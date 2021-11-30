@@ -1,91 +1,240 @@
-# SARS-CoV-2_Genome_Assembling_Pipeline
+# RQCP: Reads Quality Control Pipeline #
 
+## Description ##
+RQCP check NGS (illumina) reads quality and clean it if needed, as you set, using: 
 
+- Cutadapts to trim NGS sequencing adapters  
+- Sickle-trim to trim reads on base-calling quality score  
+- Fastq-join to join mates reads (forward R1 and Reverse R2) when it's possible  
+- FastQC to check global quality
+- FastqScreen to check putative contamination(s)
+- MultiQC to generate HTML reports  
 
-## Getting started
+## Badges ##
+![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
+![MacOS](<https://badgen.net/badge/icon/Hight Sierra (10.13),Catalina (10.15),Big Sure (11)/cyan?icon=apple&label&list=|&scale=0.9>)
+![Issues closed](<https://badgen.net/badge/Issues closed/2/green?scale=0.9>)
+![Issues opened](<https://badgen.net/badge/Issues opened/0/yellow?scale=0.9>)
+![Maintened](<https://badgen.net/badge/Maintened/Yes/red?scale=0.9>)
+![Wiki](<https://badgen.net/badge/icon/Wiki/pink?icon=wiki&label&scale=0.9>)
+![Open Source](<https://badgen.net/badge/icon/Open Source/purple?icon=https://upload.wikimedia.org/wikipedia/commons/4/44/Corazón.svg&label&scale=0.9>)
+![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
+![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.8.7/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 5.11.2/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Visuals ##
+_Good idea to include screenshots or GIFs (see ttygif or Asciinema)_  
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Installation ##
 
-## Add your files
-
-- [ ] [Create](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
+### Conda _(prior!)_ ###
+Download and install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+1. Donwload conda installer _(i.e. for Miniconda3 with Python 3.9 on MacOSX-64-bit)_:
+```shel
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/ird_transvihmi/SARS-CoV-2_Genome_Assembling_Pipeline.git
-git branch -M main
-git push -uf origin main
+
+2. Install conda using installer bash script:
+_Follow the prompts on the installer screens_  
+```shell
+bash Miniconda3-latest-MacOSX-x86_64.sh
 ```
 
-## Integrate with your tools
+3. Remove conda installer:
+```shell
+rm Miniconda3-latest-MacOSX-x86_64.sh
+```
 
-- [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/integrations/)
+4. Restart shell, close and reopen new terminal window
 
-## Collaborate with your team
+### Snakemake _(prior!)_ ###
 
-- [ ] [Invite team members and collaborators](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Automatically merge when pipeline succeeds](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Install **Snakemake** using Conda package management system  
+_Follow the prompts on the installer screens_  
+```shell
+conda install -c bioconda -c conda-forge snakemake
+```
 
-## Test and Deploy
+### RQCP ###
 
-Use the built-in continuous integration in GitLab.
+**Download** _OR_ clone the **Reads Quality Control Pipeline** project  
 
-- [ ] [Get started with GitLab CI/CD](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://docs.gitlab.com/ee/user/clusters/agent/)
+#### Download ####
 
-***
+- Download source code archive (_zip_, **tar.gz**, _tar.bz2_, _tar_): [RQCP on GitLab](https://gitlab.com/ird_transvihmi/Reads_Quality_Control_Pipeline)  
+```shel
+wget  https://gitlab.com/ird_transvihmi/Reads_Quality_Control_Pipeline/-/archive/main/Reads_Quality_Control_Pipeline-main.tar.gz -O ~/Desktop/ 
+```
 
-# Editing this README
+_alternatively_:
+![Image of download button](./visuals/download_button.png)  
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://gitlab.com/-/experiment/new_project_readme_content:218ad21a88542030485f94059a5bedba?https://www.makeareadme.com/) for this template.
+- Extract and remove the the archive (i.e. tar.gz):
+```shell
+tar -xzvf path/to/archive/Reads_Quality_Control_Pipeline-main.tar.gz
+rm path/to/archive/Reads_Quality_Control_Pipeline-main.tar.gz 
+mv ~/Desktop/Reads_Quality_Control_Pipeline-main ~/Desktop/Reads_Quality_Control_Pipeline
+cd ~/Desktop/Reads_Quality_Control_Pipeline
+```
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+#### Clone ####
 
-## Name
-Choose a self-explaining name for your project.
+- Clone with **SSH** when you want to authenticate only one time  
+Authenticate with GitLab by following the instructions in the [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)  
+```shell
+git clone git@gitlab.com:ird_transvihmi/Reads_Quality_Control_Pipeline.git
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+cd Reads_Quality_Control_Pipeline
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+Clone with **HTTPS** when you want to authenticate each time you perform an operation between your computer and GitLab  
+```shell
+git clone https://gitlab.com/ird_transvihmi/Reads_Quality_Control_Pipeline.git
+cd Reads_Quality_Control_Pipeline
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+#### Difference between download and clone ####
+To create a copy of a remote repository’s files on your computer, you can either download or clone the repository  
+If you download it, you cannot sync the repository with the remote repository on GitLab  
+Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
+You can then modify the files locally and upload the changes to the remote repository on GitLab  
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Usage ##
+- Copy your **paired-end** reads in **fastq.gz** format files into: **./resources/reads/** directory  
+- Edit **config.yaml** file on **./config/** directory, as you want, if needed  
+- Edit **fastq-screen.conf** file on **./config/** directory, as you want, if needed  
+- Be sure your bash script is executable, if not, you can run in a Terminal:
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+```shell
+sudo chmod +x path/to/Reads_Quality_Control_Pipeline/RQCP.sh
+```
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+- Run **RQCP.sh** bash script by double-clicking on it  
+- Enter project name (option) 
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+A terminal will open. you can close it at the end.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Results ###
+Yours results are available in results\_Date\_Hour\_Project
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- ... TODO ...
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+###  Configuration ###
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+#### Resources ####
+Edit to match your hardware configuration  
 
-## License
-For open source projects, say how it is licensed.
+#### Environments ####
+Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-version.yaml files
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+#### Datasets ####
+Edit to choose datasets you want an quality control with FastQC et Fastq-Screen 
+
+#### Cutadapt ####
+- **length**: Discard reads shorter than length, after trim (default config: '75')
+- **kit**: Sequence of an adapter ligated to the 3' end of the first read (default config: truseq / nextera / small)  
+
+#### Sickle-trim ####
+- **command**: Pipeline wait for paired-end reads (default config: 'pe') see: rule sickletrim on ./workflow/rules/reads_quality_control_pipeline.smk snake file
+- **encoding**: If your data are from recent Illumina run, let 'sanger' (default config: 'sanger')
+- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit (default config: '30')
+- **length**: Read length limit, after trim (default config: '75')
+
+##### Fastq-Join #####
+- **percent**: Percent maximum difference (default config: 5) 
+- **overlap**: Minimum overlap (default config: 25)
+
+#### Fastq-Screen #####
+- **config**: Path to the fastq-screen configuration file (default config: ./config/fastq-screen.conf)
+- **subset**: Don't use the whole sequence file, but create a temporary dataset of this specified number of read (default config: '10000', set '0' for all dataset)
+- **aligner**: Specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' (default config: 'bwa')
+
+##### fastq-screen.conf #####
+- **path**: Set this value to tell the program where to find your chosen aligner (default :/usr/local/\<tool\>
+- **bismark**: Same for bismark (for bisulfite sequencing only)
+- **threads**: Set this value to the number of cores you want for mapping reads (default: 1, but overwrited by Snakemake and config.yaml file)
+- **databases**: This section enables you to configure multiple genomes databases (aligner index files) to search against in your screen
+
+##### databases #####
+For each genome you need to provide a database name (which **can't** contain spaces) and the location of the aligner index files  
+
+>The path to the index files **should include the basename** of the index, _(e.g: ./resources/databases//Human/Homo\_sapiens\_h38)_  
+>Thus, the index files _(Homo\_sapiens\_h38.bt2, Homo\_sapiens\_h38.2.bt2, etc.)_ are found in a folder named **'Homo\_sapiens\_h38'**  
+>For example, the Bowtie, Bowtie2 and BWA indices of a given genome reside in the **same folder**  
+>A **single** path may be provided to **all** the of indices  
+
+The index used will be the one compatible with the chosen aligner _(as specified using the --aligner option)_  
+
+The entries shown in _./config/fastq-screen.conf_ are only suggested examples,  
+- You can add as many **database** sections as required  
+- You can **comment** out or **remove** as many of the existing entries as desired
+
+It's suggested including genomes and sequences that:  
+- may be sources of contamination either because they where run on your sequencer previously
+- may have contaminated your sample during the library preparation step
+
+For IRD_U233_TransVIHMI, cretaed this indexes:
+
+- **Human**: main sources of lab. contaminations _(exepted if Boston Dynamics Atlas robot did the job)_ **¡not included!**
+- **Mouse**: main model in biology experimentation, very frequent in NGS facility core **¡not included!**
+- **Arabidopsis**: frequent plant model in NGS facility core associated with plants researches (IRD, CIRAD, INRAE, ...) **¡not included!**
+- **Ecoli**: frequent bacteria model, also an indicator of human contaminations, also in feces and stool samples
+- **PhiX**: usefull control in Illumina sequencing run technology
+- **Adapters**: use for libraries generation
+- **Vector**: use in general molecular biology
+- **Gorilla**: species studied in TransVIHMI **¡not included!**
+- **Chimpanzee**: species studied in TransVIHMI **¡not included!**
+- **Bat**: species studied in TransVIHMI **¡not included!**
+- **HIV**: species studied in TransVIHMI
+- **Ebola**: species studied in TransVIHMI
+- **SARS-CoV-2**: species studied in TransVIHMI
+
+**Not included indexes:**  
+Indexes for large genomes can be heavy (~ 3Gb) and git limit each project to 10Gb. Download all this databases can be also to long.  
+Commonly it's share on git only code, but not larger resources _(data input, databases, references, ...).  
+This data can always be download somewhere (online servers).   
+Databases for below genomes where generated and available at IRD_U233_TransVIHMI lab.  
+You can freely ask for sharing (with USB supports or FileSender) to add it to your analyses.  
+You can also ask for new databases, for genomes references not yet included, to check putative presence / absence on your dataset.  
+
+## Support ##
+1. RTFM! (Read The Fabulous Manual! ^^.)
+2. Read de awsome wiki ;)
+3. Create a new issue: Issues > New issue > Describe your issue
+4. Send an email to [nicolas.fernandez@ird.fr](url)
+5. Call me to `+33.(0)4.67.41.55.xx` (No don't please _O\_o_!)
+
+## Roadmap ##
+Add a wiki !  
+Finish documentation about "terminal" and "results"
+Add new features  
+
+## Contributing ##
+Open to contributions :)  
+Testing code, finding issues, asking for update, proposing new features ...  
+Use Git tools to share!  
+
+## Authors and acknowledgment ##
+- Nicolas Fernandez (Developer and Maintener)  
+- Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
+
+## License ##
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+
+## Project status ##
+This project is regularly update and actively maintened  
+However, you can be volunteer to step in as a maintainer  
+
+[//]: # (I'm out of time for this project, development has slowed down, close to stopped completely, you can be volunteer to step in as a maintainer, or choose to fork this project allowing this project to keep going!)
+
+For information about main git roles:  
+- **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues.  
+- **Reporters** are _read-only contributors_, they can't write to the repository, but can on issues.  
+- **Developers** are _direct contributors_, they have access to everything to go from idea to production,  
+unless something has been explicitly restricted.  
+- **Maintainers** are _super-developers_, they are able to push to master, deploy to production.  
+This role is often held by maintainers and engineering managers.  
+- **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities.  
 
