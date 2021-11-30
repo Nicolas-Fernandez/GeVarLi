@@ -1,0 +1,13 @@
+
+~*
+*~
+#*
+*#
+.DS_Store
+#.snakemake
+*.temp
+*.done
+*.pdf
+*.txt
+/results*
+/resources/reads*

@@ -1,0 +1,50 @@
+name: fastq-screen
+channels:
+  - bioconda
+  - conda-forge
+  - r
+  - anaconda
+  - defaults
+dependencies:
+  - bowtie=1.0.0=1
+  - bowtie2=2.4.2=py39h7f6fa2c_2
+  - bwa=0.7.17=h188c3c3_8
+  - ca-certificates=2021.4.13=hecd8cb5_1
+  - certifi=2020.12.5=py39h6e9494a_1
+  - expat=2.3.0=he49afe7_0
+  - fastq-screen=0.14.0=pl5262hdfd78af_1
+  - fontconfig=2.13.1=h10f422b_1005
+  - freetype=2.10.4=h4cff582_1
+  - giflib=5.2.1=hbcb3906_2
+  - icu=67.1=hb1e8313_0
+  - jpeg=9d=hbcb3906_0
+  - libcxx=11.1.0=habf9029_0
+  - libffi=3.3=h046ec9c_2
+  - libgd=2.2.5=h190906e_1008
+  - libiconv=1.16=haf1e3a3_0
+  - libpng=1.6.37=h7cec526_2
+  - libtiff=4.2.0=h7c11950_1
+  - libwebp=1.2.0=h1648767_0
+  - libwebp-base=1.2.0=h0d85af4_2
+  - libxml2=2.9.10=h2c6e4a5_2
+  - lz4-c=1.9.3=h046ec9c_0
+  - ncurses=6.2=h2e338ed_4
+  - openssl=1.1.1k=h0d85af4_0
+  - perl=5.26.2=hbcb3906_1008
+  - perl-gd=2.71=pl526h5c9b4e4_0
+  - perl-gdgraph=1.54=pl526_0
+  - perl-gdtextutil=0.86=pl526h1de35cc_5
+  - pip=21.1=pyhd8ed1ab_0
+  - python=3.9.4=h88f2d9e_0
+  - python_abi=3.9=1_cp39
+  - readline=8.1=h05e3726_0
+  - setuptools=52.0.0=py39hecd8cb5_0
+  - sqlite=3.35.5=h44b9ce1_0
+  - tbb=2020.3=h879752b_0
+  - tk=8.6.10=h0419947_1
+  - tzdata=2021a=he74cb21_0
+  - wheel=0.36.2=pyhd3deb0d_0
+  - xz=5.2.5=haf1e3a3_1
+  - zlib=1.2.11=h7795811_1010
+  - zstd=1.4.9=h582d3a0_0
+prefix: /Users/2021nf001/miniconda3/envs/fastq-screen
