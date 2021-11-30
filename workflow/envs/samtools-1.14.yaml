@@ -1,0 +1,28 @@
+name: samtools-1.14
+channels:
+  - r
+  - anaconda
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bzip2=1.0.8=h1de35cc_0
+  - c-ares=1.18.1=h0d85af4_0
+  - ca-certificates=2021.10.26=hecd8cb5_2
+  - htslib=1.14=hc38c3fb_0
+  - krb5=1.19.2=hcfbf3a7_3
+  - libcurl=7.80.0=hf45b732_0
+  - libcxx=12.0.1=habf9029_0
+  - libdeflate=1.7=h35c211d_5
+  - libedit=3.1.20191231=h1de35cc_1
+  - libev=4.33=haf1e3a3_0
+  - libnghttp2=1.46.0=ha29bfda_0
+  - libssh2=1.10.0=h52ee1ee_2
+  - libzlib=1.2.11=h9173be1_1013
+  - ncurses=6.2=h0a44026_1
+  - openssl=1.1.1l=h0d85af4_0
+  - samtools=1.14=hdbfa7a9_0
+  - tk=8.6.11=h5dbffcc_1
+  - xz=5.2.5=h1de35cc_0
+  - zlib=1.2.11=h9173be1_1013
+prefix: /Users/2021nf001/miniconda3/envs/samtools-1.14

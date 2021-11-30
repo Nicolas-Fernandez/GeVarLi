@@ -1,0 +1,39 @@
+name: lofreq-2.1.5
+channels:
+  - r
+  - anaconda
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bzip2=1.0.8=h1de35cc_0
+  - c-ares=1.18.1=h0d85af4_0
+  - ca-certificates=2021.10.26=hecd8cb5_2
+  - curl=7.80.0=hf45b732_0
+  - htslib=1.12=hc38c3fb_1
+  - krb5=1.19.2=hcfbf3a7_3
+  - libcurl=7.80.0=hf45b732_0
+  - libcxx=12.0.1=habf9029_0
+  - libdeflate=1.7=h35c211d_5
+  - libedit=3.1.20210910=hca72f7f_0
+  - libev=4.33=haf1e3a3_0
+  - libffi=3.3=hb1e8313_2
+  - libnghttp2=1.46.0=ha29bfda_0
+  - libssh2=1.10.0=h52ee1ee_2
+  - libzlib=1.2.11=h9173be1_1013
+  - lofreq=2.1.5=py39hf4c0fae_4
+  - ncurses=6.3=hca72f7f_2
+  - openssl=1.1.1l=h0d85af4_0
+  - pip=21.3.1=pyhd8ed1ab_0
+  - python=3.9.7=h88f2d9e_1
+  - python_abi=3.9=2_cp39
+  - readline=8.1=h9ed2024_0
+  - samtools=1.4.1=0
+  - setuptools=59.2.0=py39h6e9494a_0
+  - sqlite=3.36.0=hce871da_0
+  - tk=8.6.11=h5dbffcc_1
+  - tzdata=2021e=he74cb21_0
+  - wheel=0.37.0=pyhd8ed1ab_1
+  - xz=5.2.5=h1de35cc_0
+  - zlib=1.2.11=h9173be1_1013
+prefix: /Users/2021nf001/miniconda3/envs/lofreq-2.1.5
