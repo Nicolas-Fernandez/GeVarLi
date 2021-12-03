@@ -1,10 +1,9 @@
 
 ~*
 *~
-#*
 *#
 .DS_Store
-#.snakemake
+.snakemake
 *.temp
 *.done
 *.pdf

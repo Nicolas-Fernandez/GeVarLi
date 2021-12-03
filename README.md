@@ -25,8 +25,8 @@ GeVarLi ...
 ![Open Source](<https://badgen.net/badge/icon/Open Source/purple?icon=https://upload.wikimedia.org/wikipedia/commons/4/44/Corazón.svg&label&scale=0.9>)
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.8.7/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
-![Snakemake](<https://badgen.net/badge/icon/Snakemake 5.11.2/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.9.5/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 6.12.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
 
 
@@ -56,12 +56,12 @@ bash Miniconda3-latest-MacOSX-x86_64.sh
 rm Miniconda3-latest-MacOSX-x86_64.sh
 ```
 
-4. Restart shell, close and reopen new terminal window
+4. Restart shell (close and reopen new terminal window)
 
 
 ### Snakemake _(prior!)_ ###
 
-Install **Snakemake** using Conda package management system  
+Install **Snakemake** (_i.e. v.5.11.2_) using Conda package management system  
 _Follow the prompts on the installer screens_  
 ```shell
 conda install -c bioconda -c conda-forge snakemake
@@ -75,9 +75,9 @@ conda install -c bioconda -c conda-forge snakemake
 
 #### Download ####
 
-- Download source code archive (_zip_, **tar.gz**, _tar.bz2_, _tar_): [RQCP on GitLab](https://gitlab.com/ird_transvihmi/Reads_Quality_Control_Pipeline)  
+- Download source code archive (_zip_, **tar.gz**, _tar.bz2_, _tar_): [GeVarLi on GitLab](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX)  
 ```shel
-wget  https://gitlab.com/ird_transvihmi/Reads_Quality_Control_Pipeline/-/archive/main/Reads_Quality_Control_Pipeline-main.tar.gz -O ~/Desktop/ 
+wget  https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX/-/archive/main/GeVarLi_Pipeline_macOSX-main.tar.gz -O ~/Desktop/ 
 ```
 
 _alternatively_:
@@ -85,10 +85,10 @@ _alternatively_:
 
 - Extract and remove the the archive (i.e. tar.gz):
 ```shell
-tar -xzvf path/to/archive/Reads_Quality_Control_Pipeline-main.tar.gz
-rm path/to/archive/Reads_Quality_Control_Pipeline-main.tar.gz 
-mv ~/Desktop/Reads_Quality_Control_Pipeline-main ~/Desktop/Reads_Quality_Control_Pipeline
-cd ~/Desktop/Reads_Quality_Control_Pipeline
+tar -xzvf path/to/archive/GeVarLi_Pipeline_macOSX-main.tar.gz
+rm path/to/archive/GeVarLi_Pipeline_macOSX-main.tar.gz 
+mv ~/Desktop/GeVarLi_Pipeline_macOSX-main ~/Desktop/GeVarLi_Pipeline
+cd ~/Desktop/GeVarLi_Pipeline
 ```
 
 #### Clone ####
@@ -96,15 +96,16 @@ cd ~/Desktop/Reads_Quality_Control_Pipeline
 - Clone with **SSH** when you want to authenticate only one time  
 Authenticate with GitLab by following the instructions in the [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)  
 ```shell
-git clone git@gitlab.com:ird_transvihmi/Reads_Quality_Control_Pipeline.git
-
-cd Reads_Quality_Control_Pipeline
+git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
+mv GeVarLi_Pipeline GeVarLi_Pipeline
+cd GeVarLi_Pipeline
 ```
 
 Clone with **HTTPS** when you want to authenticate each time you perform an operation between your computer and GitLab  
 ```shell
-git clone https://gitlab.com/ird_transvihmi/Reads_Quality_Control_Pipeline.git
-cd Reads_Quality_Control_Pipeline
+git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
+mv GeVarLi_Pipeline GeVarLi_Pipeline
+cd GeVarLi_Pipeline
 ```
 
 
@@ -119,12 +120,12 @@ You can then modify the files locally and upload the changes to the remote repos
 ## Usage ##
 
 - Copy your **paired-end** reads in **fastq.gz** format files into: **./resources/reads/** directory  
-- Option: edit **config.yaml** file on **./config/** directory, as you want, if needed  
-- Option: edit **fastq-screen.conf** file on **./config/** directory, as you want, if needed  
+- (_option_) Edit **config.yaml** file on **./config/** directory, as you want, if needed  
+- (_option_) Edit **fastq-screen.conf** file on **./config/** directory, as you want, if needed  
 - Be sure your bash script is executable, if not, you can run in a Terminal:
 
 ```shell
-sudo chmod +x path/to/Reads_Quality_Control_Pipeline/RQCP.sh
+sudo chmod +x path/to/GeVarLi_Pipeline/GeVarLi.sh
 ```
 
 - Run **GeVarLi.sh** bash script by double-clicking on it  

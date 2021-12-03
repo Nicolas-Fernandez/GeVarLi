@@ -77,7 +77,7 @@ AFMIN = config["indel"]["afmin"]   # Minimum allele freq allowed
 rule all:
     input:
         lineage = expand("results/pangolin/{sample}_{mapper}_{mincov}_lineage_report.csv",
-                         mincov = MINCOV, sample = SAMPLE, mapper = MAPPER),
+                         sample = SAMPLE, mapper = MAPPER, mincov = MINCOV),
         multiqc = "results/quality/multiqc/"
         
 ###############################################################################
@@ -85,7 +85,7 @@ rule pangolin_lineage:
     # Aim: lineage mapping
     # Use: pangolin [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Pangolin lineage mapping for {wildcards.sample} sample consensus ({wildcards.mapper})"
+        "Pangolin lineage mapping for {wildcards.sample} sample consensus ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         PANGOLIN
     resources:
@@ -111,14 +111,13 @@ rule bcftools_consensus:
     # Aim: create consensus
     # Use: bcftools consensus -f [REFERENCE] [.vcf.gz] -o [CONSENSUS.fasta] 
     message:
-        "BcfTools consensus for {wildcards.sample} sample ({wildcards.mapper})"
+        "BcfTools consensus for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         BCFTOOLS
-    params:
-        reference = REFERENCE
     input:
-        indelfilt = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.vcf.bgz",
-        index = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.tbi"
+        maskedref = "results/bedtools/{sample}_{mapper}_{mincov}_maskedref.fasta",
+        indelfilt = "results/indel/{sample}_{mapper}_{mincov}_indelfilt.vcf.bgz",
+        index = "results/indel/{sample}_{mapper}_{mincov}_indelfilt.tbi"
     output:
         consensus = "results/bcftools/{sample}_{mapper}_{mincov}_consensus.fasta"
     log:
@@ -126,7 +125,7 @@ rule bcftools_consensus:
     shell:
         "bcftools "                       # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
-        "--fasta-ref {params.reference} " # -f: reference sequence in fasta format
+        "--fasta-ref {input.maskedref} "  # -f: reference sequence in fasta format
         "{input.indelfilt} "              # VCF variants file
         "--output {output.consensus} "    # -o: write output to a file (default: standard output)
         "2> {log}"                        # Add redirection for log
@@ -136,15 +135,15 @@ rule tabix_tabarch_indexing:
     # Aim: tab archive indexing
     # Use: tabix [OPTIONS] [TAB.bgz]
     message:
-        "Tabix tab archive indexing for {wildcards.sample} sample ({wildcards.mapper})"
+        "Tabix tab archive indexing for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         SAMTOOLS
     input:
-        bgzip = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.vcf.bgz"
+        bgzip = "results/indel/{sample}_{mapper}_{mincov}_indelfilt.vcf.bgz"
     output:
-        index = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.tbi"
+        index = "results/indel/{sample}_{mapper}_{mincov}_indelfilt.tbi"
     log:
-        "results/{mincov}/reports/tabix/{sample}_{mapper}_indelarch-index.log"
+        "results/reports/tabix/{sample}_{mapper}_{mincov}_indelarch-index.log"
     shell:
         "tabix "             # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.bgzip} "     # The input data file must be position sorted and compressed by bgzip
@@ -156,17 +155,17 @@ rule bgzip_indel_compressing:
     # Aim: indel block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
-        "Bgzip indel block compressing for {wildcards.sample} sample ({wildcards.mapper})"
+        "Bgzip indel block compressing for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         SAMTOOLS
     resources:
         cpus = CPUS
     input:
-        indelfilt = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.vcf"
+        indelfilt = "results/indel/{sample}_{mapper}_{mincov}_indelfilt.vcf"
     output:
-        bgzip = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.vcf.bgz"
+        bgzip = temp("results/indel/{sample}_{mapper}_{mincov}_indelfilt.vcf.bgz")
     log:
-        "results/{mincov}/reports/bgzip/{sample}_{mapper}_indel-bgz.log"
+        "results/reports/bgzip/{sample}_{mapper}_{mincov}_indel-bgz.log"
     shell:
         "bgzip "                      # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
@@ -181,18 +180,18 @@ rule lofreq_indel_filtering:
     # Use: lofreq filter [OPTIONS] -i [INDEL.vcf] -o [INDELFILT.vcf]
     # Note: without --no-defaults LoFreq's predefined filters are on
     message:
-        "LoFreq filtering variants for {wildcards.sample} sample ({wildcards.mapper})"
+        "LoFreq filtering variants for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         LOFREQ
     params:
         covmin = COVMIN,
         afmin = AFMIN
     input:
-        indelcall = "results/{mincov}/indel/{sample}_{mapper}_indelcall.vcf"
+        indelcall = "results/indel/{sample}_{mapper}_{mincov}_indelcall.vcf"
     output:
-        indelfilt = "results/{mincov}/indel/{sample}_{mapper}_indelfilt.vcf"
+        indelfilt = temp("results/indel/{sample}_{mapper}_{mincov}_indelfilt.vcf")
     log:
-        "results/{mincov}/reports/lofreq/{sample}_{mapper}_indelfilt.log"
+        "results/reports/lofreq/{sample}_{mapper}_{mincov}_indelfilt.log"
     shell:
         "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                    # Filter variant parsed from vcf file
@@ -205,21 +204,21 @@ rule lofreq_indel_filtering:
 ###############################################################################
 rule lofreq_indel_calling:
     # Aim: variants calling
-    # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [REFERENCE.fasta] -o [INDEL.vcf] [INDEL.bam]
+    # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [MASKEDREF.fasta] -o [INDEL.vcf] [INDEL.bam]
     message:
-        "LoFreq calling variants for {wildcards.sample} sample ({wildcards.mapper})"
+        "LoFreq calling variants for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         LOFREQ
     resources:
         cpus = CPUS
     input:
-        maskedref = "results/{mincov}/bedtools/{sample}_{mapper}_maskedref.fasta",
-        indelqual = "results/{mincov}/indel/{sample}_{mapper}_indelqual.bam",
-        index = "results/{mincov}/indel/{sample}_{mapper}_indelqual.bai"
+        maskedref = "results/bedtools/{sample}_{mapper}_{mincov}_maskedref.fasta",
+        indelqual = "results/indel/{sample}_{mapper}_{mincov}_indelqual.bam",
+        index = "results/indel/{sample}_{mapper}_{mincov}_indelqual.bai"
     output:
-        indelcall = "results/{mincov}/indel/{sample}_{mapper}_indelcall.vcf"
+        indelcall = temp("results/indel/{sample}_{mapper}_{mincov}_indelcall.vcf")
     log:
-        "results/{mincov}/reports/lofreq/{sample}_{mapper}_indelcall.log"
+        "results/reports/lofreq/{sample}_{mapper}_{mincov}_indelcall.log"
     shell:
         "lofreq "                        # LoFreq, fast and sensitive inference of SNVs and indels
         "call-parallel "                 # Call variants from BAM file
@@ -235,17 +234,17 @@ rule samtools_indel_indexing:
     # Aim: indexing insertion/deletion qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDELQUAL.bam] [INDEX.bai]
     message:
-        "SamTools indexing insertion/deletion qualities BAM file {wildcards.sample} sample ({wildcards.mapper})"
+        "SamTools indexing insertion/deletion qualities BAM file {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         SAMTOOLS
     resources:
        cpus = CPUS
     input:
-        indelqual = "results/{mincov}/indel/{sample}_{mapper}_indelqual.bam"
+        indelqual = "results/indel/{sample}_{mapper}_{mincov}_indelqual.bam"
     output:
-        index = "results/{mincov}/indel/{sample}_{mapper}_indelqual.bai"
+        index = "results/indel/{sample}_{mapper}_{mincov}_indelqual.bai"
     log:
-        "results/reports/{mincov}/samtools/{sample}_{mapper}_indelqual-index.log"
+        "results/reports/samtools/{sample}_{mapper}_{mincov}_indelqual-index.log"
     shell:
         "samtools index "             # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} "        # --threads: Number of additional threads to use (default: 0)
@@ -257,19 +256,19 @@ rule samtools_indel_indexing:
 ###############################################################################
 rule lofreq_indel_qualities:
     # Aim: insertion/deletion qualities 
-    # Use: lofreq indelqual --dindel -f [REFERENCE.fasta] -o [INDEL.bam] [MARKDUP.bam]
+    # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
     # Note: do not realign your BAM file afterwards!
     message:
-        "LoFreq insertion/deletion qualities for {wildcards.sample} sample ({wildcards.mapper})"
+        "LoFreq insertion/deletion qualities for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         LOFREQ
     input:
-        maskedref = "results/{mincov}/bedtools/{sample}_{mapper}_maskedref.fasta",
+        maskedref = "results/bedtools/{sample}_{mapper}_{mincov}_maskedref.fasta",
         markdup = "results/samtools/{sample}_{mapper}_markdup.bam"
     output:
-        indelqual = "results/{mincov}/indel/{sample}_{mapper}_indelqual.bam"
+        indelqual = "results/indel/{sample}_{mapper}_{mincov}_indelqual.bam"
     log:
-        "results/reports/{mincov}/lofreq/{sample}_{mapper}_indelqual.log"
+        "results/reports/lofreq/{sample}_{mapper}_{mincov}_indelqual.log"
     shell:
         "lofreq "                     # LoFreq, fast and sensitive inference of SNVs and indels 
         "indelqual "                  # Insert indel qualities into BAM file (required for indel predictions)
@@ -282,40 +281,40 @@ rule lofreq_indel_qualities:
 ###############################################################################
 rule bedtools_masking:
     # Aim: masking low coverage regions
-    # Use: bedtools maskfasta [OPTIONS] -fi [REFERENCE.fasta] -bed [RANGE.bed] -fo [MASKED.fasta] 
+    # Use: bedtools maskfasta [OPTIONS] -fi [REFERENCE.fasta] -bed [RANGE.bed] -fo [MASKEDREF.fasta]
     message:
-        "BedTools masking low coverage regions for {wildcards.sample} sample ({wildcards.mapper})"
+        "BedTools masking low coverage regions for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         BEDTOOLS
     params:
         reference = REFERENCE
     input:
-        lowcovmask = "results/{mincov}/bedtools/{sample}_{mapper}_lowcovmask.bed"
+        lowcovmask = "results/bedtools/{sample}_{mapper}_{mincov}_lowcovmask.bed"
     output:
-        maskedref = "results/{mincov}/bedtools/{sample}_{mapper}_maskedref.fasta"
+        maskedref = "results/bedtools/{sample}_{mapper}_{mincov}_maskedref.fasta"
     log:
-        "results/{mincov}/reports/bedtools/{sample}_{mapper}_masking.log"
+        "results/reports/bedtools/{sample}_{mapper}_{mincov}_masking.log"
     shell:
         "bedtools maskfasta "      # Bedtools maskfasta, mask a fasta file based on feature coordinates
         "-fi {params.reference} "  # Input FASTA file 
         "-bed {input.lowcovmask} " # BED/GFF/VCF file of ranges to mask in -fi
-        "-fo {output.maskedref} "  # Output masked FATSA file
+        "-fo {output.maskedref} "  # Output masked FASTA file
         "&> {log}"                 # Add redirection for log 
 
 ###############################################################################
-rule bedtools_merge:
+rule bedtools_merged_mask:
     # Aim: merging overlaps
     # Use: bedtools merge [OPTIONS] -i [FILTERED.bed] -g [GENOME.fasta] 
     message:
-        "BedTools merging overlaps for {wildcards.sample} sample ({wildcards.mapper})"
+        "BedTools merging overlaps for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     conda:
         BEDTOOLS
     input:
-        mincovfilt = "results/{mincov}/bedtools/{sample}_{mapper}_mincovfilt.bed"
+        mincovfilt = "results/bedtools/{sample}_{mapper}_{mincov}_mincovfilt.bed"
     output:
-        lowcovmask = "results/{mincov}/bedtools/{sample}_{mapper}_lowcovmask.bed"
+        lowcovmask = temp("results/bedtools/{sample}_{mapper}_{mincov}_lowcovmask.bed")
     log:
-        "results/{mincov}/reports/bedtools/{sample}_{mapper}_merging.log"
+        "results/reports/bedtools/{sample}_{mapper}_{mincov}_merging.log"
     shell:
         "bedtools merge "         # Bedtools merge, merges overlapping BED/GFF/VCF entries into a single interval
         "-i {input.mincovfilt} "  # -i: BED/GFF/VCF input to merge 
@@ -327,18 +326,20 @@ rule awk_mincovfilt:
     # Aim: minimum coverage filtration
     # Use: awk '$4 < [MINCOV]' [BED] 1> [FILTERED]
     message:
-        "Awk minimum coverage filtration for {wildcards.sample} sample ({wildcards.mapper})"
+        "Awk minimum coverage filtration for {wildcards.sample} sample ({wildcards.mapper}-{wildcards.mincov})"
     params:
-        #mincov = MINCOV
+        mincov = MINCOV # if mincov as one fixed parameter, in config file
     input:
         genomecov = "results/bedtools/{sample}_{mapper}_genomecov.bed"
     output:
-        mincovfilt = "results/{mincov}/bedtools/{sample}_{mapper}_mincovfilt.bed"
+        mincovfilt = temp("results/bedtools/{sample}_{mapper}_{mincov}_mincovfilt.bed")
     log:
-        "results/{mincov}/reports/bedtools/{sample}_{mapper}_mincovfilt.log"
+        "results/reports/bedtools/{sample}_{mapper}_{mincov}_mincovfilt.log"
     shell:
         "awk "                       # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        "'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence (default: 10)
+        #"'$4 < 10' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
+        #"'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence (if 'mincov' as one fixed single parameter,in config file)
+        "'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence (if 'mincov' as multiple wildcards, for testing)
         "{input.genomecov} "         # BedGraph coverage input
         "1> {output.mincovfilt} "    # Minimum coverage filtered bed output
         "2> {log} "                  # Add redirection for log
@@ -360,9 +361,10 @@ rule bedtools_genomecov:
         "results/reports/bedtools/{sample}_{mapper}_genomecov.log"
     shell:
         "bedtools genomecov "     # Bedtools genomecov, compute the coverage of a feature file among a genome
+        "-bga "                   # Report depth in BedGraph format, regions with zero coverage are also reported
         "-ibam {input.markdup} "  # The input file is in BAM format, must be sorted by position
-        "-bga {output.genomecov}" # Report depth in BedGraph format, regions with zero coverage are also reported
-        "&> {log} "               # Add redirection for log
+        "1> {output.genomecov} "  # BedGraph output
+        "2> {log} "               # Add redirection for log
 
 ###############################################################################
 rule samtools_index_markdup: 
@@ -430,7 +432,7 @@ rule samtools_sorting:
     input:
         fixmate = "results/samtools/{sample}_{mapper}_fixmate.bam"
     output:
-        sorted = "results/samtools/{sample}_{mapper}_sorted.bam"
+        sorted = temp("results/samtools/{sample}_{mapper}_sorted.bam")
     log:
         "results/reports/samtools/{sample}_{mapper}_sorting.log"
     shell:
@@ -456,7 +458,7 @@ rule samtools_fixmate:
     input:
         sortbynames = "results/samtools/{sample}_{mapper}_sortbynames.bam"
     output:
-        fixmate = "results/samtools/{sample}_{mapper}_fixmate.bam"
+        fixmate = temp("results/samtools/{sample}_{mapper}_fixmate.bam")
     log:
         "results/reports/samtools/{sample}_{mapper}_fixmate.log"
     shell:
@@ -482,7 +484,7 @@ rule samtools_sortbynames:
     input:
         mapped = "results/{mapper}/{sample}_mapped.sam"
     output:
-        sortbynames = "results/samtools/{sample}_{mapper}_sortbynames.bam"
+        sortbynames = temp("results/samtools/{sample}_{mapper}_sortbynames.bam")
     log:
         "results/reports/samtools/{sample}_{mapper}_names-sorting.log"
     shell:
@@ -508,21 +510,21 @@ rule bwa_mapping:
     params:
         indexbwa = INDEXBWA
     input:
-        forward = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
-        reverse = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz"
+        fwdreads = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
+        revreads = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz"
     output:
         mapped = "results/bwa/{sample}_mapped.sam"
     log:
         "results/reports/bwa/{sample}_mapping.log"
     shell:
-        "bwa mem "            # BWA-MEM algorithm, performs local alignment.
-        "-t {resources.cpus} " # -t: Number of threads (default: 12)
-        "-v 1 "                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
-        "{params.indexbwa} "   # Reference index filename prefix
-        "{input.forward} "     # Forward input reads
-        "{input.reverse} "     # Reverse input reads
-        "1> {output.mapped} "  # SAM output
-        "2> {log}"             # Add redirection for log 
+        "bwa mem "             # BWA-MEM algorithm, performs local alignment.
+        "-t {resources.cpus} "  # -t: Number of threads (default: 12)
+        "-v 1 "                 # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
+        "{params.indexbwa} "    # Reference index filename prefix
+        "{input.fwdreads} "     # Forward input reads
+        "{input.revreads} "     # Reverse input reads
+        "1> {output.mapped} "   # SAM output
+        "2> {log}"              # Add redirection for log 
 
 ###############################################################################
 rule bowtie2_mapping:
@@ -538,23 +540,23 @@ rule bowtie2_mapping:
         indexbt2 = INDEXBT2,
         sensitivity = SENSITIVITY
     input:
-        forward = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
-        reverse = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz"
+        fwdreads = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
+        revreads = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz"
     output:
         mapped = "results/bowtie2/{sample}_mapped.sam"
     log:
         "results/reports/bowtie2/{sample}_mapping.log"
     shell:
-        "bowtie2 "                   # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.
-        "--threads {resources.cpus} " # -p: Number of alignment threads to launch (default: 1)
-        "--reorder "                  # Keep the original read order (if multi-processor option -p is used)
-        "-x {params.indexbt2} "       # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
-        "{params.sensitivity} "       # Preset (default: "--sensitive", same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]) 
-        "-q "                         # -q: Query input files are FASTQ .fq/.fastq (default)
-        "-1 {input.forward} "         # Forward input reads
-        "-2 {input.reverse} "         # Reverse input reads
-        "1> {output.mapped} "         # -S: File for SAM output (default: stdout) 
-        "2> {log}"                    # Add redirection for log 
+        "bowtie2 "                    # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.
+        "--threads {resources.cpus} "  # -p: Number of alignment threads to launch (default: 1)
+        "--reorder "                   # Keep the original read order (if multi-processor option -p is used)
+        "-x {params.indexbt2} "        # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
+        "{params.sensitivity} "        # Preset (default: "--sensitive", same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]) 
+        "-q "                          # -q: Query input files are FASTQ .fq/.fastq (default)
+        "-1 {input.fwdreads} "         # Forward input reads
+        "-2 {input.revreads} "         # Reverse input reads
+        "1> {output.mapped} "          # -S: File for SAM output (default: stdout) 
+        "2> {log}"                     # Add redirection for log 
 
 ###############################################################################
 rule sickle_trim_quality:
@@ -570,27 +572,27 @@ rule sickle_trim_quality:
         quality = QUALITY,
         length = LENGTHS
     input:
-        forward = "results/reads/cutadapt/{sample}_adapt-removed_R1.fastq.gz",
-        reverse = "results/reads/cutadapt/{sample}_adapt-removed_R2.fastq.gz"
+        fwdreads = "results/reads/cutadapt/{sample}_adapt-removed_R1.fastq.gz",
+        revreads = "results/reads/cutadapt/{sample}_adapt-removed_R2.fastq.gz"
     output:
-        forward = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
-        reverse = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz",
+        fwdreads = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
+        revreads = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz",
         single = temp("results/reads/sickle/{sample}_quality-trimmed_SE.fastq.gz")
     log:
         "results/reports/sickle-trim/{sample}.log"
     shell:
-       "sickle "               # Sickle, a windowed adaptive trimming tool for FASTQ files using quality
-        "{params.command} "     # Paired-end or single-end sequence trimming
-        "-t {params.encoding} " # --qual-type: Type of quality values, solexa ; illumina ; sanger ; CASAVA, < 1.3 ; 1.3 to 1.7 ; >= 1.8
-        "-q {params.quality} "  # --qual-threshold: Threshold for trimming based on average quality in a window (default: 20)
-        "-l {params.length} "   # --length-threshold: Threshold to keep a read based on length after trimming (default: 20)
-        "-f {input.forward} "   # --pe-file1: Input paired-end forward fastq file
-        "-r {input.reverse} "   # --pe-file2: Input paired-end reverse fastq file
-        "-g "                   # --gzip-output: Output gzipped files
-        "-o {output.forward} "  # --output-pe1: Output trimmed forward fastq file
-        "-p {output.reverse} "  # --output-pe2: Output trimmed reverse fastq file (must use -s option)
-        "-s {output.single} "   # --output-single: Output trimmed singles fastq file
-        "&> {log}"              # Add redirection for log
+       "sickle "                # Sickle, a windowed adaptive trimming tool for FASTQ files using quality
+        "{params.command} "      # Paired-end or single-end sequence trimming
+        "-t {params.encoding} "  # --qual-type: Type of quality values, solexa ; illumina ; sanger ; CASAVA, < 1.3 ; 1.3 to 1.7 ; >= 1.8
+        "-q {params.quality} "   # --qual-threshold: Threshold for trimming based on average quality in a window (default: 20)
+        "-l {params.length} "    # --length-threshold: Threshold to keep a read based on length after trimming (default: 20)
+        "-f {input.fwdreads} "   # --pe-file1: Input paired-end forward fastq file
+        "-r {input.revreads} "   # --pe-file2: Input paired-end reverse fastq file
+        "-g "                    # --gzip-output: Output gzipped files
+        "-o {output.fwdreads} "  # --output-pe1: Output trimmed forward fastq file
+        "-p {output.revreads} "  # --output-pe2: Output trimmed reverse fastq file (must use -s option)
+        "-s {output.single} "    # --output-single: Output trimmed singles fastq file
+        "&> {log}"               # Add redirection for log
 
 ###############################################################################
 rule cutadapt_adapters_removing:
@@ -609,35 +611,35 @@ rule cutadapt_adapters_removing:
         nextera = NEXTERA,
         small = SMALL
     input:
-        forward = "resources/reads/{sample}_R1.fastq.gz",
-        reverse = "resources/reads/{sample}_R2.fastq.gz"
+        fwdreads = "resources/reads/{sample}_R1.fastq.gz",
+        revreads = "resources/reads/{sample}_R2.fastq.gz"
     output:
-        forward = temp("results/reads/cutadapt/{sample}_adapt-removed_R1.fastq.gz"),
-        reverse = temp("results/reads/cutadapt/{sample}_adapt-removed_R2.fastq.gz")
+        fwdreads = temp("results/reads/cutadapt/{sample}_adapt-removed_R1.fastq.gz"),
+        revreads = temp("results/reads/cutadapt/{sample}_adapt-removed_R2.fastq.gz")
     log:
         "results/reports/cutadapt/{sample}.log"
     shell:
-       "cutadapt "                         # Cutadapt, finds and removes unwanted sequence from your HT-seq reads
-        "--cores {resources.cpus} "         # -j: Number of CPU cores to use. Use 0 to auto-detect (default: 1)
-        "--trim-n "                         # --trim-n: Trim N's on ends of reads
-        "--minimum-length {params.length} " # -m: Discard reads shorter than length
-        "--adapter {params.truseq} "        # -a: Sequence of an adapter ligated to the 3' end of the first read
-        "-A {params.truseq} "               # -A: 3' adapter to be removed from second read in a pair
-        "--adapter {params.nextera} "       # -a: Sequence of an adapter ligated to the 3' end of the first read
-        "-A {params.nextera} "              # -A: 3' adapter to be removed from second read in a pair
-        "--adapter {params.small} "         # -a: Sequence of an adapter ligated to the 3' end of the first read
-        "-A {params.small} "                # -A: 3' adapter to be removed from second read in a pair
-        "--output {output.forward} "        # -o: Write trimmed reads to FILE
-        "--paired-output {output.reverse} " # -p: Write second read in a pair to FILE
-        "{input.forward} "                  # Input forward reads R1.fastq
-        "{input.reverse} "                  # Input reverse reads R2.fastq
-        "&> {log}"                          # Add redirection for log
+       "cutadapt "                          # Cutadapt, finds and removes unwanted sequence from your HT-seq reads
+        "--cores {resources.cpus} "          # -j: Number of CPU cores to use. Use 0 to auto-detect (default: 1)
+        "--trim-n "                          # --trim-n: Trim N's on ends of reads
+        "--minimum-length {params.length} "  # -m: Discard reads shorter than length
+        "--adapter {params.truseq} "         # -a: Sequence of an adapter ligated to the 3' end of the first read
+        "-A {params.truseq} "                # -A: 3' adapter to be removed from second read in a pair
+        "--adapter {params.nextera} "        # -a: Sequence of an adapter ligated to the 3' end of the first read
+        "-A {params.nextera} "               # -A: 3' adapter to be removed from second read in a pair
+        "--adapter {params.small} "          # -a: Sequence of an adapter ligated to the 3' end of the first read
+        "-A {params.small} "                 # -A: 3' adapter to be removed from second read in a pair
+        "--output {output.fwdreads} "        # -o: Write trimmed reads to FILE
+        "--paired-output {output.revreads} " # -p: Write second read in a pair to FILE
+        "{input.fwdreads} "                  # Input forward reads R1.fastq
+        "{input.revreads} "                  # Input reverse reads R2.fastq
+        "&> {log}"                           # Add redirection for log
 
 ###############################################################################
 rule multiqc_reports_aggregation:
     # Aim: aggregates bioinformatics analyses results into a single report
     # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
-    priority:1
+    priority: 5
     message:
         "MultiQC reports aggregating"
     conda:
