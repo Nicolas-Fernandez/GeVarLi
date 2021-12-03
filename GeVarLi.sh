@@ -123,7 +123,8 @@ echo "---------------------------------"
 for fasta in ${workdir}/results/bcftools/*_consensus.fasta ; do
     sample=$(basename $fasta \_consensus\.fasta) ;
     echo $sample ;
-    sed "s/^>.*$/>$sample/" $fasta > ${workdir}/tmp && mv ${workdir}/tmp $fasta ;
+    sed "s/^>.*$/>$sample/" $fasta > ${workdir}/results/$sample.tmp &&
+	mv ${workdir}/results/$sample.tmp $fasta ;
 done
 echo "________________________________________________________________________"
 
@@ -132,7 +133,7 @@ echo ""
 echo "##### CONCATENATE FASTA FILES ######"
 echo "------------------------------------"
 
-cat ${workdir}/results/consensus_fasta/*_consensus.fasta > ${workdir}/results/All_cconsensus_sequences.fasta
+cat ${workdir}/results/bcftools/*_consensus.fasta > ${workdir}/results/All_cconsensus_sequences.fasta
 
 echo "________________________________________________________________________"
 
@@ -145,7 +146,8 @@ for report in ${workdir}/results/pangolin/*_lineage_report.csv ; do
     sample=$(basename $report \_lineage\_report\.csv) ;
     echo $sample ;
     taxon=$(awk '{if(NR==2){ print $1; }}' $report) ;
-    sed "s/$taxon/$sample,/" $report > ${workdir}/tmp && mv ${workdir}/tmp $report ;
+    sed "s/$taxon/$sample,/" $report > ${workdir}/results/$sample.tmp &&
+	mv ${workdir}/results/$sample.tmp $report ;
 done
 
 echo "________________________________________________________________________"
@@ -156,8 +158,9 @@ echo "##### CONCATENATE PANGOLIN REPORTS ######"
 echo "-----------------------------------------"
 
 cat ${workdir}/results/pangolin/*_lineage_report.csv > ${workdir}/results/All_Pangolin_lineage_reports.csv
-awk "NR==1 || NR%2==0" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/tmp && mv ${workdir}/tmp ${workdir}/results/All_Pangolin_lineage_reports.csv
-sed "s/,/\t/g" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/resuls/All_pangolin_lineage_reports.tsv
+awk "NR==1 || NR%2==0" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/results/Pangolin.tmp &&
+    mv ${workdir}/results/Pangolin.tmp ${workdir}/results/All_Pangolin_lineage_reports.csv
+sed "s/,/\t/g" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/results/All_pangolin_lineage_reports.tsv
 
 echo "________________________________________________________________________"
 
