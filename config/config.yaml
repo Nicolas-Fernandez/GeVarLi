@@ -2,10 +2,10 @@
 ###############################################################################
 # Author: Nicolas Fernandez
 # Affiliation: IRD_TransVIHMI
-# Aim: Config file for the SARS-CoV-2 Genome Assembling Pipeline (GeVarLi)
+# Aim: Config file SARS-CoV-2 GEnome assembling, VARiant analysis and LIneage (pangolin) calling pipeline
 # Date: 2021.10.12
 # Use: Edit or (de)comment values you want modify
-# Latest modification: 2021.11.26
+# Latest modification: 2021.12.08
 # Todo: ...
 
 ###############################################################################
@@ -16,8 +16,9 @@ resources:
   mem_mb: 64000 # mem in Mb
   mem_gb: 64    # mem in Gb
   time: 1140    # time in Min
-  tmpdir: '../' # temporary directory (local)
-  #tmpdir: '/scratch' # temporary directory (scratch)
+  tmpdir: '$TMPDIR'  # temporary directory (default $TMPDIR)
+  #tmpdir: '.'        # temporary directory (local)
+  #tmpdir: '/scratch' # temporary directory (HPC)
    
 ## ENVIRONNEMENTS ------------------------------------------------------------------------------------
 conda:
@@ -34,80 +35,60 @@ conda:
   lofreq:       '../envs/lofreq-2.1.5.yaml'
   pangolin:     '../envs/pangolin-3.1.16.yaml'
 
-## MAPPER --------------------------------------------------------------------------------------------
-mapper: # Choose (de/comment) one or both mappers
-  - bowtie2 # required choosing sensitivity
+## ALIGNER --------------------------------------------------------------------------------------------
+aligner: # Choose (de/comment) one or both aligners
   - bwa     # fast
-
+  #- bowtie2 # sensitivity requiried, see below "Bowtie2" options
+  
 ## CONSENSUS -----------------------------------------------------------------------------------------
 consensus:
-  reference: # Choose (de/comment) one unique reference
-    - 'resources/genomes/Wuhan_WIV04_NC_045512.2_2019.fasta' # SARS-CoV-2 Wuhan WIV04 NC_045512.2 2019
-    #- 'resources/genomes/HXB2.fasta'                         # HIV HXB2
-    #- 'resources/genomes/ZEBOV.fasta'                        # Ebola ZEBOV
-  mincov: # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
-    - '5'
-    - '10'
-    - '20'
-    - '30'
-    - '40'
-    - '50'
-    - '100'
+  reference: # Choose (de/comment) or add one unique reference
+    - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
+  mincov: '10' # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
 
 ## INDEL ---------------------------------------------------------------------------------------------
 indel:
-  covmin: '1'  # Minimum allele freq allowed (<1=off) (FLOAT)
-  afmin: '0.5' # Minimum coverage allowed (<1=off) (INT)
-
-## BOWTIE2 -------------------------------------------------------------------------------------------
-bowtie2:
-  index: # Choose (de/comment) one unique reference
-    - 'resources/databases/bowtie2/SARS-CoV-2/Wuhan_WIV04_NC_045512.2_2019' # SARS-CoV-2 Wuhan WIV04 2019
-    #- 'resources/databases/bowtie2/HIV/HXB2'                                # HIV HXB2
-    #- 'resources/databases/bowtie2/Ebola/ZEBOV'                             # Ebola ZEBOV
-  sensitivity: # Choose (de/comment) one unique sensitivity preset
-    - '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
-    - '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-    - '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
-    - '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
+  covmin: '10'  # Minimum allele freq allowed (<1=off) (FLOAT)
+  afmin: '0.2' # Minimum coverage allowed (<1=off) (INT)
 
 ## BWA ------------------------------------------------------------------------------------------------
 bwa:
-  index: # Choose (de/comment) one unique reference
-    - 'resources/databases/bwa/SARS-CoV-2/Wuhan_WIV04_NC_045512.2_2019' # SARS-CoV-2 Wuhan WIV04 2019
-    #- 'resources/databases/bwa/HIV/HXB2'                                # HIV HXB2
-    #- 'resources/databases/bwa/Ebola/ZEBOV'                             # Ebola ZEBOV
+  index: # Choose (de/comment) or add one unique bwa indexes
+    - 'resources/databases/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
+
+## BOWTIE2 -------------------------------------------------------------------------------------------
+bowtie2:
+  index: # Choose (de/comment) or add one unique bowtie2 indexes
+    - 'resources/databases/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
+  sensitivity: # Choose (de/comment) one unique sensitivity preset
+    #- '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
+    #- '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
+    - '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
+    #- '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
 
 ## SICKLE-TRIM ---------------------------------------------------------------------------------------
 sickle-trim:
-  command: # choose (de/comment) one unique command, 
-    #- 'se' # if single-end sequence
-    - 'pe' # if paired-end sequence
-  encoding: # choose one
-    - 'sanger'   # if sanger   (CASAVA >= 1.8)
-    #- 'illumina' # if illumina (CASAVA 1.3 to 1.7)
-    #- 'solexa'   # if solexa   (CASAVA < 1.3)
-  quality: '30'   # phred score limit
-  length: '25'    # read length limit, after trim
+  command: 'pe' # should be 'pe' if paired-end sequences (default) or 'se' if single-end sequences
+  encoding: # choose one unique encoding (sould be 'sanger')
+    - 'sanger'   # CASAVA >= 1.8 for 'recent' Illumina (default)
+    #- 'illumina' # CASAVA 1.3 to 1.7 for 'old' Illumina
+    #- 'solexa'   # CASAVA < 1.3 for Solexa
+  quality: '30'   # phred score limit (default: 30)
+  length: '25'    # read length limit after trim (default: 25)
 
 ## CUTADAPT ------------------------------------------------------------------------------------------
 cutadapt:
-  length: '25' # Discard reads shorter than 'length', after trim
+  length: '25' # Discard reads shorter than 'length' after trim (default: 25)
   kits:        # Sequence of an adapter ligated to the 3' end of the first read
     truseq:      'AGATCGGAAGAGC'                     # Illumina TruSeq / ScriptSeq based kits libraries
     nextera:     'CTGTCTCTTATACACATC'                # Illumina Nextera / TruSight based kits libraries
     small:       'TGGAATTCTCGGGTGCCAAGG'             # Illumina Small based kits libraries
-    #TruSeqR1:    'AGATCGGAAGAGCACACGTCTGAACTCCAGTCA' # TruSeq-LT and TruSeq-HT based kits R1
-    #TruSeqR2:    'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT' # TruSeq-LT and TruSeq-HT based kits R2
-    #ScriptSeqR1: 'AGATCGGAAGAGCACACGTCTGAAC'         # ScriptSeq and TruSeq DNA Methylation based kits R1
-    #ScriptSeqR2: 'AGATCGGAAGAGCGTCGTGTAGGGA'         # ScriptSeq and TruSeq DNA Methylation based kits R2
-    #TruSeqRibo:  'AGATCGGAAGAGCACACGTCT'             # TruSeq Ribo Profile based kits
 
 ## FASTQSCREEN ---------------------------------------------------------------------------------------
 fastq-screen:
   config: 'config/fastq-screen.conf' # path to the fastq-screen configuration file
   subset: '1000' # Don't use the whole sequence file, but create a temporary dataset of this specified number of read (set '0' for all dataset)
-  aligner:
-    - 'bwa'     # Burrows-Wheeler Aligner, for mapping low-divergent sequences against a large reference genome
+  aligner: # Choose (de/comment) one unique aligner for fastq-screen (note: we provide bwa indexes, if bowtie, please use bowtie indexes and edit fastq-screen.conf file)
+    - 'bwa'     # Burrows-Wheeler Aligner, for mapping low-divergent sequences against a large reference genome (default)
     #- 'bowtie'  # Bowtie, an ultrafast, memory-efficient short read aligner
     #- 'bowtie2' # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences
