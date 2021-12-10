@@ -4,9 +4,11 @@
 *#
 .DS_Store
 .snakemake
+*.fastq
+*.gz
+*.fastq.gz
 *.temp
 *.done
 *.pdf
 *.txt
 /results*
-/resources/reads*
