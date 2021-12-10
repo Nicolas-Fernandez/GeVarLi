@@ -4,7 +4,6 @@
 echo ""
 echo "##### ABOUT #####"
 echo "-----------------"
-
 echo "Name: GeVarLi pipeline"
 echo "Author: Nicolas Fernandez"
 echo "Affiliation: IRD_U233_TransVIHMI"
@@ -13,15 +12,15 @@ echo "Date: 2021.10.12"
 echo "Run: snakemake -s path/to/gevarli.smk --cores --use-conda"
 echo "Latest modification: 2021.12.08"
 echo "Todo: ..."
-
 echo "________________________________________________________________________"
 
 ###### Hardware check ######
 echo ""
 echo "##### HARDWARE #####"
 echo "--------------------"
-time (
-
+echo ""
+time(
+    
 physicalcpu=$(sysctl -n hw.physicalcpu)     # Get physical cpu
 echo "Physical CPU: ${physicalcpu}"         # Print physical cpu
 
@@ -40,10 +39,10 @@ echo "##### WORKING DIRECTORY #####"
 echo "-----------------------------"
 
 workdir=${0%/*}
-echo "CWD: ${workdir}/"
+echo "Working directory: ${workdir}/"
 
-fastq=$(ls -l ${workdir}/resources/reads/*fastq.gz | wc -l)
-echo "Files: ${fastq}"
+fastq=$(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l)
+echo "Fastq files: ${fastq}"
 
 echo "________________________________________________________________________"
 
@@ -157,21 +156,21 @@ sed "s/,/\t/g" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/
 
 echo "________________________________________________________________________"
 
+###### Clean End ######
+echo ""
+echo "##### SCRIPT END #####"
+echo "----------------------"
+
+find ${workdir}/results/ -type f -empty -print -delete # Remove empty file (like empty log)
+find ${workdir}/results/ -type d -empty -print -delete # Remove empty directory
+
+echo "________________________________________________________________________"
+
 ###### Report time ######
 echo ""
 echo "##### TIMER #####"
 echo "-----------------"
 echo "Processing time:"
 )
-
-echo "________________________________________________________________________"
-
-###### End ######
-echo ""
-echo "##### SCRIPT END #####"
-echo "----------------------"
-
-find ${workdir}/results -type f -empty -print -delete # Remove empty file (like empty log)
-find ${workdir}/results -type d -empty -print -delete # Remove empty directory
 
 echo "________________________________________________________________________"

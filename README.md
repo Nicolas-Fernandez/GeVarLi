@@ -98,14 +98,14 @@ Authenticate with GitLab by following the instructions in the [SSH documentation
 ```shell
 git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 mv GeVarLi_Pipeline GeVarLi_Pipeline
-cd GeVarLi_Pipeline
+cd ./GeVarLi_Pipeline
 ```
 
 Clone with **HTTPS** when you want to authenticate each time you perform an operation between your computer and GitLab  
 ```shell
 git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 mv GeVarLi_Pipeline GeVarLi_Pipeline
-cd GeVarLi_Pipeline
+cd ./GeVarLi_Pipeline
 ```
 
 
