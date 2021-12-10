@@ -5,13 +5,20 @@
 
 GeVarLi check NGS (illumina) reads quality and clean it if needed, using: 
 
-- FastQC to check global quality
-- FastqScreen to check putative contamination(s)
-- MultiQC to generate HTML reports  
-- Cutadapts to trim NGS sequencing adapters  
-- Sickle-trim to trim reads on base-calling quality score  
+- **FastQC** to check global quality
+- **FastqScreen** to check putative contamination(s)
+- **MultiQC** to generate HTML reports  
 
-GeVarLi ...
+- **CutAdapts** to trim NGS sequencing adapters  
+- **SickleTrim** to trim reads on base-calling quality score  
+
+GeVarLi align cleaned reads againt reference genome, with bwa or bowtie2 or both
+
+- **1** mark duplicated reads
+- **2** caclul genome coverage
+- **3** variants calling
+- **4** assemble consensus sequence
+- **5** pangolin leanage calling
 
 
 ## Badges ##
@@ -31,6 +38,8 @@ GeVarLi ...
 
 
 ## Visuals ##
+
+![Image of download button](./visuals/rulegraph.png)  
 
 _Good idea to include screenshots or GIFs (see ttygif or Asciinema)_  
 
@@ -61,16 +70,17 @@ rm Miniconda3-latest-MacOSX-x86_64.sh
 
 ### Snakemake _(prior!)_ ###
 
-Install **Snakemake** (_i.e. v.5.11.2_) using Conda package management system  
+Install **Snakemake** (_i.e. v.6.12.1_) using Conda package management system  
 _Follow the prompts on the installer screens_  
 ```shell
-conda install -c bioconda -c conda-forge snakemake
+conda install -n base -c conda-forge mamba
+mamba install -c conda-forge -c bioconda snakemake
 ```
 
 
 ### GeVarLi ###
 
-**Download** _OR_ clone the **Reads Quality Control Pipeline** project  
+**Download** _OR_ **Clone** the **GeVarLi pipeline** project  
 
 
 #### Download ####
@@ -137,7 +147,7 @@ A terminal will open. you can close it at the end.
 
 Yours results are available in results directory:
 
-- ... TODO ...
+- **... TODO ...** with **CHRISTELLE** 
 
 
 ###  Configuration ###
@@ -145,17 +155,26 @@ Yours results are available in results directory:
 #### Resources ####
 
 Edit to match your hardware configuration  
-
+- **cpus**:
+- **mem_mb**:
+- **mem_gb**:
+- **time**:
+- **tmpdir**:
 
 #### Environments ####
 
 Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-version.yaml files
 
 
-#### Cutadapt ####
+#### Aligner ####
 
-- **length**: Discard reads shorter than length, after trim (default config: '75')
-- **kit**: Sequence of an adapter ligated to the 3' end of the first read (default config: truseq,  nextera and small)  
+#### Consensus ####
+
+#### InDel ####
+
+#### BWA ####
+
+#### Bowtie2 ####
 
 #### Sickle-trim ####
 
@@ -164,6 +183,10 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
 - **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit (default config: '30')
 - **length**: Read length limit, after trim (default config: '75')
 
+#### Cutadapt ####
+
+- **length**: Discard reads shorter than length, after trim (default config: '25')
+- **kit**: Sequence of an adapter ligated to the 3' end of the first read (default config: Truseq, Nextera and Small Illumina kits)  
 
 #### Fastq-Screen #####
 

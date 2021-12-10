@@ -19,7 +19,6 @@ echo ""
 echo "##### HARDWARE #####"
 echo "--------------------"
 echo ""
-time(
     
 physicalcpu=$(sysctl -n hw.physicalcpu)     # Get physical cpu
 echo "Physical CPU: ${physicalcpu}"         # Print physical cpu
@@ -43,6 +42,10 @@ echo "Working directory: ${workdir}/"
 
 fastq=$(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l)
 echo "Fastq files: ${fastq}"
+
+seconds=0
+timestampstart=$(date +'%Y-%m-%d %H:%M')
+echo "Start: ${timestampstart}"
 
 echo "________________________________________________________________________"
 
@@ -131,6 +134,11 @@ for graph in ${graphList} ; do
     done ;
 done
 
+snakemake \
+    --directory ${workdir} \
+    --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --summary > ${workdir}/results/graphs/summary.txt
+
 echo "________________________________________________________________________"
 
 ###### Concatenate all consensus fasta in one unique fasta file ######
@@ -170,7 +178,11 @@ echo "________________________________________________________________________"
 echo ""
 echo "##### TIMER #####"
 echo "-----------------"
-echo "Processing time:"
-)
+
+timestampend=$(date +'%Y-%m-%d %H:%M')
+echo "End: ${timestampend}"
+
+elapsedtime=${seconds}
+echo "Processing time: ${elapsedtime} elapsed seconds"
 
 echo "________________________________________________________________________"

@@ -12,9 +12,9 @@
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 12      # cpus
-  mem_mb: 64000 # mem in Mb
-  mem_gb: 64    # mem in Gb
+  cpus: 8      # cpus
+  mem_mb: 16000 # mem in Mb
+  mem_gb: 16    # mem in Gb
   time: 1140    # time in Min
   tmpdir: '$TMPDIR'  # temporary directory (default $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
@@ -38,14 +38,19 @@ conda:
 ## ALIGNER --------------------------------------------------------------------------------------------
 aligner: # Choose (de/comment) one or both aligners
   - bwa     # fast
-  - bowtie2 # sensitivity requiried, see below "Bowtie2" options
+  #- bowtie2 # sensitivity requiried, see below "Bowtie2" options
   
 ## CONSENSUS -----------------------------------------------------------------------------------------
 consensus:
   reference: # Choose (de/comment) or add one unique reference
     - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
-  mincov: '30' # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
-
+  mincov: # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
+  #- '0' # Only for testing !
+  #- '1' # Only for testing ! (default DNAstar)
+  #- '5' # Only for testing !
+  - '10' # Only for testing ! (default CNR Lyon)
+  #- '30' # Only for testing ! (recomanded)
+  
 ## INDEL ---------------------------------------------------------------------------------------------
 indel:
   covmin: '10'  # Minimum allele freq allowed (<1=off) (FLOAT)
