@@ -38,13 +38,13 @@ conda:
 ## ALIGNER --------------------------------------------------------------------------------------------
 aligner: # Choose (de/comment) one or both aligners
   - bwa     # fast
-  #- bowtie2 # sensitivity requiried, see below "Bowtie2" options
+  - bowtie2 # sensitivity requiried, see below "Bowtie2" options
   
 ## CONSENSUS -----------------------------------------------------------------------------------------
 consensus:
   reference: # Choose (de/comment) or add one unique reference
     - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
-  mincov: '10' # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
+  mincov: '30' # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
 
 ## INDEL ---------------------------------------------------------------------------------------------
 indel:
@@ -63,8 +63,8 @@ bowtie2:
   sensitivity: # Choose (de/comment) one unique sensitivity preset
     #- '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
     #- '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-    - '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
-    #- '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
+    # '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
+    - '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
 
 ## SICKLE-TRIM ---------------------------------------------------------------------------------------
 sickle-trim:

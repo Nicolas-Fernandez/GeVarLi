@@ -161,8 +161,8 @@ echo ""
 echo "##### SCRIPT END #####"
 echo "----------------------"
 
-find ${workdir}/results/ -type f -empty -print -delete # Remove empty file (like empty log)
-find ${workdir}/results/ -type d -empty -print -delete # Remove empty directory
+find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
+find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
 echo "________________________________________________________________________"
 
