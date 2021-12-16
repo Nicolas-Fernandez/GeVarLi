@@ -2,7 +2,7 @@
 # Name: GeVarLi pipeline
 # Author: Nicolas Fernandez
 # Affiliation: IRD_U233_TransVIHMI
-# Aim: SARS-CoV-2 GEnome assembling, VARiant analysis and LIneage (pangolin) calling pipeline
+# Aim: SARS-CoV-2 GEnome assembling, Variant analysis and LIneage (pangolin) calling pipeline
 # Date: 2021.10.12
 # Run: snakemake -s path/to/gevarli.smk --cores --use-conda 
 # Latest modification: 2021.12.08
@@ -54,7 +54,7 @@ SMALL = config["cutadapt"]["kits"]["small"]     # Cutadapt --adapter Illumina Sm
 
 COMMAND = config["sickle-trim"]["command"]   # Sickle-trim command
 ENCODING = config["sickle-trim"]["encoding"] # Sickle-trim --qual-type 
-QUALITY = config["sickle-trim"]["quality"]   # Sickle-trim --qual-threshold
+QUALITYS = config["sickle-trim"]["quality"]  # Sickle-trim --qual-threshold
 LENGTHS = config["sickle-trim"]["length"]    # Sickle-trim --length-treshold
 
 CONFIG = config["fastq-screen"]["config"]   # Fastq-screen --conf
@@ -67,6 +67,9 @@ INDEXBT2 = config["bowtie2"]["index"]          # bowtie2 path to indexed genome 
 SENSITIVITY = config["bowtie2"]["sensitivity"] # bowtie2 sensitivity preset
 INDEXBWA = config["bwa"]["index"]              # bwa path to indexed genome reference
 
+QUALITYD = config["samtools"]["quality"] # Samtools depth qual threshold
+LENGTHD = config["samtools"]["length"]   # Samtools depth length threshold
+
 REFERENCE = config["consensus"]["reference"] # Genome reference fasta sequence
 MINCOV = config["consensus"]["mincov"]       # Minimum coverage for masking regions in consensus sequence
 
@@ -76,9 +79,11 @@ AFMIN = config["indel"]["afmin"]   # Minimum allele freq allowed
 ###############################################################################
 rule all:
     input:
-        lineage = expand("results/pangolin/{sample}_{aligner}_{mincov}_lineage_report.csv",
-                         sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        multiqc = "results/quality/multiqc/"
+        multiqc = "results/quality/multiqc/",
+        depth = expand("results/mapping/{sample}_{aligner}_depth.txt",
+                       sample = SAMPLE, aligner = ALIGNER),
+        lineage = expand("results/lineage/{sample}_{aligner}_{mincov}_pangolin-report.csv",
+                         sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
 
 ###############################################################################
 rule pangolin_lineage:
@@ -93,17 +98,17 @@ rule pangolin_lineage:
     params:
         tmpdir = TMPDIR
     input:
-        consensus = "results/bcftools/{sample}_{aligner}_{mincov}_consensus.fasta"
+        consensus = "results/assembling/{sample}_{aligner}_{mincov}_consensus.fasta"
     output:
-        lintmp = "results/pangolin/{sample}_{aligner}_{mincov}_lineage_report.csv"
+        lineage = "results/lineage/{sample}_{aligner}_{mincov}_pangolin-report.csv"
     log:
-        "results/reports/pangolin/{sample}_{aligner}_{mincov}_lineage.log"
+        "results/reports/lineage/{sample}_{aligner}_{mincov}_lineage.log"
     shell:
         "pangolin "                  # Pangolinn Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "          # Query fasta file of sequences to analyse
         "--threads {resources.cpus} " # -t: Number of threads
         "--tempdir {params.tmpdir} "  # Specify where you want the temp stuff to go (default: $TMPDIR)
-        "--outfile {output.lintmp} "  # Optional output file name (default: lineage_report.csv)
+        "--outfile {output.lineage} " # Optional output file name (default: lineage_report.csv)
         "&> {log}"                    # Log redirection
 
 ###############################################################################
@@ -113,15 +118,15 @@ rule sed_rename_headers:
     message:
         "Sed rename header for {wildcards.sample} sample consensus fasta ({wildcards.aligner}-{wildcards.mincov})"
     input:
-        contmp = "results/bcftools/{sample}_{aligner}_{mincov}_consensus.fasta.tmp"
+        constmp = "results/assembling/{sample}_{aligner}_{mincov}_consensus.fasta.tmp"
     output:
-        consensus = "results/bcftools/{sample}_{aligner}_{mincov}_consensus.fasta"
+        consensus = "results/assembling/{sample}_{aligner}_{mincov}_consensus.fasta"
     log:
         "results/reports/sed/{sample}_{aligner}_{mincov}_fasta-header.log"
     shell:
         "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
         "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.mincov}/' "
-        "{input.contmp} "        # Input file
+        "{input.constmp} "       # Input file
         "1> {output.consensus} " # Output file
         "2> {log}"               # Log redirection
 
@@ -134,11 +139,11 @@ rule bcftools_consensus:
     conda:
         BCFTOOLS
     input:
-        maskedref = "results/bedtools/{sample}_{aligner}_{mincov}_maskedref.fasta",
-        indelfilt = "results/indel/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz",
-        index = "results/indel/{sample}_{aligner}_{mincov}_indelfilt.tbi"
+        maskedref = "results/genomecov/{sample}_{aligner}_{mincov}_maskedref.fasta",
+        indelfilt = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz",
+        index = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.tbi"
     output:
-        contmp = temp("results/bcftools/{sample}_{aligner}_{mincov}_consensus.fasta.tmp")
+        constmp = temp("results/assembling/{sample}_{aligner}_{mincov}_consensus.fasta.tmp")
     log:
         "results/reports/bcftools/{sample}_{aligner}_{mincov}_consensus.log"
     shell:
@@ -146,7 +151,7 @@ rule bcftools_consensus:
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
         "--fasta-ref {input.maskedref} "  # -f: reference sequence in fasta format
         "{input.indelfilt} "              # VCF variants file
-        "--output {output.contmp} "       # -o: write output to a file (default: standard output)
+        "--output {output.constmp} "      # -o: write output to a file (default: standard output)
         "2> {log}"                        # Log redirection
 
 ###############################################################################
@@ -158,9 +163,9 @@ rule tabix_tabarch_indexing:
     conda:
         SAMTOOLS
     input:
-        bgzip = "results/indel/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz"
+        bgzip = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz"
     output:
-        index = "results/indel/{sample}_{aligner}_{mincov}_indelfilt.tbi"
+        index = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.tbi"
     log:
         "results/reports/tabix/{sample}_{aligner}_{mincov}_indelarch-index.log"
     shell:
@@ -180,9 +185,9 @@ rule bgzip_indel_compressing:
     resources:
         cpus = CPUS
     input:
-        indelfilt = "results/indel/{sample}_{aligner}_{mincov}_indelfilt.vcf"
+        indelfilt = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.vcf"
     output:
-        bgzip = "results/indel/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz"
+        bgzip = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz"
     log:
         "results/reports/bgzip/{sample}_{aligner}_{mincov}_indel-bgz.log"
     shell:
@@ -206,9 +211,9 @@ rule lofreq_indel_filtering:
         covmin = COVMIN,
         afmin = AFMIN
     input:
-        indelcall = "results/indel/{sample}_{aligner}_{mincov}_indelcall.vcf"
+        indelcall = "results/variants/{sample}_{aligner}_{mincov}_indelcall.vcf"
     output:
-        indelfilt = temp("results/indel/{sample}_{aligner}_{mincov}_indelfilt.vcf")
+        indelfilt = "results/variants/{sample}_{aligner}_{mincov}_indelfilt.vcf"
     log:
         "results/reports/lofreq/{sample}_{aligner}_{mincov}_indelfilt.log"
     shell:
@@ -231,11 +236,11 @@ rule lofreq_indel_calling:
     resources:
         cpus = CPUS
     input:
-        maskedref = "results/bedtools/{sample}_{aligner}_{mincov}_maskedref.fasta",
-        indelqual = "results/indel/{sample}_{aligner}_{mincov}_indelqual.bam",
-        index = "results/indel/{sample}_{aligner}_{mincov}_indelqual.bai"
+        maskedref = "results/genomecov/{sample}_{aligner}_{mincov}_maskedref.fasta",
+        indelqual = "results/variants/{sample}_{aligner}_{mincov}_indelqual.bam",
+        index = "results/variants/{sample}_{aligner}_{mincov}_indelqual.bai"
     output:
-        indelcall = temp("results/indel/{sample}_{aligner}_{mincov}_indelcall.vcf")
+        indelcall = "results/variants/{sample}_{aligner}_{mincov}_indelcall.vcf"
     log:
         "results/reports/lofreq/{sample}_{aligner}_{mincov}_indelcall.log"
     shell:
@@ -249,7 +254,7 @@ rule lofreq_indel_calling:
         "&> {log}"                       # Log redirection 
 
 ###############################################################################
-rule samtools_indel_indexing: 
+rule samtools_indel_indexing:
     # Aim: indexing insertion/deletion qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDELQUAL.bam] [INDEX.bai]
     message:
@@ -259,9 +264,9 @@ rule samtools_indel_indexing:
     resources:
        cpus = CPUS
     input:
-        indelqual = "results/indel/{sample}_{aligner}_{mincov}_indelqual.bam"
+        indelqual = "results/variants/{sample}_{aligner}_{mincov}_indelqual.bam"
     output:
-        index = "results/indel/{sample}_{aligner}_{mincov}_indelqual.bai"
+        index = "results/variants/{sample}_{aligner}_{mincov}_indelqual.bai"
     log:
         "results/reports/samtools/{sample}_{aligner}_{mincov}_indelqual-index.log"
     shell:
@@ -282,10 +287,10 @@ rule lofreq_indel_qualities:
     conda:
         LOFREQ
     input:
-        maskedref = "results/bedtools/{sample}_{aligner}_{mincov}_maskedref.fasta",
-        markdup = "results/samtools/{sample}_{aligner}_markdup.bam"
+        maskedref = "results/genomecov/{sample}_{aligner}_{mincov}_maskedref.fasta",
+        markdup = "results/mapping/{sample}_{aligner}_markdup.bam"
     output:
-        indelqual = "results/indel/{sample}_{aligner}_{mincov}_indelqual.bam"
+        indelqual = "results/variants/{sample}_{aligner}_{mincov}_indelqual.bam"
     log:
         "results/reports/lofreq/{sample}_{aligner}_{mincov}_indelqual.log"
     shell:
@@ -308,9 +313,9 @@ rule bedtools_masking:
     params:
         reference = REFERENCE
     input:
-        lowcovmask = "results/bedtools/{sample}_{aligner}_{mincov}_lowcovmask.bed"
+        lowcovmask = "results/genomecov/{sample}_{aligner}_{mincov}_lowcovmask.bed"
     output:
-        maskedref = "results/bedtools/{sample}_{aligner}_{mincov}_maskedref.fasta"
+        maskedref = "results/genomecov/{sample}_{aligner}_{mincov}_maskedref.fasta"
     log:
         "results/reports/bedtools/{sample}_{aligner}_{mincov}_masking.log"
     shell:
@@ -329,9 +334,9 @@ rule bedtools_merged_mask:
     conda:
         BEDTOOLS
     input:
-        mincovfilt = "results/bedtools/{sample}_{aligner}_{mincov}_mincovfilt.bed"
+        mincovfilt = "results/genomecov/{sample}_{aligner}_{mincov}-mincovfilt.bed"
     output:
-        lowcovmask = temp("results/bedtools/{sample}_{aligner}_{mincov}_lowcovmask.bed")
+        lowcovmask = "results/genomecov/{sample}_{aligner}_{mincov}_lowcovmask.bed"
     log:
         "results/reports/bedtools/{sample}_{aligner}_{mincov}_merging.log"
     shell:
@@ -349,11 +354,11 @@ rule awk_mincovfilt:
     params:
         mincov = MINCOV # if mincov as one fixed parameter, in config file
     input:
-        genomecov = "results/bedtools/{sample}_{aligner}_genomecov.bed"
+        genomecov = "results/genomecov/{sample}_{aligner}_genomecov.bed"
     output:
-        mincovfilt = temp("results/bedtools/{sample}_{aligner}_{mincov}_mincovfilt.bed")
+        mincovfilt = "results/genomecov/{sample}_{aligner}_{mincov}-mincovfilt.bed"
     log:
-        "results/reports/bedtools/{sample}_{aligner}_{mincov}_mincovfilt.log"
+        "results/reports/bedtools/{sample}_{aligner}_{mincov}-mincovfilt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
         #"'$4 < 10' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
@@ -372,10 +377,10 @@ rule bedtools_genomecov:
     conda:
         BEDTOOLS
     input:
-        markdup = "results/samtools/{sample}_{aligner}_markdup.bam",
-        index = "results/samtools/{sample}_{aligner}_markdup.bai"
+        markdup = "results/mapping/{sample}_{aligner}_markdup.bam",
+        index = "results/mapping/{sample}_{aligner}_markdup.bai"
     output:
-        genomecov = "results/bedtools/{sample}_{aligner}_genomecov.bed"
+        genomecov = "results/genomecov/{sample}_{aligner}_genomecov.bed"
     log:
         "results/reports/bedtools/{sample}_{aligner}_genomecov.log"
     shell:
@@ -386,7 +391,45 @@ rule bedtools_genomecov:
         "2> {log} "               # Log redirection
 
 ###############################################################################
-rule samtools_index_markdup: 
+rule samtools_depth:
+    # Aim: 
+    # Use: 
+    message:
+        "SamTools compute the depth BAM file {wildcards.sample} sample ({wildcards.aligner})"
+    conda:
+        SAMTOOLS
+    params:
+        quality = QUALITYD,
+        length = LENGTHD
+    input:
+        sorted = "results/mapping/{sample}_{aligner}_sorted.bam",
+        markdup = "results/mapping/{sample}_{aligner}_markdup.bam"
+    output:
+        depth = "results/mapping/{sample}_{aligner}_depth.txt"
+    log:
+        "results/reports/samtools/{sample}_{aligner}_depth.log"
+    shell:
+        "samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
+        "-a "                  # output all positions (including zero depth)
+        "-q {params.quality} " # base quality threshold (default: 0)
+        "-l {params.length} "  # read length threshold, ignore reads shorter than <int> (default: 0)
+        "{input.sorted} "      # Sorted bam input
+        "| "                   # PIPE 
+        """awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average_sorted = ",sum/NR; print "Stdev_sorted = ",sqrt(sumsq/NR - (sum/NR)**2)}}' """
+        "> {output.depth} "    # Depth_sorted output
+        "&& "                  # AND 
+        "samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
+        "-a "                  # output all positions (including zero depth)
+        "-q {params.quality} " # base quality threshold (default: 0)
+        "-l {params.length} "  # read length threshold, ignore reads shorter than <int> (default: 0)
+        "{input.markdup} "     # Markdup bam input
+        "| "                   # PIPE
+        """awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average_markdup = ",sum/NR; print "Stdev_markdup = ",sqrt(sumsq/NR - (sum/NR)**2)}}' """
+        ">> {output.depth} "   # Depth_markdup bam output
+        "2> {log}"             # Log redirection
+
+###############################################################################
+rule samtools_index_markdup:
     # Aim: indexing marked as duplicate BAM file
     # Use: samtools index -@ [THREADS] -b [MARKDUP.bam] [INDEX.bai]
     message:
@@ -396,21 +439,21 @@ rule samtools_index_markdup:
     resources:
        cpus = CPUS
     input:
-        markdup = "results/samtools/{sample}_{aligner}_markdup.bam"
+        markdup = "results/mapping/{sample}_{aligner}_markdup.bam"
     output:
-        index = "results/samtools/{sample}_{aligner}_markdup.bai"
+        index = "results/mapping/{sample}_{aligner}_markdup.bai"
     log:
         "results/reports/samtools/{sample}_{aligner}_markdup-index.log"
     shell:
-        "samtools index "            # Samtools index, tools for alignments in the SAM format with command to index alignment
-        "-@ {resources.cpus} "        # --threads: Number of additional threads to use (default: 1)
-        "-b "                         # -b: Generate BAI-format index for BAM files (default)
-        "{input.markdup} "            # Sorted bam input
-        "{output.index} "             # Markdup bam output
-        "&> {log}"                    # Log redirection 
+        "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
+        "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)
+        "-b "                  # -b: Generate BAI-format index for BAM files (default)
+        "{input.markdup} "     # Markdup bam input
+        "{output.index} "      # Markdup index output
+        "&> {log}"             # Log redirection
 
 ###############################################################################
-rule samtools_markdup: 
+rule samtools_markdup:
     # Aim: marking duplicate alignments
     # Use: samtools markdup -@ [THREADS] -r -s -O BAM [SORTED.bam] [MARKDUP.bam] 
     message:
@@ -420,9 +463,9 @@ rule samtools_markdup:
     resources:
        cpus = CPUS
     input:
-        sorted = "results/samtools/{sample}_{aligner}_sorted.bam"
+        sorted = "results/mapping/{sample}_{aligner}_sorted.bam"
     output:
-        markdup = "results/samtools/{sample}_{aligner}_markdup.bam"
+        markdup = "results/mapping/{sample}_{aligner}_markdup.bam"
     log:
         "results/reports/samtools/{sample}_{aligner}_markdup.log"
     shell:
@@ -436,7 +479,7 @@ rule samtools_markdup:
         "&> {log}"                    # Log redirection 
 
 ###############################################################################
-rule samtools_sorting: 
+rule samtools_sorting:
     # Aim: sorting
     # Use: samtools sort -@ [THREADS] -m [MEM] -T [TMPDIR] -O BAM -o [SORTED.bam] [FIXMATE.bam] 
     message:
@@ -449,11 +492,11 @@ rule samtools_sorting:
     params:
         tmpdir = TMPDIR
     input:
-        fixmate = "results/samtools/{sample}_{aligner}_fixmate.bam"
+        fixmate = "results/mapping/{sample}_{aligner}_fixmate.bam"
     output:
-        sorted = temp("results/samtools/{sample}_{aligner}_sorted.bam")
+        sorted = "results/mapping/{sample}_{aligner}_sorted.bam"
     log:
-        "results/reports/samtools/{sample}_{aligner}_sorting.log"
+        "results/reports/samtools/{sample}_{aligner}_sorted.log"
     shell:
         "samtools sort "              # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} "  # -@: Number of additional threads to use (default: 1)
@@ -465,7 +508,7 @@ rule samtools_sorting:
         "&> {log}"                     # Log redirection 
 
 ###############################################################################
-rule samtools_fixmate: 
+rule samtools_fixmate:
     # Aim: filling in mate coordinates
     # Use: samtools fixmate -@ [THREADS] -m -O BAM [SORTBYNAMES.bam] [FIXMATE.bam] 
     message:
@@ -475,9 +518,9 @@ rule samtools_fixmate:
     resources:
        cpus = CPUS
     input:
-        sortbynames = "results/samtools/{sample}_{aligner}_sortbynames.bam"
+        sortbynames = "results/mapping/{sample}_{aligner}_sortbynames.bam"
     output:
-        fixmate = temp("results/samtools/{sample}_{aligner}_fixmate.bam")
+        fixmate = "results/mapping/{sample}_{aligner}_fixmate.bam"
     log:
         "results/reports/samtools/{sample}_{aligner}_fixmate.log"
     shell:
@@ -490,7 +533,7 @@ rule samtools_fixmate:
         "&> {log}"                     # Log redirection 
 
 ###############################################################################
-rule samtools_sortbynames: 
+rule samtools_sortbynames:
     # Aim: sorting by names
     # Use: samtools sort -t [THREADS] -n -O BAM -o [SORTBYNAMES.bam] [MAPPED.sam]
     message:
@@ -501,11 +544,11 @@ rule samtools_sortbynames:
        cpus = CPUS,
        mem_gb = MEM_GB
     input:
-        mapped = "results/{aligner}/{sample}_mapped.sam"
+        mapped = "results/mapping/{sample}_{aligner}-mapped.sam"
     output:
-        sortbynames = temp("results/samtools/{sample}_{aligner}_sortbynames.bam")
+        sortbynames = "results/mapping/{sample}_{aligner}_sortbynames.bam"
     log:
-        "results/reports/samtools/{sample}_{aligner}_names-sorting.log"
+        "results/reports/samtools/{sample}_{aligner}_sortbynames.log"
     shell:
         "samtools sort "              # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} "  # -@: Number of additional threads to use (default: 1)
@@ -529,12 +572,12 @@ rule bwa_mapping:
     params:
         indexbwa = INDEXBWA
     input:
-        fwdreads = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
-        revreads = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz"
+        fwdreads = "results/reads/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
+        revreads = "results/reads/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = "results/bwa/{sample}_mapped.sam"
+        mapped = "results/mapping/{sample}_bwa-mapped.sam"
     log:
-        "results/reports/bwa/{sample}_mapping.log"
+        "results/reports/bwa/{sample}.log"
     shell:
         "bwa mem "             # BWA-MEM algorithm, performs local alignment.
         "-t {resources.cpus} "  # -t: Number of threads (default: 12)
@@ -559,12 +602,12 @@ rule bowtie2_mapping:
         indexbt2 = INDEXBT2,
         sensitivity = SENSITIVITY
     input:
-        fwdreads = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
-        revreads = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz"
+        fwdreads = "results/reads/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
+        revreads = "results/reads/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = "results/bowtie2/{sample}_mapped.sam"
+        mapped = "results/mapping/{sample}_bowtie2-mapped.sam"
     log:
-        "results/reports/bowtie2/{sample}_mapping.log"
+        "results/reports/bowtie2/{sample}.log"
     shell:
         "bowtie2 "                    # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.
         "--threads {resources.cpus} "  # -p: Number of alignment threads to launch (default: 1)
@@ -588,15 +631,15 @@ rule sickle_trim_quality:
     params:
         command = COMMAND,
         encoding = ENCODING,
-        quality = QUALITY,
+        quality = QUALITYS,
         length = LENGTHS
     input:
-        fwdreads = "results/reads/cutadapt/{sample}_adapt-removed_R1.fastq.gz",
-        revreads = "results/reads/cutadapt/{sample}_adapt-removed_R2.fastq.gz"
+        fwdreads = "results/reads/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
+        revreads = "results/reads/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
     output:
-        fwdreads = "results/reads/sickle/{sample}_quality-trimmed_R1.fastq.gz",
-        revreads = "results/reads/sickle/{sample}_quality-trimmed_R2.fastq.gz",
-        single = temp("results/reads/sickle/{sample}_quality-trimmed_SE.fastq.gz")
+        fwdreads = "results/reads/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
+        revreads = "results/reads/sickle/{sample}_sickle-trimmed_R2.fastq.gz",
+        single = temp("results/reads/sickle/{sample}_sickle-trimmed_SE.fastq.gz")
     log:
         "results/reports/sickle-trim/{sample}.log"
     shell:
@@ -633,8 +676,8 @@ rule cutadapt_adapters_removing:
         fwdreads = "resources/reads/{sample}_R1.fastq.gz",
         revreads = "resources/reads/{sample}_R2.fastq.gz"
     output:
-        fwdreads = temp("results/reads/cutadapt/{sample}_adapt-removed_R1.fastq.gz"),
-        revreads = temp("results/reads/cutadapt/{sample}_adapt-removed_R2.fastq.gz")
+        fwdreads = temp("results/reads/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz"),
+        revreads = temp("results/reads/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz")
     log:
         "results/reports/cutadapt/{sample}.log"
     shell:
@@ -658,7 +701,7 @@ rule cutadapt_adapters_removing:
 rule multiqc_reports_aggregation:
     # Aim: aggregates bioinformatics analyses results into a single report
     # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
-    priority: 5
+    #priority: 5
     message:
         "MultiQC reports aggregating"
     conda:
@@ -669,7 +712,7 @@ rule multiqc_reports_aggregation:
     output:
         multiqc = directory("results/quality/multiqc/")
     log:
-        "results/reports/multiqc/aggregation.log"
+        "results/reports/quality/multiqc.log"
     shell:
         "multiqc "                  # Multiqc, searches in given directories for analysis & compiles a HTML report
         "--quiet "                   # -q: Only show log warning
@@ -698,7 +741,7 @@ rule fastqscreen_contamination_checking:
     output:
         fastqscreen = directory("results/quality/fastq-screen/")
     log:
-        "results/reports/fastq-screen/reads-contamination.log"
+        "results/reports/quality/fastq-screen.log"
     shell:
         "fastq_screen "                 # FastqScreen, what did you expect ?
         "-q "                            # --quiet: Only show log warning
@@ -725,7 +768,7 @@ rule fastqc_quality_control:
     output:
         fastqc = directory("results/quality/fastqc/")
     log:
-        "results/reports/fastqc/reads-qualities.log"
+        "results/reports/quality/fastqc.log"
     shell:
         "mkdir -p {output.fastqc} " # (*) this directory must exist as the program will not create it
         "2> /dev/null && "          # in silence and then... 
