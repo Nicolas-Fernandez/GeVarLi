@@ -155,12 +155,12 @@ echo ""
 echo "##### CONCATENATE PANGOLIN REPORTS #####"
 echo "----------------------------------------"
 
-cat ${workdir}/results/pangolin/*_lineage_report.csv > ${workdir}/results/All_Pangolin_lineage_reports.csv
+cat ${workdir}/results/lineage/*_pangolin-report.csv > ${workdir}/results/All_lineage_pangolin-reports.csv
 
-awk "NR==1 || NR%2==0" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/results/Pangolin.tmp \
-    && mv ${workdir}/results/Pangolin.tmp ${workdir}/results/All_Pangolin_lineage_reports.csv
+awk "NR==1 || NR%2==0" ${workdir}/results/All_lineage_pangolin-reports.csv > ${workdir}/results/Pangolin.tmp \
+    && mv ${workdir}/results/Pangolin.tmp ${workdir}/results/All_lineage_pangolin-reports.csv
 
-sed "s/,/\t/g" ${workdir}/results/All_Pangolin_lineage_reports.csv > ${workdir}/results/All_pangolin_lineage_reports.tsv
+sed "s/,/\t/g" ${workdir}/results/All_lineage_pangolin-reports.csv > ${workdir}/results/All_lineage_pangolin-reports.tsv
 
 echo "________________________________________________________________________"
 
