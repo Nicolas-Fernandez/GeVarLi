@@ -109,7 +109,6 @@ snakemake \
     --printshellcmds \
     --keep-going \
     --rerun-incomplete \
-    --prioritize multiqc_reports_aggregation
 
 echo "________________________________________________________________________"
 
@@ -118,7 +117,7 @@ echo ""
 echo "##### SNAKEMAKE PIPELINE GRAPHS ######"
 echo "--------------------------------------"
 
-mkdir ${workdir}/results/graphs/ 2> /dev/null
+mkdir ${workdir}/results/10_Graphs/ 2> /dev/null
 
 graphList="dag rulegraph filegraph"
 extentionList="pdf png"
@@ -130,14 +129,14 @@ for graph in ${graphList} ; do
             --snakefile ${workdir}/workflow/rules/gevarli.smk \
             --${graph} | \
 	    dot -T${extention} > \
-		${workdir}/results/graphs/${graph}.${extention} ;
+		${workdir}/results/10_Graphs/${graph}.${extention} ;
     done ;
 done
 
 snakemake \
     --directory ${workdir} \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --summary > ${workdir}/results/graphs/summary.txt
+    --summary > ${workdir}/results/10_Graphs/summary.txt
 
 echo "________________________________________________________________________"
 
@@ -146,7 +145,7 @@ echo ""
 echo "##### CONCATENATE FASTA FILES #####"
 echo "-----------------------------------"
 
-cat ${workdir}/results/assembling/*_consensus.fasta > ${workdir}/results/All_cconsensus_sequences.fasta
+cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
 
 echo "________________________________________________________________________"
 
@@ -155,7 +154,7 @@ echo ""
 echo "##### CONCATENATE PANGOLIN REPORTS #####"
 echo "----------------------------------------"
 
-cat ${workdir}/results/lineage/*_pangolin-report.csv > ${workdir}/results/All_lineage_pangolin-reports.csv
+cat ${workdir}/results/06_Lineage/*_pangolin-report.csv > ${workdir}/results/All_lineage_pangolin-reports.csv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_lineage_pangolin-reports.csv > ${workdir}/results/Pangolin.tmp \
     && mv ${workdir}/results/Pangolin.tmp ${workdir}/results/All_lineage_pangolin-reports.csv
