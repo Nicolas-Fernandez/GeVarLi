@@ -146,7 +146,7 @@ echo ""
 echo "##### CONCATENATE FASTA FILES #####"
 echo "-----------------------------------"
 
-cat ${workdir}/results/bcftools/*_consensus.fasta > ${workdir}/results/All_cconsensus_sequences.fasta
+cat ${workdir}/results/assembling/*_consensus.fasta > ${workdir}/results/All_cconsensus_sequences.fasta
 
 echo "________________________________________________________________________"
 
