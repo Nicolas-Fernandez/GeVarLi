@@ -73,8 +73,8 @@ bowtie2:
 
 ## SAMTOOLS-DEPTH ------------------------------------------------------------------------------------
 samtools:
-  quality: '30' # base quality threshold (default: 30)
-  length: '25'  # read length threshold, ignore reads shorter than <int> (default: 25)
+  quality: '0' # base quality threshold (default: 30)
+  length: '0'  # read length threshold, ignore reads shorter than <int> (default: 25)
 
 ## SICKLE-TRIM ---------------------------------------------------------------------------------------
 sickle-trim:
