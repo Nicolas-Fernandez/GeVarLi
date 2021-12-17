@@ -140,7 +140,17 @@ snakemake \
 
 echo "________________________________________________________________________"
 
-###### Concatenate all consensus fasta in one unique fasta file ######
+###### Concatenate all mean depth coverage ######
+echo ""
+echo "##### CONCATENATE MEAN DEPTH #####"
+echo "----------------------------------"
+
+grep -E "Mean_depth:" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages.tsv
+grep -E "^Average =" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages_CHRISTELLE.tsv
+
+echo "________________________________________________________________________"
+
+###### Concatenate all consensus fasta ######
 echo ""
 echo "##### CONCATENATE FASTA FILES #####"
 echo "-----------------------------------"
@@ -154,12 +164,12 @@ echo ""
 echo "##### CONCATENATE PANGOLIN REPORTS #####"
 echo "----------------------------------------"
 
-cat ${workdir}/results/06_Lineage/*_pangolin-report.csv > ${workdir}/results/All_lineage_pangolin-reports.csv
+cat ${workdir}/results/06_Lineages/*_pangolin-report.csv > ${workdir}/results/All_lineages_pangolin-report.csv
 
-awk "NR==1 || NR%2==0" ${workdir}/results/All_lineage_pangolin-reports.csv > ${workdir}/results/Pangolin.tmp \
-    && mv ${workdir}/results/Pangolin.tmp ${workdir}/results/All_lineage_pangolin-reports.csv
+awk "NR==1 || NR%2==0" ${workdir}/results/All_lineages_pangolin-report.csv > ${workdir}/results/PANGO.tmp \
+    && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_lineages_pangolin-report.csv
 
-sed "s/,/\t/g" ${workdir}/results/All_lineage_pangolin-reports.csv > ${workdir}/results/All_lineage_pangolin-reports.tsv
+sed "s/,/\t/g" ${workdir}/results/All_lineages_pangolin-report.csv > ${workdir}/results/All_lineages_pangolin-report.tsv
 
 echo "________________________________________________________________________"
 

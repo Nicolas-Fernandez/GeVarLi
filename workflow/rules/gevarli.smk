@@ -6,7 +6,7 @@
 # Date: 2021.10.12
 # Run: snakemake -s path/to/gevarli.smk --cores --use-conda 
 # Latest modification: 2021.12.08
-# Todo: Add publications
+# Todo: Add % genome coverage @1x, @10x, @30x, ...
 
 ###############################################################################
 # PUBLICATIONS #
@@ -47,15 +47,15 @@ MEM_GB = config["resources"]["mem_gb"] # resources mem in Gb
 TMPDIR = config["resources"]["tmpdir"] # resources temporary directory
 
 # PATRAMETERS #
-LENGTHC = config["cutadapt"]["length"]          # Cutadapt --minimum-length
+LENGTHc = config["cutadapt"]["length"]          # Cutadapt --minimum-length
 TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
 NEXTERA = config["cutadapt"]["kits"]["nextera"] # Cutadapt --adapter Illumina Nextera
 SMALL = config["cutadapt"]["kits"]["small"]     # Cutadapt --adapter Illumina Small
 
 COMMAND = config["sickle-trim"]["command"]   # Sickle-trim command
 ENCODING = config["sickle-trim"]["encoding"] # Sickle-trim --qual-type 
-QUALITYS = config["sickle-trim"]["quality"]  # Sickle-trim --qual-threshold
-LENGTHS = config["sickle-trim"]["length"]    # Sickle-trim --length-treshold
+QUALITY = config["sickle-trim"]["quality"]   # Sickle-trim --qual-threshold
+LENGTH = config["sickle-trim"]["length"]     # Sickle-trim --length-treshold
 
 CONFIG = config["fastq-screen"]["config"]   # Fastq-screen --conf
 ALIGNER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
@@ -66,9 +66,6 @@ ALIGNER = config["aligner"] # Aligners (bowtie2 and/or bwa)
 INDEXBT2 = config["bowtie2"]["index"]          # bowtie2 path to indexed genome reference
 SENSITIVITY = config["bowtie2"]["sensitivity"] # bowtie2 sensitivity preset
 INDEXBWA = config["bwa"]["index"]              # bwa path to indexed genome reference
-
-QUALITYD = config["samtools"]["quality"] # Samtools depth qual threshold
-LENGTHD = config["samtools"]["length"]   # Samtools depth length threshold
 
 REFERENCE = config["consensus"]["reference"] # Genome reference fasta sequence
 MINCOV = config["consensus"]["mincov"]       # Minimum coverage for masking regions in consensus sequence
@@ -82,7 +79,7 @@ rule all:
         multiqc = "results/00_Quality_Control/multiqc/",
         depth = expand("results/03_Coverage/{sample}_{aligner}_depth.txt",
                        sample = SAMPLE, aligner = ALIGNER),
-        lineage = expand("results/06_Lineage/{sample}_{aligner}_{mincov}_pangolin-report.csv",
+        lineage = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
 
 ###############################################################################
@@ -100,7 +97,7 @@ rule pangolin_lineage:
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta"
     output:
-        lineage = "results/06_Lineage/{sample}_{aligner}_{mincov}_pangolin-report.csv"
+        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv"
     log:
         "results/11_Reports/pangolin/{sample}_{aligner}_{mincov}_lineage.log"
     shell:
@@ -369,8 +366,46 @@ rule awk_mincovfilt:
         "2> {log} "                  # Log redirection
 
 ###############################################################################
-rule bedtools_genomecov:
-    # Aim: computing genome coverage
+rule awk_genome_depth:
+    # Aim: computing genomme depth sequencing
+    # Use: awk print int([TotalBases] / [GenomeSize])
+    message:
+        "SamTools compute the depth BAM file {wildcards.sample} sample ({wildcards.aligner})"
+    conda:
+        SAMTOOLS
+    input:
+        sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam",
+        genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
+    output:
+        depth = "results/03_Coverage/{sample}_{aligner}_depth.txt"
+    log:
+        "results/11_Reports/samtools/{sample}_{aligner}_depth.log"
+    shell:
+        "awk '{{ "                                 # awk,
+        "totalBases += ( $3 - $2 ) * $4 ; "         #
+        "totalBasesSq += (( $3 - $2 ) * $4 )**2 ; " #
+        "genomeSize += ( $3 - $2 ) "                #
+        "}} END {{ "                                #
+        "print "                                    #
+        """ "Mean_depth:", "\t", """                #
+        """ int(totalBases / genomeSize), "\t", """ #
+        """ "Standar_deviation:", "\t", """         #
+        """ int(sqrt((totalBasesSq / genomeSize) - (totalBases / genomeSize)**2)) """ #
+        "}}' "                                      #
+        "{input.genomecov} "                        # Mardup bam input
+        "> {output.depth} "                         # Depth output
+        "&& "
+        "samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
+        "-a "                  # output all positions (including zero depth)
+        "{input.sorted} "      # Sorted bam input
+        "| "                   # PIPE 
+        """awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average =", "\t", sum/NR, "\t", "Stdev =", "\t", sqrt(sumsq/NR-(sum/NR)**2)}}' """
+        ">> {output.depth} "   # Depth_sorted output
+        "2> {log}"                             # Log redirection
+
+###############################################################################
+rule bedtools_genome_coverage:
+    # Aim: computing genome coverage sequencing
     # Use: bedtools genomecov [OPTIONS] -ibam [MARKDUP.bam]
     message:
         "BedTools computing genome coverage for {wildcards.sample} sample against reference genome sequence ({wildcards.aligner})"
@@ -389,44 +424,6 @@ rule bedtools_genomecov:
         "-ibam {input.markdup} "  # The input file is in BAM format, must be sorted by position
         "1> {output.genomecov} "  # BedGraph output
         "2> {log} "               # Log redirection
-
-###############################################################################
-rule samtools_depth:
-    # Aim: 
-    # Use: 
-    message:
-        "SamTools compute the depth BAM file {wildcards.sample} sample ({wildcards.aligner})"
-    conda:
-        SAMTOOLS
-    params:
-        quality = QUALITYD,
-        length = LENGTHD
-    input:
-        sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam",
-        markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam"
-    output:
-        depth = "results/03_Coverage/{sample}_{aligner}_depth.txt"
-    log:
-        "results/11_Reports/samtools/{sample}_{aligner}_depth.log"
-    shell:
-        "samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
-        "-a "                  # output all positions (including zero depth)
-        "-q {params.quality} " # base quality threshold (default: 0)
-        "-l {params.length} "  # read length threshold, ignore reads shorter than <int> (default: 0)
-        "{input.sorted} "      # Sorted bam input
-        "| "                   # PIPE 
-        """awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average_sorted = ",sum/NR ; print "Stdev_sorted = ", sqrt(sumsq/NR - (sum/NR)**2)}}' """
-        "> {output.depth} "    # Depth_sorted output
-        "&& "                  # AND 
-        "samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
-        "-a "                  # output all positions (including zero depth)
-        "-q {params.quality} " # base quality threshold (default: 0)
-        "-l {params.length} "  # read length threshold, ignore reads shorter than <int> (default: 0)
-        "{input.markdup} "     # Markdup bam input
-        "| "                   # PIPE
-        """awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average_markdup = ",sum/NR; print "Stdev_markdup = ",sqrt(sumsq/NR - (sum/NR)**2)}}' """
-        ">> {output.depth} "   # Depth_markdup bam output
-        "2> {log}"             # Log redirection
 
 ###############################################################################
 rule samtools_index_markdup:
@@ -631,8 +628,8 @@ rule sickle_trim_quality:
     params:
         command = COMMAND,
         encoding = ENCODING,
-        quality = QUALITYS,
-        length = LENGTHS
+        quality = QUALITY,
+        length = LENGTH
     input:
         fwdreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
         revreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
@@ -668,7 +665,7 @@ rule cutadapt_adapters_removing:
     resources:
         cpus = CPUS
     params:
-        length = LENGTHC,
+        length = LENGTHc,
         truseq = TRUSEQ,
         nextera = NEXTERA,
         small = SMALL
