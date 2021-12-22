@@ -55,9 +55,15 @@ echo ""
 echo "##### RENAME FASTQ FILES #####"
 echo "------------------------------"
 
-rename -v 's/_S\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-rename -v 's/_L\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
-rename -v 's/_001.fastq.gz/.fastq.gz/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+# With rename command from macOSX 
+rename 's/_S\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+rename 's/_L\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+rename 's/_001.fastq.gz/.fastq.gz/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+
+# With rename command as part of the util-linux package
+rename _S\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+rename _L\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+rename _001.fastq.gz .fastq.gz ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 echo "________________________________________________________________________"
 
@@ -81,6 +87,7 @@ echo "Dry run:"
 # Specify working directory (relative paths in the snakefile will use this as their origin)
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
 # If defined in the rule, run job in a conda environment.
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
 # Do not execute anything, and display what would be done. If you have a very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
 snakemake \
@@ -88,6 +95,7 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
     --use-conda \
+    --conda-frontend mamba \
     --dryrun \
     --quiet
 
@@ -97,6 +105,7 @@ echo "Let's go!"
 # Specify working directory (relative paths in the snakefile will use this as their origin)
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
 # If defined in the rule, run job in a conda environment.
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
 # Print out the shell commands that will be executed.
 # Go on with independent jobs if a job fails.
 # Re-run all jobs the output of which is recognized as incomplete.
@@ -106,6 +115,7 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
     --use-conda \
+    --conda-frontend mamba \
     --printshellcmds \
     --keep-going \
     --rerun-incomplete \
