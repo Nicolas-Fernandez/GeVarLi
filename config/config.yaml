@@ -12,9 +12,9 @@
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 12      # cpus
-  mem_mb: 64000 # mem in Mb
-  mem_gb: 64    # mem in Gb
+  cpus: 6      # cpus
+  mem_mb: 12000 # mem in Mb
+  mem_gb: 12    # mem in Gb
   time: 1140    # time in Min
   tmpdir: '$TMPDIR'  # temporary directory (default $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
