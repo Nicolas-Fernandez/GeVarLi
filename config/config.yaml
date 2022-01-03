@@ -5,8 +5,8 @@
 # Aim: Config file SARS-CoV-2 GEnome assembling, VARiant analysis and LIneage (pangolin) calling pipeline
 # Date: 2021.10.12
 # Use: Edit or (de)comment values you want modify
-# Latest modification: 2021.12.08
-# Todo: ...
+# Latest modification: 2021.01.03
+# Todo: na
 
 ###############################################################################
 
@@ -24,10 +24,10 @@ resources:
 conda:
   fastqc:       '../envs/fastqc-0.11.9.yaml'
   fastq-screen: '../envs/fastq-screen-0.14.0.yaml'
-  multiqc:      '../envs/multiqc-1.11.yaml'          # Update from 1.10.1
-  cutadapt:     '../envs/cutadapt-3.5.yaml'          # Update from 3.4
+  multiqc:      '../envs/multiqc-1.11.yaml'
+  cutadapt:     '../envs/cutadapt-3.5.yaml'
   sickle-trim:  '../envs/sickle-trim-1.33.yaml'
-  bowtie2:      '../envs/bowtie2-2.4.4.yaml'         # Update from 2.4.2
+  bowtie2:      '../envs/bowtie2-2.4.4.yaml'
   bwa:          '../envs/bwa-0.7.17.yaml'
   samtools:     '../envs/samtools-1.14.yaml'
   bedtools:     '../envs/bedtools-2.30.0.yaml'
