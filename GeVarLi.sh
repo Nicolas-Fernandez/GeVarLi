@@ -11,7 +11,7 @@ echo "Aim: SARS-CoV-2 Genome assembling, Variant and Lineage (pangolin) calling"
 echo "Date: 2021.10.12"
 echo "Run: snakemake -s path/to/gevarli.smk --cores --use-conda"
 echo "Latest modification: 2021.12.08"
-echo "Todo: ..."
+echo "Todo: na"
 echo "________________________________________________________________________"
 
 ###### Hardware check ######
@@ -43,7 +43,7 @@ echo "Working directory: ${workdir}/"
 fastq=$(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l)
 echo "Fastq files: ${fastq}"
 
-seconds=0
+SECONDS=0
 timestampstart=$(date +'%Y-%m-%d %H:%M')
 echo "Start: ${timestampstart}"
 
@@ -156,6 +156,8 @@ echo "##### CONCATENATE MEAN DEPTH #####"
 echo "----------------------------------"
 
 grep -E "Mean_depth:" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages.tsv
+
+# Remove when Christelle down
 grep -E "^Average =" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages_CHRISTELLE.tsv
 
 echo "________________________________________________________________________"
@@ -181,6 +183,8 @@ awk "NR==1 || NR%2==0" ${workdir}/results/All_lineages_pangolin-report.csv > ${w
 
 sed "s/,/\t/g" ${workdir}/results/All_lineages_pangolin-report.csv > ${workdir}/results/All_lineages_pangolin-report.tsv
 
+rm -f ${workdir}/results/All_lineages_pangolin-report.csv
+
 echo "________________________________________________________________________"
 
 ###### Clean End ######
@@ -201,7 +205,7 @@ echo "-----------------"
 timestampend=$(date +'%Y-%m-%d %H:%M')
 echo "End: ${timestampend}"
 
-elapsedtime=${seconds}
-echo "Processing time: ${elapsedtime} elapsed seconds"
+elapsedtime=${SECONDS}
+echo "Processing time: $((${elapsedtime}/60)) minutes and $((${elapsedtime}%60)) seconds elapsed"
 
 echo "________________________________________________________________________"
