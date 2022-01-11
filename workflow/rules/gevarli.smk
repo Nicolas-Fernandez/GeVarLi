@@ -374,7 +374,7 @@ rule awk_genome_depth:
     conda:
         SAMTOOLS
     input:
-        sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam",
+        #sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
         depth = "results/03_Coverage/{sample}_{aligner}_depth.txt"
@@ -394,14 +394,14 @@ rule awk_genome_depth:
         "}}' "                                      #
         "{input.genomecov} "                        # Mardup bam input
         "> {output.depth} "                         # Depth output
-        "&& "
-        "samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
-        "-a "                  # output all positions (including zero depth)
-        "{input.sorted} "      # Sorted bam input
-        "| "                   # PIPE 
-        """awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average =", "\t", sum/NR, "\t", "Stdev =", "\t", sqrt(sumsq/NR-(sum/NR)**2)}}' """
-        ">> {output.depth} "   # Depth_sorted output
-        "2> {log}"                             # Log redirection
+        "2> {log}"                                  # Log redirection
+        #"&& "
+        #"samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
+        #"-a "                  # output all positions (including zero depth)
+        #"{input.sorted} "      # Sorted bam input
+        #"| "                   # PIPE 
+        #"""awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average =", "\t", sum/NR, "\t", "Stdev =", "\t", sqrt(sumsq/NR-(sum/NR)**2)}}' """
+        #">> {output.depth} "   # Depth_sorted output
 
 ###############################################################################
 rule bedtools_genome_coverage:
@@ -491,7 +491,7 @@ rule samtools_sorting:
     input:
         fixmate = "results/02_Mapping/{sample}_{aligner}_fixmate.bam"
     output:
-        sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam"
+        sorted = temp("results/02_Mapping/{sample}_{aligner}_sorted.bam")
     log:
         "results/11_Reports/samtools/{sample}_{aligner}_sorted.log"
     shell:
@@ -517,7 +517,7 @@ rule samtools_fixmate:
     input:
         sortbynames = "results/02_Mapping/{sample}_{aligner}_sortbynames.bam"
     output:
-        fixmate = "results/02_Mapping/{sample}_{aligner}_fixmate.bam"
+        fixmate = temp("results/02_Mapping/{sample}_{aligner}_fixmate.bam")
     log:
         "results/11_Reports/samtools/{sample}_{aligner}_fixmate.log"
     shell:
@@ -543,7 +543,7 @@ rule samtools_sortbynames:
     input:
         mapped = "results/02_Mapping/{sample}_{aligner}-mapped.sam"
     output:
-        sortbynames = "results/02_Mapping/{sample}_{aligner}_sortbynames.bam"
+        sortbynames = temp("results/02_Mapping/{sample}_{aligner}_sortbynames.bam")
     log:
         "results/11_Reports/samtools/{sample}_{aligner}_sortbynames.log"
     shell:
@@ -572,7 +572,7 @@ rule bwa_mapping:
         fwdreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         revreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = "results/02_Mapping/{sample}_bwa-mapped.sam"
+        mapped = temp("results/02_Mapping/{sample}_bwa-mapped.sam")
     log:
         "results/11_Reports/bwa/{sample}.log"
     shell:
@@ -602,7 +602,7 @@ rule bowtie2_mapping:
         fwdreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         revreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = "results/02_Mapping/{sample}_bowtie2-mapped.sam"
+        mapped = temp("results/02_Mapping/{sample}_bowtie2-mapped.sam")
     log:
         "results/11_Reports/bowtie2/{sample}.log"
     shell:
