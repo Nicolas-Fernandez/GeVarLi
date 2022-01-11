@@ -39,10 +39,7 @@ GeVarLi align cleaned reads againt reference genome, with bwa or bowtie2 or both
 
 ## Visuals ##
 
-![Image of download button](./visuals/rulegraph.png)  
-
-_Good idea to include screenshots or GIFs (see ttygif or Asciinema)_  
-
+![Image of rule graph](./visuals/rulegraph.png)  
 
 ## Installation ##
 
@@ -147,7 +144,40 @@ A terminal will open. you can close it at the end.
 
 Yours results are available in results directory:
 
-- **... TODO ...** with **CHRISTELLE** 
+### root ###
+
+- *All_consensus_sequences.fasta*: all consensus assembled genomes in fasta format
+- *All_genome_coverages.tsv*: all genome coverage in tsv format
+- *All_pangolin_lineages.tsv*: all pangolin lineages in tsv format
+- *All_nextclade_lineages.tsv*: _comming soon_ all nextclade lineages in tsv format
+
+### 00_Quality_Control ###
+
+- *fastq-screen*: raw reads putative contaminations reports for each samples in html, png and txt formats 
+- *fastqc*: raw reads quality reports for each samples in html and zip format
+- *multiqc*: fastq-screen and fastqc results agrgation report for all samples in html format
+
+### 01_Trimming ###
+
+- *sickle*: paired reads, without adapters and quality trimmed
+- _cutadapt: paired reads, without adapters (default: tempdir, removed, save disk usage)_
+
+### 02_Mapping ###
+
+- _mapped.sam_: (default: tempdir, removed, save disk usage)_
+- _sortbynames.bam_: (default: tempdir, removed, save disk usage)_
+- _fixmate.bam_: (default: tempdir, removed, save disk usage)_
+- _sorted.bam_: (default: tempdir, removed, save disk usage)_
+- *markdup.bam*:
+- *markdup.bai*:
+
+### 03_Coverage ###
+### 04_Variants ###
+### 05_Consensus ###
+### 06_Lineages ###
+### 10_graphs ###
+### 11_Reports ###
+
 
 
 ###  Configuration ###
@@ -156,9 +186,7 @@ Yours results are available in results directory:
 
 Edit to match your hardware configuration  
 - **cpus**:
-- **mem_mb**:
 - **mem_gb**:
-- **time**:
 - **tmpdir**:
 
 #### Environments ####
@@ -229,7 +257,7 @@ Use Git tools to share!
 
 - Nicolas Fernandez (Developer and Maintener)  
 - Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
-
+- Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
 
 ## License ##
 
