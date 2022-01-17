@@ -86,7 +86,7 @@ rule all:
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         pangolin = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        nextclade = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_nextclade-report.csv",
+        nextclade = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_nextclade-report.tsv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
 
 ###############################################################################
@@ -100,8 +100,7 @@ rule nextclade_lineage:
     resources:
         cpus = CPUS
     params:
-        reference = REFERENCE,
-        tmpdir = TMPDIR
+        reference = REFERENCE
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta"
     output:
@@ -115,7 +114,7 @@ rule nextclade_lineage:
         "--input-fasta {input.consens} "        # Path to a .fasta file with input sequences
         "--input-root-seq {params.referecnce} " # Path to a .fasta file containing root sequence (must contain only 1 sequence)
         "--output-tsv {output.lineage} "        # Path to output TSV results file
-        "&> {log}"                    # Log redirection
+        "&> {log}"                              # Log redirection
 
 ###############################################################################
 rule pangolin_lineage:
