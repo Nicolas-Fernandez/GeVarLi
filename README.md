@@ -18,7 +18,7 @@ GeVarLi align cleaned reads againt reference genome, with bwa or bowtie2 or both
 - **2** caclul genome coverage
 - **3** variants calling
 - **4** assemble consensus sequence
-- **5** pangolin leanage calling
+- **5** pangolin leanage assignation
 
 
 ## Badges ##
@@ -70,8 +70,8 @@ rm Miniconda3-latest-MacOSX-x86_64.sh
 Install **Snakemake** (_i.e. v.6.12.1_) using Conda package management system  
 _Follow the prompts on the installer screens_  
 ```shell
-conda install -n base -c conda-forge mamba
-mamba install -c conda-forge -c bioconda snakemake
+conda install -n base -c conda-forge mamba --yes
+mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
 
 
@@ -79,49 +79,40 @@ mamba install -c conda-forge -c bioconda snakemake
 
 **Download** _OR_ **Clone** the **GeVarLi pipeline** project  
 
+#### Difference between **Download** and **Clone** ####
+
+To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
+If you download it, you cannot sync the repository with the remote repository on GitLab  
+Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
+You can then modify the files locally and upload the changes to the remote repository on GitLab  
 
 #### Download ####
 
-- Download source code archive (_zip_, **tar.gz**, _tar.bz2_, _tar_): [GeVarLi on GitLab](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX)  
-```shel
-wget  https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX/-/archive/main/GeVarLi_Pipeline_macOSX-main.tar.gz -O ~/Desktop/ 
-```
+- Download and extract source code archive (_zip_, **tar.gz**, _tar.bz2_, _tar_): [GeVarLi on GitLab](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX)  
 
-_alternatively_:
 ![Image of download button](./visuals/download_button.png)  
 
-- Extract and remove the the archive (i.e. tar.gz):
-```shell
-tar -xzvf path/to/archive/GeVarLi_Pipeline_macOSX-main.tar.gz
-rm path/to/archive/GeVarLi_Pipeline_macOSX-main.tar.gz 
-mv ~/Desktop/GeVarLi_Pipeline_macOSX-main ~/Desktop/GeVarLi_Pipeline
-cd ~/Desktop/GeVarLi_Pipeline
+```shel
+wget  https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX/-/archive/main/GeVarLi_Pipeline_macOSX-main.tar.gz -O ~/GeVarLi_Pipeline.macOSX
+tar -xzvf ~/GeVarLi_Pipeline_macOSX.tar.gz
+rm -f ~/GeVarLi_Pipeline_macOSX.tar.gz 
+cd ~/Desktop/GeVarLi_Pipeline_macOSX/
 ```
 
 #### Clone ####
 
-- Clone with **SSH** when you want to authenticate only one time  
+- Clone with **SSH** (_when you want to authenticate only one time_)  
 Authenticate with GitLab by following the instructions in the [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)  
 ```shell
 git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-mv GeVarLi_Pipeline GeVarLi_Pipeline
-cd ./GeVarLi_Pipeline
+cd ./GeVarLi_Pipeline_macOSX/
 ```
 
-Clone with **HTTPS** when you want to authenticate each time you perform an operation between your computer and GitLab  
+Clone with **HTTPS** (_when you want to authenticate each time you perform an operation between your computer and GitLab_)  
 ```shell
 git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-mv GeVarLi_Pipeline GeVarLi_Pipeline
-cd ./GeVarLi_Pipeline
+cd ./GeVarLi_Pipeline_macOSX/
 ```
-
-
-#### Difference between download and clone ####
-
-To create a copy of a remote repository’s files on your computer, you can either download or clone the repository  
-If you download it, you cannot sync the repository with the remote repository on GitLab  
-Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
-You can then modify the files locally and upload the changes to the remote repository on GitLab  
 
 
 ## Usage ##
@@ -132,12 +123,12 @@ You can then modify the files locally and upload the changes to the remote repos
 - Be sure your bash script is executable, if not, you can run in a Terminal:
 
 ```shell
-sudo chmod +x path/to/GeVarLi_Pipeline/GeVarLi.sh
+sudo chmod +x ./GeVarLi.sh
 ```
 
 - Run **GeVarLi.sh** bash script by double-clicking on it  
 
-A terminal will open. you can close it at the end.
+A terminal window will open and analyzes start. You can close the terminal window the end.
 
 
 ### Results ###

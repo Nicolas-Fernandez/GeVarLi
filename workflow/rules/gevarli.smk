@@ -5,8 +5,8 @@
 # Aim: SARS-CoV-2 GEnome assembling, Variant analysis and LIneage (pangolin) calling pipeline
 # Date: 2021.10.12
 # Run: snakemake -s path/to/gevarli.smk --cores --use-conda 
-# Latest modification: 2021.12.08
-# Todo: Add % genome coverage @1x, @10x, @30x, ...
+# Latest modification: 2021.01.17
+# Todo: Nextclade lineage testing 
 
 ###############################################################################
 # PUBLICATIONS #
@@ -40,6 +40,7 @@ BCFTOOLS = config["conda"]["bcftools"] # BcfTools
 LOFREQ = config["conda"]["lofreq"] # LoFreq
 
 PANGOLIN = config["conda"]["pangolin"] # Pangolin
+NEXTCLADE = config["conda"]["nextclade"] # Nextclade
 
 # RESOURCES #
 CPUS = config["resources"]["cpus"]     # resources thread
@@ -80,7 +81,41 @@ rule all:
         depth = expand("results/03_Coverage/{sample}_{aligner}_depth.txt",
                        sample = SAMPLE, aligner = ALIGNER),
         lineage = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv",
+                         sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
+        percent = expand("results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.txt",
+                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
+        pangolin = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv",
+                         sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
+        nextclade = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_nextclade-report.csv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
+
+###############################################################################
+rule nextclade_lineage:
+    # Aim: nextclade mapping
+    # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
+    message:
+        "Nextclade lineage mapping for {wildcards.sample} sample consensus ({wildcards.aligner}-{wildcards.mincov})"
+    conda:
+        NEXTCLADE
+    resources:
+        cpus = CPUS
+    params:
+        reference = REFERENCE,
+        tmpdir = TMPDIR
+    input:
+        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta"
+    output:
+        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}_nextclade-report.tsv"
+    log:
+        "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}_lineage.log"
+    shell:
+        "nextclade "                          # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
+        "run "                                  # Run the analysis
+        "--jobs {resources.cpus} "              # Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
+        "--input-fasta {input.consens} "        # Path to a .fasta file with input sequences
+        "--input-root-seq {params.referecnce} " # Path to a .fasta file containing root sequence (must contain only 1 sequence)
+        "--output-tsv {output.lineage} "        # Path to output TSV results file
+        "&> {log}"                    # Log redirection
 
 ###############################################################################
 rule pangolin_lineage:
@@ -101,7 +136,7 @@ rule pangolin_lineage:
     log:
         "results/11_Reports/pangolin/{sample}_{aligner}_{mincov}_lineage.log"
     shell:
-        "pangolin "                  # Pangolinn Phylogenetic Assignment of Named Global Outbreak LINeages
+        "pangolin "                  # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "          # Query fasta file of sequences to analyse
         "--threads {resources.cpus} " # -t: Number of threads
         "--tempdir {params.tmpdir} "  # Specify where you want the temp stuff to go (default: $TMPDIR)
@@ -358,7 +393,7 @@ rule awk_mincovfilt:
         "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}-mincovfilt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        #"'$4 < 10' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
+        #"'$4 < 30' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
         #"'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence (if 'mincov' as one fixed single parameter,in config file)
         "'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence (if 'mincov' as multiple wildcards, for testing)
         "{input.genomecov} "         # BedGraph coverage input
@@ -366,9 +401,49 @@ rule awk_mincovfilt:
         "2> {log} "                  # Log redirection
 
 ###############################################################################
+rule awk_genome_coverage:
+    # Aim: computing genome coverage sequencing
+    # Use: awk [BEDGRAPH.txt]
+    message:
+        "Awk get coverage percent at x for {wildcards.sample} ({wildcards.aligner})"
+    conda:
+        BEDTOOLS
+    params:
+        mincov = MINCOV # if mincov as one fixed parameter, in config file
+    input:
+        genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
+    output:
+        percent = "results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.txt"
+    log:
+        "results/11_Reports/awk/{sample}_{aligner}_{mincov}x-cov-percent.log"
+    shell:
+        "lower=$(awk "             # awk, lower
+        #"'$4 < 30 "                 # (if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation)
+        #"'$4 < {params.mincov} "    # (if 'mincov' as one fixed single parameter, in config file)
+        "'$4 < {wildcards.mincov} " # (if 'mincov' as multiple wildcards, for testing)
+        "{{bpCountZero+=($3-$2)}} " #
+        "{{print bpCountZero}}' "   #
+        "{input.genomecov} "        # BedGraph coverage input
+        "| tail -1) "               #
+        #
+        "upper=$(awk "                # awk, upper
+        #"'$4 < 30 "                    # (if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation)
+        #"'$4 < {params.mincov} "       # (if 'mincov' as one fixed single parameter, in config file)
+        "'$4 < {wildcards.mincov} "    # (if 'mincov' as multiple wildcards, for testing)
+        "{{bpCountNonZero+=($3-$2)}} " #
+        "{{print bpCountNonZero}}' "   #
+        "{input.genomecov} "           # BedGraph coverage input
+        "| tail -1) "                  #
+        #
+        "echo "                                                 # echo,
+        "$(bc <<< 'scale=6; ($upper / ($lower + $upper))*100') " #
+        "> {output.percent} "                                    # Percent output
+        "2> {log}"                                               # Log redirection
+
+###############################################################################
 rule awk_genome_depth:
     # Aim: computing genomme depth sequencing
-    # Use: awk print int([TotalBases] / [GenomeSize])
+    # Use: awk print int([TotalBases] / [GenomeSize]) [BEDGRAPH.txt]
     message:
         "SamTools compute the depth BAM file {wildcards.sample} sample ({wildcards.aligner})"
     conda:
@@ -392,7 +467,7 @@ rule awk_genome_depth:
         """ "Standar_deviation:", "\t", """         #
         """ int(sqrt((totalBasesSq / genomeSize) - (totalBases / genomeSize)**2)) """ #
         "}}' "                                      #
-        "{input.genomecov} "                        # Mardup bam input
+        "{input.genomecov} "                        # BedGraph coverage input
         "> {output.depth} "                         # Depth output
         "2> {log}"                                  # Log redirection
         #"&& "
