@@ -109,12 +109,12 @@ rule nextclade_lineage:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}_lineage.log"
     shell:
         "nextclade "                          # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
-        "run "                                  # Run the analysis
-        "--jobs {resources.cpus} "              # Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
-        "--input-fasta {input.consensus} "      # Path to a .fasta file with input sequences
-        "--input-root-seq {params.referecnce} " # Path to a .fasta file containing root sequence (must contain only 1 sequence)
-        "--output-tsv {output.lineage} "        # Path to output TSV results file
-        "&> {log}"                              # Log redirection
+        "run "                                 # Run the analysis
+        "--jobs {resources.cpus} "             # Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
+        "--input-fasta {input.consensus} "     # Path to a .fasta file with input sequences
+        "--input-root-seq {params.reference} " # Path to a .fasta file containing root sequence (must contain only 1 sequence)
+        "--output-tsv {output.lineage} "       # Path to output TSV results file
+        "&> {log}"                             # Log redirection
 
 ###############################################################################
 rule pangolin_lineage:
