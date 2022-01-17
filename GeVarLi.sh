@@ -10,7 +10,7 @@ echo "Affiliation: IRD_U233_TransVIHMI"
 echo "Aim: SARS-CoV-2 Genome assembling, Variant and Lineage (pangolin) calling"
 echo "Date: 2021.10.12"
 echo "Run: snakemake -s path/to/gevarli.smk --cores --use-conda"
-echo "Latest modification: 2021.12.08"
+echo "Latest modification: 2021.01.17"
 echo "Todo: na"
 echo "________________________________________________________________________"
 
@@ -45,7 +45,7 @@ echo "Fastq files: ${fastq}"
 
 SECONDS=0
 timestampstart=$(date +'%Y-%m-%d %H:%M')
-echo "Start: ${timestampstart}"
+echo "Start time: ${timestampstart}"
 
 echo "________________________________________________________________________"
 
@@ -146,7 +146,7 @@ done
 snakemake \
     --directory ${workdir} \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --summary > ${workdir}/results/10_Graphs/summary.txt
+    --summary > ${workdir}/results/11_Reports/files_summary.txt
 
 echo "________________________________________________________________________"
 
@@ -155,7 +155,7 @@ echo ""
 echo "##### CONCATENATE MEAN DEPTH #####"
 echo "----------------------------------"
 
-grep -E "Mean_depth:" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages.tsv
+grep -E "Mean_depth:" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_genome_coverages.tsv
 
 # Remove when Christelle down
 grep -E "^Average =" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages_CHRISTELLE.tsv
@@ -183,7 +183,7 @@ awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}
 
 sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
 
-rm -f ${workdir}/results/All_lineages_pangolin_lineages.csv
+rm -f ${workdir}/results/All_pangolin_lineages.csv
 
 echo "________________________________________________________________________"
 
@@ -203,7 +203,7 @@ echo "##### TIMER #####"
 echo "-----------------"
 
 timestampend=$(date +'%Y-%m-%d %H:%M')
-echo "End: ${timestampend}"
+echo "End time: ${timestampend}"
 
 elapsedtime=${SECONDS}
 echo "Processing time: $((${elapsedtime}/60)) minutes and $((${elapsedtime}%60)) seconds elapsed"
