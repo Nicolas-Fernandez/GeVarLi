@@ -323,7 +323,7 @@ rule lofreq_indel_qualities:
     conda:
         LOFREQ
     input:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta",
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}x_maskedref.fasta",
         markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam"
     output:
         indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bam"
