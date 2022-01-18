@@ -154,18 +154,6 @@ snakemake \
 
 echo "________________________________________________________________________"
 
-###### Concatenate all mean depth coverage ######
-echo ""
-echo "##### CONCATENATE MEAN DEPTH #####"
-echo "----------------------------------"
-
-grep -E "Mean_depth:" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_genome_coverages.tsv
-
-# Remove when Christelle down
-grep -E "^Average =" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages_CHRISTELLE.tsv
-
-echo "________________________________________________________________________"
-
 ###### Concatenate all consensus fasta ######
 echo ""
 echo "##### CONCATENATE FASTA FILES #####"
@@ -175,7 +163,22 @@ cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_c
 
 echo "________________________________________________________________________"
 
-###### Concatenate all Pangolin lienage reports ######
+###### Concatenate all mean depth coverage ######
+echo ""
+echo "##### CONCATENATE MEAN DEPTH #####"
+echo "----------------------------------"
+
+cat ${workdir}/results/03_Coverage/*mean-depth.tsv > ${workdir}/results/All_genome_coverages.tsv
+
+awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
+    && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
+
+# Remove when Christelle down
+#grep -E "^Average =" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages_CHRISTELLE.tsv
+
+echo "________________________________________________________________________"
+
+###### Concatenate all Pangolin lineage reports ######
 echo ""
 echo "##### CONCATENATE PANGOLIN REPORTS #####"
 echo "----------------------------------------"
@@ -188,6 +191,18 @@ awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}
 sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
 
 rm -f ${workdir}/results/All_pangolin_lineages.csv
+
+echo "________________________________________________________________________"
+
+###### Concatenate all Nextclade lineage reports ######
+echo ""
+echo "##### CONCATENATE NEXTCLADE REPORTS #####"
+echo "----------------------------------------"
+
+cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv > ${workdir}/results/All_nextclade_lineages.tsv
+
+awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
+    && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv
 
 echo "________________________________________________________________________"
 

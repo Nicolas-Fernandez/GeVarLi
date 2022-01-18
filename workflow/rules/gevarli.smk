@@ -80,11 +80,9 @@ DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 rule all:
     input:
         multiqc = "results/00_Quality_Control/multiqc/",
-        depth = expand("results/03_Coverage/{sample}_{aligner}_depth.txt",
+        depth = expand("results/03_Coverage/{sample}_{aligner}_mean-depth.tsv",
                        sample = SAMPLE, aligner = ALIGNER),
-        lineage = expand("results/06_Lineages/{sample}_{aligner}_{mincov}x_pangolin-report.csv",
-                         sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        percent = expand("results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.txt",
+        percent = expand("results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.tsv",
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         pangolin = expand("results/06_Lineages/{sample}_{aligner}_{mincov}x_pangolin-report.csv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
@@ -416,11 +414,11 @@ rule awk_genome_coverage:
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
-        percent = "results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.txt"
+        percent = "results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.tsv"
     log:
         "results/11_Reports/awk/{sample}_{aligner}_{mincov}x-cov-percent.log"
     shell:
-        "lower=$(awk "             # awk, lower
+        "lower=$(awk "             # lower with Awk, a program that you can use to select particular records in a file and perform operations upon them
         #"'$4 < 30 "                 # (if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation)
         #"'$4 < {params.mincov} "    # (if 'mincov' as one fixed single parameter, in config file)
         "'$4 < {wildcards.mincov} " # (if 'mincov' as multiple wildcards, for testing)
@@ -429,7 +427,7 @@ rule awk_genome_coverage:
         "{input.genomecov} "        # BedGraph coverage input
         "| tail -1) "               #
         #
-        "upper=$(awk "                # awk, upper
+        "upper=$(awk "                # upper with Awk, a program that you can use to select particular records in a file and perform operations upon them
         #"'$4 < 30 "                    # (if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation)
         #"'$4 < {params.mincov} "       # (if 'mincov' as one fixed single parameter, in config file)
         "'$4 < {wildcards.mincov} "    # (if 'mincov' as multiple wildcards, for testing)
@@ -444,34 +442,38 @@ rule awk_genome_coverage:
         "2> {log}"                                               # Log redirection
 
 ###############################################################################
-rule awk_genome_depth:
+rule awk_genome_meandepth:
     # Aim: computing genomme depth sequencing
     # Use: awk print int([TotalBases] / [GenomeSize]) [BEDGRAPH.txt]
     message:
-        "SamTools compute the depth BAM file {wildcards.sample} sample ({wildcards.aligner})"
+        "SamTools compute the mean depth BAM file {wildcards.sample} sample ({wildcards.aligner})"
     conda:
         SAMTOOLS
     input:
         #sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
-        depth = "results/03_Coverage/{sample}_{aligner}_depth.txt"
+        depth = "results/03_Coverage/{sample}_{aligner}_mean-depth.tsv"
     log:
-        "results/11_Reports/awk/{sample}_{aligner}_depth.log"
+        "results/11_Reports/awk/{sample}_{aligner}_mean-depth.log"
     shell:
-        "awk '{{ "                                 # awk,
-        "totalBases += ( $3 - $2 ) * $4 ; "         #
-        "totalBasesSq += (( $3 - $2 ) * $4 )**2 ; " #
-        "genomeSize += ( $3 - $2 ) "                #
-        "}} END {{ "                                #
-        "print "                                    #
-        """ "Mean_depth:", "\t", """                #
-        """ int(totalBases / genomeSize), "\t", """ #
-        """ "Standar_deviation:", "\t", """         #
-        """ int(sqrt((totalBasesSq / genomeSize) - (totalBases / genomeSize)**2)) """ #
-        "}}' "                                      #
+        "awk '{{ "                                 # Awk, a program that you can use to select particular records in a file and perform operations upon them
+        "totalBases += ( $3 - $2 ) * $4 ; "         # Total bases 
+        "totalBasesSq += (( $3 - $2 ) * $4 )**2 ; " # Total bases square
+        "genomeSize += ( $3 - $2 ) "                # Genome size 
+        "}} END {{ "                                # End
+        "print "                                    # Print
+        """ "sample_id", "\t", """                  # Sample ID header
+        """ "mean_depth", "\t", """                 # Mean depth header
+        """ "standard_deviation" ORS """        # Standard deviation header
+#        "}} "
+#        "{{ print "                                 # Print
+        """ "{wildcards.sample}", "\t", """         # Sample ID value
+        """ int(totalBases / genomeSize), "\t", """ # Mean depth value
+        """ int(sqrt((totalBasesSq / genomeSize) - (totalBases / genomeSize)**2)) """ # Standard deviation value
+        "}}' "
         "{input.genomecov} "                        # BedGraph coverage input
-        "> {output.depth} "                         # Depth output
+        "> {output.depth} "                         # Mean depth output
         "2> {log}"                                  # Log redirection
         #"&& "
         #"samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
