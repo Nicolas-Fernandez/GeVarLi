@@ -80,13 +80,13 @@ rule all:
         multiqc = "results/00_Quality_Control/multiqc/",
         depth = expand("results/03_Coverage/{sample}_{aligner}_depth.txt",
                        sample = SAMPLE, aligner = ALIGNER),
-        lineage = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv",
+        lineage = expand("results/06_Lineages/{sample}_{aligner}_{mincov}x_pangolin-report.csv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         percent = expand("results/03_Coverage/{sample}_{aligner}_{mincov}x-cov-percent.txt",
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        pangolin = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv",
+        pangolin = expand("results/06_Lineages/{sample}_{aligner}_{mincov}x_pangolin-report.csv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        nextclade = expand("results/06_Lineages/{sample}_{aligner}_{mincov}_nextclade-report.tsv",
+        nextclade = expand("results/06_Lineages/{sample}_{aligner}_{mincov}x_nextclade-report.tsv",
                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
 
 ###############################################################################
@@ -102,11 +102,11 @@ rule nextclade_lineage:
     params:
         reference = REFERENCE
     input:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}_nextclade-report.tsv"
+        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}x_nextclade-report.tsv"
     log:
-        "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}_lineage.log"
+        "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}x_lineage.log"
     shell:
         "nextclade "                          # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
         "run "                                 # Run the analysis
@@ -129,11 +129,11 @@ rule pangolin_lineage:
     params:
         tmpdir = TMPDIR
     input:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}_pangolin-report.csv"
+        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}x_pangolin-report.csv"
     log:
-        "results/11_Reports/pangolin/{sample}_{aligner}_{mincov}_lineage.log"
+        "results/11_Reports/pangolin/{sample}_{aligner}_{mincov}x_lineage.log"
     shell:
         "pangolin "                  # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "          # Query fasta file of sequences to analyse
@@ -149,11 +149,11 @@ rule sed_rename_headers:
     message:
         "Sed rename header for {wildcards.sample} sample consensus fasta ({wildcards.aligner}-{wildcards.mincov})"
     input:
-        constmp = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta.tmp"
+        constmp = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta.tmp"
     output:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta"
     log:
-        "results/11_Reports/sed/{sample}_{aligner}_{mincov}_fasta-header.log"
+        "results/11_Reports/sed/{sample}_{aligner}_{mincov}x_fasta-header.log"
     shell:
         "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
         "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.mincov}/' "
@@ -170,13 +170,13 @@ rule bcftools_consensus:
     conda:
         BCFTOOLS
     input:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}_maskedref.fasta",
-        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz",
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.tbi"
+        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta",
+        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz",
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi"
     output:
-        constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}_consensus.fasta.tmp")
+        constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta.tmp")
     log:
-        "results/11_Reports/bcftools/{sample}_{aligner}_{mincov}_consensus.log"
+        "results/11_Reports/bcftools/{sample}_{aligner}_{mincov}x_consensus.log"
     shell:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
@@ -194,11 +194,11 @@ rule tabix_tabarch_indexing:
     conda:
         SAMTOOLS
     input:
-        bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz"
+        bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz"
     output:
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.tbi"
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi"
     log:
-        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}_indelarch-index.log"
+        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}x_indelarch-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.bgzip} "     # The input data file must be position sorted and compressed by bgzip
@@ -216,11 +216,11 @@ rule bgzip_indel_compressing:
     resources:
         cpus = CPUS
     input:
-        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.vcf"
+        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf"
     output:
-        bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.vcf.bgz"
+        bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz"
     log:
-        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}_indel-bgz.log"
+        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}x_indel-bgz.log"
     shell:
         "bgzip "                     # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
@@ -242,11 +242,11 @@ rule lofreq_indel_filtering:
         covmin = COVMIN,
         afmin = AFMIN
     input:
-        indelcall = "results/04_Variants/{sample}_{aligner}_{mincov}_indelcall.vcf"
+        indelcall = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelcall.vcf"
     output:
-        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}_indelfilt.vcf"
+        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}_indelfilt.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}x_indelfilt.log"
     shell:
         "lofreq "                   # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                    # Filter variant parsed from vcf file
@@ -267,13 +267,13 @@ rule lofreq_indel_calling:
     resources:
         cpus = CPUS
     input:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}_maskedref.fasta",
-        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}_indelqual.bam",
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}_indelqual.bai"
+        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta",
+        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bam",
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bai"
     output:
-        indelcall = "results/04_Variants/{sample}_{aligner}_{mincov}_indelcall.vcf"
+        indelcall = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelcall.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}_indelcall.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}x_indelcall.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         "call-parallel "                 # Call variants from BAM file
@@ -295,11 +295,11 @@ rule samtools_indel_indexing:
     resources:
        cpus = CPUS
     input:
-        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}_indelqual.bam"
+        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bam"
     output:
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}_indelqual.bai"
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bai"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_{mincov}_indelqual-index.log"
+        "results/11_Reports/samtools/{sample}_{aligner}_{mincov}x_indelqual-index.log"
     shell:
         "samtools index "            # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} "        # --threads: Number of additional threads to use (default: 0)
@@ -318,12 +318,12 @@ rule lofreq_indel_qualities:
     conda:
         LOFREQ
     input:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}_maskedref.fasta",
+        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta",
         markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam"
     output:
-        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}_indelqual.bam"
+        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bam"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}_indelqual.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}x_indelqual.log"
     shell:
         "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels 
         "indelqual "                  # Insert indel qualities into BAM file (required for indel predictions)
@@ -344,11 +344,11 @@ rule bedtools_masking:
     params:
         reference = REFERENCE
     input:
-        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}_lowcovmask.bed"
+        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}x_lowcovmask.bed"
     output:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}_maskedref.fasta"
+        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta"
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}_masking.log"
+        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}x_masking.log"
     shell:
         "bedtools maskfasta "     # Bedtools maskfasta, mask a fasta file based on feature coordinates
         "-fi {params.reference} "  # Input FASTA file 
@@ -365,11 +365,11 @@ rule bedtools_merged_mask:
     conda:
         BEDTOOLS
     input:
-        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}-mincovfilt.bed"
+        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}x-mincovfilt.bed"
     output:
-        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}_lowcovmask.bed"
+        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}x_lowcovmask.bed"
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}_merging.log"
+        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}x_merging.log"
     shell:
         "bedtools merge "        # Bedtools merge, merges overlapping BED/GFF/VCF entries into a single interval
         "-i {input.mincovfilt} "  # -i: BED/GFF/VCF input to merge 
@@ -387,9 +387,9 @@ rule awk_mincovfilt:
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
-        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}-mincovfilt.bed"
+        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}x-mincovfilt.bed"
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}-mincovfilt.log"
+        "results/11_Reports/awk/{sample}_{aligner}_{mincov}x-mincovfilt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
         #"'$4 < 30' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
@@ -453,7 +453,7 @@ rule awk_genome_depth:
     output:
         depth = "results/03_Coverage/{sample}_{aligner}_depth.txt"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_depth.log"
+        "results/11_Reports/awk/{sample}_{aligner}_depth.log"
     shell:
         "awk '{{ "                                 # awk,
         "totalBases += ( $3 - $2 ) * $4 ; "         #
