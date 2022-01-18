@@ -71,8 +71,7 @@ bowtie2:
 
 ## NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
-  refseq: 'resources/nextclade/reference.fasta' # Nextclade reference sequence
-  reftree: 'resources/nextclade/tree.json'      # Nextclade reference tree
+  dataset: 'resources/nextclade/sars-cov-2/' # Nextclade sars-cov-2 dataset
 
 ## SICKLE-TRIM ---------------------------------------------------------------------------------------
 sickle-trim:
