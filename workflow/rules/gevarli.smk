@@ -175,7 +175,7 @@ rule bcftools_consensus:
     conda:
         BCFTOOLS
     input:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta",
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}x_maskedref.fasta",
         indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz",
         index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi"
     output:
@@ -272,7 +272,7 @@ rule lofreq_indel_calling:
     resources:
         cpus = CPUS
     input:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta",
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}x_maskedref.fasta",
         indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bam",
         index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelqual.bai"
     output:
