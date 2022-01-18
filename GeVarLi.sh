@@ -86,6 +86,7 @@ echo "Dry run:"
 # The workflow definition in form of a snakefile.
 # Specify working directory (relative paths in the snakefile will use this as their origin)
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # If defined in the rule, run job in a conda environment.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
 # Do not execute anything, and display what would be done. If you have a very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
@@ -94,6 +95,7 @@ snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
+    --prioritize multiqc_reports_aggregation \
     --use-conda \
     --conda-frontend mamba \
     --dryrun \
@@ -104,6 +106,7 @@ echo "Let's go!"
 # The workflow definition in form of a snakefile.
 # Specify working directory (relative paths in the snakefile will use this as their origin)
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # If defined in the rule, run job in a conda environment.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
 # Print out the shell commands that will be executed.
@@ -114,6 +117,7 @@ snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
+    --prioritize multiqc_reports_aggregation \
     --use-conda \
     --conda-frontend mamba \
     --printshellcmds \
