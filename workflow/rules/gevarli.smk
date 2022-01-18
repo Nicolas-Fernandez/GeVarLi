@@ -74,8 +74,7 @@ MINCOV = config["consensus"]["mincov"]       # Minimum coverage for masking regi
 COVMIN = config["indel"]["covmin"] # Minimum coverage allowed
 AFMIN = config["indel"]["afmin"]   # Minimum allele freq allowed
 
-NEXTREFSEQ = config["nextclade"]["refseq"]   # Nextclade reference sequence
-NEXTREFTREE = config["nextclade"]["reftree"] # Nextclade reference tree
+DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 
 ###############################################################################
 rule all:
@@ -103,8 +102,7 @@ rule nextclade_lineage:
     resources:
         cpus = CPUS
     params:
-        nextrefseq = NEXTREFSEQ,
-        nextreftree = NEXTREFTREE
+        dataset = DATASET
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta"
     output:
@@ -112,14 +110,13 @@ rule nextclade_lineage:
     log:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}x_lineage.log"
     shell:
-        "nextclade "                           # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
-        "run "                                  # Run the analysis
-        "--jobs {resources.cpus} "              # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
-        "--input-fasta {input.consensus} "      # -i: Path to a .fasta file with input sequences
-        "--input-root-seq {params.nextrefseq} " # -r: Path to a .fasta file containing root sequence (must contain only 1 sequence)
-        "--input-tree {params.nextreftree} "    # -a: Path to Auspice JSON v2 file containing reference tree
-        "--output-tsv {output.lineage} "        # -t: Path to output TSV results file
-        "&> {log}"                              # Log redirection
+        "nextclade "                       # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
+        "run "                              # Run the analysis
+        "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
+        "--input-fasta {input.consensus} "  # -i: Path to a .fasta file with input sequences
+        "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
+        "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
+        "&> {log}"                          # Log redirection
 
 ###############################################################################
 rule pangolin_lineage:
