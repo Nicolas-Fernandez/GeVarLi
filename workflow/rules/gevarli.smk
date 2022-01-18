@@ -47,7 +47,7 @@ CPUS = config["resources"]["cpus"]     # resources thread
 MEM_GB = config["resources"]["mem_gb"] # resources mem in Gb
 TMPDIR = config["resources"]["tmpdir"] # resources temporary directory
 
-# PATRAMETERS #
+# PARAMETERS #
 LENGTHc = config["cutadapt"]["length"]          # Cutadapt --minimum-length
 TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
 NEXTERA = config["cutadapt"]["kits"]["nextera"] # Cutadapt --adapter Illumina Nextera
@@ -73,6 +73,9 @@ MINCOV = config["consensus"]["mincov"]       # Minimum coverage for masking regi
 
 COVMIN = config["indel"]["covmin"] # Minimum coverage allowed
 AFMIN = config["indel"]["afmin"]   # Minimum allele freq allowed
+
+NEXTREFSEQ = config["nextclade"]["refseq"]   # Nextclade reference sequence
+NEXTREFTREE = config["nextclade"]["reftree"] # Nextclade reference tree
 
 ###############################################################################
 rule all:
@@ -100,7 +103,8 @@ rule nextclade_lineage:
     resources:
         cpus = CPUS
     params:
-        reference = REFERENCE
+        nextrefseq = NEXTREFSEQ,
+        nextreftree = NEXTREFTREE
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta"
     output:
@@ -108,13 +112,14 @@ rule nextclade_lineage:
     log:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}x_lineage.log"
     shell:
-        "nextclade "                          # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
-        "run "                                 # Run the analysis
-        "--jobs {resources.cpus} "             # Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
-        "--input-fasta {input.consensus} "     # Path to a .fasta file with input sequences
-        "--input-root-seq {params.reference} " # Path to a .fasta file containing root sequence (must contain only 1 sequence)
-        "--output-tsv {output.lineage} "       # Path to output TSV results file
-        "&> {log}"                             # Log redirection
+        "nextclade "                           # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
+        "run "                                  # Run the analysis
+        "--jobs {resources.cpus} "              # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
+        "--input-fasta {input.consensus} "      # -i: Path to a .fasta file with input sequences
+        "--input-root-seq {params.nextrefseq} " # -r: Path to a .fasta file containing root sequence (must contain only 1 sequence)
+        "--input-tree {params.nextreftree} "    # -a: Path to Auspice JSON v2 file containing reference tree
+        "--output-tsv {output.lineage} "        # -t: Path to output TSV results file
+        "&> {log}"                              # Log redirection
 
 ###############################################################################
 rule pangolin_lineage:
@@ -196,7 +201,7 @@ rule tabix_tabarch_indexing:
     input:
         bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz"
     output:
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi"
+        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi")
     log:
         "results/11_Reports/tabix/{sample}_{aligner}_{mincov}x_indelarch-index.log"
     shell:
@@ -218,7 +223,7 @@ rule bgzip_indel_compressing:
     input:
         indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf"
     output:
-        bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz"
+        bgzip = temp("results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz")
     log:
         "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}x_indel-bgz.log"
     shell:
@@ -346,7 +351,7 @@ rule bedtools_masking:
     input:
         lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}x_lowcovmask.bed"
     output:
-        maskedref = "results/03_Coverage/{sample}_{aligner}_{mincov}x_maskedref.fasta"
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}x_maskedref.fasta"
     log:
         "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}x_masking.log"
     shell:
@@ -367,7 +372,7 @@ rule bedtools_merged_mask:
     input:
         mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}x-mincovfilt.bed"
     output:
-        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}x_lowcovmask.bed"
+        lowcovmask = temp("results/03_Coverage/{sample}_{aligner}_{mincov}x_lowcovmask.bed")
     log:
         "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}x_merging.log"
     shell:
@@ -387,7 +392,7 @@ rule awk_mincovfilt:
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
-        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}x-mincovfilt.bed"
+        mincovfilt = temp("results/03_Coverage/{sample}_{aligner}_{mincov}x-mincovfilt.bed")
     log:
         "results/11_Reports/awk/{sample}_{aligner}_{mincov}x-mincovfilt.log"
     shell:
@@ -489,7 +494,7 @@ rule bedtools_genome_coverage:
         markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam",
         index = "results/02_Mapping/{sample}_{aligner}_markdup.bai"
     output:
-        genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
+        genomecov = temp("results/03_Coverage/{sample}_{aligner}_genomecov.bed")
     log:
         "results/11_Reports/bedtools/{sample}_{aligner}_genomecov.log"
     shell:

@@ -12,8 +12,8 @@
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 4            # cpus
-  mem_gb: 4          # mem in Gb
+  cpus: 12            # cpus
+  mem_gb: 12          # mem in Gb
   tmpdir: '$TMPDIR'  # temporary directory (default: $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
   #tmpdir: '/scratch' # temporary directory (HPC)
@@ -45,7 +45,7 @@ consensus:
     - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
   mincov: # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
   #- '0' # Only for testing ! (not recomanded at all)
-  - '1' # Only for testing ! (default DNAstar)
+  #- '1' # Only for testing ! (default DNAstar)
   - '10' # Only for testing ! (default CNR Lyon)
   #- '30' # Recomanded (if enough reads depth)
   
@@ -57,12 +57,12 @@ indel:
 ## BWA ------------------------------------------------------------------------------------------------
 bwa:
   index: # Choose (de/comment) or add one unique bwa indexes
-    - 'resources/databases/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
+    - 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
 
 ## BOWTIE2 -------------------------------------------------------------------------------------------
 bowtie2:
   index: # Choose (de/comment) or add one unique bowtie2 indexes
-    - 'resources/databases/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
+    - 'resources/indexes/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
   sensitivity: # Choose (de/comment) one unique sensitivity preset
     #- '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
     #- '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
