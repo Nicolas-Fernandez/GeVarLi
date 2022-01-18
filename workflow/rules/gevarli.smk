@@ -106,7 +106,9 @@ rule nextclade_lineage:
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}x_nextclade-report.tsv"
+        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}x_nextclade-report.tsv",
+        alignment = directory("results/06_Lineages/nextclade/{sample}_{aligner}_{mincov}x_nextclade-alignment/"),
+        errors = "results/06_Lineages/nextclade/{sample}_{aligner}_{mincov}x_nextclade-errors.csv"
     log:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}x_lineage.log"
     shell:
@@ -116,6 +118,8 @@ rule nextclade_lineage:
         "--input-fasta {input.consensus} "  # -i: Path to a .fasta file with input sequences
         "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
         "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
+        "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
+        "--output-errors {output.errors} "  # -E: Path to output errors and warnings occurred during processing
         "&> {log}"                          # Log redirection
 
 ###############################################################################
