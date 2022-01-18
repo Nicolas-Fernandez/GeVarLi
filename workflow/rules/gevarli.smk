@@ -460,18 +460,16 @@ rule awk_genome_meandepth:
         "awk '{{ "                                 # Awk, a program that you can use to select particular records in a file and perform operations upon them
         "totalBases += ( $3 - $2 ) * $4 ; "         # Total bases 
         "totalBasesSq += (( $3 - $2 ) * $4 )**2 ; " # Total bases square
-        "genomeSize += ( $3 - $2 ) "                # Genome size 
-        "}} END {{ "                                # End
-        "print "                                    # Print
+        "genomeSize += ( $3 - $2 ) }} "             # Genome size 
+        "END "                                      # End
+        "{{ print "                                 # Print
         """ "sample_id", "\t", """                  # Sample ID header
         """ "mean_depth", "\t", """                 # Mean depth header
-        """ "standard_deviation" ORS """        # Standard deviation header
-#        "}} "
-#        "{{ print "                                 # Print
+        """ "standard_deviation" """                # Standard deviation header
+        "ORS "                                      # \n newline
         """ "{wildcards.sample}", "\t", """         # Sample ID value
         """ int(totalBases / genomeSize), "\t", """ # Mean depth value
-        """ int(sqrt((totalBasesSq / genomeSize) - (totalBases / genomeSize)**2)) """ # Standard deviation value
-        "}}' "
+        """ int(sqrt((totalBasesSq / genomeSize) - (totalBases / genomeSize)**2)) }}' """ # Standard deviation value
         "{input.genomecov} "                        # BedGraph coverage input
         "> {output.depth} "                         # Mean depth output
         "2> {log}"                                  # Log redirection
