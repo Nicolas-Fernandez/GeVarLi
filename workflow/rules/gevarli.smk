@@ -174,7 +174,7 @@ rule bcftools_consensus:
     input:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}x_maskedref.fasta",
         indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz",
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi"
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.bgz.tbi"
     output:
         constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}x_consensus.fasta.tmp")
     log:
@@ -198,7 +198,7 @@ rule tabix_tabarch_indexing:
     input:
         bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.vcf.bgz"
     output:
-        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.tbi")
+        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}x_indelfilt.bgz.tbi")
     log:
         "results/11_Reports/tabix/{sample}_{aligner}_{mincov}x_indelarch-index.log"
     shell:
