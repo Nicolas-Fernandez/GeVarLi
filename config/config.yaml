@@ -69,6 +69,11 @@ bowtie2:
     # '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
     - '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
 
+## NEXTCLADE ----------------------------------------------------------------------------------------
+nextclade:
+  refseq: 'resources/nextclade/reference.fasta' # Nextclade reference sequence
+  reftree: 'resources/nextclade/tree.json'      # Nextclade reference tree
+
 ## SICKLE-TRIM ---------------------------------------------------------------------------------------
 sickle-trim:
   command: 'pe' # should be 'pe' if paired-end sequences (default) or 'se' if single-end sequences
