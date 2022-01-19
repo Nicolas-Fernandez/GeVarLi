@@ -367,7 +367,7 @@ rule bedtools_merged_mask:
     conda:
         BEDTOOLS
     input:
-        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}X-mincovfilt.bed"
+        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}X_mincovfilt.bed"
     output:
         lowcovmask = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_lowcovmask.bed")
     log:
