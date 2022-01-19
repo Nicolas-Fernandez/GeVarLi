@@ -1,25 +1,9 @@
 
-# GeVarLi: Genome assembly, Variant calling and Lineage assignment (Pangolin) #
+# GeVarLi: Genome assembly, Variant calling and Lineage assignment #
 
 ## Description ##
 
-GeVarLi check NGS (illumina) reads quality and clean it if needed, using: 
-
-- **FastQC** to check global quality
-- **FastqScreen** to check putative contamination(s)
-- **MultiQC** to generate HTML reports  
-
-- **CutAdapts** to trim NGS sequencing adapters  
-- **SickleTrim** to trim reads on base-calling quality score  
-
-GeVarLi align cleaned reads againt reference genome, with bwa or bowtie2 or both
-
-- **1** mark duplicated reads
-- **2** caclul genome coverage
-- **3** variants calling
-- **4** assemble consensus sequence
-- **5** pangolin leanage assignation
-
+TODO more concise
 
 ## Badges ##
 
@@ -114,7 +98,6 @@ git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 cd ./GeVarLi_Pipeline_macOSX/
 ```
 
-
 ## Usage ##
 
 - Copy your **paired-end** reads in **fastq.gz** format files into: **./resources/reads/** directory  
@@ -133,27 +116,27 @@ A terminal window will open and analyzes start. You can close the terminal windo
 
 ### Results ###
 
-Yours results are available in results directory:
+Yours results are available in results directory as follow:
 
-### root ###
+#### root ####
 
 - *All_consensus_sequences.fasta*: all consensus assembled genomes in fasta format
 - *All_genome_coverages.tsv*: all genome coverage in tsv format
 - *All_pangolin_lineages.tsv*: all pangolin lineages in tsv format
 - *All_nextclade_lineages.tsv*: _comming soon_ all nextclade lineages in tsv format
 
-### 00_Quality_Control ###
+#### 00_Quality_Control ####
 
 - *fastq-screen*: raw reads putative contaminations reports for each samples in html, png and txt formats 
 - *fastqc*: raw reads quality reports for each samples in html and zip format
 - *multiqc*: fastq-screen and fastqc results agrgation report for all samples in html format
 
-### 01_Trimming ###
+#### 01_Trimming ####
 
 - *sickle*: paired reads, without adapters and quality trimmed
 - _cutadapt: paired reads, without adapters (default: tempdir, removed, save disk usage)_
 
-### 02_Mapping ###
+#### 02_Mapping ####
 
 - _mapped.sam_: (default: tempdir, removed, save disk usage)_
 - _sortbynames.bam_: (default: tempdir, removed, save disk usage)_
@@ -162,12 +145,12 @@ Yours results are available in results directory:
 - *markdup.bam*:
 - *markdup.bai*:
 
-### 03_Coverage ###
-### 04_Variants ###
-### 05_Consensus ###
-### 06_Lineages ###
-### 10_graphs ###
-### 11_Reports ###
+#### 03_Coverage ####
+#### 04_Variants ####
+#### 05_Consensus ####
+#### 06_Lineages ####
+#### 10_graphs ####
+#### 11_Reports ####
 
 
 
@@ -219,6 +202,99 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
 - **bismark**: Same for bismark (for bisulfite sequencing only)
 - **threads**: Set this value to the number of cores you want for mapping reads (default: 1, but overwrited by Snakemake and config.yaml file)
 - **databases**: This section enables you to configure multiple genomes databases (aligner index files) to search against in your screen
+
+
+### Directories paths ###
+
+  GeVarLi.sh
+  README.md
+  *config*/
+ ├──  config.yaml
+ └──  fastq-screen.conf
+  *resources*/
+ ├──  *genomes*/
+ │  ├──  Adapters.fasta
+ │  ├──  Ebola_ZEBOV.fasta
+ │  ├──  Echerichia_coli_U00096.fasta
+ │  ├──  HIV_HXB2.fasta
+ │  ├──  Phi-X174.fasta
+ │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta
+ │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta.fai
+ │  └──  UniVec_wo_phi-X174.fasta
+ ├──  *indexes*/
+ │  ├──  *bowtie2*/
+ │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.1.bt2
+ │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.2.bt2
+ │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.3.bt2
+ │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.4.bt2
+ │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.rev.1.bt2
+ │  │  └──  SARS-CoV-2_Wuhan-WIV04_2019.rev.2.bt2
+ │  └──  *bwa*/
+ │     ├──  Adapters.amb
+ │     ├──  Adapters.ann
+ │     ├──  Adapters.bwt
+ │     ├──  Adapters.pac
+ │     ├──  Adapters.sa
+ │     ├──  Ebola_ZEBOV.amb
+ │     ├──  Ebola_ZEBOV.ann
+ │     ├──  Ebola_ZEBOV.bwt
+ │     ├──  Ebola_ZEBOV.pac
+ │     ├──  Ebola_ZEBOV.sa
+ │     ├──  Echerichia_coli_U00096.amb
+ │     ├──  Echerichia_coli_U00096.ann
+ │     ├──  Echerichia_coli_U00096.bwt
+ │     ├──  Echerichia_coli_U00096.pac
+ │     ├──  Echerichia_coli_U00096.sa
+ │     ├──  HIV_HXB2.amb
+ │     ├──  HIV_HXB2.ann
+ │     ├──  HIV_HXB2.bwt
+ │     ├──  HIV_HXB2.pac
+ │     ├──  HIV_HXB2.sa
+ │     ├──  Phi-X174.amb
+ │     ├──  Phi-X174.ann
+ │     ├──  Phi-X174.bwt
+ │     ├──  Phi-X174.pac
+ │     ├──  Phi-X174.sa
+ │     ├──  SARS-CoV-2_Wuhan-WIV04_2019.amb
+ │     ├──  SARS-CoV-2_Wuhan-WIV04_2019.ann
+ │     ├──  SARS-CoV-2_Wuhan-WIV04_2019.bwt
+ │     ├──  SARS-CoV-2_Wuhan-WIV04_2019.pac
+ │     ├──  SARS-CoV-2_Wuhan-WIV04_2019.sa
+ │     ├──  UniVec_wo_phi-X174.amb
+ │     ├──  UniVec_wo_phi-X174.ann
+ │     ├──  UniVec_wo_phi-X174.bwt
+ │     ├──  UniVec_wo_phi-X174.pac
+ │     └──  UniVec_wo_phi-X174.sa
+ ├──  *nextclade*/
+ │  ├──  genemap.gff
+ │  ├──  primers.csv
+ │  ├──  qc.json
+ │  ├──  reference.fasta
+ │  ├──  sequences.fasta
+ │  ├──  tag.json
+ │  └──  tree.json
+ └──  *reads*/
+    └──  .gitkeep
+  *visuals*/
+ ├──  download_button.png
+ └──  rulegraph.png
+  *workflow*/
+ ├──  *envs*/
+ │  ├──  bcftools-1.14.yaml
+ │  ├──  bedtools-2.30.0.yaml
+ │  ├──  bowtie2-2.4.4.yaml
+ │  ├──  bwa-0.7.17.yaml
+ │  ├──  cutadapt-3.5.yaml
+ │  ├──  fastq-screen-0.14.0.yaml
+ │  ├──  fastqc-0.11.9.yaml
+ │  ├──  lofreq-2.1.5.yaml
+ │  ├──  multiqc-1.11.yaml
+ │  ├──  nextclade-1.9.0.yaml
+ │  ├──  pangolin-3.1.17.yaml
+ │  ├──  samtools-1.14.yaml
+ │  └──  sickle-trim-1.33.yaml
+ └──  *rules*/
+    └──  gevarli.smk
 
 
 ## Support ##
