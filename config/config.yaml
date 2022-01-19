@@ -5,19 +5,19 @@
 # Aim: Config file SARS-CoV-2 GEnome assembling, VARiant analysis and LIneage (pangolin) calling pipeline
 # Date: 2021.10.12
 # Use: Edit or (de)comment settings
-# Latest modification: 2021.01.03
-# Todo: na
+# Latest modification: 2021.01.19
+# Todo: done
 
 ###############################################################################
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 12            # cpus
-  mem_gb: 12          # mem in Gb
+  cpus: 4            # cpus
+  mem_gb: 4          # mem in Gb
   tmpdir: '$TMPDIR'  # temporary directory (default: $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
   #tmpdir: '/scratch' # temporary directory (HPC)
-   
+
 ## ENVIRONNEMENTS ------------------------------------------------------------------------------------
 conda:
   fastqc:       '../envs/fastqc-0.11.9.yaml'
@@ -30,6 +30,7 @@ conda:
   samtools:     '../envs/samtools-1.14.yaml'
   bedtools:     '../envs/bedtools-2.30.0.yaml'
   bcftools:     '../envs/bcftools-1.14.yaml'
+  gawk:         '../envs/gawk-5.1.0.yaml'
   lofreq:       '../envs/lofreq-2.1.5.yaml'
   pangolin:     '../envs/pangolin-3.1.17.yaml'
   nextclade:    '../envs/nextclade-1.9.0.yaml'
@@ -38,7 +39,7 @@ conda:
 aligner: # Choose (de/comment) one or both aligners
   - bwa     # fast
   #- bowtie2 # sensitivity requiried, see below "Bowtie2" options
-  
+
 ## CONSENSUS -----------------------------------------------------------------------------------------
 consensus:
   reference: # Choose (de/comment) or add one unique reference
@@ -48,7 +49,7 @@ consensus:
   #- '1' # Only for testing ! (default DNAstar)
   - '10' # Only for testing ! (default CNR Lyon)
   #- '30' # Recomanded (if enough reads depth)
-  
+
 ## INDEL ---------------------------------------------------------------------------------------------
 indel:
   covmin: '10'  # Minimum allele freq allowed (<1=off) (FLOAT)
