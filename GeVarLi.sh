@@ -10,7 +10,7 @@ echo "Affiliation: IRD_U233_TransVIHMI"
 echo "Aim: SARS-CoV-2 Genome assembling, Variant and Lineage (pangolin) calling"
 echo "Date: 2021.10.12"
 echo "Run: snakemake -s path/to/gevarli.smk --cores --use-conda"
-echo "Latest modification: 2021.01.17"
+echo "Latest modification: 2021.01.19"
 echo "Todo: na"
 echo "________________________________________________________________________"
 
@@ -163,12 +163,12 @@ cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_c
 
 echo "________________________________________________________________________"
 
-###### Concatenate all mean depth coverage ######
+###### Concatenate all coverage stats ######
 echo ""
-echo "##### CONCATENATE MEAN DEPTH #####"
+echo "##### CONCATENATE COVERAGE STATS #####"
 echo "----------------------------------"
 
-cat ${workdir}/results/03_Coverage/*mean-depth.tsv > ${workdir}/results/All_genome_coverages.tsv
+cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_genome_coverages.tsv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
     && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv

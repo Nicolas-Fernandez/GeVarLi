@@ -1,0 +1,21 @@
+name: Gawk-5.1.0
+channels:
+  - r
+  - anaconda
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - gawk=5.1.0=h8a0c380_0
+  - gettext=0.21.0=h7535e17_0
+  - icu=69.1=he49afe7_0
+  - libcxx=12.0.1=habf9029_1
+  - libiconv=1.16=h1de35cc_0
+  - libxml2=2.9.12=h7e28ab6_1
+  - libzlib=1.2.11=h9173be1_1013
+  - llvm-openmp=12.0.1=hda6cdc1_1
+  - ncurses=6.3=he49afe7_0
+  - readline=8.1.2=hca72f7f_1
+  - xz=5.2.5=h1de35cc_0
+  - zlib=1.2.11=h9173be1_1013
+prefix: /Users/2021nf001/miniconda3/envs/Gawk-5.1.0
