@@ -12,8 +12,8 @@
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 4            # cpus
-  mem_gb: 4          # mem in Gb
+  cpus: 12            # cpus
+  mem_gb: 12          # mem in Gb
   tmpdir: '$TMPDIR'  # temporary directory (default: $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
   #tmpdir: '/scratch' # temporary directory (HPC)
