@@ -5,7 +5,7 @@
 # Aim: SARS-CoV-2 GEnome assembling, Variant analysis and LIneage (pangolin) calling pipeline
 # Date: 2021.10.12
 # Run: snakemake -s path/to/gevarli.smk --cores --use-conda 
-# Latest modification: 2021.01.19
+# Latest modification: 2021.01.20
 # Todo: done
 
 ###############################################################################
