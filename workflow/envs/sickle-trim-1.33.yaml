@@ -8,4 +8,4 @@ channels:
 dependencies:
   - sickle-trim=1.33=h188c3c3_6
   - zlib=1.2.11=h7795811_1010
-prefix: /Users/2021nf001/miniconda3/envs/sickle-1.33
+

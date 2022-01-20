@@ -19,4 +19,4 @@ dependencies:
   - perl=5.32.0=hbcb3906_0
   - xz=5.2.5=haf1e3a3_1
   - zlib=1.2.11=h7795811_1010
-prefix: /Users/2021nf001/miniconda3/envs/fastqc
+
