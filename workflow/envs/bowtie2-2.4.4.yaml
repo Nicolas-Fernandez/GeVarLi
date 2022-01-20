@@ -27,4 +27,4 @@ dependencies:
   - xz=5.2.5=h1de35cc_0
   - zlib=1.2.11=h1de35cc_3
   - zstd=1.4.9=h582d3a0_0
-prefix: /Users/2021nf001/miniconda3/envs/bowtie2-2.4.4
+

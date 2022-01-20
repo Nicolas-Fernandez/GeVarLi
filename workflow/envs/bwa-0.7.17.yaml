@@ -9,4 +9,4 @@ dependencies:
   - bwa=0.7.17=h188c3c3_8
   - perl=5.32.1=1_h0d85af4_perl5
   - zlib=1.2.11=h1de35cc_3
-prefix: /Users/2021nf001/miniconda3/envs/bwa-0.7.17
+
