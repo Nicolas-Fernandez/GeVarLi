@@ -11,7 +11,7 @@ echo "Aim: SARS-CoV-2 Genome assembling, Variant calling and Lineage assignation
 echo "Date: 2021.10.12"
 echo "Run: snakemake -s path/to/gevarli.smk --cores --use-conda"
 echo "Latest modification: 2021.01.20"
-echo "Todo: na"
+echo "Todo: done"
 echo "________________________________________________________________________"
 
 ###### Hardware check ######
@@ -194,6 +194,7 @@ echo "##### CONCATENATE FASTA FILES #####"
 echo "-----------------------------------"
 
 cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
+cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_ReadsQC_report.html
 
 echo "________________________________________________________________________"
 
@@ -206,9 +207,6 @@ cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
     && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
-
-# Remove when Christelle down
-#grep -E "^Average =" ${workdir}/results/03_Coverage/*_depth.txt | cat > ${workdir}/results/All_coverages_CHRISTELLE.tsv
 
 echo "________________________________________________________________________"
 
