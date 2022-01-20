@@ -211,20 +211,19 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
   *config*/  
  ├──  config.yaml  
  └──  fastq-screen.conf  
-  *resources*/  
- ├──  *genomes*/  
+  *resources/*  
+ ├──  *genomes/*  
  │  ├──  Adapters.fasta  
  │  ├──  Ebola_ZEBOV.fasta  
  │  ├──  Echerichia_coli_U00096.fasta  
  │  ├──  HIV_HXB2.fasta  
  │  ├──  Phi-X174.fasta  
  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta  
- │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta.fai  
  │  └──  UniVec_wo_phi-X174.fasta  
- ├──  *indexes*/  
- │  ├──  *bowtie2*/  
+ ├──  *indexes/*  
+ │  ├──  *bowtie2/*  
  │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019  
- │  └──  *bwa*/  
+ │  └──  *bwa/*  
  │     ├──  SARS-CoV-2_Wuhan-WIV04_2019  
  │     ├──  Adapters  
  │     ├──  Ebola_ZEBOV  
@@ -232,7 +231,7 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
  │     ├──  HIV_HXB2  
  │     ├──  Phi-X174  
  │     ├──  UniVec_wo_phi-X174  
- ├──  *nextclade*/  
+ ├──  *nextclade/*  
  │  ├──  genemap.gff  
  │  ├──  primers.csv  
  │  ├──  qc.json  
@@ -240,13 +239,13 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
  │  ├──  sequences.fasta  
  │  ├──  tag.json  
  │  └──  tree.json  
- └──  *reads*/  
+ └──  *reads/*  
     └──  .gitkeep  
-  *visuals*/  
+  *visuals/*  
  ├──  download_button.png  
  └──  rulegraph.png  
-  *workflow*/  
- ├──  *envs*/  
+  *workflow/*  
+ ├──  *envs/*  
  │  ├──  bcftools-1.14.yaml  
  │  ├──  bedtools-2.30.0.yaml  
  │  ├──  bowtie2-2.4.4.yaml  
@@ -260,7 +259,7 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
  │  ├──  pangolin-3.1.17.yaml  
  │  ├──  samtools-1.14.yaml  
  │  └──  sickle-trim-1.33.yaml  
- └──  *rules*/  
+ └──  *rules/*  
     └──  gevarli.smk  
 
 
