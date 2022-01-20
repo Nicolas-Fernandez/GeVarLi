@@ -196,19 +196,19 @@ rule tabix_tabarch_indexing:
     conda:
         SAMTOOLS
     input:
-        bgzip = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz"
+        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz"
     output:
         index = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.bgz.tbi")
     log:
         "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_indelarch-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
-        "{input.bgzip} "     # The input data file must be position sorted and compressed by bgzip
+        "{input.archive} "   # The input data file must be position sorted and compressed by bgzip
         "1> {output.index} " # Tabix output TBI index formats
         "2> {log}"           # Log redirection 
 
 ###############################################################################
-rule bgzip_indel_compressing:
+rule bgzip_indel_archive:
     # Aim: indel block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
@@ -220,7 +220,7 @@ rule bgzip_indel_compressing:
     input:
         indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf"
     output:
-        bgzip = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz")
+        archive = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz")
     log:
         "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_indel-bgz.log"
     shell:
@@ -228,7 +228,7 @@ rule bgzip_indel_compressing:
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
         "--threads {resources.cpus} " # -@: Number of threads to use (default: 1)
         "{input.indelfilt} "          # VCF input file, gzip suuported, no streaming supported
-        "1> {output.bgzip} "          # VCF output file, gzip supported (default: standard output)
+        "1> {output.archive} "        # VCF output file, gzip supported (default: standard output)
         "2> {log}"                    # Log redirection 
 
 ###############################################################################

@@ -7,10 +7,10 @@ echo "-----------------"
 echo "Name: GeVarLi pipeline"
 echo "Author: Nicolas Fernandez"
 echo "Affiliation: IRD_U233_TransVIHMI"
-echo "Aim: SARS-CoV-2 Genome assembling, Variant and Lineage (pangolin) calling"
+echo "Aim: SARS-CoV-2 Genome assembling, Variant calling and Lineage assignation"
 echo "Date: 2021.10.12"
 echo "Run: snakemake -s path/to/gevarli.smk --cores --use-conda"
-echo "Latest modification: 2021.01.19"
+echo "Latest modification: 2021.01.20"
 echo "Todo: na"
 echo "________________________________________________________________________"
 
@@ -56,14 +56,14 @@ echo "##### RENAME FASTQ FILES #####"
 echo "------------------------------"
 
 # With rename command from macOSX 
-rename 's/_S\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-rename 's/_L\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
-rename 's/_001.fastq.gz/.fastq.gz/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+rename --verbose 's/_S\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+rename --verbose 's/_L\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+rename --verbose 's/_001.fastq.gz/.fastq.gz/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 # With rename command as part of the util-linux package
-rename _S\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-rename _L\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
-rename _001.fastq.gz .fastq.gz ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+rename --verbose _S\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+rename --verbose _L\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+rename --verbose _001.fastq.gz .fastq.gz ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 echo "________________________________________________________________________"
 
@@ -72,8 +72,46 @@ echo ""
 echo "##### SNAKEMAKE PIPELINE #####"
 echo "-----------------------------"
 
+echo "Conda environments list:"
+# Specify working directory (relative paths in the snakefile will use this as their origin).
+# The workflow definition in form of a snakefile.
+# List all conda environments and their location on disk.
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --list-conda-envs
+
+echo ""
+echo "Conda environments update:"
+# Specify working directory (relative paths in the snakefile will use this as their origin).
+# The workflow definition in form of a snakefile.
+# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Cleanup unused conda environments.
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --cores \
+    --conda-cleanup-envs
+
+echo ""
+echo "Conda environments setup:"
+# Specify working directory (relative paths in the snakefile will use this as their origin).
+# The workflow definition in form of a snakefile.
+# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# If defined in the rule, run job in a conda environment.
+# If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --cores \
+    --use-conda \
+    --conda-create-envs-only \
+    --conda-frontend mamba
+
+echo ""
 echo "Unlocking working directory:"
-# Specify working directory (relative paths in the snakefile will use this as their origin)
+# Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Remove a lock on the working directory.
 snakemake \
@@ -83,32 +121,29 @@ snakemake \
 
 echo ""
 echo "Dry run:"
+# Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
-# Specify working directory (relative paths in the snakefile will use this as their origin)
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
+# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If you have a very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
-    --prioritize multiqc_reports_aggregation \
     --use-conda \
-    --conda-frontend mamba \
+    --prioritize multiqc_reports_aggregation \
     --dryrun \
     --quiet
 
 echo ""
 echo "Let's go!"
+# Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
-# Specify working directory (relative paths in the snakefile will use this as their origin)
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
+# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
 # Go on with independent jobs if a job fails.
 # Re-run all jobs the output of which is recognized as incomplete.
@@ -117,12 +152,11 @@ snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
-    --prioritize multiqc_reports_aggregation \
     --use-conda \
-    --conda-frontend mamba \
+    --prioritize multiqc_reports_aggregation \
     --printshellcmds \
     --keep-going \
-    --rerun-incomplete \
+    --rerun-incomplete
 
 echo "________________________________________________________________________"
 
