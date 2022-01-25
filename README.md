@@ -54,9 +54,9 @@ rm Miniconda3-latest-MacOSX-x86_64.sh
 Install **Snakemake** (_i.e. v.6.12.1_) using Conda package management system  
 _Follow the prompts on the installer screens_  
 ```shell
-conda install -n base -c conda-forge mamba --yes
-mamba install -n base -c bioconda rename --yes
-mamba install -n base -c conda-forge -c bioconda snakemake=6.12.1 --yes
+conda install -c conda-forge mamba --yes
+mamba install -c bioconda rename --yes
+mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
 
 
