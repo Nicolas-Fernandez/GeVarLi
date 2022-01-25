@@ -1,5 +1,5 @@
 
-# GeVarLi: Genome assembly, Variant calling and Lineage assignment #
+# GeVarLi: GEnome assembly, VARiant calling and LIneage assignment #
 
 ## Description ##
 
