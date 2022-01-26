@@ -1,5 +1,5 @@
 
-# GeVarLi: **GE**nome assembly, **VAR**iant calling and **LI**neage assignment #
+# **GeVarLi**: **Ge**nome assembly, **Var**iant calling and **Li**neage assignment #
 
 ## Description ##
 
@@ -28,7 +28,8 @@ This is the **macOSX** version (specific conda environements).
 
 ## Visuals ##
 
-![Image of rule graph](./visuals/rulegraph.png)  
+<img src="./visuals/rulegraph.png" width="150" height="300">  
+
 
 ## Installation ##
 
