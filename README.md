@@ -28,7 +28,7 @@ This is the **macOSX** version (specific conda environements).
 
 ## Visuals ##
 
-![Image of rule graph](./visuals/rulegraph.pdf)  
+![Image of rule graph](./visuals/rulegraph.png)  
 
 ## Installation ##
 
