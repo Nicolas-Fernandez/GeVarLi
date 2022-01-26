@@ -3,23 +3,23 @@
 
 ## Description ##
 
-GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.
-The pipeline first control the reads quality and clean it if needed, and last submit obtained consensus sequences to Nextclade and Pangolin classification.
-Intermediates usefull files are	also provided, like alignement bam	files (use IGV), variants vcf files and genome coverage statistics.
+GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
+The pipeline first control the reads quality and clean it if needed, and last submit obtained consensus sequences to Nextclade and Pangolin classification.  
+Intermediates usefull files are	also provided, like alignement bam	files (use IGV), variants vcf files and genome coverage statistics.  
 
 This is the **macOSX** version (specific conda environements).
 
 ## Badges ##
 
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOS](<https://badgen.net/badge/icon/Hight Sierra (10.13),Catalina (10.15),Big Sure (11)/cyan?icon=apple&label&list=|&scale=0.9>)
+![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13) | Catalina (10.15) | Big Sure (11)/cyan?icon=apple&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
 ![Issues opened](<https://badgen.net/badge/Issues opened/0/yellow?scale=0.9>)
 ![Maintened](<https://badgen.net/badge/Maintened/Yes/red?scale=0.9>)
 ![Wiki](<https://badgen.net/badge/icon/Wiki/pink?icon=wiki&label&scale=0.9>)
 ![Open Source](<https://badgen.net/badge/icon/Open Source/purple?icon=https://upload.wikimedia.org/wikipedia/commons/4/44/Corazón.svg&label&scale=0.9>)
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
-![Gitlab](<https://badgen.net/badge/icon/Conda 4.10.3/orange?icon=gitlab&label&scale=0.9>)
+![Gitlab](<https://badgen.net/badge/icon/Gitlab/orange?icon=gitlab&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
 ![Python](<https://badgen.net/badge/icon/Python 3.9.5/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
 ![Snakemake](<https://badgen.net/badge/icon/Snakemake 6.12.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
@@ -28,7 +28,7 @@ This is the **macOSX** version (specific conda environements).
 
 ## Visuals ##
 
-![Image of rule graph](./visuals/rulegraph.png)  
+![Image of rule graph](./visuals/rulegraph.pdf)  
 
 ## Installation ##
 
