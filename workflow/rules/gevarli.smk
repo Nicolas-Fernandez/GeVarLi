@@ -2,9 +2,9 @@
 # Name: GeVarLi pipeline
 # Author: Nicolas Fernandez
 # Affiliation: IRD_U233_TransVIHMI
-# Aim: SARS-CoV-2 GEnome assembling, Variant analysis and LIneage (pangolin) calling pipeline
+# Aim: SARS-CoV-2 GEnome assembling, VARiant calling and LIneage assignation pipeline
 # Date: 2021.10.12
-# Run: snakemake -s path/to/gevarli.smk --cores --use-conda 
+# Run: snakemake --snakefile gevarli.smk --cores --use-conda 
 # Latest modification: 2021.01.20
 # Todo: done
 
