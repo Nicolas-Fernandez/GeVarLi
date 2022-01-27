@@ -36,21 +36,21 @@ This is the **macOSX** version (specific conda environements).
 
 ### Conda _(prior!)_ ###
 
-Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_)  
+- Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_)
 [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 _Follow the screen prompt instructions_  
 ```shell
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
-bash Miniconda3-latest-MacOSX-x86_64.sh
-rm Miniconda3-latest-MacOSX-x86_64.sh
+bash ./Miniconda3-latest-MacOSX-x86_64.sh
+rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-_Restart shell (close and reopen new terminal window)_
+_Restart shell (close and reopen the terminal window)_
 
 
 ### Snakemake _(prior!)_ ###
 
-Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
-_Follow the prompts on the installer screens_  
+- Install **Snakemake** (_i.e. v.6.12.1_) using Conda
+_Follow the screen prompt instructions_  
 ```shell
 conda install -c conda-forge mamba --yes
 mamba install -c bioconda rename --yes
@@ -60,58 +60,52 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 
 ### GeVarLi ###
 
-**Download** _OR_ **Clone** the **GeVarLi pipeline** project  
+- Clone the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab (_ID: 31729804_)
 
-#### Difference between **Download** and **Clone** ####
-
-To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
-If you download it, you cannot sync the repository with the remote repository on GitLab  
-Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
-You can then modify the files locally and upload the changes to the remote repository on GitLab  
-
-#### Download ####
-
-- Download and extract source code archive (_zip_, **tar.gz**, _tar.bz2_, _tar_): [GeVarLi on GitLab](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX)  
-
-![Image of download button](./visuals/download_button.png)  
-
-```shel
-wget  https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX/-/archive/main/GeVarLi_Pipeline_macOSX-main.tar.gz -O ~/GeVarLi_Pipeline.macOSX
-tar -xzvf ~/GeVarLi_Pipeline_macOSX.tar.gz
-rm -f ~/GeVarLi_Pipeline_macOSX.tar.gz 
-cd ~/Desktop/GeVarLi_Pipeline_macOSX/
-```
-
-#### Clone ####
-
-- Clone with **SSH** (_when you want to authenticate only one time_)  
-Authenticate with GitLab by following the instructions in the [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)  
-```shell
-git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-cd ./GeVarLi_Pipeline_macOSX/
-```
-
-Clone with **HTTPS** (_when you want to authenticate each time you perform an operation between your computer and GitLab_)  
+#### HTTPS ####
+_If you want to authenticate each time you perform an operation between your computer and GitLab_
 ```shell
 git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-cd ./GeVarLi_Pipeline_macOSX/
 ```
+```shell
+mv ./GeVarLi_Pipeline_macOSX/ ~/Desktop/GeVarLi_Pipeline_macOSX/
+cd ~/Desktop/GeVarli_Pipeline_macOSX/
+```
+
+#### SSH ####
+_If you want to authenticate only one time (follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html))_
+```shell
+git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
+```
+```shell
+mv GeVarLi_Pipeline_macOSX/ ~/Desktop/GeVarLi_Pipeline_macOSX/
+cd ~/Desktop/GeVarli_Pipeline_macOSX/
+```
+
+Difference between **Download** and **Clone**:  
+- To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
+- If you download it, you cannot sync the repository with the remote repository on GitLab  
+- Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
+- You can then modify the files locally and upload the changes to the remote repository on GitLab  
+- You can then update the files locally and download the changes from the remote repository on GitLab  
+```shell
+git pull
+```
+
 
 ## Usage ##
 
-- Copy your **paired-end** reads in **fastq.gz** format files into: **./resources/reads/** directory  
-- (_option_) Edit **config.yaml** file on **./config/** directory, as you want, if needed  
-- (_option_) Edit **fastq-screen.conf** file on **./config/** directory, as you want, if needed  
-- Be sure your bash script is executable  
-```shell
-sudo chmod +x ./GeVarLi.sh
-```
-- Run **GeVarLi.sh** bash script by double-clicking on it _(a terminal window will open and analyzes start)_
+- Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
+- Double-click on **GeVarLi.sh** bash script to run the GeVarLi pipeline
+_A new terminal window will open and yours analyzes will start)_
+
+- _Option: Edit **config.yaml** file in **./config/** directory
+- _Option: Edit **fastq-screen.conf** file in **./config/** directory
 
 
 ### Results ###
 
-Yours results are available in results directory as follow:
+Yours results are available in **./results** directory, as follow:
 
 #### root ####
 
