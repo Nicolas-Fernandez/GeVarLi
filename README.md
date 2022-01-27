@@ -4,8 +4,10 @@
 ## Description ##
 
 GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
-The pipeline first control the reads quality and clean it if needed, and last submit obtained consensus sequences to Nextclade and Pangolin classification.  
-Intermediates usefull files are	also provided, like alignement bam	files (use IGV), variants vcf files and genome coverage statistics.  
+
+- First, control reads qualities and clean it, if needed.  
+- Intermediates usefull files are also provided, like alignement bam files (use IGV), variants vcf files and genome coverage statistics.  
+- Last, submit obtained consensus sequences to Nextclade and Pangolin classifications.  
 
 This is the **macOSX** version (specific conda environements).
 
@@ -32,12 +34,11 @@ This is the **macOSX** version (specific conda environements).
 <img src="./visuals/rulegraph.png" width="150" height="300">  
 
 
-## Installation ##
+## Installations ##
 
-### Conda _(prior!)_ ###
+### Conda _(¡prior!)_ ###
 
-- Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_)
-[Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+- Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_): [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 _Follow the screen prompt instructions_  
 ```shell
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
@@ -47,9 +48,9 @@ rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 _Restart shell (close and reopen the terminal window)_
 
 
-### Snakemake _(prior!)_ ###
+### Snakemake _(¡prior!)_ ###
 
-- Install **Snakemake** (_i.e. v.6.12.1_) using Conda
+- Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
 _Follow the screen prompt instructions_  
 ```shell
 conda install -c conda-forge mamba --yes
@@ -87,7 +88,7 @@ Difference between **Download** and **Clone**:
 - If you download it, you cannot sync the repository with the remote repository on GitLab  
 - Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
-- You can then update the files locally and download the changes from the remote repository on GitLab  
+- You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
 git pull
 ```
