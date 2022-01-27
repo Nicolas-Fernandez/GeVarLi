@@ -9,6 +9,7 @@ Intermediates usefull files are	also provided, like alignement bam	files (use IG
 
 This is the **macOSX** version (specific conda environements).
 
+
 ## Badges ##
 
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
@@ -35,29 +36,20 @@ This is the **macOSX** version (specific conda environements).
 
 ### Conda _(prior!)_ ###
 
-Download and install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
-1. Donwload conda installer _(i.e. for Miniconda3 with Python 3.9 on MacOSX-64-bit)_:
-```shel
+Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_)  
+[Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+_Follow the screen prompt instructions_  
+```shell
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
-```
-
-2. Install conda using installer bash script:
-_Follow the prompts on the installer screens_  
-```shell
 bash Miniconda3-latest-MacOSX-x86_64.sh
-```
-
-3. Remove conda installer:
-```shell
 rm Miniconda3-latest-MacOSX-x86_64.sh
 ```
-
-4. Restart shell (close and reopen new terminal window)
+_Restart shell (close and reopen new terminal window)_
 
 
 ### Snakemake _(prior!)_ ###
 
-Install **Snakemake** (_i.e. v.6.12.1_) using Conda package management system  
+Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
 _Follow the prompts on the installer screens_  
 ```shell
 conda install -c conda-forge mamba --yes
@@ -110,15 +102,11 @@ cd ./GeVarLi_Pipeline_macOSX/
 - Copy your **paired-end** reads in **fastq.gz** format files into: **./resources/reads/** directory  
 - (_option_) Edit **config.yaml** file on **./config/** directory, as you want, if needed  
 - (_option_) Edit **fastq-screen.conf** file on **./config/** directory, as you want, if needed  
-- Be sure your bash script is executable, if not, you can run in a Terminal:
-
+- Be sure your bash script is executable  
 ```shell
 sudo chmod +x ./GeVarLi.sh
 ```
-
-- Run **GeVarLi.sh** bash script by double-clicking on it  
-
-A terminal window will open and analyzes start. You can close the terminal window the end.
+- Run **GeVarLi.sh** bash script by double-clicking on it _(a terminal window will open and analyzes start)_
 
 
 ### Results ###
@@ -298,6 +286,7 @@ Use Git tools to share!
 - Nicolas Fernandez (Developer and Maintener)  
 - Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
 - Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
+
 
 ## License ##
 
