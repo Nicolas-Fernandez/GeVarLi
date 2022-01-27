@@ -5,11 +5,11 @@
 
 GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
 
-- First, control reads qualities and clean it, if needed.  
+- First, control reads quality and clean it, if needed.  
 - Intermediates usefull files are also provided, like alignement bam files (use IGV), variants vcf files and genome coverage statistics.  
 - Last, submit obtained consensus sequences to Nextclade and Pangolin classifications.  
 
-This is the **macOSX** version (specific conda environements).
+_This is the **macOSX** version (specific conda environements)._
 
 
 ## Badges ##
@@ -38,7 +38,7 @@ This is the **macOSX** version (specific conda environements).
 
 ### Conda _(¡prior!)_ ###
 
-- Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_): [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_): [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 _Follow the screen prompt instructions_  
 ```shell
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
@@ -50,7 +50,7 @@ _Restart shell (close and reopen the terminal window)_
 
 ### Snakemake _(¡prior!)_ ###
 
-- Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
+Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
 _Follow the screen prompt instructions_  
 ```shell
 conda install -c conda-forge mamba --yes
@@ -61,10 +61,10 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 
 ### GeVarLi ###
 
-- Clone the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab (_ID: 31729804_)
+Clone the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab (_ID: 31729804_)
 
 #### HTTPS ####
-_If you want to authenticate each time you perform an operation between your computer and GitLab_
+If you want to authenticate each time you perform an operation between your computer and GitLab
 ```shell
 git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 ```
@@ -74,7 +74,7 @@ cd ~/Desktop/GeVarli_Pipeline_macOSX/
 ```
 
 #### SSH ####
-_If you want to authenticate only one time (follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html))_
+If you want to authenticate only one time (_follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)_)
 ```shell
 git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 ```
@@ -85,7 +85,7 @@ cd ~/Desktop/GeVarli_Pipeline_macOSX/
 
 Difference between **Download** and **Clone**:  
 - To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
-- If you download it, you cannot sync the repository with the remote repository on GitLab  
+- If you download it, you **cannot sync** the repository with the remote repository on GitLab  
 - Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
@@ -96,12 +96,12 @@ git pull
 
 ## Usage ##
 
-- Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
-- Double-click on **GeVarLi.sh** bash script to run the GeVarLi pipeline
-_A new terminal window will open and yours analyzes will start)_
+1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
+2. Double-click on **GeVarLi.sh** bash script to run the GeVarLi pipeline
+_A new terminal window will open and yours analyzes will start)_  
 
-- _Option: Edit **config.yaml** file in **./config/** directory
-- _Option: Edit **fastq-screen.conf** file in **./config/** directory
+_Option: Edit **config.yaml** file in **./config/** directory_  
+_Option: Edit **fastq-screen.conf** file in **./config/** directory_  
 
 
 ### Results ###
@@ -110,10 +110,11 @@ Yours results are available in **./results** directory, as follow:
 
 #### root ####
 
-- *All_consensus_sequences.fasta*: all consensus assembled genomes in fasta format
-- *All_genome_coverages.tsv*: all genome coverage in tsv format
-- *All_pangolin_lineages.tsv*: all pangolin lineages in tsv format
-- *All_nextclade_lineages.tsv*: _comming soon_ all nextclade lineages in tsv format
+- *All_reads_QC.html*: all reads quality reports from MultiQC in _html_ format
+- *All_consensus_sequences.fasta*: all consensus sequences in _fasta_ format
+- *All_genome_coverages.tsv*: all genome coverages in _tsv_ format
+- *All_pangolin_lineages.tsv*: all pangolin lineage reports  in _tsv_ format
+- *All_nextclade_lineages.tsv*: all nextclade lineage reports in _tsv_ format
 
 #### 00_Quality_Control ####
 
@@ -136,13 +137,28 @@ Yours results are available in **./results** directory, as follow:
 - *markdup.bai*:
 
 #### 03_Coverage ####
+
+- TODO
+
 #### 04_Variants ####
+
+- TODO
+
 #### 05_Consensus ####
+
+- TODO
+
 #### 06_Lineages ####
+
+- TODO
+
 #### 10_graphs ####
+
+- TODO
+
 #### 11_Reports ####
 
-
+- TODO
 
 ###  Configuration ###
 
@@ -160,13 +176,23 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
 
 #### Aligner ####
 
+- TODO
+
 #### Consensus ####
+
+- TODO
 
 #### InDel ####
 
+- TODO
+
 #### BWA ####
 
+- TODO
+
 #### Bowtie2 ####
+
+- TODO
 
 #### Sickle-trim ####
 
@@ -259,7 +285,7 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
 2. Read de awsome wiki ;)
 3. Create a new issue: Issues > New issue > Describe your issue
 4. Send an email to [nicolas.fernandez@ird.fr](url)
-5. Call me to `+33.(0)4.67.41.55.xx` (No don't please _O\_o_!)
+5. Call me to... No don't please _O\_o_!
 
 
 ## Roadmap ##
