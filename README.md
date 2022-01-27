@@ -97,7 +97,7 @@ git pull
 ## Usage ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
-2. Double-click on **GeVarLi.sh** bash script to run the GeVarLi pipeline
+2. Double-click on **GeVarLi.sh** bash script to run the GeVarLi pipeline  
 _A new terminal window will open and yours analyzes will start)_  
 
 _Option: Edit **config.yaml** file in **./config/** directory_  
