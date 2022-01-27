@@ -2,18 +2,17 @@
 ###############################################################################
 # Author: Nicolas Fernandez
 # Affiliation: IRD_TransVIHMI
-# Aim: Config file SARS-CoV-2 GEnome assembling, VARiant analysis and LIneage (pangolin) calling pipeline
+# Aim: Config file for GeVarLi pipeline
 # Date: 2021.10.12
 # Use: Edit or (de)comment settings
-# Latest modification: 2021.01.20
+# Latest modification: 2021.01.27
 # Todo: done
-
 ###############################################################################
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 12            # cpus
-  mem_gb: 12          # mem in Gb
+  cpus: 4            # cpus
+  mem_gb: 4          # mem in Gb
   tmpdir: '$TMPDIR'  # temporary directory (default: $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
   #tmpdir: '/scratch' # temporary directory (HPC)
