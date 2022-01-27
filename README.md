@@ -45,7 +45,7 @@ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-_Restart shell (close and reopen the terminal window)_
+_Restart shell (close and reopen the terminal window_
 
 
 ### Snakemake _(¡prior!)_ ###
