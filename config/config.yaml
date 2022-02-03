@@ -11,8 +11,8 @@
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 4            # cpus
-  mem_gb: 4          # mem in Gb
+  cpus: 12            # cpus
+  mem_gb: 16          # mem in Gb
   tmpdir: '$TMPDIR'  # temporary directory (default: $TMPDIR)
   #tmpdir: '.'        # temporary directory (local)
   #tmpdir: '/scratch' # temporary directory (HPC)
@@ -44,10 +44,9 @@ consensus:
   reference: # Choose (de/comment) or add one unique reference
     - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
   mincov: # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
-  #- '0' # Only for testing ! (not recomanded at all)
-  #- '1' # Only for testing ! (default DNAstar)
+  - '1' # Only for testing ! (default DNAstar)
   - '10' # Only for testing ! (default CNR Lyon)
-  #- '30' # Recomanded (if enough reads depth)
+  - '30' # Recomanded (if enough reads depth)
 
 ## INDEL ---------------------------------------------------------------------------------------------
 indel:
