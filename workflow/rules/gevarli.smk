@@ -1,27 +1,28 @@
-###########################################A############A####A####################
+
+#######T######R#####A#####N######S######V######I######H#######M######I#########
 # Name: GeVarLi pipeline
 # Author: Nicolas Fernandez
 # Affiliation: IRD_U233_TransVIHMI
-# Aim: SARS-CoV-2 GEnome assembling, VARiant calling and LIneage assignation pipeline
+# Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2021.01.20
+# Latest modification: 2021.02.07
 # Todo: done
-
 ###############################################################################
-# PUBLICATIONS #
-
 
 
 ###############################################################################
 # CONFIGURATION #
 configfile: "config/config.yaml"
 
+###############################################################################
 # FUNCTIONS #
 
+###############################################################################
 # WILDCARDS #
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
+###############################################################################
 # ENVIRONMENTS #
 CUTADAPT = config["conda"]["cutadapt"]      # Cutadapt
 SICKLETRIM = config["conda"]["sickle-trim"] # Sickle-trim
@@ -44,11 +45,13 @@ LOFREQ = config["conda"]["lofreq"] # LoFreq
 PANGOLIN = config["conda"]["pangolin"] # Pangolin
 NEXTCLADE = config["conda"]["nextclade"] # Nextclade
 
+###############################################################################
 # RESOURCES #
 CPUS = config["resources"]["cpus"]     # resources thread
 MEM_GB = config["resources"]["mem_gb"] # resources mem in Gb
 TMPDIR = config["resources"]["tmpdir"] # resources temporary directory
 
+###############################################################################
 # PARAMETERS #
 LENGTHc = config["cutadapt"]["length"]          # Cutadapt --minimum-length
 TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
@@ -173,8 +176,8 @@ rule bcftools_consensus:
         BCFTOOLS
     input:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta",
-        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz",
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.bgz.tbi"
+        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz",
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi"
     output:
         constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta.tmp")
     log:
@@ -183,7 +186,7 @@ rule bcftools_consensus:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
         "--fasta-ref {input.maskedref} "  # -f: reference sequence in fasta format
-        "{input.indelfilt} "              # VCF variants file
+        "{input.variantfilt} "            # VCF variants file
         "--output {output.constmp} "      # -o: write output to a file (default: standard output)
         "2> {log}"                        # Log redirection
 
@@ -196,11 +199,11 @@ rule tabix_tabarch_indexing:
     conda:
         SAMTOOLS
     input:
-        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz"
+        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz"
     output:
-        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.bgz.tbi")
+        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi")
     log:
-        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_indelarch-index.log"
+        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_variantarchive-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.archive} "   # The input data file must be position sorted and compressed by bgzip
@@ -208,62 +211,62 @@ rule tabix_tabarch_indexing:
         "2> {log}"           # Log redirection 
 
 ###############################################################################
-rule bgzip_indel_archive:
-    # Aim: indel block compressing
+rule bgzip_variant_archive:
+    # Aim: Variant block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
-        "Bgzip indel block compressing for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "Bgzip variant block compressing for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
     conda:
         SAMTOOLS
     resources:
         cpus = CPUS
     input:
-        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf"
+        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf"
     output:
-        archive = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf.bgz")
+        archive = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz")
     log:
-        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_indel-bgz.log"
+        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_variant-bgz.log"
     shell:
         "bgzip "                     # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
         "--threads {resources.cpus} " # -@: Number of threads to use (default: 1)
-        "{input.indelfilt} "          # VCF input file, gzip suuported, no streaming supported
+        "{input.variantfilt} "          # VCF input file, gzip suuported, no streaming supported
         "1> {output.archive} "        # VCF output file, gzip supported (default: standard output)
         "2> {log}"                    # Log redirection 
 
 ###############################################################################
-rule lofreq_indel_filtering:
-    # Aim: variants filtering in VCF file
+rule lofreq_variant_filtering:
+    # Aim: SNVs and Indels filtering in VCF file
     # Use: lofreq filter [OPTIONS] -i [INDEL.vcf] -o [INDELFILT.vcf]
     # Note: without --no-defaults LoFreq's predefined filters are on
     message:
-        "LoFreq filtering variants for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "LoFreq filtering SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
     conda:
         LOFREQ
     params:
         covmin = COVMIN,
         afmin = AFMIN
     input:
-        indelcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelcall.vcf"
+        variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantcall.vcf"
     output:
-        indelfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelfilt.vcf"
+        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_indelfilt.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variantfilt.log"
     shell:
-        "lofreq "                   # LoFreq, fast and sensitive inference of SNVs and indels
-        "filter "                    # Filter variant parsed from vcf file
-        "--cov-min {params.covmin} " # -v: Minimum coverage allowed (<1=off) (INT)
-        "--af-min {params.afmin} "   # -a: Minimum allele freq allowed (<1=off) (FLOAT)
-        "--in {input.indelcall} "    # VCF input file, gzip suuported, no streaming supported
-        "--out {output.indelfilt} "  # VCF output file, gzip supported (default: standard output)
-        "&> {log}"                   # Log redirection 
+        "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
+        "filter "                     # Filter SNVs and Indels parsed from vcf file
+        "--cov-min {params.covmin} "  # -v: Minimum coverage allowed (<1=off) (INT)
+        "--af-min {params.afmin} "    # -a: Minimum allele freq allowed (<1=off) (FLOAT)
+        "--in {input.variantcall} "   # VCF input file, gzip suuported, no streaming supported
+        "--out {output.variantfilt} " # VCF output file, gzip supported (default: standard output)
+        "&> {log}"                    # Log redirection 
 
 ###############################################################################
-rule lofreq_indel_calling:
-    # Aim: variants calling
+rule lofreq_variant_calling:
+    # Aim: SNVs and Indels calling
     # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [MASKEDREF.fasta] -o [INDEL.vcf] [INDEL.bam]
     message:
-        "LoFreq calling variants for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "LoFreq calling SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
     conda:
         LOFREQ
     resources:
@@ -273,25 +276,25 @@ rule lofreq_indel_calling:
         indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bam",
         index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bai"
     output:
-        indelcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelcall.vcf"
+        variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantcall.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_indelcall.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variantcall.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         "call-parallel "                 # Call variants from BAM file
         "--pp-threads {resources.cpus} " # Number of threads (required)
         "--call-indels "                 # Enable indel calls (note: preprocess your file to include indel alignment qualities!)
         "--ref {input.maskedref} "       # -f: Indexed reference fasta file (gzip supported)
-        "--out {output.indelcall} "      # -o: Indel VCF file output (default: standard output)
+        "--out {output.variantcall} "    # -o: SNVs and Indels VCF file output (default: standard output)
         "{input.indelqual} "             # Indel BAM input
         "&> {log}"                       # Log redirection 
 
 ###############################################################################
 rule samtools_indel_indexing:
-    # Aim: indexing insertion/deletion qualities BAM file
+    # Aim: indexing indel qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDELQUAL.bam] [INDEX.bai]
     message:
-        "SamTools indexing insertion/deletion qualities BAM file {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "SamTools indexing indel qualities BAM file {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
     conda:
         SAMTOOLS
     resources:
@@ -303,20 +306,20 @@ rule samtools_indel_indexing:
     log:
         "results/11_Reports/samtools/{sample}_{aligner}_{mincov}X_indelqual-index.log"
     shell:
-        "samtools index "            # Samtools index, tools for alignments in the SAM format with command to index alignment
-        "-@ {resources.cpus} "        # --threads: Number of additional threads to use (default: 0)
-        "-b "                         # -b: Generate BAI-format index for BAM files (default)
-        "{input.indelqual} "          # Sorted bam input
-        "{output.index} "             # Markdup bam output
-        "&> {log}"                    # Log redirection 
+        "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
+        "-@ {resources.cpus} " # Number of additional threads to use (default: 0)
+        "-b "                  # -b: Generate BAI-format index for BAM files (default)
+        "{input.indelqual} "   # Sorted bam input
+        "{output.index} "      # Markdup bam output
+        "&> {log}"             # Log redirection 
 
 ###############################################################################
 rule lofreq_indel_qualities:
-    # Aim: insertion/deletion qualities 
+    # Aim: Indels qualities 
     # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
     # Note: do not realign your BAM file afterwards!
     message:
-        "LoFreq insertion/deletion qualities for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "LoFreq insert indels qualities for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
     conda:
         LOFREQ
     input:
@@ -327,13 +330,13 @@ rule lofreq_indel_qualities:
     log:
         "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_indelqual.log"
     shell:
-        "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels 
-        "indelqual "                  # Insert indel qualities into BAM file (required for indel predictions)
-        "--dindel "                   # Add Dindel's indel qualities Illumina specifics (need --ref and clashes with -u)
-        "--ref {input.maskedref} "    # -f: Reference (masked) sequence used for mapping (only required for --dindel)
-        "--out {output.indelqual} "   # -o: Indel BAM file output (default: standard output)
-        "{input.markdup} "            # Markdup BAM input
-        "&> {log}"                    # Log redirection 
+        "lofreq "                  # LoFreq, fast and sensitive inference of SNVs and Indels 
+        "indelqual "                # Insert indel qualities into BAM file (required for indel predictions)
+        "--dindel "                 # Add Dindel's indel qualities Illumina specifics (need --ref and clashes with -u)
+        "--ref {input.maskedref} "  # -f: Reference (masked) sequence used for mapping (only required for --dindel)
+        "--out {output.indelqual} " # -o: Indel BAM file output (default: standard output)
+        "{input.markdup} "          # Markdup BAM input
+        "&> {log}"                  # Log redirection 
 
 ###############################################################################
 rule bedtools_masking:
@@ -414,43 +417,35 @@ rule awk_coverage_statistics:
     params:
         mincov = MINCOV # if mincov as one fixed parameter, in config file
     input:
-        #sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
         "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
-        "awk ' "                                 # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        #"$4 >= 30 "                                 # if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation
-        #"$4 >= {params.mincov} "                    # if 'mincov' as one fixed single parameter, in config file
-        "$4 >= {wildcards.mincov} "                 # if 'mincov' as multiple wildcards, for testing
-        "{{supMinCov+=$3-$2}} ; "                   # Genome size >= @ mincov X
-        "{{genomeSize+=$3-$2}} ; "                  # Genome size
-        "{{totalBases+=($3-$2)*$4}} ; "             # Total bases @ 1 X 
-        "{{totalBasesSq+=(($3-$2)*$4)**2}} "        # Total bases square @ 1 X
-        "END "                                      # End
-        "{{print "                                  # Print
-        """ "sample_id", "\t", """                  # Sample ID header
-        """ "mean_depth", "\t", """                 # Mean depth header
-        """ "standard_deviation", "\t", """         # Standard deviation header
-        """ "cov_percent_@{wildcards.mincov}X" """  # Coverage percent @ mincov X header
-        "ORS "                                      # \n newline
-        """ "{wildcards.sample}", "\t", """         # Sample ID value
-        """ int(totalBases/genomeSize), "\t", """   # Mean depth value
+        "awk ' "                                  # Awk, a program that you can use to select particular records in a file and perform operations upon them
+        #"$4 >= 30 "                                # if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation
+        #"$4 >= {params.mincov} "                   # if 'mincov' as one fixed single parameter, in config file
+        "$4 >= {wildcards.mincov} "                # if 'mincov' as multiple wildcards, for testing
+        "{{supMinCov+=$3-$2}} ; "                  # Genome size >= @ mincov X
+        "{{genomeSize+=$3-$2}} ; "                 # Genome size
+        "{{totalBases+=($3-$2)*$4}} ; "            # Total bases @ 1 X 
+        "{{totalBasesSq+=(($3-$2)*$4)**2}} "       # Total bases square @ 1 X
+        "END "                                     # End
+        "{{print "                                 # Print
+        """ "sample_id", "\t", """                 # Sample ID header
+        """ "mean_depth", "\t", """                # Mean depth header
+        """ "standard_deviation", "\t", """        # Standard deviation header
+        """ "cov_percent_@{wildcards.mincov}X" """ # Coverage percent @ mincov X header
+        "ORS "                                     # \n newline
+        """ "{wildcards.sample}", "\t", """        # Sample ID value
+        """ int(totalBases/genomeSize), "\t", """  # Mean depth value
         """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
-        """ supMinCov/genomeSize*100 """            # Coverage percent @ mincov X value
-        "}}' "                                      #
-        "{input.genomecov} "                        # BedGraph coverage input
-        "1> {output.covstats} "                     # Mean depth output
-        "2> {log}"                                  # Log redirection
-        #"&& "
-        #"samtools depth "     # Samtools depth, tools for alignments in the SAM format with command to compute the depth
-        #"-a "                  # output all positions (including zero depth)
-        #"{input.sorted} "      # Sorted bam input
-        #"| "                   # PIPE 
-        #"""awk '{{sum+=$3; sumsq+=$3*$3}} END {{print "Average =", "\t", sum/NR, "\t", "Stdev =", "\t", sqrt(sumsq/NR-(sum/NR)**2)}}' """
-        #">> {output.depth} "   # Depth_sorted output
+        """ supMinCov/genomeSize*100 """           # Coverage percent @ mincov X value
+        "}}' "                                     #
+        "{input.genomecov} "                       # BedGraph coverage input
+        "1> {output.covstats} "                    # Mean depth output
+        "2> {log}"                                 # Log redirection
 
 ###############################################################################
 rule bedtools_genome_coverage:
@@ -747,7 +742,7 @@ rule cutadapt_adapters_removing:
 rule multiqc_reports_aggregation:
     # Aim: aggregates bioinformatics analyses results into a single report
     # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
-    #priority: 42
+    priority: 42
     message:
         "MultiQC reports aggregating"
     conda:
