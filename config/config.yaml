@@ -2,10 +2,10 @@
 ###############################################################################
 # Author: Nicolas Fernandez
 # Affiliation: IRD_TransVIHMI
-# Aim: Config file for GeVarLi pipeline
+# Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
-# Use: Edit or (de)comment settings
-# Latest modification: 2021.02.04
+# Use: Edit or de/comment (#) settings
+# Latest modification: 2021.02.08
 # Todo: done
 ###############################################################################
 
@@ -46,9 +46,9 @@ consensus:
     #- 'resources/genomes/HIV_HXB2.fasta'                    # HIV_HXB2
     #- 'resources/genomes/Ebola_ZEBOV.fasta'                 # Ebola_ZEBOV
   mincov: # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
-  - '1' # Only for testing ! (default DNAstar)
+  #- '1' # Only for testing ! (default DNAstar)
   - '10' # Only for testing ! (default CNR Lyon)
-  - '30' # Recomanded (if enough reads depth)
+  #- '30' # Recomanded (if enough reads depth)
 
 ## INDEL ---------------------------------------------------------------------------------------------
 indel:
@@ -66,11 +66,13 @@ bwa:
 bowtie2:
   index: # Choose (de/comment) or add one unique bowtie2 indexes
     - 'resources/indexes/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
+    #- 'resources/indexes/bowtie2/HIV_HXB2'                    # HIV_HXB2
+    #- 'resources/indexes/bowtie2/Ebola_ZEBOV'                 # Ebola_ZEBOV
   sensitivity: # Choose (de/comment) one unique sensitivity preset
     #- '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
     #- '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-    # '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
-    - '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
+    - '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
+    #- '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
 
 ## NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:

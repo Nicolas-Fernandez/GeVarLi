@@ -1,12 +1,12 @@
 
 #######T######R#####A#####N######S######V######I######H#######M######I#########
-# Name: GeVarLi pipeline
+# Name: gevarli.smk
 # Author: Nicolas Fernandez
 # Affiliation: IRD_U233_TransVIHMI
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2021.02.07
+# Latest modification: 2021.02.08
 # Todo: done
 ###############################################################################
 
