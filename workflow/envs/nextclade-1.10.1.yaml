@@ -7,4 +7,3 @@ channels:
   - defaults
 dependencies:
   - nextclade=1.10.1=h527b516_0
-prefix: /Users/2021nf001/miniconda3/envs/nextclade-1.10.1

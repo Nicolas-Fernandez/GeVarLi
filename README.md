@@ -1,5 +1,5 @@
 
-# GeVarLi: GEnome assembly, VARiant calling and LIneage assignment #
+# GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
 ## Description ##
 
@@ -68,19 +68,11 @@ If you want to authenticate each time you perform an operation between your comp
 ```shell
 git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 ```
-```shell
-mv ./GeVarLi_Pipeline_macOSX/ ~/Desktop/GeVarLi_Pipeline_macOSX/
-cd ~/Desktop/GeVarli_Pipeline_macOSX/
-```
 
 #### SSH ####
 If you want to authenticate only one time (_follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)_)
 ```shell
 git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-```
-```shell
-mv GeVarLi_Pipeline_macOSX/ ~/Desktop/GeVarLi_Pipeline_macOSX/
-cd ~/Desktop/GeVarli_Pipeline_macOSX/
 ```
 
 Difference between **Download** and **Clone**:  
@@ -90,6 +82,7 @@ Difference between **Download** and **Clone**:
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
+cd ./GeVarLi_Pipeline_macOSX/
 git pull
 ```
 
@@ -325,3 +318,109 @@ This role is often held by maintainers and engineering managers.
  │  └──  sickle-trim-1.33.yaml  
  └──  **rules/**  
     └──  gevarli.smk  
+
+### References ###
+
+**HAVoC, a bioinformatic pipeline for reference-based consensus assembly and lineage assignment for SARS-CoV-2 sequences**  
+Phuoc Thien Truong Nguyen, Ilya Plyusnin, Tarja Sironen, Olli Vapalahti, Ravi Kant & Teemu Smura  
+_BMC Bioinformatics volume 22, Article number: 373 (2021)_  
+[DOI:](https://doi.org/10.1186/s12859-021-04294-2)  
+[Publication:](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04294-2#Bib1)  
+[Source code:](https://bitbucket.org/auto_cov_pipeline/havoc/src/master/)  
+[Documentation](https://www2.helsinki.fi/en/projects/havoc)  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:]()  
+[Documentation]()  
+
+**FastQ Screen: A tool for multi-genome mapping and quality control**  
+Wingett SW, Andrews S.  
+__  
+[DOI:](https://doi.org/10.12688/f1000research.15931.2)  
+[Publication:]()  
+[Source code:]()  
+[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)  
+
+****  
+  
+__  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:](https://github.com/s-andrews/FastQC)  
+[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)  
+
+**Sickle: A sliding-window, adaptive, quality-based trimming tool for FastQ files**  
+Joshi NA, Fass JN.  
+_(2011)  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:](https://github.com/najoshi/sickle)  
+[Documentation]()  
+
+**Cutadapt Removes Adapter Sequences From High-Throughput Sequencing Reads**  
+Marcel Martin  
+_EMBnet Journal volume 17, Article number: 1 (2011)  
+[DOI:](https://doi.org/10.14806/ej.17.1.200)  
+[Publication:](http://journal.embnet.org/index.php/embnetjournal/article/view/200)  
+[Source code:](https://github.com/marcelm/cutadapt/)  
+[Documentation](https://cutadapt.readthedocs.io/en/stable/)  
