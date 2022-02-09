@@ -45,9 +45,9 @@ consensus:
     - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
     #- 'resources/genomes/HIV_HXB2.fasta'                    # HIV_HXB2
     #- 'resources/genomes/Ebola_ZEBOV.fasta'                 # Ebola_ZEBOV
-  mincov: # Minimum coverage for masking regions in consensus sequence (default: 10) [INT]
+  mincov: # Choose (de/comment) or add one unique minimum coverage for masking regions in consensus sequence (default: 10) [INT]
   #- '1' # Only for testing ! (default DNAstar)
-  - '10' # Only for testing ! (default CNR Lyon)
+  - '10' # Only for testing ! (default CNR Lyon / AfroScreen)
   #- '30' # Recomanded (if enough reads depth)
 
 ## INDEL ---------------------------------------------------------------------------------------------
