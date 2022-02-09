@@ -400,8 +400,8 @@ rule awk_mincovfilt:
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
         #"'$4 < 30' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
-        #"'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence (if 'mincov' as one fixed single parameter,in config file)
-        "'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence (if 'mincov' as multiple wildcards, for testing)
+        "'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence (if 'mincov' as one fixed single parameter,in config file)
+        #"'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence (if 'mincov' as multiple wildcards, for testing)
         "{input.genomecov} "         # BedGraph coverage input
         "1> {output.mincovfilt} "    # Minimum coverage filtered bed output
         "2> {log} "                  # Log redirection
