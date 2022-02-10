@@ -285,7 +285,7 @@ This role is often held by maintainers and engineering managers.
 
 ### Directories tree structure ###
 
-<pre>
+```
  GeVarLi.sh  
  README.md  
  **config**/  
@@ -340,7 +340,7 @@ This role is often held by maintainers and engineering managers.
 │   └──  sickle-trim-1.33.yaml  
 └──  **rules/**  
     └──  gevarli.smk  
-</pre>
+```
 
 ### References ###
 
