@@ -291,7 +291,7 @@ This role is often held by maintainers and engineering managers.
  **config**/  
 ├──  config.yaml  
 └──  fastq-screen.conf  
- **resources/**  
+📂 **resources/**  
 ├──  **genomes/**  
 │   ├──  Adapters.fasta  
 │   ├──  Ebola_ZEBOV.fasta  
