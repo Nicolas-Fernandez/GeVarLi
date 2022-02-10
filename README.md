@@ -102,7 +102,7 @@ _Option: Edit **fastq-screen.conf** file in **./config/** directory_
 
 ### Results ###
 
-Yours results are available in **./results** directory, as follow:
+Yours results are available in **./results/** directory, as follow:
 
 #### root ####
 
@@ -120,8 +120,8 @@ Yours results are available in **./results** directory, as follow:
 
 #### 01_Trimming ####
 
-- **sickle/**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
-- _cutadapt/: paired reads, without adapters (default: tempdir, removed, save disk usage)_
+- **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
+- _cutadapt/ directory: paired reads, without adapters (default: tempdir, removed, save disk usage)_
 
 #### 02_Mapping ####
 
@@ -155,7 +155,7 @@ Yours results are available in **./results** directory, as follow:
 
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-alignement\**: nextclade directory containing:
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-alignement/ directory**:
     - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.aligned.fasta**:
     - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**:
     - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**:
@@ -285,60 +285,60 @@ This role is often held by maintainers and engineering managers.
 
 ### Directories tree structure ###
 
-  GeVarLi.sh  
-  README.md  
-  **config**/  
- ├──  config.yaml  
- └──  fastq-screen.conf  
-  **resources/**  
- ├──  **genomes/**  
-\ │   ├──  Adapters.fasta  
- │   ├──  Ebola_ZEBOV.fasta  
- │   ├──  Echerichia_coli_U00096.fasta  
- │   ├──  HIV_HXB2.fasta  
- │   ├──  Phi-X174.fasta  
- │   ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta  
- │   └──  UniVec_wo_phi-X174.fasta  
- ├──  **indexes/**  
- │   ├──  **bowtie2/**  
- │   │  └──  SARS-CoV-2_Wuhan-WIV04_2019  
- │   └──  **bwa/**  
- │       ├──  SARS-CoV-2_Wuhan-WIV04_2019  
- │       ├──  Adapters  
- │       ├──  Ebola_ZEBOV  
- │       ├──  Echerichia_coli_U00096  
- │       ├──  HIV_HXB2  
- │       ├──  Phi-X174  
- │       └──  UniVec_wo_phi-X174  
- ├──  **nextclade/**  
- │   ├──  genemap.gff  
- │   ├──  primers.csv  
- │   ├──  qc.json  
- │   ├──  reference.fasta  
- │   ├──  sequences.fasta  
- │   ├──  tag.json  
- │   └──  tree.json  
- └──  **reads/**  
-     └──  .gitkeep  
-  **visuals/**  
- └──  rulegraph.png  
-  **workflow/**  
- ├──  **envs/**  
- │   ├──  bcftools-1.14.yaml  
- │   ├──  bedtools-2.30.0.yaml  
- │   ├──  bowtie2-2.4.4.yaml  
- │   ├──  bwa-0.7.17.yaml  
- │   ├──  cutadapt-3.5.yaml  
- │   ├──  fastq-screen-0.14.0.yaml  
- │   ├──  fastqc-0.11.9.yaml  
- │   ├──  lofreq-2.1.5.yaml  
- │   ├──  multiqc-1.11.yaml  
- │   ├──  nextclade-1.10.1.yaml  
- │   ├──  pangolin-3.1.17.yaml  
- │   ├──  samtools-1.14.yaml  
- │   └──  sickle-trim-1.33.yaml  
- └──  **rules/**  
-     └──  gevarli.smk  
+ GeVarLi.sh  
+ README.md  
+ **config**/  
+├──  config.yaml  
+└──  fastq-screen.conf  
+ **resources/**  
+├──  **genomes/**  
+│   ├──  Adapters.fasta  
+│   ├──  Ebola_ZEBOV.fasta  
+│   ├──  Echerichia_coli_U00096.fasta  
+│   ├──  HIV_HXB2.fasta  
+│   ├──  Phi-X174.fasta  
+│   ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta  
+│   └──  UniVec_wo_phi-X174.fasta  
+├──  **indexes/**  
+│   ├──  **bowtie2/**  
+│   │   └──  SARS-CoV-2_Wuhan-WIV04_2019  
+│   └──  **bwa/**  
+│       ├──  SARS-CoV-2_Wuhan-WIV04_2019  
+│       ├──  Adapters  
+│       ├──  Ebola_ZEBOV  
+│       ├──  Echerichia_coli_U00096  
+│       ├──  HIV_HXB2  
+│       ├──  Phi-X174  
+│       └──  UniVec_wo_phi-X174  
+├──  **nextclade/**  
+│   ├──  genemap.gff  
+│   ├──  primers.csv  
+│   ├──  qc.json  
+│   ├──  reference.fasta  
+│   ├──  sequences.fasta  
+│   ├──  tag.json  
+│   └──  tree.json  
+└──  **reads/**  
+    └──  .gitkeep  
+ **visuals/**  
+└──  rulegraph.png  
+ **workflow/**  
+├──  **envs/**  
+│   ├──  bcftools-1.14.yaml  
+│   ├──  bedtools-2.30.0.yaml  
+│   ├──  bowtie2-2.4.4.yaml  
+│   ├──  bwa-0.7.17.yaml  
+│   ├──  cutadapt-3.5.yaml  
+│   ├──  fastq-screen-0.14.0.yaml  
+│   ├──  fastqc-0.11.9.yaml  
+│   ├──  lofreq-2.1.5.yaml  
+│   ├──  multiqc-1.11.yaml  
+│   ├──  nextclade-1.10.1.yaml  
+│   ├──  pangolin-3.1.17.yaml  
+│   ├──  samtools-1.14.yaml  
+│   └──  sickle-trim-1.33.yaml  
+└──  **rules/**  
+    └──  gevarli.smk  
 
 ### References ###
 
