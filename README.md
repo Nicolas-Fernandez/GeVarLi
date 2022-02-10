@@ -292,7 +292,7 @@ This role is often held by maintainers and engineering managers.
  └──  fastq-screen.conf  
   **resources/**  
  ├──  **genomes/**  
- │   ├──  Adapters.fasta  
+/ │   ├──  Adapters.fasta  
  │   ├──  Ebola_ZEBOV.fasta  
  │   ├──  Echerichia_coli_U00096.fasta  
  │   ├──  HIV_HXB2.fasta  
