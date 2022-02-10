@@ -125,41 +125,41 @@ Yours results are available in **./results** directory, as follow:
 
 #### 02_Mapping ####
 
-- **/<sample/>/_/<aligner/>/_markdup.bam**: 
-- **/<sample/>/_/<aligner/>/_markdup.bai**:
-- _/<sample/>/_/<aligner/>/_mapped.sam_: (default: tempdir, removed, save disk usage)_
-- _/<sample/>/_/<aligner/>/_sortbynames.bam_: (default: tempdir, removed, save disk usage)_
-- _/<sample/>/_/<aligner/>/_fixmate.bam_: (default: tempdir, removed, save disk usage)_
-- _/<sample/>/_/<aligner/>/_sorted.bam_: (default: tempdir, removed, save disk usage)_
+- **\<sample\>\_\<aligner\>\_markdup.bam**: 
+- **\<sample\>\_\<aligner\>\_markdup.bai**:
+- _\<sample\>\_\<aligner\>\_mapped.sam_: (default: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_sortbynames.bam_: (default: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_fixmate.bam_: (default: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_sorted.bam_: (default: tempdir, removed, save disk usage)_
 
 #### 03_Coverage ####
 
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_coverage-stats.tsv**:
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_coverage-stats.tsv**:
 
 #### 04_Variants ####
 
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_indelqual.bam**: 
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_indelqual.bai**:
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
-- _/<sample/>/_/<aligner/>/_/<mincov/>/_indelfilt.vcf.bgz: (default: tempdir, removed, save disk usage)_
-- _/<sample/>/_/<aligner/>/_/<mincov/>/_indelfilt.vcf.bgz.tbi: (default: tempdir, removed, save disk usage)_
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bam**: 
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bai**:
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
+- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz: (default: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz.tbi: (default: tempdir, removed, save disk usage)_
 
 #### 05_Consensus ####
 
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
 
 #### 06_Lineages ####
 
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
-- **/<sample/>/_/<aligner/>/_/<mincov/>/_nextclade-alignement/**: nextclade directory containing:
-    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.aligned.fasta**:
-    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.insertions.csv**:
-    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.errors.csv**:
-    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.gene./<gene/>.fasta**: for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-alignement\**: nextclade directory containing:
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.aligned.fasta**:
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**:
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**:
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.gene.\<gene\>.fasta**: for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
 
 #### 10_graphs ####
 
@@ -292,7 +292,7 @@ This role is often held by maintainers and engineering managers.
  └──  fastq-screen.conf  
   **resources/**  
  ├──  **genomes/**  
-/ │   ├──  Adapters.fasta  
+\ │   ├──  Adapters.fasta  
  │   ├──  Ebola_ZEBOV.fasta  
  │   ├──  Echerichia_coli_U00096.fasta  
  │   ├──  HIV_HXB2.fasta  
