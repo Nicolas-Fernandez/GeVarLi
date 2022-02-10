@@ -15,7 +15,7 @@ _This is the **macOSX** version (specific conda environements)._
 ## Badges ##
 
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13) | Catalina (10.15) | Big Sure (11)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.2.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
 ![Issues opened](<https://badgen.net/badge/Issues opened/0/yellow?scale=0.9>)
 ![Maintened](<https://badgen.net/badge/Maintened/Yes/red?scale=0.9>)
