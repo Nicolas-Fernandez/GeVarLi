@@ -36,7 +36,7 @@ _This is the **macOSX** version (specific conda environements)._
 
 ## Installations ##
 
-### Conda _(¡prior!)_ ###
+### Conda _(required)_ ###
 
 Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_): [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 _Follow the screen prompt instructions_  
@@ -48,7 +48,7 @@ rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 _Restart shell (close and reopen the terminal window_
 
 
-### Snakemake _(¡prior!)_ ###
+### Snakemake _(required)_ ###
 
 Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
 _Follow the screen prompt instructions_  
@@ -103,57 +103,78 @@ Yours results are available in **./results** directory, as follow:
 
 #### root ####
 
-- *All_reads_QC.html*: all reads quality reports from MultiQC in _html_ format
-- *All_consensus_sequences.fasta*: all consensus sequences in _fasta_ format
-- *All_genome_coverages.tsv*: all genome coverages in _tsv_ format
-- *All_pangolin_lineages.tsv*: all pangolin lineage reports  in _tsv_ format
-- *All_nextclade_lineages.tsv*: all nextclade lineage reports in _tsv_ format
+- **All_consensus_sequences.fasta**: all consensus sequences, in _fasta_ format
+- **All_genome_coverages.tsv**: all genome coverages, in _tsv_ format
+- **All_nextclade_lineages.tsv**: all nextclade lineage reports, in _tsv_ format
+- **All_pangolin_lineages.tsv**: all pangolin lineage reports, in _tsv_ format
+- **All_readsQC_reports.html**: all reads quality reports from MultiQC, in _html_ format
 
 #### 00_Quality_Control ####
 
-- *fastq-screen*: raw reads putative contaminations reports for each samples in html, png and txt formats 
-- *fastqc*: raw reads quality reports for each samples in html and zip format
-- *multiqc*: fastq-screen and fastqc results agrgation report for all samples in html format
+- **fastq-screen**: raw reads putative contaminations reports for each samples, in _html_, _png_ and _txt_ formats 
+- **fastqc**: raw reads quality reports for each samples, in _html_ and _zip_ formats
+- **multiqc**: fastq-screen and fastqc results agregation report for all samples, in _html_ format
 
 #### 01_Trimming ####
 
-- *sickle*: paired reads, without adapters and quality trimmed
-- _cutadapt: paired reads, without adapters (default: tempdir, removed, save disk usage)_
+- **sickle/**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
+
+- _cutadapt/: paired reads, without adapters (default: tempdir, removed, save disk usage)_
 
 #### 02_Mapping ####
 
-- _mapped.sam_: (default: tempdir, removed, save disk usage)_
-- _sortbynames.bam_: (default: tempdir, removed, save disk usage)_
-- _fixmate.bam_: (default: tempdir, removed, save disk usage)_
-- _sorted.bam_: (default: tempdir, removed, save disk usage)_
-- *markdup.bam*:
-- *markdup.bai*:
+- **/<sample/>/_/<aligner/>/_markdup.bam**: 
+- **/<sample/>/_/<aligner/>/_markdup.bai**:
+
+- _/<sample/>/_/<aligner/>/_mapped.sam_: (default: tempdir, removed, save disk usage)_
+- _/<sample/>/_/<aligner/>/_sortbynames.bam_: (default: tempdir, removed, save disk usage)_
+- _/<sample/>/_/<aligner/>/_fixmate.bam_: (default: tempdir, removed, save disk usage)_
+- _/<sample/>/_/<aligner/>/_sorted.bam_: (default: tempdir, removed, save disk usage)_
 
 #### 03_Coverage ####
 
-- TODO
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_coverage-stats.tsv**:
 
 #### 04_Variants ####
 
-- TODO
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_indelqual.bam**: 
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_indelqual.bai**:
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
+
+- _/<sample/>/_/<aligner/>/_/<mincov/>/_indelfilt.vcf.bgz: (default: tempdir, removed, save disk usage)_
+- _/<sample/>/_/<aligner/>/_/<mincov/>/_indelfilt.vcf.bgz.tbi: (default: tempdir, removed, save disk usage)_
 
 #### 05_Consensus ####
 
-- TODO
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
 
 #### 06_Lineages ####
 
-- TODO
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
+- **/<sample/>/_/<aligner/>/_/<mincov/>/_nextclade-alignement/**: nextclade directory containing:
+    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.aligned.fasta**:
+    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.insertions.csv**:
+    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.errors.csv**:
+    - **/<sample/>/_/<aligner/>/_/<mincov/>/_consensus.gene./<gene/>.fasta**: for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
 
 #### 10_graphs ####
 
-- TODO
+- **dag**: , in _pdf_ and _png_ formats
+- **filegraph**: , in _pdf_ and _png_ formats
+- **rulegraph**: , in _pdf_ and _png_ formats
 
 #### 11_Reports ####
 
-- TODO
+- All _non-empty_ **log** for each tool and each sample
+- files_summary.txt: , in _txt_ format 
 
 ###  Configuration ###
+
+If you want see or edit default settings in **config.yaml** file in **./config/** directory  
 
 #### Resources ####
 
@@ -219,14 +240,14 @@ Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-
 2. Read de awsome wiki ;)
 3. Create a new issue: Issues > New issue > Describe your issue
 4. Send an email to [nicolas.fernandez@ird.fr](url)
-5. Call me to... No don't please _O\_o_!
+5. Call me to +33.(0)4.67.41.55... No don't please _O\_o_!
 
 
 ## Roadmap ##
 
-Add a wiki !  
-Finish documentation about "terminal" and "results"
-Add new features  
+Add a wiki ! And move may sections from README.md to the wiki !  
+End documentation about "results" and "configuration"...  
+Add new features ? (i.e. adding pangolin lineage)  
 
 
 ## Contributing ##
@@ -329,88 +350,82 @@ _BMC Bioinformatics volume 22, Article number: 373 (2021)_
 [Source code:](https://bitbucket.org/auto_cov_pipeline/havoc/src/master/)  
 [Documentation](https://www2.helsinki.fi/en/projects/havoc)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**Sustainable data analysis with Snakemake**  
+Felix Mölder, Kim Philipp Jablonski, Brice Letcher, Michael B. Hall, Christopher H. Tomkins-Tinch, Vanessa Sochat, Jan Forster, Soohyun Lee, Sven O. Twardziok, Alexander Kanitz, Andreas Wilm, Manuel Holtgrewe, Sven Rahmann, Sven Nahnsen, Johannes Köster  
+_F1000Research (2021)_  
+[DOI:](https://doi.org/10.12688/f1000research.29032.2)  
+[Publication:](https://f1000research.com/articles/10-33/v1)  
+[Source code:](https://github.com/snakemake/snakemake)  
+[Documentation](https://snakemake.readthedocs.io/en/stable/index.html)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**Nextclade: clade assignment, mutation calling and quality control for viral genomes**  
+Ivan Aksamentov, Cornelius Roemer, Emma B. Hodcroft and Richard A. Neher  
+_The Journal of Open Source Software_  
+[DOI:](https://doi.org/10.21105/joss.03773)  
+[Publication:](https://joss.theoj.org/papers/10.21105/joss.03773)  
+[Source code:](https://github.com/nextstrain/nextclade)  
+[Documentation](https://clades.nextstrain.org/)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**Assignment of epidemiological lineages in an emerging pandemic using the pangolin tool**  
+Áine O’Toole, Emily Scher, Anthony Underwood, Ben Jackson, Verity Hill, John T McCrone, Rachel Colquhoun, Chris Ruis, Khalil Abu-Dahab, Ben Taylor, Corin Yeats, Louis du Plessis, Daniel Maloney, Nathan Medd, Stephen W Attwood, David M Aanensen, Edward C Holmes, Oliver G Pybus and Andrew Rambaut  
+_Virus Evolution, Volume 7, Issue 2 (2021)_  
+[DOI:](https://doi.org/10.1093/ve/veab064)  
+[Publication:](https://academic.oup.com/ve/article/7/2/veab064/6315289)  
+[Source code:](https://github.com/cov-lineages/pangolin) _(pangolin)_  
+[Source code:](https://github.com/cov-lineages/scorpio) _(scorpio)_  
+[Documentation](https://cov-lineages.org/index.html)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**Tabix: fast retrieval of sequence features from generic TAB-delimited files**  
+Heng Li  
+_Bioinformatics, Volume 27, Issue 5 (2011)_  
+[DOI:](https://doi.org/10.1093/bioinformatics/btq671)  
+[Publication:](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3042176/)  
+[Source code:](https://github.com/samtools/samtools)  
+[Documentation](http://samtools.sourceforge.net/)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**LoFreq: a sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets**  
+Andreas Wilm, Pauline Poh Kim Aw, Denis Bertrand, Grace Hui Ting Yeo, Swee Hoe Ong, Chang Hua Wong, Chiea Chuen Khor, Rosemary Petric, Martin Lloyd Hibberd and Niranjan Nagarajan  
+_Nucleic Acids Research, Volume 40, Issue 22 (2012)_  
+[DOI:](https://doi.org/10.1093/nar/gks918)  
+[Publication:](https://pubmed.ncbi.nlm.nih.gov/23066108/)  
+[Source code:](https://gitlab.com/treangenlab/lofreq) _(v2 used)_  
+[Source code:](https://github.com/andreas-wilm/lofreq3) _(see also v3 in Nim)_  
+[Documentation](https://csb5.github.io/lofreq/)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
+**The AWK Programming Language**  
+Al Aho, Brian Kernighan and Peter Weinberger  
+_Addison-Wesley (1988)_  
+[ISBN:](https://www.biblio.com/9780201079814)  
 [Publication:]()  
-[Source code:]()  
-[Documentation]()  
+[Source code:](https://github.com/onetrueawk/awk)  
+[Documentation](https://www.gnu.org/software/gawk/manual/gawk.html)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**BEDTools: a flexible suite of utilities for comparing genomic features**  
+Aaron R. Quinlan and Ira M. Hall  
+_Bioinformatics, Volume 26, Issue 6 (2010)_  
+[DOI:](https://doi.org/10.1093/bioinformatics/btq033)  
+[Publication:](https://academic.oup.com/bioinformatics/article/26/6/841/244688)  
+[Source code:](https://github.com/arq5x/bedtools2)  
+[Documentation](https://bedtools.readthedocs.io/en/latest/)  
 
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:]()  
-[Documentation]()  
+**Twelve years of SAMtools and BCFtools**  
+Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies and Heng Li  
+_GigaScience, Volume 10, Issue 2 (2021)_  
+[DOI:](https://doi.org/10.1093/gigascience/giab008)  
+[Publication:](https://academic.oup.com/gigascience/article/10/2/giab008/6137722)  
+[Source code:](https://github.com/samtools/samtools)  
+[Documentation](http://samtools.sourceforge.net/)  
 
-**FastQ Screen: A tool for multi-genome mapping and quality control**  
-Wingett SW, Andrews S.  
-__  
-[DOI:](https://doi.org/10.12688/f1000research.15931.2)  
-[Publication:]()  
-[Source code:]()  
-[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)  
-
-****  
-  
-__  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:](https://github.com/s-andrews/FastQC)  
-[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)  
+**Fast and accurate short read alignment with Burrows-Wheeler Transform**  
+Heng Li and Richard Durbin  
+_Bioinformatics, Volume 25, Aricle 1754-60 (2009)_  
+[DOI:](https://doi.org/10.1093/bioinformatics/btp324)  
+[Publication:](https://pubmed.ncbi.nlm.nih.gov/19451168/)  
+[Source code:](https://github.com/lh3/bwa)  
+[Documentation](http://bio-bwa.sourceforge.net/)  
 
 **Sickle: A sliding-window, adaptive, quality-based trimming tool for FastQ files**  
-Joshi NA, Fass JN.  
+Joshi NA and Fass JN  
 _(2011)  
 [DOI:](https://doi.org/)  
 [Publication:]()  
@@ -419,8 +434,44 @@ _(2011)
 
 **Cutadapt Removes Adapter Sequences From High-Throughput Sequencing Reads**  
 Marcel Martin  
-_EMBnet Journal volume 17, Article number: 1 (2011)  
+_EMBnet Journal, Volume 17, Article 1 (2011)  
 [DOI:](https://doi.org/10.14806/ej.17.1.200)  
 [Publication:](http://journal.embnet.org/index.php/embnetjournal/article/view/200)  
 [Source code:](https://github.com/marcelm/cutadapt/)  
 [Documentation](https://cutadapt.readthedocs.io/en/stable/)  
+
+**MultiQC: summarize analysis results for multiple tools and samples in a single report**  
+Philip Ewels, Måns Magnusson, Sverker Lundin and Max Käller  
+_Bioinformatics, Volume 32, Issue 19 (2016)_  
+[DOI:](https://doi.org/10.1093/bioinformatics/btw354)  
+[Publication:](https://academic.oup.com/bioinformatics/article/32/19/3047/2196507)  
+[Source code:](https://github.com/ewels/MultiQC)  
+[Documentation](https://multiqc.info/)  
+
+**FastQ Screen: A tool for multi-genome mapping and quality control**  
+Wingett SW and Andrews S  
+_F1000Research (2018)_  
+[DOI:](https://doi.org/10.12688/f1000research.15931.2)  
+[Publication:](https://f1000research.com/articles/7-1338/v2)  
+[Source code:](https://github.com/StevenWingett/FastQ-Screen)  
+[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)  
+
+**FastQC: A quality control tool for high throughput sequence data**  
+Simon Andrews  
+_Online (2010)_  
+[DOI:](https://doi.org/)  
+[Publication:]()  
+[Source code:](https://github.com/s-andrews/FastQC)  
+[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)  
+
+
+### Glossary ###
+
+BAM: Binary Alignment Map
+BAI: BAM Indexes
+
+FASTA: Fast-All
+FASTQ: FASTA with Quality data
+FAI: FASTA Indexes
+
+SAM: Sequence Alignment Map
