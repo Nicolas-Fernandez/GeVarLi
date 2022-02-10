@@ -121,14 +121,12 @@ Yours results are available in **./results** directory, as follow:
 #### 01_Trimming ####
 
 - **sickle/**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
-
 - _cutadapt/: paired reads, without adapters (default: tempdir, removed, save disk usage)_
 
 #### 02_Mapping ####
 
 - **/<sample/>/_/<aligner/>/_markdup.bam**: 
 - **/<sample/>/_/<aligner/>/_markdup.bai**:
-
 - _/<sample/>/_/<aligner/>/_mapped.sam_: (default: tempdir, removed, save disk usage)_
 - _/<sample/>/_/<aligner/>/_sortbynames.bam_: (default: tempdir, removed, save disk usage)_
 - _/<sample/>/_/<aligner/>/_fixmate.bam_: (default: tempdir, removed, save disk usage)_
@@ -146,7 +144,6 @@ Yours results are available in **./results** directory, as follow:
 - **/<sample/>/_/<aligner/>/_/<mincov/>/_indelqual.bai**:
 - **/<sample/>/_/<aligner/>/_/<mincov/>/_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
 - **/<sample/>/_/<aligner/>/_/<mincov/>/_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
-
 - _/<sample/>/_/<aligner/>/_/<mincov/>/_indelfilt.vcf.bgz: (default: tempdir, removed, save disk usage)_
 - _/<sample/>/_/<aligner/>/_/<mincov/>/_indelfilt.vcf.bgz.tbi: (default: tempdir, removed, save disk usage)_
 
@@ -295,186 +292,184 @@ This role is often held by maintainers and engineering managers.
  └──  fastq-screen.conf  
   **resources/**  
  ├──  **genomes/**  
- │  ├──  Adapters.fasta  
- │  ├──  Ebola_ZEBOV.fasta  
- │  ├──  Echerichia_coli_U00096.fasta  
- │  ├──  HIV_HXB2.fasta  
- │  ├──  Phi-X174.fasta  
- │  ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta  
- │  └──  UniVec_wo_phi-X174.fasta  
+ │   ├──  Adapters.fasta  
+ │   ├──  Ebola_ZEBOV.fasta  
+ │   ├──  Echerichia_coli_U00096.fasta  
+ │   ├──  HIV_HXB2.fasta  
+ │   ├──  Phi-X174.fasta  
+ │   ├──  SARS-CoV-2_Wuhan-WIV04_2019.fasta  
+ │   └──  UniVec_wo_phi-X174.fasta  
  ├──  **indexes/**  
- │  ├──  **bowtie2/**  
- │  │  ├──  SARS-CoV-2_Wuhan-WIV04_2019  
- │  └──  **bwa/**  
- │     ├──  SARS-CoV-2_Wuhan-WIV04_2019  
- │     ├──  Adapters  
- │     ├──  Ebola_ZEBOV  
- │     ├──  Echerichia_coli_U00096  
- │     ├──  HIV_HXB2  
- │     ├──  Phi-X174  
- │     ├──  UniVec_wo_phi-X174  
+ │   ├──  **bowtie2/**  
+ │   │  └──  SARS-CoV-2_Wuhan-WIV04_2019  
+ │   └──  **bwa/**  
+ │       ├──  SARS-CoV-2_Wuhan-WIV04_2019  
+ │       ├──  Adapters  
+ │       ├──  Ebola_ZEBOV  
+ │       ├──  Echerichia_coli_U00096  
+ │       ├──  HIV_HXB2  
+ │       ├──  Phi-X174  
+ │       └──  UniVec_wo_phi-X174  
  ├──  **nextclade/**  
- │  ├──  genemap.gff  
- │  ├──  primers.csv  
- │  ├──  qc.json  
- │  ├──  reference.fasta  
- │  ├──  sequences.fasta  
- │  ├──  tag.json  
- │  └──  tree.json  
+ │   ├──  genemap.gff  
+ │   ├──  primers.csv  
+ │   ├──  qc.json  
+ │   ├──  reference.fasta  
+ │   ├──  sequences.fasta  
+ │   ├──  tag.json  
+ │   └──  tree.json  
  └──  **reads/**  
-    └──  .gitkeep  
+     └──  .gitkeep  
   **visuals/**  
  └──  rulegraph.png  
   **workflow/**  
  ├──  **envs/**  
- │  ├──  bcftools-1.14.yaml  
- │  ├──  bedtools-2.30.0.yaml  
- │  ├──  bowtie2-2.4.4.yaml  
- │  ├──  bwa-0.7.17.yaml  
- │  ├──  cutadapt-3.5.yaml  
- │  ├──  fastq-screen-0.14.0.yaml  
- │  ├──  fastqc-0.11.9.yaml  
- │  ├──  lofreq-2.1.5.yaml  
- │  ├──  multiqc-1.11.yaml  
- │  ├──  nextclade-1.10.1.yaml  
- │  ├──  pangolin-3.1.17.yaml  
- │  ├──  samtools-1.14.yaml  
- │  └──  sickle-trim-1.33.yaml  
+ │   ├──  bcftools-1.14.yaml  
+ │   ├──  bedtools-2.30.0.yaml  
+ │   ├──  bowtie2-2.4.4.yaml  
+ │   ├──  bwa-0.7.17.yaml  
+ │   ├──  cutadapt-3.5.yaml  
+ │   ├──  fastq-screen-0.14.0.yaml  
+ │   ├──  fastqc-0.11.9.yaml  
+ │   ├──  lofreq-2.1.5.yaml  
+ │   ├──  multiqc-1.11.yaml  
+ │   ├──  nextclade-1.10.1.yaml  
+ │   ├──  pangolin-3.1.17.yaml  
+ │   ├──  samtools-1.14.yaml  
+ │   └──  sickle-trim-1.33.yaml  
  └──  **rules/**  
-    └──  gevarli.smk  
+     └──  gevarli.smk  
 
 ### References ###
 
 **HAVoC, a bioinformatic pipeline for reference-based consensus assembly and lineage assignment for SARS-CoV-2 sequences**  
 Phuoc Thien Truong Nguyen, Ilya Plyusnin, Tarja Sironen, Olli Vapalahti, Ravi Kant & Teemu Smura  
 _BMC Bioinformatics volume 22, Article number: 373 (2021)_  
-[DOI:](https://doi.org/10.1186/s12859-021-04294-2)  
-[Publication:](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04294-2#Bib1)  
-[Source code:](https://bitbucket.org/auto_cov_pipeline/havoc/src/master/)  
-[Documentation](https://www2.helsinki.fi/en/projects/havoc)  
+**DOI**:[https://doi.org/10.1186/s12859-021-04294-2](https://doi.org/10.1186/s12859-021-04294-2)  
+**Publication**:[https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04294-2#Bib1](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04294-2#Bib1)  
+**Source code**:[https://bitbucket.org/auto_cov_pipeline/havoc/src/master/](https://bitbucket.org/auto_cov_pipeline/havoc/src/master/)  
+**Documentation**:[https://www2.helsinki.fi/en/projects/havoc](https://www2.helsinki.fi/en/projects/havoc)  
 
 **Sustainable data analysis with Snakemake**  
 Felix Mölder, Kim Philipp Jablonski, Brice Letcher, Michael B. Hall, Christopher H. Tomkins-Tinch, Vanessa Sochat, Jan Forster, Soohyun Lee, Sven O. Twardziok, Alexander Kanitz, Andreas Wilm, Manuel Holtgrewe, Sven Rahmann, Sven Nahnsen, Johannes Köster  
 _F1000Research (2021)_  
-[DOI:](https://doi.org/10.12688/f1000research.29032.2)  
-[Publication:](https://f1000research.com/articles/10-33/v1)  
-[Source code:](https://github.com/snakemake/snakemake)  
-[Documentation](https://snakemake.readthedocs.io/en/stable/index.html)  
+**DOI**:[](https://doi.org/10.12688/f1000research.29032.2)  
+**Publication**:[](https://f1000research.com/articles/10-33/v1)  
+**Source code**:[](https://github.com/snakemake/snakemake)  
+**Documentation**:[](https://snakemake.readthedocs.io/en/stable/index.html)  
 
 **Nextclade: clade assignment, mutation calling and quality control for viral genomes**  
 Ivan Aksamentov, Cornelius Roemer, Emma B. Hodcroft and Richard A. Neher  
 _The Journal of Open Source Software_  
-[DOI:](https://doi.org/10.21105/joss.03773)  
-[Publication:](https://joss.theoj.org/papers/10.21105/joss.03773)  
-[Source code:](https://github.com/nextstrain/nextclade)  
-[Documentation](https://clades.nextstrain.org/)  
+**DOI**:[](https://doi.org/10.21105/joss.03773)  
+**Publication**:[](https://joss.theoj.org/papers/10.21105/joss.03773)  
+**Source code**:[](https://github.com/nextstrain/nextclade)  
+**Documentation**:[](https://clades.nextstrain.org/)  
 
 **Assignment of epidemiological lineages in an emerging pandemic using the pangolin tool**  
 Áine O’Toole, Emily Scher, Anthony Underwood, Ben Jackson, Verity Hill, John T McCrone, Rachel Colquhoun, Chris Ruis, Khalil Abu-Dahab, Ben Taylor, Corin Yeats, Louis du Plessis, Daniel Maloney, Nathan Medd, Stephen W Attwood, David M Aanensen, Edward C Holmes, Oliver G Pybus and Andrew Rambaut  
 _Virus Evolution, Volume 7, Issue 2 (2021)_  
-[DOI:](https://doi.org/10.1093/ve/veab064)  
-[Publication:](https://academic.oup.com/ve/article/7/2/veab064/6315289)  
-[Source code:](https://github.com/cov-lineages/pangolin) _(pangolin)_  
-[Source code:](https://github.com/cov-lineages/scorpio) _(scorpio)_  
-[Documentation](https://cov-lineages.org/index.html)  
+**DOI**:[](https://doi.org/10.1093/ve/veab064)  
+**Publication**:[](https://academic.oup.com/ve/article/7/2/veab064/6315289)  
+**Source code**:[](https://github.com/cov-lineages/pangolin) _(pangolin)_  
+**Source code**:[](https://github.com/cov-lineages/scorpio) _(scorpio)_  
+**Documentation**:[](https://cov-lineages.org/index.html)  
 
 **Tabix: fast retrieval of sequence features from generic TAB-delimited files**  
 Heng Li  
 _Bioinformatics, Volume 27, Issue 5 (2011)_  
-[DOI:](https://doi.org/10.1093/bioinformatics/btq671)  
-[Publication:](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3042176/)  
-[Source code:](https://github.com/samtools/samtools)  
-[Documentation](http://samtools.sourceforge.net/)  
+**DOI**:[](https://doi.org/10.1093/bioinformatics/btq671)  
+**Publication**:[](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3042176/)  
+**Source code**:[](https://github.com/samtools/samtools)  
+**Documentation**:[](http://samtools.sourceforge.net/)  
 
 **LoFreq: a sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets**  
 Andreas Wilm, Pauline Poh Kim Aw, Denis Bertrand, Grace Hui Ting Yeo, Swee Hoe Ong, Chang Hua Wong, Chiea Chuen Khor, Rosemary Petric, Martin Lloyd Hibberd and Niranjan Nagarajan  
 _Nucleic Acids Research, Volume 40, Issue 22 (2012)_  
-[DOI:](https://doi.org/10.1093/nar/gks918)  
-[Publication:](https://pubmed.ncbi.nlm.nih.gov/23066108/)  
-[Source code:](https://gitlab.com/treangenlab/lofreq) _(v2 used)_  
-[Source code:](https://github.com/andreas-wilm/lofreq3) _(see also v3 in Nim)_  
-[Documentation](https://csb5.github.io/lofreq/)  
+**DOI**:[](https://doi.org/10.1093/nar/gks918)  
+**Publication**:[](https://pubmed.ncbi.nlm.nih.gov/23066108/)  
+**Source code**:[](https://gitlab.com/treangenlab/lofreq) _(v2 used)_  
+**Source code**:[](https://github.com/andreas-wilm/lofreq3) _(see also v3 in Nim)_  
+**Documentation**:[](https://csb5.github.io/lofreq/)  
 
 **The AWK Programming Language**  
 Al Aho, Brian Kernighan and Peter Weinberger  
 _Addison-Wesley (1988)_  
-[ISBN:](https://www.biblio.com/9780201079814)  
-[Publication:]()  
-[Source code:](https://github.com/onetrueawk/awk)  
-[Documentation](https://www.gnu.org/software/gawk/manual/gawk.html)  
+**ISBN**:[](https://www.biblio.com/9780201079814)  
+**Publication**:[]()  
+**Source code**:[](https://github.com/onetrueawk/awk)  
+**Documentation**:[](https://www.gnu.org/software/gawk/manual/gawk.html)  
 
 **BEDTools: a flexible suite of utilities for comparing genomic features**  
 Aaron R. Quinlan and Ira M. Hall  
 _Bioinformatics, Volume 26, Issue 6 (2010)_  
-[DOI:](https://doi.org/10.1093/bioinformatics/btq033)  
-[Publication:](https://academic.oup.com/bioinformatics/article/26/6/841/244688)  
-[Source code:](https://github.com/arq5x/bedtools2)  
-[Documentation](https://bedtools.readthedocs.io/en/latest/)  
+**DOI**:[](https://doi.org/10.1093/bioinformatics/btq033)  
+**Publication**:[](https://academic.oup.com/bioinformatics/article/26/6/841/244688)  
+**Source code**:[](https://github.com/arq5x/bedtools2)  
+**Documentation**:[](https://bedtools.readthedocs.io/en/latest/)  
 
 **Twelve years of SAMtools and BCFtools**  
 Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies and Heng Li  
 _GigaScience, Volume 10, Issue 2 (2021)_  
-[DOI:](https://doi.org/10.1093/gigascience/giab008)  
-[Publication:](https://academic.oup.com/gigascience/article/10/2/giab008/6137722)  
-[Source code:](https://github.com/samtools/samtools)  
-[Documentation](http://samtools.sourceforge.net/)  
+**DOI**:[](https://doi.org/10.1093/gigascience/giab008)  
+**Publication**:[](https://academic.oup.com/gigascience/article/10/2/giab008/6137722)  
+**Source code**:[](https://github.com/samtools/samtools)  
+**Documentation**:[](http://samtools.sourceforge.net/)  
 
 **Fast and accurate short read alignment with Burrows-Wheeler Transform**  
 Heng Li and Richard Durbin  
 _Bioinformatics, Volume 25, Aricle 1754-60 (2009)_  
-[DOI:](https://doi.org/10.1093/bioinformatics/btp324)  
-[Publication:](https://pubmed.ncbi.nlm.nih.gov/19451168/)  
-[Source code:](https://github.com/lh3/bwa)  
-[Documentation](http://bio-bwa.sourceforge.net/)  
+**DOI**:[](https://doi.org/10.1093/bioinformatics/btp324)  
+**Publication**:[](https://pubmed.ncbi.nlm.nih.gov/19451168/)  
+**Source code**:[](https://github.com/lh3/bwa)  
+**Documentation**:[](http://bio-bwa.sourceforge.net/)  
 
 **Sickle: A sliding-window, adaptive, quality-based trimming tool for FastQ files**  
 Joshi NA and Fass JN  
 _(2011)  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:](https://github.com/najoshi/sickle)  
-[Documentation]()  
+**DOI**:[](https://doi.org/)  
+**Publication**:[]()  
+**Source code**:[](https://github.com/najoshi/sickle)  
+**Documentation**:[]()  
 
 **Cutadapt Removes Adapter Sequences From High-Throughput Sequencing Reads**  
 Marcel Martin  
 _EMBnet Journal, Volume 17, Article 1 (2011)  
-[DOI:](https://doi.org/10.14806/ej.17.1.200)  
-[Publication:](http://journal.embnet.org/index.php/embnetjournal/article/view/200)  
-[Source code:](https://github.com/marcelm/cutadapt/)  
-[Documentation](https://cutadapt.readthedocs.io/en/stable/)  
+**DOI**:[](https://doi.org/10.14806/ej.17.1.200)  
+**Publication**:[](http://journal.embnet.org/index.php/embnetjournal/article/view/200)  
+**Source code**:[](https://github.com/marcelm/cutadapt/)  
+**Documentation**:[](https://cutadapt.readthedocs.io/en/stable/)  
 
 **MultiQC: summarize analysis results for multiple tools and samples in a single report**  
 Philip Ewels, Måns Magnusson, Sverker Lundin and Max Käller  
 _Bioinformatics, Volume 32, Issue 19 (2016)_  
-[DOI:](https://doi.org/10.1093/bioinformatics/btw354)  
-[Publication:](https://academic.oup.com/bioinformatics/article/32/19/3047/2196507)  
-[Source code:](https://github.com/ewels/MultiQC)  
-[Documentation](https://multiqc.info/)  
+**DOI**:[](https://doi.org/10.1093/bioinformatics/btw354)  
+**Publication**:[](https://academic.oup.com/bioinformatics/article/32/19/3047/2196507)  
+**Source code**:[](https://github.com/ewels/MultiQC)  
+**Documentation**:[](https://multiqc.info/)  
 
 **FastQ Screen: A tool for multi-genome mapping and quality control**  
 Wingett SW and Andrews S  
 _F1000Research (2018)_  
-[DOI:](https://doi.org/10.12688/f1000research.15931.2)  
-[Publication:](https://f1000research.com/articles/7-1338/v2)  
-[Source code:](https://github.com/StevenWingett/FastQ-Screen)  
-[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)  
+**DOI**:[](https://doi.org/10.12688/f1000research.15931.2)  
+**Publication**:[](https://f1000research.com/articles/7-1338/v2)  
+**Source code**:[](https://github.com/StevenWingett/FastQ-Screen)  
+**Documentation**:[](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/)  
 
 **FastQC: A quality control tool for high throughput sequence data**  
 Simon Andrews  
 _Online (2010)_  
-[DOI:](https://doi.org/)  
-[Publication:]()  
-[Source code:](https://github.com/s-andrews/FastQC)  
-[Documentation](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)  
+**DOI**:[](https://doi.org/)  
+**Publication**:[]()  
+**Source code**:[](https://github.com/s-andrews/FastQC)  
+**Documentation**:[](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)  
 
 
 ### Glossary ###
 
-BAM: Binary Alignment Map
-BAI: BAM Indexes
-
-FASTA: Fast-All
-FASTQ: FASTA with Quality data
-FAI: FASTA Indexes
-
-SAM: Sequence Alignment Map
+- **BAM**: Binary Alignment Map
+- **BAI**: BAM Indexes
+- **FASTA**: Fast-All
+- **FASTQ**: FASTA with Quality data
+- **FAI**: FASTA Indexes
+- **SAM**: Sequence Alignment Map
