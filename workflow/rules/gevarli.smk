@@ -176,7 +176,7 @@ rule bcftools_consensus:
         BCFTOOLS
     input:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta",
-        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz",
+        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz",
         index = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi"
     output:
         constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta.tmp")
@@ -186,7 +186,7 @@ rule bcftools_consensus:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
         "--fasta-ref {input.maskedref} "  # -f: reference sequence in fasta format
-        "{input.variantfilt} "            # VCF variants file
+        "{input.archive} "                # SNVs and Indels filtered VCF archive file
         "--output {output.constmp} "      # -o: write output to a file (default: standard output)
         "2> {log}"                        # Log redirection
 

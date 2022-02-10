@@ -133,7 +133,6 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
     --use-conda \
-    --prioritize multiqc_reports_aggregation \
     --dryrun \
     --quiet
 
@@ -153,7 +152,6 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
     --use-conda \
-    --prioritize multiqc_reports_aggregation \
     --printshellcmds \
     --keep-going \
     --rerun-incomplete
@@ -194,7 +192,9 @@ echo "##### CONCATENATE FASTA FILES #####"
 echo "-----------------------------------"
 
 cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
-cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_ReadsQC_report.html
+
+# and copy multiqc_report.html to results/ dir root
+cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_readsQC_reports.html
 
 echo "________________________________________________________________________"
 
