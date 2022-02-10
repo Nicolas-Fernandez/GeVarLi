@@ -285,7 +285,7 @@ This role is often held by maintainers and engineering managers.
 
 ### Directories tree structure ###
 
-```
+```shell
  GeVarLi.sh  
  README.md  
  **config**/  
