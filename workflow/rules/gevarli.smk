@@ -76,8 +76,8 @@ INDEXBWA = config["bwa"]["index"]              # bwa path to indexed genome refe
 REFERENCE = config["consensus"]["reference"] # Genome reference fasta sequence
 MINCOV = config["consensus"]["mincov"]       # Minimum coverage for masking regions in consensus sequence
 
-COVMIN = config["indel"]["covmin"] # Minimum coverage allowed
-AFMIN = config["indel"]["afmin"]   # Minimum allele freq allowed
+COVMIN = config["variant"]["covmin"] # Minimum coverage allowed
+AFMIN = config["variant"]["afmin"]   # Minimum allele freq allowed
 
 DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 

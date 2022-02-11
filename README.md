@@ -38,19 +38,19 @@ _This is the **macOSX** version (specific conda environements)._
 
 ### Conda _(required)_ ###
 
-Install **Conda** (_i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit_): [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
-_Follow the screen prompt instructions_  
+Install **Conda** _(i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit)_: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+Follow the screen prompt instructions  
 ```shell
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ./Miniconda3-latest-Linux-x86_64.sh 
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-_Restart shell (close and reopen the terminal window_
+Restart shell _(close and re-open the terminal window)_  
 
 
 ### Snakemake _(required)_ ###
 
-Install **Snakemake** (_i.e. v.6.12.1_) using Conda  
+Install **Snakemake** _(i.e. v.6.12.1)_ using Conda  
 _Follow the screen prompt instructions_  
 ```shell
 conda install -c conda-forge mamba --yes
@@ -61,7 +61,7 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 
 ### GeVarLi ###
 
-Clone the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab (_ID: 31729804_):
+Clone the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
 
 #### HTTPS ####
 If you want to authenticate each time you perform an operation between your computer and GitLab
@@ -73,7 +73,7 @@ cd ./GeVarLi_Pipeline_macOSX/
 **OR**
 
 #### SSH ####
-If you want to authenticate only one time (_follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html)_)
+If you want to authenticate only one time _(follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html))_
 ```shell
 git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 cd ./GeVarLi_Pipeline_macOSX/
@@ -121,16 +121,16 @@ Yours results are available in **./results/** directory, as follow:
 #### 01_Trimming ####
 
 - **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
-- _cutadapt/ directory: paired reads, without adapters (default: tempdir, removed, save disk usage)_
+- _cutadapt/ directory: paired reads, without adapters (default config: tempdir, removed, save disk usage)_
 
 #### 02_Mapping ####
 
 - **\<sample\>\_\<aligner\>\_markdup.bam**: 
 - **\<sample\>\_\<aligner\>\_markdup.bai**:
-- _\<sample\>\_\<aligner\>\_mapped.sam_: (default: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_sortbynames.bam_: (default: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_fixmate.bam_: (default: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_sorted.bam_: (default: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_mapped.sam_: (default config: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_sortbynames.bam_: (default config: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_fixmate.bam_: (default config: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_sorted.bam_: (default config: tempdir, removed, save disk usage)_
 
 #### 03_Coverage ####
 
@@ -144,8 +144,8 @@ Yours results are available in **./results/** directory, as follow:
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bai**:
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
-- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz: (default: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz.tbi: (default: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz: (default config: tempdir, removed, save disk usage)_
+- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz.tbi: (default config: tempdir, removed, save disk usage)_
 
 #### 05_Consensus ####
 
@@ -157,20 +157,23 @@ Yours results are available in **./results/** directory, as follow:
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-alignement/ directory**:
     - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.aligned.fasta**:
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**:
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**:
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.gene.\<gene\>.fasta**: for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**: insertions
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**: errors
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.gene.\<gene\>.fasta**: consensus for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
 
 #### 10_graphs ####
 
-- **dag**: , in _pdf_ and _png_ formats
-- **filegraph**: , in _pdf_ and _png_ formats
-- **rulegraph**: , in _pdf_ and _png_ formats
+- **dag**: directed acyclic graph of jobs, in _pdf_ and _png_ formats
+- **rulegraph**: dependency graph of rules, in _pdf_ and _png_ formats
+_(less crowded than above DAG of jobs, but also show less information)_  
+- **filegraph**: dependency graph of rules with their input and output files in the dot language, in _pdf_ and _png_ formats
+_(an intermediate solution between above DAG of jobs and the rule graph)_  
 
 #### 11_Reports ####
 
 - All _non-empty_ **log** for each tool and each sample
-- files_summary.txt: , in _txt_ format 
+- files_summary.txt: summary of all files created by the workflow, in _txt_ format 
+_(columns: filename, modification time, rule version, status, plan)_
 
 ###  Configuration ###
 
@@ -179,59 +182,78 @@ If you want see or edit default settings in **config.yaml** file in **./config/*
 #### Resources ####
 
 Edit to match your hardware configuration  
-- **cpus**:
-- **mem_gb**:
-- **tmpdir**:
+- **cpus**: for tools that can _(i.e. bwa)_ could be use at most n cpus to run in parallel _(default config: 4)_
+_**Note**: snakemake (if launch with default bash script) will always use all cpus to parallelize jobs_
+- **mem_gb**: for tools that can _(i.e. samtools)_ limit its use of memory to max n Gb _(default config: 4 Gb)_
+- **tmpdir**: for tools that can _(i.e. pangolin)_ specify where you want the temp stuff _(default config: $TMPDIR)_
 
 #### Environments ####
 
-Edit if you change some environments (i.e.new version) in ./workflow/envs/tools-version.yaml files
-
+Edit if you change some environments _(i.e. new version)_ in ./workflow/envs/tools-version.yaml files
 
 #### Aligner ####
 
-- TODO
+You can choose to align your reads using either **BWA** or **Bowtie2** or both tools  
+
+To select one or both, de/comment (#) as you wish:
+
+- **bwa**: faster _(default config)_
+- **bowtie2**: slower, sensitivity requiried could be set _(see below "Bowtie2" options)_
+
+_Final file names allow you to keep track which tools was used_  
 
 #### Consensus ####
 
-- TODO
+- **reference**: reference sequence path used for genome assmbling _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
+- **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default config: 10)_
 
-#### InDel ####
+#### Variant ####
 
-- TODO
+- **covmin**: minimum coverage allowed for SNVs and InDels filtering, if < 1 = off _(default config: 10 (INT))_
+- **afmin**: minimum allele frequency allowed for SNVs and InDels filtering, if < 1 = off _(default config: 0.2 (FLOAT))_
 
 #### BWA ####
 
-- TODO
+- **index**: reference index path for bwa _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
 
 #### Bowtie2 ####
 
-- TODO
+- **index**: reference index path for bowtie2 _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
+- **sensitivity**: preset for bowtie2 sensitivity
+  - **very-fast**: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
+  - **fast**: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
+  - **sensitive**: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 _(default)_
+  - **very-sensitive**: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
+
+- **-D**:
+- **-R**:
+- **-N**:
+- **-L**:
+- **-i**:
 
 #### Sickle-trim ####
 
-- **command**: Pipeline wait for paired-end reads (default config: 'pe') see: rule sickletrim on ./workflow/rules/reads_quality_control_pipeline.smk snake file
-- **encoding**: If your data are from recent Illumina run, let 'sanger' (default config: 'sanger')
-- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit (default config: '30')
-- **length**: Read length limit, after trim (default config: '75')
+- **command**: Pipeline wait for paired-end reads _(default config: 'pe')_ see: rule sickletrim on ./workflow/rules/reads_quality_control_pipeline.smk snake file
+- **encoding**: If your data are from recent Illumina run, let 'sanger' _(default config: 'sanger')_
+- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default config: '30')_
+- **length**: Read length limit, after trim _(default config: '75')_
 
 #### Cutadapt ####
 
-- **length**: Discard reads shorter than length, after trim (default config: '25')
-- **kit**: Sequence of an adapter ligated to the 3' end of the first read (default config: Truseq, Nextera and Small Illumina kits)  
+- **length**: Discard reads shorter than length, after trim _(default config: '25')_
+- **kit**: Sequence of an adapter ligated to the 3' end of the first read _(default config: Truseq, Nextera and Small Illumina kits)  
 
 #### Fastq-Screen #####
 
-- **config**: Path to the fastq-screen configuration file (default config: ./config/fastq-screen.conf)
-- **subset**: Don't use the whole sequence file, but create a temporary dataset of this specified number of read (default config: '10000', set '0' for all dataset)
-- **aligner**: Specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' (default config: 'bwa')
+- **config**: Path to the fastq-screen configuration file _(default config: ./config/fastq-screen.conf)_
+- **subset**: Don't use the whole sequence file, but create a temporary dataset of this specified number of read _(default config: '10000', set '0' for all dataset)_
+- **aligner**: Specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' _(default config: 'bwa')_
 
 ##### fastq-screen.conf #####
 
-- **path**: Set this value to tell the program where to find your chosen aligner (default :/usr/local/\<tool\>
-- **bismark**: Same for bismark (for bisulfite sequencing only)
-- **threads**: Set this value to the number of cores you want for mapping reads (default: 1, but overwrited by Snakemake and config.yaml file)
 - **databases**: This section enables you to configure multiple genomes databases (aligner index files) to search against in your screen
+_ **path**: Set this value to tell the program where to find your chosen aligner _(default :/usr/local/\<tool\>)_
+_ **threads**: Set this value to the number of cores you want for mapping reads (default config: 1, but overwrited by Snakemake and config.yaml file)_
 
 
 ## Support ##
@@ -363,16 +385,6 @@ _Computer software (2016)_
 **Documentation**: [https://snakemake.readthedocs.io/en/stable/index.html](https://snakemake.readthedocs.io/en/stable/index.html) (conda)  
 **Source code**: [https://github.com/mamba-org/mamba](https://github.com/mamba-org/mamba) (mamba) 
 **Documentation**: [https://mamba.readthedocs.io/en/latest/index.html](https://mamba.readthedocs.io/en/latest/index.html) (mamba)  
-
-**Sustainable data analysis with Snakemake**  
-Felix Mölder, Kim Philipp Jablonski, Brice Letcher, Michael B. Hall, Christopher H. Tomkins-Tinch, Vanessa Sochat, Jan Forster, Soohyun Lee, Sven O. Twardziok, Alexander Kanitz, Andreas Wilm, Manuel Holtgrewe, Sven Rahmann, Sven Nahnsen, Johannes Köster  
-_F1000Research (2021)_  
-**DOI**: [https://doi.org/10.12688/f1000research.29032.2](https://doi.org/10.12688/f1000research.29032.2)  
-**Publication**: [https://f1000research.com/articles/10-33/v1](https://f1000research.com/articles/10-33/v1)  
-**Source code**: [https://github.com/conda/conda](https://github.com/conda/conda)  
-**Documentation**: [https://docs.conda.io/en/latest/index.html](https://docs.conda.io/en/latest/index.html)  
-
-
 
 **HAVoC, a bioinformatic pipeline for reference-based consensus assembly and lineage assignment for SARS-CoV-2 sequences**  
 Phuoc Thien Truong Nguyen, Ilya Plyusnin, Tarja Sironen, Olli Vapalahti, Ravi Kant & Teemu Smura  
