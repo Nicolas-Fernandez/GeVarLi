@@ -36,8 +36,8 @@ conda:
 
 ## ALIGNER --------------------------------------------------------------------------------------------
 aligner: # Choose (de/comment) one or both aligners
-  - bwa     # fast
-  #- bowtie2 # sensitivity requiried, see below "Bowtie2" options
+  - bwa     # faster (default)
+  #- bowtie2 # slower, sensitivity requiried could be set (see below "Bowtie2" options)
 
 ## CONSENSUS -----------------------------------------------------------------------------------------
 consensus:
@@ -50,8 +50,8 @@ consensus:
   - '10' # Only for testing ! (default CNR Lyon / AfroScreen)
   #- '30' # Recomanded (if enough reads depth)
 
-## INDEL ---------------------------------------------------------------------------------------------
-indel:
+## VARIANT --------------------------------------------------------------------------------------------
+variant:
   covmin: '10'  # Minimum allele freq allowed (<1=off) (FLOAT)
   afmin: '0.2' # Minimum coverage allowed (<1=off) (INT)
 
