@@ -167,15 +167,15 @@ Yours results are available in **./results/** directory, as follow:
 #### 10_graphs ####
 
 - **dag**: directed acyclic graph of jobs, in _pdf_ and _png_ formats
-- **rulegraph**: dependency graph of rules, in _pdf_ and _png_ formats
+- **rulegraph**: dependency graph of rules, in _pdf_ and _png_ formats  
 _(less crowded than above DAG of jobs, but also show less information)_  
-- **filegraph**: dependency graph of rules with their input and output files in the dot language, in _pdf_ and _png_ formats
+- **filegraph**: dependency graph of rules with their input and output files in the dot language, in _pdf_ and _png_ formats  
 _(an intermediate solution between above DAG of jobs and the rule graph)_  
 
 #### 11_Reports ####
 
 - All _non-empty_ **log** for each tool and each sample
-- files_summary.txt: summary of all files created by the workflow, in _txt_ format 
+- files_summary.txt: summary of all files created by the workflow, in _txt_ format  
 _(columns: filename, modification time, rule version, status, plan)_
 
 ###  Configuration ###
@@ -185,10 +185,10 @@ If you want see or edit default settings in **config.yaml** file in **./config/*
 #### Resources ####
 
 Edit to match your hardware configuration  
-- **cpus**: for tools that can _(i.e. bwa)_ could be use at most n cpus to run in parallel _(default config: 4)_
+- **cpus**: for tools that can _(i.e. bwa)_ could be use at most n cpus to run in parallel _(default config: '4')_  
 _**Note**: snakemake (if launch with default bash script) will always use all cpus to parallelize jobs_
-- **mem_gb**: for tools that can _(i.e. samtools)_ limit its use of memory to max n Gb _(default config: 4 Gb)_
-- **tmpdir**: for tools that can _(i.e. pangolin)_ specify where you want the temp stuff _(default config: $TMPDIR)_
+- **mem_gb**: for tools that can _(i.e. samtools)_ limit its use of memory to max n Gb _(default config: '4' Gb)_
+- **tmpdir**: for tools that can _(i.e. pangolin)_ specify where you want the temp stuff _(default config: '$TMPDIR')_
 
 #### Environments ####
 
@@ -197,7 +197,6 @@ Edit if you change some environments _(i.e. new version)_ in ./workflow/envs/too
 #### Aligner ####
 
 You can choose to align your reads using either **BWA** or **Bowtie2** or both tools  
-
 To select one or both, de/comment (#) as you wish:
 
 - **bwa**: faster _(default config)_
@@ -207,47 +206,44 @@ _Final file names allow you to keep track which tools was used_
 
 #### Consensus ####
 
-- **reference**: reference sequence path used for genome assmbling _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
-- **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default config: 10)_
+- **reference**: reference sequence path used for genome assmbling _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
+- **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default config: '10')_
 
 #### Variant ####
 
-- **covmin**: minimum coverage allowed for SNVs and InDels filtering, if < 1 = off _(default config: 10 (INT))_
-- **afmin**: minimum allele frequency allowed for SNVs and InDels filtering, if < 1 = off _(default config: 0.2 (FLOAT))_
+- **covmin**: minimum coverage allowed for SNVs and InDels filtering, if < 1 = off _(default config: '10' (INT))_
+- **afmin**: minimum allele frequency allowed for SNVs and InDels filtering, if < 1 = off _(default config: '0.2' (FLOAT))_
 
 #### BWA ####
 
-- **index**: reference index path for bwa _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
+- **index**: reference index path for bwa _(default config: 'SARS-CoV-2_Wuhan-WIV04_2019')_
 
 #### Bowtie2 ####
 
-- **index**: reference index path for bowtie2 _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
-- **sensitivity**: preset for bowtie2 sensitivity
+- **index**: reference index path for bowtie2 _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
+- **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
 
 #### Sickle-trim ####
 
-- **command**: Pipeline wait for paired-end reads _(default config: 'pe')_ see: rule sickletrim on ./workflow/rules/reads_quality_control_pipeline.smk snake file
+- **command**: Pipeline wait for paired-end reads _(default config: 'pe')_
 - **encoding**: If your data are from recent Illumina run, let 'sanger' _(default config: 'sanger')_
 - **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default config: '30')_
-- **length**: Read length limit, after trim _(default config: '75')_
+- **length**: read length limit, after trim _(default config: '25')_
 
 #### Cutadapt ####
 
-- **length**: Discard reads shorter than length, after trim _(default config: '25')_
-- **kit**: Sequence of an adapter ligated to the 3' end of the first read _(default config: Truseq, Nextera and Small Illumina kits)  
+- **length**: discard reads shorter than length, after trim _(default config: '25')_
+- **kits**: sequence of an adapter ligated to the 3' end of the first read _(default config: 'truseq', 'nextera' and 'small' Illumina kits)  
 
 #### Fastq-Screen #####
 
-- **config**: Path to the fastq-screen configuration file _(default config: ./config/fastq-screen.conf)_
-- **subset**: Don't use the whole sequence file, but create a temporary dataset of this specified number of read _(default config: '10000', set '0' for all dataset)_
-- **aligner**: Specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' _(default config: 'bwa')_
+- **config**: path to the fastq-screen configuration file _(default config: ./config/fastq-screen.conf)_
+- **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default config: '1000')_
+- **aligner**: specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' _(default config: 'bwa')_
 
 ##### fastq-screen.conf #####
 
-- **databases**: This section enables you to configure multiple genomes databases (aligner index files) to search against in your screen
-_ **path**: Set this value to tell the program where to find your chosen aligner _(default :/usr/local/\<tool\>)_
-_ **threads**: Set this value to the number of cores you want for mapping reads (default config: 1, but overwrited by Snakemake and config.yaml file)_
-
+- **databases**: enables you to configure multiple genomes databases _(aligner index files)_ to search against
 
 ## Support ##
 
