@@ -102,7 +102,8 @@ _Option: Edit **fastq-screen.conf** file in **./config/** directory_
 
 ### Results ###
 
-Yours results are available in **./results/** directory, as follow:
+Yours results are available in **./results/** directory, as follow:  
+_(file names keep track which tools / params was used: \<**sample**\>\_\<**aligner**\>\_\<**mincov**\>)_  
 
 #### root ####
 
@@ -121,48 +122,48 @@ Yours results are available in **./results/** directory, as follow:
 #### 01_Trimming ####
 
 - **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
-
 - _cutadapt/ directory: paired reads, without adapters (default config: tempdir, removed, save disk usage)_
 
 #### 02_Mapping ####
 
-- **\<sample\>\_\<aligner\>\_markdup.bam**: read alignments, in _bam_ format _(can be visualized in, i.e. IGV)_
-- **\<sample\>\_\<aligner\>\_markdup.bai**: bam indexes _bai_ use in i.e. IGV with _./resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta_
-
-- _\<sample\>\_\<aligner\>\_mapped.sam_: (default config: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_sortbynames.bam_: (default config: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_fixmate.bam_: (default config: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_sorted.bam_: (default config: tempdir, removed, save disk usage)_
+- **markdup.bam**: read alignments, in _bam_ format _(can be visualized in, i.e. IGV)_
+- **markdup.bai**: bam indexes _bai_ use in i.e. IGV with _./resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta_
+- _mapped.sam_: (default config: tempdir, removed, save disk usage)_
+- _sortbynames.bam_: (default config: tempdir, removed, save disk usage)_
+- _fixmate.bam_: (default config: tempdir, removed, save disk usage)_
+- _sorted.bam_: (default config: tempdir, removed, save disk usage)_
 
 #### 03_Coverage ####
 
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_coverage-stats.tsv**:
+- **coverage-stats.tsv**: information about genome coverage
+    - **mean_depth**: mean coverage depth across all genome reference sequence
+	- **standard_deviation**: standard deviation for mean_depth
+	- **cov_percent_@nX**: genome reference coverage percentage at at-least n X of depth
 
 #### 04_Variants ####
 
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bam**: read alignments with indel qualities, in _bam_ format _(can be visualized in, i.e. IGV)_
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bai**: bam indexes _bai_ use in i.e. IGV with _./results/04_Variants/maskedref.fasta_
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
-
-- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz: (default config: tempdir, removed, save disk usage)_
-- _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz.tbi: (default config: tempdir, removed, save disk usage)_
+- **maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
+- **maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
+- **indelqual.bam**: read alignments with indel qualities, in _bam_ format _(can be visualized in, i.e. IGV)_
+- **indelqual.bai**: bam indexes _bai_ use in i.e. IGV with _./results/04_Variants/maskedref.fasta_
+- **variantcall.vcf**: SNVs and Indels calling in _vcf_ format
+- **variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
+- _indelfilt.vcf.bgz: (default config: tempdir, removed, save disk usage)_
+- _indelfilt.vcf.bgz.tbi: (default config: tempdir, removed, save disk usage)_
 
 #### 05_Consensus ####
 
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
+- **consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
 
 #### 06_Lineages ####
 
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-alignement/ directory**:
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.aligned.fasta**: aligned sequences, in _fasta_ format
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**: stripped insertions data, in _csv_ format
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**: errors and warnings occurred during processing, in _csv_ format
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.gene.\<gene\>.fasta**: peptide sequences for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
+- **pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
+- **nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
+- **nextclade-alignement/ directory**:
+    - **consensus.aligned.fasta**: aligned sequences, in _fasta_ format
+    - **consensus.insertions.csv**: stripped insertions data, in _csv_ format
+    - **consensus.errors.csv**: errors and warnings occurred during processing, in _csv_ format
+    - **consensus.gene.\<gene\>.fasta**: peptide sequences for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
 
 #### 10_graphs ####
 
@@ -202,7 +203,6 @@ To select one or both, de/comment (#) as you wish:
 - **bwa**: faster _(default config)_
 - **bowtie2**: slower, sensitivity requiried could be set _(see below "Bowtie2" options)_
 
-_Final file names allow you to keep track which tools was used_  
 
 #### Consensus ####
 
