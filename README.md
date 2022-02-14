@@ -121,12 +121,14 @@ Yours results are available in **./results/** directory, as follow:
 #### 01_Trimming ####
 
 - **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
+
 - _cutadapt/ directory: paired reads, without adapters (default config: tempdir, removed, save disk usage)_
 
 #### 02_Mapping ####
 
-- **\<sample\>\_\<aligner\>\_markdup.bam**: 
-- **\<sample\>\_\<aligner\>\_markdup.bai**:
+- **\<sample\>\_\<aligner\>\_markdup.bam**: read alignments, in _bam_ format _(can be visualized in, i.e. IGV)_
+- **\<sample\>\_\<aligner\>\_markdup.bai**: bam indexes _bai_ use in i.e. IGV with _./resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta_
+
 - _\<sample\>\_\<aligner\>\_mapped.sam_: (default config: tempdir, removed, save disk usage)_
 - _\<sample\>\_\<aligner\>\_sortbynames.bam_: (default config: tempdir, removed, save disk usage)_
 - _\<sample\>\_\<aligner\>\_fixmate.bam_: (default config: tempdir, removed, save disk usage)_
@@ -140,10 +142,11 @@ Yours results are available in **./results/** directory, as follow:
 
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bam**: 
-- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bai**:
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bam**: read alignments with indel qualities, in _bam_ format _(can be visualized in, i.e. IGV)_
+- **\<sample\>\_\<aligner\>\_\<mincov\>\_indelqual.bai**: bam indexes _bai_ use in i.e. IGV with _./results/04_Variants/maskedref.fasta_
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_variantcall.vcf**: SNVs and Indels calling in _vcf_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
+
 - _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz: (default config: tempdir, removed, save disk usage)_
 - _\<sample\>\_\<aligner\>\_\<mincov\>\_indelfilt.vcf.bgz.tbi: (default config: tempdir, removed, save disk usage)_
 
@@ -156,10 +159,10 @@ Yours results are available in **./results/** directory, as follow:
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
 - **\<sample\>\_\<aligner\>\_\<mincov\>\_nextclade-alignement/ directory**:
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.aligned.fasta**:
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**: insertions
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**: errors
-    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.gene.\<gene\>.fasta**: consensus for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.aligned.fasta**: aligned sequences, in _fasta_ format
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.insertions.csv**: stripped insertions data, in _csv_ format
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.errors.csv**: errors and warnings occurred during processing, in _csv_ format
+    - **\<sample\>\_\<aligner\>\_\<mincov\>\_consensus.gene.\<gene\>.fasta**: peptide sequences for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
 
 #### 10_graphs ####
 
@@ -220,16 +223,6 @@ _Final file names allow you to keep track which tools was used_
 
 - **index**: reference index path for bowtie2 _(default config: SARS-CoV-2_Wuhan-WIV04_2019)_
 - **sensitivity**: preset for bowtie2 sensitivity
-  - **very-fast**: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
-  - **fast**: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-  - **sensitive**: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 _(default)_
-  - **very-sensitive**: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
-
-- **-D**:
-- **-R**:
-- **-N**:
-- **-L**:
-- **-i**:
 
 #### Sickle-trim ####
 
