@@ -71,8 +71,8 @@ bowtie2:
   sensitivity: # Choose (de/comment) one unique sensitivity preset
     #- '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
     #- '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-    - '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
-    #- '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
+    #- '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
+    - '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
 
 ## NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
