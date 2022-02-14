@@ -286,13 +286,13 @@ This project is regularly update and actively maintened
 However, you can be volunteer to step in as a maintainer  
 
 For information about main git roles:  
-- **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues.  
-- **Reporters** are _read-only contributors_, they can't write to the repository, but can on issues.  
-- **Developers** are _direct contributors_, they have access to everything to go from idea to production,  
-unless something has been explicitly restricted.  
-- **Maintainers** are _super-developers_, they are able to push to master, deploy to production.  
-This role is often held by maintainers and engineering managers.  
-- **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities.  
+- **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues  
+- **Reporters** are _read-only contributors_, they can't write to the repository, but can on issues  
+- **Developers** are _direct contributors_, they have access to everything to go from idea to production  
+_Unless something has been explicitly restricted_  
+- **Maintainers** are _super-developers_, they are able to push to master, deploy to production  
+_This role is often held by maintainers and engineering managers_  
+- **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
 
 ### Directories tree structure ###
 
