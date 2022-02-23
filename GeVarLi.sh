@@ -2,75 +2,86 @@
                                                                                                                            
 ###### About ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### ABOUT #####"
 echo "-----------------"
+echo ""
 echo "Name: GeVarLi.sh"
 echo "Author: Nicolas Fernandez"
 echo "Affiliation: IRD_U233_TransVIHMI"
 echo "Aim: Bash script for GEnome assembling, VARiant calling and LIneage assignation"
 echo "Date: 2021.10.12"
 echo "Run: bash GeVarLi.sh"
-echo "Latest modification: 2021.02.08"
+echo "Latest modification: 2022.02.22"
 echo "Todo: done"
-echo "________________________________________________________________________"
 
-###### Hardware check ######
+
+###### Hardware report ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### HARDWARE #####"
 echo "--------------------"
 echo ""
-    
+
 physicalcpu=$(sysctl -n hw.physicalcpu)     # Get physical cpu
-echo "Physical CPU: ${physicalcpu}"         # Print physical cpu
+echo "Physical CPUs: ${physicalcpu} cores"  # Print physical cpu
 
 logicalcpu=$(sysctl -n hw.logicalcpu)       # Get logical cpu
-echo "Logical CPU: ${logicalcpu}"           # Print logical cpu
+echo "Logical CPUs: ${logicalcpu} threads"  # Print logical cpu
 
 hwmemsize=$(sysctl -n hw.memsize)           # Get memory size
 ramsize=$(expr ${hwmemsize} / $((1024**3))) # 1024**3 = GB
-echo "System Memory: ${ramsize} GB"         # Print RAM size
+echo "System Memory: ${ramsize} Gb"         # Print RAM size
 
-echo "________________________________________________________________________"
 
-###### Working directory ######
+###### Working settings ######
 echo ""
-echo "##### WORKING DIRECTORY #####"
-echo "-----------------------------"
+echo "------------------------------------------------------------------------"
+echo "##### WORKING SETTINGS #####"
+echo "----------------------------"
+echo ""
 
 workdir=${0%/*}
 echo "Working directory: ${workdir}/"
 
 fastq=$(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l)
-echo "Fastq files: ${fastq}"
+echo "Fastq files: ${fastq} (2 per samples)"
+
+usedthreads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml)
+echo "Using ${usedthreads} on total of ${logicalcpu} threads available"
+
+usedmemory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml)
+echo "Using ${usedmemory} on total of ${ramsize} Gb available"
 
 SECONDS=0
 timestampstart=$(date +'%Y-%m-%d %H:%M')
 echo "Start time: ${timestampstart}"
 
-echo "________________________________________________________________________"
 
 ###### Rename samples ######
-# de/comment first line if you want to keep or remove barcode-ID in sample name
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### RENAME FASTQ FILES #####"
 echo "------------------------------"
+echo ""
 
-# With rename command from macOSX 
+# Rename fastq files to remove "_001" Illumina pattern. De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 rename --verbose 's/_S\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
 rename --verbose 's/_L\d+_/_/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
 rename --verbose 's/_001.fastq.gz/.fastq.gz/' ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 # With rename command as part of the util-linux package
-rename --verbose _S\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-rename --verbose _L\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
-rename --verbose _001.fastq.gz .fastq.gz ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+#rename --verbose _S\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+#rename --verbose _L\d+_ _ ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+#rename --verbose _001.fastq.gz .fastq.gz ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
-echo "________________________________________________________________________"
 
 ###### Call snakemake pipeline ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### SNAKEMAKE PIPELINE #####"
 echo "-----------------------------"
+echo ""
 
 echo "Conda environments list:"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
@@ -156,12 +167,13 @@ snakemake \
     --keep-going \
     --rerun-incomplete
 
-echo "________________________________________________________________________"
 
 ###### Create usefull graphs and summary ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### SNAKEMAKE PIPELINE GRAPHS ######"
 echo "--------------------------------------"
+echo ""
 
 mkdir ${workdir}/results/10_Graphs/ 2> /dev/null
 
@@ -184,36 +196,39 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --summary > ${workdir}/results/11_Reports/files_summary.txt
 
-echo "________________________________________________________________________"
 
 ###### Concatenate all consensus fasta ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### CONCATENATE FASTA FILES #####"
 echo "-----------------------------------"
+echo ""
 
 cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
 
 # and copy multiqc_report.html to results/ dir root
 cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_readsQC_reports.html
 
-echo "________________________________________________________________________"
 
 ###### Concatenate all coverage stats ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### CONCATENATE COVERAGE STATS #####"
 echo "----------------------------------"
+echo ""
 
 cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_genome_coverages.tsv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
     && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
 
-echo "________________________________________________________________________"
 
 ###### Concatenate all Pangolin lineage reports ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### CONCATENATE PANGOLIN REPORTS #####"
 echo "----------------------------------------"
+echo ""
 
 cat ${workdir}/results/06_Lineages/*_pangolin-report.csv > ${workdir}/results/All_pangolin_lineages.csv
 
@@ -224,34 +239,38 @@ sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results
 
 rm -f ${workdir}/results/All_pangolin_lineages.csv
 
-echo "________________________________________________________________________"
 
 ###### Concatenate all Nextclade lineage reports ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### CONCATENATE NEXTCLADE REPORTS #####"
 echo "----------------------------------------"
+echo ""
 
 cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv > ${workdir}/results/All_nextclade_lineages.tsv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
     && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv
 
-echo "________________________________________________________________________"
 
 ###### Clean End ######
 echo ""
-echo "##### SCRIPT END #####"
-echo "----------------------"
+echo "------------------------------------------------------------------------"
+echo "##### CLEAN END #####"
+echo "---------------------"
+echo ""
 
+# Clean empty files and directories
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
-echo "________________________________________________________________________"
 
 ###### Report time ######
 echo ""
+echo "------------------------------------------------------------------------"
 echo "##### TIMER #####"
 echo "-----------------"
+echo ""
 
 timestampend=$(date +'%Y-%m-%d %H:%M')
 echo "End time: ${timestampend}"
@@ -259,4 +278,5 @@ echo "End time: ${timestampend}"
 elapsedtime=${SECONDS}
 echo "Processing time: $((${elapsedtime}/60)) minutes and $((${elapsedtime}%60)) seconds elapsed"
 
-echo "________________________________________________________________________"
+echo ""
+echo "------------------------------------------------------------------------"
