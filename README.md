@@ -39,13 +39,13 @@ _This is the **macOSX** version (specific conda environements)._
 ### Conda _(required)_ ###
 
 Install **Conda** _(i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit)_: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
-Follow the screen prompt instructions  
+_Follow the screen prompt instructions_  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ./Miniconda3-latest-Linux-x86_64.sh 
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ./Miniconda3-latest-MacOSX-x86_64.sh 
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-Restart shell _(close and re-open the terminal window)_  
+- Please, restart now the shell, by closing and reopening a new terminal window
 
 
 ### Snakemake _(required)_ ###
