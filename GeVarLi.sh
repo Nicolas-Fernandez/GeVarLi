@@ -41,7 +41,7 @@ echo "##### WORKING SETTINGS #####"
 echo "----------------------------"
 echo ""
 
-workdir=${0%/*}
+workdir=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)
 echo "Working directory: ${workdir}/"
 
 fastq=$(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l)
