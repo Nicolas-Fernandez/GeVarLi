@@ -2,7 +2,6 @@
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
 ## Description ##
-
 GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
 
 - First, control reads quality and clean it, if needed.  
@@ -13,7 +12,6 @@ _This is the **macOSX** version (specific conda environements)._
 
 
 ## Badges ##
-
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
 ![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.2.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
@@ -30,14 +28,12 @@ _This is the **macOSX** version (specific conda environements)._
 
 
 ## Visuals ##
-
 <img src="./visuals/rulegraph.png" width="150" height="300">  
 
 
 ## Installations ##
 
 ### Conda _(required)_ ###
-
 Install **Conda** _(i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit)_: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 _Follow the screen prompt instructions_  
 ```shell
@@ -49,7 +45,6 @@ rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 
 
 ### Snakemake _(required)_ ###
-
 Install **Snakemake** _(i.e. v.6.12.1)_ using Conda  
 _Follow the screen prompt instructions_  
 ```shell
@@ -60,7 +55,6 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 
 
 ### GeVarLi repository ###
-
 Clone _(HTTPS **or** SSH)_ the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
 
 #### HTTPS ####
@@ -90,27 +84,25 @@ git pull --verbose
 
 
 ## Usage ##
-
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
 2. Execute the **GeVarLi.sh** bash script to run the GeVarLi pipeline
-    - by **double clicking** on it **or** right-click > open\_with... > Terminal.app
-	- **or** with CLI :
+    - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
+	- with a **Right-click** > **Open with** > **Terminal.app**
+	- with **CLI** from a terminal:
 ```shell
 bash ./GeVarLi_Pipeline_macOSX/GeVarLi.sh
 ```
-_A new terminal window will open and yours analyzes will start)_  
+_(Yours analyzes will start with default configuration settings)_  
 
 _Option-1: Edit **config.yaml** file in **./config/** directory_  
 _Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
 
 
-### Results ###
-
+## Results ##
 Yours results are available in **./results/** directory, as follow:  
 _(file names keep track which tools / params was used: \<**sample**\>\_\<**aligner**\>\_\<**mincov**\>)_  
 
-#### root ####
-
+### root ###
 This is the main results :   
 
 - **All_consensus_sequences.fasta**: all consensus sequences, in _fasta_ format
@@ -119,19 +111,16 @@ This is the main results :
 - **All_pangolin_lineages.tsv**: all pangolin lineage reports, in _tsv_ format
 - **All_readsQC_reports.html**: all reads quality reports from MultiQC, in _html_ format
 
-#### 00_Quality_Control ####
-
+### 00_Quality_Control ###
 - **fastq-screen**: raw reads putative contaminations reports for each samples, in _html_, _png_ and _txt_ formats 
 - **fastqc**: raw reads quality reports for each samples, in _html_ and _zip_ formats
 - **multiqc**: fastq-screen and fastqc results agregation report for all samples, in _html_ format
 
-#### 01_Trimming ####
-
+### 01_Trimming ###
 - **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
 - _cutadapt/ directory: paired reads, without adapters (default config: tempdir, removed, save disk usage)_
 
-#### 02_Mapping ####
-
+### 02_Mapping ###
 - **markdup.bam**: read alignments, in _bam_ format _(can be visualized in, i.e. IGV)_
 - **markdup.bai**: bam indexes _bai_ use in i.e. IGV with _./resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta_
 - _mapped.sam_: (default config: tempdir, removed, save disk usage)_
@@ -139,15 +128,13 @@ This is the main results :
 - _fixmate.bam_: (default config: tempdir, removed, save disk usage)_
 - _sorted.bam_: (default config: tempdir, removed, save disk usage)_
 
-#### 03_Coverage ####
-
+### 03_Coverage ###
 - **coverage-stats.tsv**: information about genome coverage
     - **mean_depth**: mean coverage depth across all genome reference sequence
 	- **standard_deviation**: standard deviation for mean_depth
 	- **cov_percent_@nX**: genome reference coverage percentage at at-least n X of depth
 
-#### 04_Variants ####
-
+### 04_Variants ###
 - **maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
 - **maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
 - **indelqual.bam**: read alignments with indel qualities, in _bam_ format _(can be visualized in, i.e. IGV)_
@@ -157,12 +144,10 @@ This is the main results :
 - **variantfilt.vcf.bgz**: SNVs and Indels passing filters archive, in _vcf.bgz_ format
 - **variantfilt.vcf.bgz.tbi**: SNVs and Indels passing filters archive indexed, in _vcf.bgz.tbi_ format
 
-#### 05_Consensus ####
-
+### 05_Consensus ###
 - **consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
 
-#### 06_Lineages ####
-
+### 06_Lineages ###
 - **pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
 - **nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
 - **nextclade-alignement/ directory**:
@@ -171,88 +156,75 @@ This is the main results :
     - **consensus.errors.csv**: errors and warnings occurred during processing, in _csv_ format
     - **consensus.gene.\<gene\>.fasta**: peptide sequences for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
 
-#### 10_graphs ####
-
+### 10_graphs ###
 - **dag**: directed acyclic graph of jobs, in _pdf_ and _png_ formats
 - **rulegraph**: dependency graph of rules, in _pdf_ and _png_ formats  
 _(less crowded than above DAG of jobs, but also show less information)_  
 - **filegraph**: dependency graph of rules with their input and output files in the dot language, in _pdf_ and _png_ formats  
 _(an intermediate solution between above DAG of jobs and the rule graph)_  
 
-#### 11_Reports ####
-
+### 11_Reports ###
 - All _non-empty_ **log** for each tool and each sample
 - files_summary.txt: summary of all files created by the workflow, in _txt_ format  
 _(columns: filename, modification time, rule version, status, plan)_
 
-###  Configuration ###
 
+##  Configuration ##
 If you want see or edit default settings in **config.yaml** file in **./config/** directory  
 
-#### Resources ####
-
+### Resources ###
 Edit to match your hardware configuration  
 - **cpus**: for tools that can _(i.e. bwa)_ could be use at most n cpus to run in parallel _(default config: '4')_  
 _**Note**: snakemake (if launch with default bash script) will always use all cpus to parallelize jobs_
 - **mem_gb**: for tools that can _(i.e. samtools)_ limit its use of memory to max n Gb _(default config: '4' Gb)_
 - **tmpdir**: for tools that can _(i.e. pangolin)_ specify where you want the temp stuff _(default config: '$TMPDIR')_
 
-#### Environments ####
 
+### Environments ###
 Edit if you change some environments _(i.e. new version)_ in ./workflow/envs/tools-version.yaml files
 
-#### Aligner ####
-
+### Aligner ###
 You can choose to align your reads using either **BWA** or **Bowtie2** or both tools  
 To select one or both, de/comment (#) as you wish:
 
 - **bwa**: faster _(default config)_
 - **bowtie2**: slower, sensitivity requiried could be set _(see below "Bowtie2" options)_
 
-
-#### Consensus ####
-
+### Consensus ###
 - **reference**: reference sequence path used for genome assmbling _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
 - **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default config: '10')_
 
-#### Variant ####
-
+### Variant ####
 - **covmin**: minimum coverage allowed for SNVs and InDels filtering, if < 1 = off _(default config: '10' (INT))_
 - **afmin**: minimum allele frequency allowed for SNVs and InDels filtering, if < 1 = off _(default config: '0.2' (FLOAT))_
 
-#### BWA ####
-
+### BWA ####
 - **index**: reference index path for bwa _(default config: 'SARS-CoV-2_Wuhan-WIV04_2019')_
 
-#### Bowtie2 ####
-
+### Bowtie2 ####
 - **index**: reference index path for bowtie2 _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
 - **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
 
-#### Sickle-trim ####
-
+### Sickle-trim ###
 - **command**: Pipeline wait for paired-end reads _(default config: 'pe')_
 - **encoding**: If your data are from recent Illumina run, let 'sanger' _(default config: 'sanger')_
 - **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default config: '30')_
 - **length**: read length limit, after trim _(default config: '25')_
 
-#### Cutadapt ####
-
+### Cutadapt ###
 - **length**: discard reads shorter than length, after trim _(default config: '25')_
 - **kits**: sequence of an adapter ligated to the 3' end of the first read _(default config: 'truseq', 'nextera' and 'small' Illumina kits)  
 
-#### Fastq-Screen #####
-
+### Fastq-Screen ###
 - **config**: path to the fastq-screen configuration file _(default config: ./config/fastq-screen.conf)_
 - **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default config: '1000')_
 - **aligner**: specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' _(default config: 'bwa')_
 
-##### fastq-screen.conf #####
-
+#### fastq-screen.conf ####
 - **databases**: enables you to configure multiple genomes databases _(aligner index files)_ to search against
 
-## Support ##
 
+## Support ##
 1. RTFM! (Read The Fabulous Manual! ^^.)
 2. Read de awsome wiki ;)
 3. Create a new issue: Issues > New issue > Describe your issue
@@ -261,33 +233,28 @@ To select one or both, de/comment (#) as you wish:
 
 
 ## Roadmap ##
-
 Add a wiki ! And move may sections from README.md to the wiki !  
 End documentation about "results" and "configuration"...  
 Add new features ? (i.e. adding pangolin lineage)  
 
 
 ## Contributing ##
-
 Open to contributions :)  
 Testing code, finding issues, asking for update, proposing new features ...  
 Use Git tools to share!  
 
 
 ## Authors and acknowledgment ##
-
 - Nicolas Fernandez (Developer and Maintener)  
 - Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
 - Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
 
 
 ## License ##
-
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
 
 
 ## Project status ##
-
 This project is regularly update and actively maintened  
 However, you can be volunteer to step in as a maintainer  
 
@@ -301,7 +268,6 @@ _This role is often held by maintainers and engineering managers_
 - **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
 
 ### Directories tree structure ###
-
 ```shell
 🖥️️  GeVarLi.sh
 📚 README.md
@@ -497,10 +463,9 @@ _Online (2010)_
 
 
 ### Glossary ###
-
-- **BAM**: Binary Alignment Map
-- **BAI**: BAM Indexes
-- **FASTA**: Fast-All
-- **FASTQ**: FASTA with Quality data
-- **FAI**: FASTA Indexes
-- **SAM**: Sequence Alignment Map
+- **BAM** ..... Binary Alignment Map
+- **BAI** ..... BAM Indexes
+- **FASTA** ... Fast-All
+- **FASTQ** ... FASTA with Quality
+- **FAI** ..... FASTA Indexes
+- **SAM** ..... Sequence Alignment Map
