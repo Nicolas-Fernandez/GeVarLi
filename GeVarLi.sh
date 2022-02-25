@@ -19,7 +19,7 @@ echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
 echo -e "${blue}Run${nc} ___________________ bash GeVarLi.sh"
-echo -e "${blue}Latest modification${nc} ___ 2022.02.22"
+echo -e "${blue}Latest Modification${nc} ___ 2022.02.22"
 echo -e "${blue}Todo${nc} __________________ done"
 
 
@@ -30,14 +30,18 @@ echo -e "${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-physicalcpu=$(sysctl -n hw.physicalcpu)     # Get physical cpu
-logicalcpu=$(sysctl -n hw.logicalcpu)       # Get logical cpu
-hwmemsize=$(sysctl -n hw.memsize)           # Get memory size
-ramsize=$(expr ${hwmemsize} / $((1024**3))) # / 1024**3 = Gb
 
-echo -e "${blue}Physical CPUs${nc} _________  ${red}${physicalcpu}${nc} cores" # Print physical cpu
-echo -e "${blue}Logical CPUs${nc} __________ ${red}${logicalcpu}${nc} threads" # Print logical cpu
-echo -e "${blue}System Memory${nc} _________ ${red}${ramsize}${nc} Gb of RAM"  # Print RAM size
+model_name=$(sysctl -n machdep.cpu.brand_string) # Get chip model name
+physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
+logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
+mem_size=$(sysctl -n hw.memsize)                 # Get memory size
+ram_size=$(expr ${mem_size} / $((1024**3)))      # / 1024**3 = Gb
+
+echo -e "                        ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}" # Print header chip model name
+echo -e "${blue}Chip Model Name${nc} _______ ${model_name}"                     # Print chip model name
+echo -e "${blue}Physical CPUs${nc} _________  ${red}${physical_cpu}${nc} cores" # Print physical cpu
+echo -e "${blue}Logical CPUs${nc} __________ ${red}${logical_cpu}${nc} threads" # Print logical cpu
+echo -e "${blue}System Memory${nc} _________ ${red}${ram_size}${nc} Gb of RAM"  # Print RAM size
 
 
 ###### Settings ######
@@ -47,19 +51,19 @@ echo -e "${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-workdir=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)                                     # Get working directory
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                        # Count fastq.gz files
-sample=$(expr ${fastq} / 2)                                                                 # / 2 = samples (paired-end)
-maxthreads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed 's/cpus: //')    # Get user config for max threads
-maxmemory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed 's/mem_gb: //') # Get user config for max memory
-timestampstart=$(date +"%Y-%m-%d %H:%M")                                                    # Get date / hour starting analyzes
-SECONDS=0                                                                                   # Initialize SECONDS counter
+workdir=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)                                      # Get working directory
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                         # Count fastq.gz files
+samples=$(expr ${fastq} / 2)                                                                 # / 2 = samples (paired-end)
+max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed 's/cpus: //')    # Get user config for max threads
+max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed 's/mem_gb: //') # Get user config for max memory
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                   # Get date / hour starting analyzes
+SECONDS=0                                                                                    # Initialize SECONDS counter
 
-echo -e "${blue}Working directory${nc} _____ ${workdir}/"                                                            # Print working directory 
-echo -e "${blue}Samples processed${nc} _____ ${red}${sample}${nc} samples (${ylo}${fastq}${nc} fastq files)"         # Print samples number 
-echo -e "${blue}Maximum threads${nc} _______ ${red}${maxthreads}${nc} of ${ylo}${logicalcpu}${nc} threads available" # Print max threads
-echo -e "${blue}Maximum memory${nc} ________ ${red}${maxmemory}${nc} of ${ylo}${ramsize}${nc} Gb available"          # Print max memory
-echo -e "${blue}Start time${nc} ____________ ${timestampstart}"                                                      # Print date / hour starting analyzes
+echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                              # Print working directory 
+echo -e "${blue}Samples Processed${nc} _____ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)"          # Print samples number 
+echo -e "${blue}Maximum Threads${nc} _______ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
+echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available"          # Print max memory
+echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                                      # Print date / hour starting analyzes
 
 
 ###### Rename samples ######
@@ -182,11 +186,11 @@ echo ""
 
 mkdir ${workdir}/results/10_Graphs/ 2> /dev/null
 
-graphList="dag rulegraph filegraph"
-extentionList="pdf png"
+graph_list="dag rulegraph filegraph"
+extention_list="pdf png"
 
-for graph in ${graphList} ; do
-    for extention in ${extentionList} ; do
+for graph in ${graph_list} ; do
+    for extention in ${extention_list} ; do
 	snakemake \
 	    --directory ${workdir}/ \
             --snakefile ${workdir}/workflow/rules/gevarli.smk \
@@ -268,13 +272,13 @@ echo ""
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
-timestampend=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
-elapsedtime=${SECONDS}                 # Get SECONDS counter 
-minutes=$((${elapsedtime}/60))         # / 60 = minutes
-seconds=$((${elapsedtime}%60))         # % 60 = seconds
+time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
+elapsed_time=${SECONDS}                  # Get SECONDS counter 
+minutes=$((${elapsed_time}/60))          # / 60 = minutes
+seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
-echo -e "${blue}End time${nc} ______________ ${timestampend}"                                                         # Print date / hour ending analyzes
-echo -e "${blue}Processing time${nc} _______ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
+echo -e "${blue}End Time${nc} ______________ ${time_stamp_end}"                                                        # Print date / hour ending analyzes
+echo -e "${blue}Processing Time${nc} _______ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
 
 echo ""
 echo -e "${green}------------------------------------------------------------------------${nc}"
