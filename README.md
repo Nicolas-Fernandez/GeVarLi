@@ -45,7 +45,7 @@ curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o .
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-- Please, restart now the shell, by closing and reopening a new terminal window
+- Please, **restart** now your shell (i.e. close and open a new terminal window)
 
 
 ### Snakemake _(required)_ ###
@@ -59,9 +59,9 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
 
 
-### GeVarLi ###
+### GeVarLi repository ###
 
-Clone the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
+Clone _(HTTPS **or** SSH)_ the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
 
 #### HTTPS ####
 If you want to authenticate each time you perform an operation between your computer and GitLab
@@ -69,8 +69,6 @@ If you want to authenticate each time you perform an operation between your comp
 git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
 cd ./GeVarLi_Pipeline_macOSX/
 ```
-
-**OR**
 
 #### SSH ####
 If you want to authenticate only one time _(follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html))_
@@ -86,6 +84,7 @@ Difference between **Download** and **Clone**:
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
+cd ./GeVarLi_Pipeline_macOSX/
 git pull --verbose
 ```
 
@@ -93,11 +92,16 @@ git pull --verbose
 ## Usage ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
-2. Double-click on **GeVarLi.sh** bash script to run the GeVarLi pipeline  
+2. Execute the **GeVarLi.sh** bash script to run the GeVarLi pipeline
+    - by **double clicking** on it **or** right-click > open\_with... > Terminal.app
+	- **or** with CLI :
+```shell
+bash ./GeVarLi_Pipeline_macOSX/GeVarLi.sh
+```
 _A new terminal window will open and yours analyzes will start)_  
 
-_Option: Edit **config.yaml** file in **./config/** directory_  
-_Option: Edit **fastq-screen.conf** file in **./config/** directory_  
+_Option-1: Edit **config.yaml** file in **./config/** directory_  
+_Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
 
 
 ### Results ###
@@ -106,6 +110,8 @@ Yours results are available in **./results/** directory, as follow:
 _(file names keep track which tools / params was used: \<**sample**\>\_\<**aligner**\>\_\<**mincov**\>)_  
 
 #### root ####
+
+This is the main results :   
 
 - **All_consensus_sequences.fasta**: all consensus sequences, in _fasta_ format
 - **All_genome_coverages.tsv**: all genome coverages, in _tsv_ format
@@ -148,8 +154,8 @@ _(file names keep track which tools / params was used: \<**sample**\>\_\<**align
 - **indelqual.bai**: bam indexes _bai_ use in i.e. IGV with _./results/04_Variants/maskedref.fasta_
 - **variantcall.vcf**: SNVs and Indels calling in _vcf_ format
 - **variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
-- _indelfilt.vcf.bgz: (default config: tempdir, removed, save disk usage)_
-- _indelfilt.vcf.bgz.tbi: (default config: tempdir, removed, save disk usage)_
+- **variantfilt.vcf.bgz**: SNVs and Indels passing filters archive, in _vcf.bgz_ format
+- **variantfilt.vcf.bgz.tbi**: SNVs and Indels passing filters archive indexed, in _vcf.bgz.tbi_ format
 
 #### 05_Consensus ####
 
