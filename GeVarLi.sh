@@ -34,8 +34,8 @@ echo ""
 model_name=$(sysctl -n machdep.cpu.brand_string) # Get chip model name
 physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
 logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
-mem_size=$(sysctl -n hw.memsize)                 # Get memory size
-ram_size=$(expr ${mem_size} / $((1024**3)))      # / 1024**3 = Gb
+mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
+ram_size=$(expr ${mem_size} \/ $((1024**3)) )    # / 1024**3 = Gb
 
 echo -e "                        ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}" # Print header chip model name
 echo -e "${blue}Chip Model Name${nc} _______ ${model_name}"                     # Print chip model name
@@ -51,11 +51,11 @@ echo -e "${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-workdir=$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)                                      # Get working directory
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                       # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                         # Count fastq.gz files
-samples=$(expr ${fastq} / 2)                                                                 # / 2 = samples (paired-end)
-max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed 's/cpus: //')    # Get user config for max threads
-max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed 's/mem_gb: //') # Get user config for max memory
+samples=$(expr ${fastq} \/ 2)                                                                 # / 2 = samples (paired-end)
+max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")    # Get user config for max threads
+max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //") # Get user config for max memory
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                   # Get date / hour starting analyzes
 SECONDS=0                                                                                    # Initialize SECONDS counter
 
@@ -228,7 +228,7 @@ echo ""
 
 cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_genome_coverages.tsv
 
-awk 'NR==1 || NR%2==0' ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
+awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
     && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
 
 
@@ -241,10 +241,10 @@ echo ""
 
 cat ${workdir}/results/06_Lineages/*_pangolin-report.csv > ${workdir}/results/All_pangolin_lineages.csv
 
-awk 'NR==1 || NR%2==0' ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/PANGO.tmp \
+awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/PANGO.tmp \
     && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv
 
-sed 's/,/\t/g' ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
+sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
 
 rm -f ${workdir}/results/All_pangolin_lineages.csv
 
@@ -258,7 +258,7 @@ echo ""
 
 cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv > ${workdir}/results/All_nextclade_lineages.tsv
 
-awk 'NR==1 || NR%2==0' ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
+awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
     && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv
 
 
