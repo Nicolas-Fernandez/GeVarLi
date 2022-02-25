@@ -201,7 +201,7 @@ rule tabix_tabarch_indexing:
     input:
         archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz"
     output:
-        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi")
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi"
     log:
         "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_variantarchive-index.log"
     shell:
@@ -223,7 +223,7 @@ rule bgzip_variant_archive:
     input:
         variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf"
     output:
-        archive = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz")
+        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz"
     log:
         "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_variant-bgz.log"
     shell:
@@ -425,8 +425,8 @@ rule awk_coverage_statistics:
     shell:
         "awk ' "                                  # Awk, a program that you can use to select particular records in a file and perform operations upon them
         #"$4 >= 30 "                                # if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation
-        #"$4 >= {params.mincov} "                   # if 'mincov' as one fixed single parameter, in config file
-        "$4 >= {wildcards.mincov} "                # if 'mincov' as multiple wildcards, for testing
+        "$4 >= {params.mincov} "                   # if 'mincov' as one fixed single parameter, in config file
+        #"$4 >= {wildcards.mincov} "                # if 'mincov' as multiple wildcards, for testing
         "{{supMinCov+=$3-$2}} ; "                  # Genome size >= @ mincov X
         "{{genomeSize+=$3-$2}} ; "                 # Genome size
         "{{totalBases+=($3-$2)*$4}} ; "            # Total bases @ 1 X 
