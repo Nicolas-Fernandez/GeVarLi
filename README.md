@@ -463,9 +463,9 @@ _Online (2010)_
 
 
 ### Glossary ###
-- **BAM** ..... Binary Alignment Map
-- **BAI** ..... BAM Indexes
-- **FASTA** ... Fast-All
-- **FASTQ** ... FASTA with Quality
-- **FAI** ..... FASTA Indexes
-- **SAM** ..... Sequence Alignment Map
+- **BAM**: Binary Alignment Map
+- **BAI**: BAM Indexes
+- **FASTA**: Fast-All
+- **FASTQ**: FASTA with Quality
+- **FAI**: FASTA Indexes
+- **SAM**: Sequence Alignment Map
