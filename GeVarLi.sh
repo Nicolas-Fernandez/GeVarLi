@@ -75,7 +75,7 @@ echo ""
 
 # Rename fastq files to remove "_001" Illumina pattern. De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 rename --verbose "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-rename --verbose "s/_L\d+_/_/" ${workrendir}/resources/reads/*.fastq.gz 2> /dev/null             # Remove line-ID ID like {_L001_}
+rename --verbose "s/_L\d+_/_/" ${workrdir}/resources/reads/*.fastq.gz 2> /dev/null               # Remove line-ID ID like {_L001_}
 rename --verbose "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 
@@ -152,7 +152,8 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
     --use-conda \
-    --dryrun \
+    --prioritize multiqc_reports_aggregation \
+    --dry-run \
     --quiet
 
 echo ""
@@ -172,6 +173,7 @@ snakemake \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
     --use-conda \
+    --prioritize multiqc_reports_aggregation \
     --printshellcmds \
     --keep-going \
     --rerun-incomplete
@@ -277,7 +279,7 @@ elapsed_time=${SECONDS}                  # Get SECONDS counter
 minutes=$((${elapsed_time}/60))          # / 60 = minutes
 seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
-echo -e "${blue}End Time${nc} ______________ ${time_stamp_end}"                                                        # Print date / hour ending analyzes
+echo -e "${blue}End Time${nc} ______________ ${time_stamp_end}"                                                       # Print date / hour ending analyzes
 echo -e "${blue}Processing Time${nc} _______ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
 
 echo ""
