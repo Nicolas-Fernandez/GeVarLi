@@ -55,7 +55,7 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 
 
 ### GeVarLi repository ###
-Clone _(HTTPS **or** SSH)_ the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
+Clone _(HTTPS or SSH)_ the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
 
 #### HTTPS ####
 If you want to authenticate each time you perform an operation between your computer and GitLab
@@ -92,7 +92,7 @@ git pull --verbose
 ```shell
 bash ./GeVarLi_Pipeline_macOSX/GeVarLi.sh
 ```
-_(Yours analyzes will start with default configuration settings)_  
+Yours analyzes will start with default configuration settings  
 
 _Option-1: Edit **config.yaml** file in **./config/** directory_  
 _Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
@@ -266,6 +266,7 @@ _Unless something has been explicitly restricted_
 - **Maintainers** are _super-developers_, they are able to push to master, deploy to production  
 _This role is often held by maintainers and engineering managers_  
 - **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
+
 
 ### Directories tree structure ###
 ```shell

@@ -742,7 +742,7 @@ rule cutadapt_adapters_removing:
 rule multiqc_reports_aggregation:
     # Aim: aggregates bioinformatics analyses results into a single report
     # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
-    priority: 42
+    #priority: 42
     message:
         "MultiQC reports aggregating"
     conda:
