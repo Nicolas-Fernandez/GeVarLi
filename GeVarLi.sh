@@ -51,18 +51,28 @@ echo -e "${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                       # Get working directory
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                         # Count fastq.gz files
-samples=$(expr ${fastq} \/ 2)                                                                 # / 2 = samples (paired-end)
-max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")    # Get user config for max threads
-max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //") # Get user config for max memory
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                   # Get date / hour starting analyzes
-SECONDS=0                                                                                    # Initialize SECONDS counter
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                             # Get working directory
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                               # Count fastq.gz files
+samples=$(expr ${fastq} \/ 2)                                                                      # / 2 = samples (paired-end)
+max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")          # Get user config for max threads
+max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //")       # Get user config for max memory
+reference=$(grep -o -E "reference: '.+\.fasta'" ${workdir}/config/config.yaml | sed "s/reference: 'resources\/genomes\///" | sed "s/\.fasta'//") # Get user config genome reference
+aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")     # Get user config aligner
+min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")          # Get user config minimum coverage
+snvs_cov_min=$(grep -o -E "covmin: [0-9]+" ${workdir}/config/config.yaml | sed "s/covmin: //")     # Get user config snvs cov min
+snvs_af_min=$(grep -o -E "afmin: [0|1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/afmin: //") # Get user config snvs af min
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                         # Get date / hour starting analyzes
+SECONDS=0                                                                                          # Initialize SECONDS counter
 
 echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                              # Print working directory 
 echo -e "${blue}Samples Processed${nc} _____ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)"          # Print samples number 
 echo -e "${blue}Maximum Threads${nc} _______ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
 echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available"          # Print max memory
+echo -e "${blue}Genome Reference${nc} ______ ${reference}"                                                             # Print
+echo -e "${blue}Aligner${nc} _______________ ${aligner}"                                                               # Print
+echo -e "${blue}Minimum Coverage${nc} ______ ${red}${min_cov}${nc}X"                                                   # Print
+echo -e "${blue}SNVs Min. Cov.${nc} ________ ${red}${snvs_cov_min}${nc}"                                               # Print
+echo -e "${blue}SNVs Min. Freq.${nc} _______ ${red}${snvs_af_min}${nc}"                                                # Print
 echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                                      # Print date / hour starting analyzes
 
 
@@ -74,9 +84,9 @@ echo -e "${green}------------------------------${nc}"
 echo ""
 
 # Rename fastq files to remove "_001" Illumina pattern. De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
-rename --verbose "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-rename --verbose "s/_L\d+_/_/" ${workrdir}/resources/reads/*.fastq.gz 2> /dev/null               # Remove line-ID ID like {_L001_}
-rename --verbose "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+rename  "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
+rename  "s/_L\d+_/_/" ${workrdir}/resources/reads/*.fastq.gz               # Remove line-ID ID like {_L001_}
+rename  "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
 
 
 ###### Call snakemake pipeline ######
