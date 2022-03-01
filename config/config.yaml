@@ -5,102 +5,94 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2021.02.08
+# Latest modification: 2022.03.01
 # Todo: done
 ###############################################################################
 
 ## CLUSTER -------------------------------------------------------------------------------------------
 resources:
-  cpus: 4            # cpus
-  mem_gb: 4          # mem in Gb
-  tmpdir: '$TMPDIR'  # temporary directory (default: $TMPDIR)
-  #tmpdir: '.'        # temporary directory (local)
-  #tmpdir: '/scratch' # temporary directory (HPC)
+  cpus: 4          # Set maximum cpus usage (for multithreading) [INT]
+  mem_gb: 4        # Set maximum memory unsage (in Gb) [INT]
+  tmpdir: '$TMPDIR'  # Temporary directory (default: '$TMPDIR')
+    ##- '$TMPDIR'     # System variable $TMPDIR (dafault)
+    ##- '.'           # Local (i.e. GeVarLi root directory)
+    ##- '/scratch'    # HPC (set it to match your HPC usage)
 
 ## ENVIRONNEMENTS ------------------------------------------------------------------------------------
-conda:
-  fastqc:       '../envs/fastqc-0.11.9.yaml'
-  fastq-screen: '../envs/fastq-screen-0.14.0.yaml'
-  multiqc:      '../envs/multiqc-1.11.yaml'
-  cutadapt:     '../envs/cutadapt-3.5.yaml'
-  sickle-trim:  '../envs/sickle-trim-1.33.yaml'
-  bowtie2:      '../envs/bowtie2-2.4.4.yaml'
-  bwa:          '../envs/bwa-0.7.17.yaml'
-  samtools:     '../envs/samtools-1.14.yaml'
-  bedtools:     '../envs/bedtools-2.30.0.yaml'
-  bcftools:     '../envs/bcftools-1.14.yaml'
-  gawk:         '../envs/gawk-5.1.0.yaml'
-  lofreq:       '../envs/lofreq-2.1.5.yaml'
-  pangolin:     '../envs/pangolin-3.1.17.yaml'
-  nextclade:    '../envs/nextclade-1.10.1.yaml'
+conda:                                             # Conda environement yaml files:
+  fastqc:       '../envs/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
+  fastq-screen: '../envs/fastq-screen-0.14.0.yaml' # Fastq-Screen ver. 0.14.0
+  multiqc:      '../envs/multiqc-1.11.yaml'        # MultiQC      ver. 1.11
+  cutadapt:     '../envs/cutadapt-3.5.yaml'        # Cutadapt     ver. 3.5
+  sickle-trim:  '../envs/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
+  bowtie2:      '../envs/bowtie2-2.4.4.yaml'       # Bowtie2      ver. 2.4.4
+  bwa:          '../envs/bwa-0.7.17.yaml'          # BWA          ver. 0.7.17
+  samtools:     '../envs/samtools-1.14.yaml'       # Samtools     ver. 1.14
+  bedtools:     '../envs/bedtools-2.30.0.yaml'     # Bedtools     ver. 2.30.0
+  bcftools:     '../envs/bcftools-1.14.yaml'       # Bcftools     ver. 1.14
+  gawk:         '../envs/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
+  lofreq:       '../envs/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
+  pangolin:     '../envs/pangolin-3.1.17.yaml'     # Pangolon     ver. 3.1.17
+  nextclade:    '../envs/nextclade-1.10.1.yaml'    # Nextclade    ver. 1.10.1
 
 ## ALIGNER --------------------------------------------------------------------------------------------
-aligner: # Choose (de/comment) one or both aligners
-  - bwa     # faster (default)
-  #- bowtie2 # slower, sensitivity requiried could be set (see below "Bowtie2" options)
+aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
+  ##- 'bwa'     # Faster (default)
+  ##- 'bowtie2' # Slower, 'sensitivity' requiried and should be set (see below "Bowtie2" options)
 
 ## CONSENSUS -----------------------------------------------------------------------------------------
 consensus:
-  reference: # Choose (de/comment) or add one unique reference
-    - 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
-    #- 'resources/genomes/HIV_HXB2.fasta'                    # HIV_HXB2
-    #- 'resources/genomes/Ebola_ZEBOV.fasta'                 # Ebola_ZEBOV
-  mincov: # Choose (de/comment) or add one unique minimum coverage for masking regions in consensus sequence (default: 10) [INT]
-  #- '1' # Only for testing ! (default DNAstar)
-  - '10' # Only for testing ! (default CNR Lyon / AfroScreen)
-  #- '30' # Recomanded (if enough reads depth)
+  reference: 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # Path to your favorite reference
+  mincov: 10 # Minimum coverage for masking regions in consensus sequence (default: '10') [INT]
+  ##- 1       # Only for testing ! (default DNAstar)
+  ##- 10      # Only for testing ! (default CNR Lyon / AfroScreen consortium)
+  ##- 30      # Recomanded (if enough reads depth)
 
 ## VARIANT --------------------------------------------------------------------------------------------
 variant:
-  covmin: '10'  # Minimum allele freq allowed (<1=off) (FLOAT)
-  afmin: '0.2' # Minimum coverage allowed (<1=off) (INT)
+  covmin: 10 # Minimum coverage allowed (default: '0.2') [FLOAT] (<1='off')
+  afmin: 0.2 # Minimum allele freq allowed (default: '10') [INT] (<1='off')
 
 ## BWA ------------------------------------------------------------------------------------------------
 bwa:
-  index: # Choose (de/comment) or add one unique bwa indexes
-    - 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
-    #- 'resources/indexes/bwa/HIV_HXB2'                    # HIV_HXB2
-    #- 'resources/indexes/bwa/Ebola_ZEBOV'                 # Ebola_ZEBOV
+  index: 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # BWA indexes (default: SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2)
 
 ## BOWTIE2 -------------------------------------------------------------------------------------------
 bowtie2:
-  index: # Choose (de/comment) or add one unique bowtie2 indexes
-    - 'resources/indexes/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2
-    #- 'resources/indexes/bowtie2/HIV_HXB2'                    # HIV_HXB2
-    #- 'resources/indexes/bowtie2/Ebola_ZEBOV'                 # Ebola_ZEBOV
-  sensitivity: # Choose (de/comment) one unique sensitivity preset
-    #- '--very-fast'       # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
-    #- '--fast'            # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-    #- '--sensitive'       # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
-    - '--very-sensitive'  # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
+  index: 'resources/indexes/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # Bowtie2 indexes (default: SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2)
+  sensitivity: '--sensitive' # Bowtie2 sensitivity preset (default: '--sensitive')
+    ##- '--very-fast'              # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
+    ##- '--fast'                   # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
+    ##- '--sensitive'              # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
+    ##- '--very-sensitive'         # Same as: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50
 
 ## NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
-  dataset: 'resources/nextclade/sars-cov-2/' # Nextclade sars-cov-2 dataset
+  dataset: 'resources/nextclade/sars-cov-2/' # Nextclade sars-cov-2 default dataset (for nextclade 1.10.1)
 
 ## SICKLE-TRIM ---------------------------------------------------------------------------------------
 sickle-trim:
-  command: 'pe' # should be 'pe' if paired-end sequences (default) or 'se' if single-end sequences
-  encoding: # choose one unique encoding (sould be 'sanger')
-    - 'sanger'   # CASAVA >= 1.8 for 'recent' Illumina (default)
-    #- 'illumina' # CASAVA 1.3 to 1.7 for 'old' Illumina
-    #- 'solexa'   # CASAVA < 1.3 for Solexa
-  quality: '30'   # phred score limit (default: 30)
-  length: '25'    # read length limit after trim (default: 25)
+  command: 'pe'      # Reading (default and should be 'pe' for paired-end sequences)
+  encoding: 'sanger' # Quality encoding (dafault and sould be 'sanger')
+    ##- 'sanger'      # CASAVA >= 1.8 for "recent" Illumina reads (default)
+    ##- 'illumina'    # CASAVA 1.3 to 1.7 for "old" Illumina reads
+    ##- 'solexa'      # CASAVA < 1.3 for Solexa
+  quality: 30        # Phred score limit (default: '30')
+  length: 25         # Read length limit after trim (default: '25')
 
 ## CUTADAPT ------------------------------------------------------------------------------------------
 cutadapt:
-  length: '25' # Discard reads shorter than 'length' after trim (default: 25)
-  kits:        # Sequence of an adapter ligated to the 3' end of the first read
-    truseq:      'AGATCGGAAGAGC'                     # Illumina TruSeq / ScriptSeq based kits libraries
-    nextera:     'CTGTCTCTTATACACATC'                # Illumina Nextera / TruSight based kits libraries
-    small:       'TGGAATTCTCGGGTGCCAAGG'             # Illumina Small based kits libraries
+  length: 25 # Discard reads shorter than 'length' after trim (default: '25')
+  kits:      # Sequence of an adapter ligated to the 3' end of the first read
+    truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
+    nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
+    small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
 
 ## FASTQSCREEN ---------------------------------------------------------------------------------------
 fastq-screen:
-  config: 'config/fastq-screen.conf' # path to the fastq-screen configuration file
-  subset: '1000' # Don't use the whole sequence file, but create a temporary dataset of this specified number of read (set '0' for all dataset)
-  aligner: # Choose (de/comment) one unique aligner for fastq-screen (note: we provide bwa indexes, if bowtie, please use bowtie indexes and edit fastq-screen.conf file)
-    - 'bwa'     # Burrows-Wheeler Aligner, for mapping low-divergent sequences against a large reference genome (default)
-    #- 'bowtie'  # Bowtie, an ultrafast, memory-efficient short read aligner
-    #- 'bowtie2' # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences
+  config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
+  subset: 1000                       # Don't use the whole sequence file, but sub-dataset of specified number of read (default: '1000') [INT] (0='all')
+  aligner: 'bwa'                     # Aligner for fastq-screen (default and should be 'bwa')
+    ##- 'bwa'                         # Burrows-Wheeler Aligner (default) [small indexes provided, see 'fastq-screen.conf' file]
+    ##- 'bowtie'                      # Bowtie [indexes not provided]
+    ##- 'bowtie2'                     # Bowtie2 [indexes not provided]
