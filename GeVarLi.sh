@@ -64,15 +64,15 @@ snvs_af_min=$(grep -o -E "afmin: [0|1]\.[0-9]+" ${workdir}/config/config.yaml | 
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                         # Get date / hour starting analyzes
 SECONDS=0                                                                                          # Initialize SECONDS counter
 
-echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                              # Print working directory 
+echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                              # Print working directory
 echo -e "${blue}Samples Processed${nc} _____ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)"          # Print samples number 
 echo -e "${blue}Maximum Threads${nc} _______ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
 echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available"          # Print max memory
-echo -e "${blue}Genome Reference${nc} ______ ${reference}"                                                             # Print
-echo -e "${blue}Aligner${nc} _______________ ${aligner}"                                                               # Print
-echo -e "${blue}Minimum Coverage${nc} ______ ${red}${min_cov}${nc}X"                                                   # Print
-echo -e "${blue}SNVs Min. Cov.${nc} ________ ${red}${snvs_cov_min}${nc}"                                               # Print
-echo -e "${blue}SNVs Min. Freq.${nc} _______ ${red}${snvs_af_min}${nc}"                                                # Print
+echo -e "${blue}Genome Reference${nc} ______ ${reference}"                                                             # Print user config genome reference
+echo -e "${blue}Aligner${nc} _______________ ${aligner}"                                                               # Print user config aligner
+echo -e "${blue}Minimum Coverage${nc} ______ ${red}${min_cov}${nc}x"                                                   # Print user config minimum coverage
+echo -e "${blue}SNVs Min. Cov.${nc} ________ ${red}${snvs_cov_min}${nc}"                                               # Print user config snvs cov min
+echo -e "${blue}SNVs Min. Freq.${nc} _______ ${red}${snvs_af_min}${nc}"                                                # Print user config snvs af min
 echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                                      # Print date / hour starting analyzes
 
 
