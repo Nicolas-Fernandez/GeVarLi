@@ -6,7 +6,7 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2021.02.08
+# Latest modification: 2021.03.01
 # Todo: done
 ###############################################################################
 
@@ -450,7 +450,7 @@ rule awk_coverage_statistics:
 ###############################################################################
 rule bedtools_genome_coverage:
     # Aim: computing genome coverage sequencing
-    # Use: bedtools genomecov [OPTIONS] -ibam [MARKDUP.bam]
+    # Use: bedtools genomecov [OPTIONS] -ibam [MARKDUP.bam] 1> [BEDGRAPH.bed]
     message:
         "BedTools computing genome coverage for {wildcards.sample} sample against reference genome sequence ({wildcards.aligner})"
     conda:
