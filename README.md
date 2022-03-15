@@ -3,12 +3,13 @@
 
 ## Description ##
 GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
+Writed for **[AFROSCREEN](https://www.ird.fr/afroscreen-un-programme-de-riposte-contre-la-covid-19-pour-renforcer-la-surveillance-de-levolution)** [ANRS](https://www.anrs.fr/fr/emergences/covid-19/projet-afroscreen) project. 
 
 - First, control reads quality and clean it, if needed.  
 - Intermediates usefull files are also provided, like alignement bam files (use IGV), variants vcf files and genome coverage statistics.  
 - Last, submit obtained consensus sequences to Nextclade and Pangolin classifications.  
 
-_This is the **macOSX** version (specific conda environements)._
+_This is the **macOSX** version (specific conda environements)_
 
 
 ## Badges ##
@@ -55,20 +56,20 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 
 
 ### GeVarLi repository ###
-Clone _(HTTPS or SSH)_ the [GeVarLi_Pipeline_macOSX](https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX) repository on GitLab _(ID: 31729804)_:
+Clone _(HTTPS or SSH)_ the [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository on GitLab _(ID: 399)_:
 
 #### HTTPS ####
 If you want to authenticate each time you perform an operation between your computer and GitLab
 ```shell
-git clone https://gitlab.com/ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-cd ./GeVarLi_Pipeline_macOSX/
+git clone https://forge.ird.fr/transvihmi/GeVarLi_macOSX.git
+cd ./GeVarLi_macOSX/
 ```
 
 #### SSH ####
 If you want to authenticate only one time _(follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html))_
 ```shell
-git clone git@gitlab.com:ird_transvihmi/GeVarLi_Pipeline_macOSX.git
-cd ./GeVarLi_Pipeline_macOSX/
+git clone git@forge.ird.fr:transvihmi/GeVarLi_macOSX.git
+cd ./GeVarLi_macOSX/
 ```
 
 Difference between **Download** and **Clone**:  
@@ -78,7 +79,7 @@ Difference between **Download** and **Clone**:
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
-cd ./GeVarLi_Pipeline_macOSX/
+cd ./GeVarLi_macOSX/
 git pull --verbose
 ```
 
@@ -90,7 +91,7 @@ git pull --verbose
 	- with a **Right-click** > **Open with** > **Terminal.app**
 	- with **CLI** from a terminal:
 ```shell
-bash ./GeVarLi_Pipeline_macOSX/GeVarLi.sh
+bash ./GeVarLi_macOSX/GeVarLi.sh
 ```
 Yours analyzes will start with default configuration settings  
 
