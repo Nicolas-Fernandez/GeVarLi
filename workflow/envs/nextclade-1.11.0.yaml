@@ -1,4 +1,4 @@
-name: nextclade-1.10.1
+name: nextclade-1.11.0
 channels:
   - r
   - anaconda
@@ -6,4 +6,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - nextclade=1.10.1=h527b516_0
+  - nextclade=1.11.0=h527b516_0
+
