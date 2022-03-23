@@ -67,17 +67,16 @@ CONFIG = config["fastq-screen"]["config"]   # Fastq-screen --conf
 ALIGNER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
 SUBSET = config["fastq-screen"]["subset"]   # Fastq-screen --subset
 
-ALIGNER = config["aligner"] # Aligners (bowtie2 and/or bwa)
+ALIGNER = config["aligner"] # Aligners ('bwa' or 'bowtie2')
 
+INDEXBWA = config["bwa"]["index"]              # bwa path to indexed genome reference
 INDEXBT2 = config["bowtie2"]["index"]          # bowtie2 path to indexed genome reference
 SENSITIVITY = config["bowtie2"]["sensitivity"] # bowtie2 sensitivity preset
-INDEXBWA = config["bwa"]["index"]              # bwa path to indexed genome reference
 
 REFERENCE = config["consensus"]["reference"] # Genome reference fasta sequence
-MINCOV = config["consensus"]["mincov"]       # Minimum coverage for masking regions in consensus sequence
-
-COVMIN = config["variant"]["covmin"] # Minimum coverage allowed
-AFMIN = config["variant"]["afmin"]   # Minimum allele freq allowed
+MINCOV = config["consensus"]["mincov"]       # Minimum coverage, mask lower regions with 'N' 
+MINAF = config["consensus"]["minaf"]         # Minimum allele frequency allowed
+IUPAC = config["consensus"]["iuapc"]         # Output variants in the form of IUPAC ambiguity codes
 
 DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 
@@ -174,6 +173,8 @@ rule bcftools_consensus:
         "BcfTools consensus for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
     conda:
         BCFTOOLS
+    params:
+        iupac = IUPAC
     input:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta",
         archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz",
@@ -186,6 +187,7 @@ rule bcftools_consensus:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
         "--fasta-ref {input.maskedref} "  # -f: reference sequence in fasta format
+        "{params.iupac} "                 # -I, --iupac-codes: output variants in the form of IUPAC ambiguity codes
         "{input.archive} "                # SNVs and Indels filtered VCF archive file
         "--output {output.constmp} "      # -o: write output to a file (default: standard output)
         "2> {log}"                        # Log redirection
@@ -244,8 +246,8 @@ rule lofreq_variant_filtering:
     conda:
         LOFREQ
     params:
-        covmin = COVMIN,
-        afmin = AFMIN
+        mincov = MINCOV,
+        minaf = MINAF
     input:
         variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantcall.vcf"
     output:
@@ -255,8 +257,8 @@ rule lofreq_variant_filtering:
     shell:
         "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                     # Filter SNVs and Indels parsed from vcf file
-        "--cov-min {params.covmin} "  # -v: Minimum coverage allowed (<1=off) (INT)
-        "--af-min {params.afmin} "    # -a: Minimum allele freq allowed (<1=off) (FLOAT)
+        "--cov-min {params.mincov} "  # -v: Minimum coverage allowed (<1=off) (INT)
+        "--af-min {params.minaf} "    # -a: Minimum allele freq allowed (<1=off) (FLOAT)
         "--in {input.variantcall} "   # VCF input file, gzip suuported, no streaming supported
         "--out {output.variantfilt} " # VCF output file, gzip supported (default: standard output)
         "&> {log}"                    # Log redirection 
@@ -390,7 +392,7 @@ rule awk_mincovfilt:
     conda:
         GAWK
     params:
-        mincov = MINCOV # if mincov as one fixed parameter, in config file
+        mincov = MINCOV
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
@@ -399,9 +401,7 @@ rule awk_mincovfilt:
         "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_mincovfilt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        #"'$4 < 30' "                 # Minimum coverage for masking regions in consensus sequence (if 'mincov' fixed by default, i.e. by lab strategy  or health organization recomendation)
-        "'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence (if 'mincov' as one fixed single parameter,in config file)
-        #"'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence (if 'mincov' as multiple wildcards, for testing)
+        "'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence
         "{input.genomecov} "         # BedGraph coverage input
         "1> {output.mincovfilt} "    # Minimum coverage filtered bed output
         "2> {log} "                  # Log redirection
@@ -415,7 +415,7 @@ rule awk_coverage_statistics:
     conda:
         GAWK
     params:
-        mincov = MINCOV # if mincov as one fixed parameter, in config file
+        mincov = MINCOV
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
     output:
@@ -424,9 +424,7 @@ rule awk_coverage_statistics:
         "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
         "awk ' "                                  # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        #"$4 >= 30 "                                # if 'mincov' fixed by default, i.e. by lab strategy, or health organizations protocol recomendation
-        "$4 >= {params.mincov} "                   # if 'mincov' as one fixed single parameter, in config file
-        #"$4 >= {wildcards.mincov} "                # if 'mincov' as multiple wildcards, for testing
+        "$4 >= {params.mincov} "                   # Minimum coverage
         "{{supMinCov+=$3-$2}} ; "                  # Genome size >= @ mincov X
         "{{genomeSize+=$3-$2}} ; "                 # Genome size
         "{{totalBases+=($3-$2)*$4}} ; "            # Total bases @ 1 X 
