@@ -1,4 +1,4 @@
-
+OA
 #######T######R#####A#####N######S######V######I######H#######M######I#########
 # Name: gevarli.smk
 # Author: Nicolas Fernandez
@@ -6,7 +6,7 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2021.03.01
+# Latest modification: 2021.03.23
 # Todo: done
 ###############################################################################
 
@@ -257,8 +257,8 @@ rule lofreq_variant_filtering:
     shell:
         "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                     # Filter SNVs and Indels parsed from vcf file
-        "--cov-min {params.mincov} "  # -v: Minimum coverage allowed (<1=off) (INT)
-        "--af-min {params.minaf} "    # -a: Minimum allele freq allowed (<1=off) (FLOAT)
+        "--cov-min {params.mincov} "  # -v: Minimum coverage allowed (INT)
+        "--af-min {params.minaf} "    # -a: Minimum allele freq allowed (FLOAT)
         "--in {input.variantcall} "   # VCF input file, gzip suuported, no streaming supported
         "--out {output.variantfilt} " # VCF output file, gzip supported (default: standard output)
         "&> {log}"                    # Log redirection 
