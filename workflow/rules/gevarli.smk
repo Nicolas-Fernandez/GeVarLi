@@ -120,35 +120,6 @@ rule nextclade_lineage:
         "&> {log}"                          # Log redirection
 
 ###############################################################################
-rule nextclade_update:
-    # Aim: nextclade lineages assignation
-    # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
-    message:
-        "Nextclade lineage mapping for {wildcards.sample} sample consensus ({wildcards.aligner}-{wildcards.mincov})"
-    conda:
-        NEXTCLADE
-    resources:
-        cpus = CPUS
-    params:
-        dataset = DATASET
-    input:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta"
-    output:
-        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
-        alignment = directory("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-alignment/")
-    log:
-        "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
-    shell:
-        "nextclade "                       # Nextclade, assign queries sequences to clades and reports potential quality issues
-        "run "                              # Run analyzis
-        "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
-        "--input-fasta {input.consensus} "  # -i: Path to a .fasta file with input sequences
-        "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
-        "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
-        "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
-        "&> {log}"                          # Log redirection
-
-###############################################################################
 rule pangolin_lineage:
     # Aim: lineage mapping
     # Use: pangolin [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
