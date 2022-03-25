@@ -175,9 +175,9 @@ rule bcftools_consensus:
     params:
         iupac = IUPAC
     input:
-        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta",
-        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz",
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi"
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta",
+        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf.bgz",
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.bgz.tbi"
     output:
         constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta.tmp")
     log:
@@ -200,11 +200,11 @@ rule tabix_tabarch_indexing:
     conda:
         SAMTOOLS
     input:
-        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz"
+        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf.bgz"
     output:
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.bgz.tbi"
+        index = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.bgz.tbi")
     log:
-        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_variantarchive-index.log"
+        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_variant-archive-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.archive} "   # The input data file must be position sorted and compressed by bgzip
@@ -222,11 +222,11 @@ rule bgzip_variant_archive:
     resources:
         cpus = CPUS
     input:
-        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf"
+        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf"
     output:
-        archive = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf.bgz"
+        archive = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf.bgz")
     log:
-        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_variant-bgz.log"
+        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_variant-archive.log"
     shell:
         "bgzip "                     # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
@@ -248,11 +248,11 @@ rule lofreq_variant_filtering:
         mincov = MINCOV,
         minaf = MINAF
     input:
-        variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantcall.vcf"
+        variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-call.vcf"
     output:
-        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantfilt.vcf"
+        variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variantfilt.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variant-filt.log"
     shell:
         "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                     # Filter SNVs and Indels parsed from vcf file
@@ -273,13 +273,13 @@ rule lofreq_variant_calling:
     resources:
         cpus = CPUS
     input:
-        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta",
-        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bam",
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bai"
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta",
+        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bam",
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bai"
     output:
-        variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variantcall.vcf"
+        variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-call.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variantcall.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variant-call.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         "call-parallel "                 # Call variants from BAM file
@@ -301,11 +301,11 @@ rule samtools_indel_indexing:
     resources:
        cpus = CPUS
     input:
-        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bam"
+        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bam"
     output:
-        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bai"
+        index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bai"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_{mincov}X_indelqual-index.log"
+        "results/11_Reports/samtools/{sample}_{aligner}_{mincov}X_indel-qual-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # Number of additional threads to use (default: 0)
@@ -324,12 +324,12 @@ rule lofreq_indel_qualities:
     conda:
         LOFREQ
     input:
-        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta",
-        markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam"
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta",
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     output:
-        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indelqual.bam"
+        indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bam"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_indelqual.log"
+        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_indel-qual.log"
     shell:
         "lofreq "                  # LoFreq, fast and sensitive inference of SNVs and Indels 
         "indelqual "                # Insert indel qualities into BAM file (required for indel predictions)
@@ -350,9 +350,9 @@ rule bedtools_masking:
     params:
         reference = REFERENCE
     input:
-        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}X_lowcovmask.bed"
+        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}X_low-cov-mask.bed"
     output:
-        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_maskedref.fasta"
+        maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta"
     log:
         "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}X_masking.log"
     shell:
@@ -371,9 +371,9 @@ rule bedtools_merged_mask:
     conda:
         BEDTOOLS
     input:
-        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}X_mincovfilt.bed"
+        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}X_min-cov-filt.bed"
     output:
-        lowcovmask = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_lowcovmask.bed")
+        lowcovmask = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_low-cov-mask.bed")
     log:
         "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}X_merging.log"
     shell:
@@ -393,11 +393,11 @@ rule awk_mincovfilt:
     params:
         mincov = MINCOV
     input:
-        genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
+        genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
-        mincovfilt = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_mincovfilt.bed")
+        mincovfilt = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_min-cov-filt.bed")
     log:
-        "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_mincovfilt.log"
+        "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_min-cov-filt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
         "'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence
@@ -416,7 +416,7 @@ rule awk_coverage_statistics:
     params:
         mincov = MINCOV
     input:
-        genomecov = "results/03_Coverage/{sample}_{aligner}_genomecov.bed"
+        genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
@@ -453,12 +453,12 @@ rule bedtools_genome_coverage:
     conda:
         BEDTOOLS
     input:
-        markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam",
-        index = "results/02_Mapping/{sample}_{aligner}_markdup.bai"
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bai"
     output:
-        genomecov = temp("results/03_Coverage/{sample}_{aligner}_genomecov.bed")
+        genomecov = temp("results/03_Coverage/{sample}_{aligner}_genome-cov.bed")
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_genomecov.log"
+        "results/11_Reports/bedtools/{sample}_{aligner}_genome-cov.log"
     shell:
         "bedtools genomecov "    # Bedtools genomecov, compute the coverage of a feature file among a genome
         "-bga "                   # Report depth in BedGraph format, regions with zero coverage are also reported
@@ -477,11 +477,11 @@ rule samtools_index_markdup:
     resources:
        cpus = CPUS
     input:
-        markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam"
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     output:
-        index = "results/02_Mapping/{sample}_{aligner}_markdup.bai"
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bai"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_markdup-index.log"
+        "results/11_Reports/samtools/{sample}_{aligner}_mark-dup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)
@@ -503,9 +503,9 @@ rule samtools_markdup:
     input:
         sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam"
     output:
-        markdup = "results/02_Mapping/{sample}_{aligner}_markdup.bam"
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_markdup.log"
+        "results/11_Reports/samtools/{sample}_{aligner}_mark-dup.log"
     shell:
         "samtools markdup "          # Samtools markdup, tools for alignments in the SAM format with command mark duplicates
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -556,9 +556,9 @@ rule samtools_fixmate:
     resources:
        cpus = CPUS
     input:
-        sortbynames = "results/02_Mapping/{sample}_{aligner}_sortbynames.bam"
+        sortbynames = "results/02_Mapping/{sample}_{aligner}_sort-by-names.bam"
     output:
-        fixmate = temp("results/02_Mapping/{sample}_{aligner}_fixmate.bam")
+        fixmate = temp("results/02_Mapping/{sample}_{aligner}_fix-mate.bam")
     log:
         "results/11_Reports/samtools/{sample}_{aligner}_fixmate.log"
     shell:
@@ -584,9 +584,9 @@ rule samtools_sortbynames:
     input:
         mapped = "results/02_Mapping/{sample}_{aligner}-mapped.sam"
     output:
-        sortbynames = temp("results/02_Mapping/{sample}_{aligner}_sortbynames.bam")
+        sortbynames = temp("results/02_Mapping/{sample}_{aligner}_sort-by-names.bam")
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_sortbynames.log"
+        "results/11_Reports/samtools/{sample}_{aligner}_sort-by-names.log"
     shell:
         "samtools sort "              # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} "  # -@: Number of additional threads to use (default: 1)
@@ -675,8 +675,8 @@ rule sickle_trim_quality:
         fwdreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
         revreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
     output:
-        fwdreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
-        revreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz",
+        fwdreads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz"),
+        revreads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"),
         single = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz")
     log:
         "results/11_Reports/sickle-trim/{sample}.log"
