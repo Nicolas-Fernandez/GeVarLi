@@ -30,7 +30,6 @@ echo -e "${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-
 model_name=$(sysctl -n machdep.cpu.brand_string) # Get chip model name
 physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
 logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
