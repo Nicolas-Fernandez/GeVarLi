@@ -148,9 +148,6 @@ rule nextclade_update:
         "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
         "&> {log}"                          # Log redirection
 
-
-nextclade dataset get --name='sars-cov-2' --output-dir='data/sars-cov-2'
-
 ###############################################################################
 rule pangolin_lineage:
     # Aim: lineage mapping
