@@ -45,9 +45,9 @@ consensus:
   reference: 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # Path to your favorite reference
   mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
-  iuapc:     # Output variants in the form of IUPAC ambiguity codes
+  iupac:     # Output variants in the form of IUPAC ambiguity codes
     - ''        # Deactivate
-    #- '--iuapc' # Activate
+    #- '--iupac' # Activate
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:

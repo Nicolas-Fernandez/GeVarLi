@@ -1,4 +1,3 @@
-OA
 #######T######R#####A#####N######S######V######I######H#######M######I#########
 # Name: gevarli.smk
 # Author: Nicolas Fernandez
@@ -76,7 +75,7 @@ SENSITIVITY = config["bowtie2"]["sensitivity"] # bowtie2 sensitivity preset
 REFERENCE = config["consensus"]["reference"] # Genome reference fasta sequence
 MINCOV = config["consensus"]["mincov"]       # Minimum coverage, mask lower regions with 'N' 
 MINAF = config["consensus"]["minaf"]         # Minimum allele frequency allowed
-IUPAC = config["consensus"]["iuapc"]         # Output variants in the form of IUPAC ambiguity codes
+IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
 
 DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 
@@ -93,7 +92,36 @@ rule all:
 
 ###############################################################################
 rule nextclade_lineage:
-    # Aim: nextclade mapping
+    # Aim: nextclade lineage assignation
+    # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
+    message:
+        "Nextclade lineage assignation for {wildcards.sample} sample consensus ({wildcards.aligner}-{wildcards.mincov})"
+    conda:
+        NEXTCLADE
+    resources:
+        cpus = CPUS
+    params:
+        dataset = DATASET
+    input:
+        consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta"
+    output:
+        lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
+        alignment = directory("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-alignment/")
+    log:
+        "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
+    shell:
+        "nextclade "                       # Nextclade, assign queries sequences to clades and reports potential quality issues
+        "run "                              # Run analyzis
+        "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
+        "--input-fasta {input.consensus} "  # -i: Path to a .fasta file with input sequences
+        "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
+        "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
+        "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
+        "&> {log}"                          # Log redirection
+
+###############################################################################
+rule nextclade_update:
+    # Aim: nextclade lineages assignation
     # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
         "Nextclade lineage mapping for {wildcards.sample} sample consensus ({wildcards.aligner}-{wildcards.mincov})"
@@ -111,14 +139,17 @@ rule nextclade_lineage:
     log:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
     shell:
-        "nextclade "                       # Nextclade, identifies differences between a reference and queries sequences, assign it to clades and reports potential quality issues
-        "run "                              # Run the analysis
+        "nextclade "                       # Nextclade, assign queries sequences to clades and reports potential quality issues
+        "run "                              # Run analyzis
         "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
         "--input-fasta {input.consensus} "  # -i: Path to a .fasta file with input sequences
         "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
         "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
         "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
         "&> {log}"                          # Log redirection
+
+
+nextclade dataset get --name='sars-cov-2' --output-dir='data/sars-cov-2'
 
 ###############################################################################
 rule pangolin_lineage:
