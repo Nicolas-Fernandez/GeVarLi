@@ -530,7 +530,7 @@ rule samtools_sorting:
     params:
         tmpdir = TMPDIR
     input:
-        fixmate = "results/02_Mapping/{sample}_{aligner}_fixmate.bam"
+        fixmate = "results/02_Mapping/{sample}_{aligner}_fix-mate.bam"
     output:
         sorted = temp("results/02_Mapping/{sample}_{aligner}_sorted.bam")
     log:
