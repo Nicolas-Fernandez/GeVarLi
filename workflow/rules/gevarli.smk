@@ -23,12 +23,12 @@ SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
 # ENVIRONMENTS #
-CUTADAPT = config["conda"]["cutadapt"]      # Cutadapt
-SICKLETRIM = config["conda"]["sickle-trim"] # Sickle-trim
-
 FASTQC = config["conda"]["fastqc"]            # FastQC
 FASTQSCREEN = config["conda"]["fastq-screen"] # Fastq-Screen
 MULTIQC = config["conda"]["multiqc"]          # MultiQC
+
+CUTADAPT = config["conda"]["cutadapt"]      # Cutadapt
+SICKLETRIM = config["conda"]["sickle-trim"] # Sickle-trim
 
 BOWTIE2 = config["conda"]["bowtie2"]  # Bowtie2
 BWA = config["conda"]["bwa"]          # Bwa
