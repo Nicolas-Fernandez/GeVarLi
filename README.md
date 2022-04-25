@@ -21,7 +21,7 @@
 ## ABOUT ##
 
 GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
-Writed for **[AFROSCREEN](https://www.afroscreen.org/) project. 
+Writed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
 
 ### Genomic sequencing, a public health tool ###
 The establishment of a surveillance and sequencing network is an essential public health tool for detecting and containing pathogens with epidemic potential. Genomic sequencing makes it possible to identify pathogens, monitor the emergence and impact of variants, and adapt public health policies accordingly.
