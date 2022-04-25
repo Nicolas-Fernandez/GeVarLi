@@ -1,18 +1,8 @@
 
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
-## Description ##
-GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
-Writed for **[AFROSCREEN](https://www.ird.fr/afroscreen-un-programme-de-riposte-contre-la-covid-19-pour-renforcer-la-surveillance-de-levolution)** [ANRS](https://www.anrs.fr/fr/emergences/covid-19/projet-afroscreen) project. 
+## BADGES ##
 
-- First, control reads quality and clean it, if needed.  
-- Intermediates usefull files are also provided, like alignement bam files (use IGV), variants vcf files and genome coverage statistics.  
-- Last, submit obtained consensus sequences to Nextclade and Pangolin classifications.  
-
-_This is the **macOSX** version (specific conda environements)_
-
-
-## Badges ##
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
 ![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.2.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
@@ -28,11 +18,29 @@ _This is the **macOSX** version (specific conda environements)_
 ![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
 
 
-## Visuals ##
+## ABOUT ##
+
+GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
+Writed for **[AFROSCREEN](https://www.afroscreen.org/) project. 
+
+### Genomic sequencing, a public health tool ###
+The establishment of a surveillance and sequencing network is an essential public health tool for detecting and containing pathogens with epidemic potential. Genomic sequencing makes it possible to identify pathogens, monitor the emergence and impact of variants, and adapt public health policies accordingly.
+
+The Covid-19 epidemic has highlighted the disparities that remain between continents in terms of surveillance and sequencing systems. At the end of October 2021, of the 4,600,000 sequences shared on the public and free GISAID tool worldwide, only 49,000 came from the African continent, i.e. less than 1% of the cases of Covid-19 diagnosed on this continent.
+
+### Features ###
+- Control reads quality (_multiQC html report_) and clean it  
+- Align reads (_bam files_), variants calling (_vcf files_) and genome coverage statistics  
+- Consensus sequences (_fasta file_)  
+- Nextclade and Pangolin classifications  
+
+### Version ###
+This is the **macOSX** version (_specific conda environements_) v.2022.04.25  
+
+### Visuals ###
 <img src="./visuals/rulegraph.png" width="150" height="300">  
 
-
-## Installations ##
+## INSTALLATIONS ##
 
 ### Conda _(required)_ ###
 Install **Conda** _(i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit)_: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
@@ -44,7 +52,6 @@ rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
 - Please, **restart** now your shell (i.e. close and open a new terminal window)
 
-
 ### Snakemake _(required)_ ###
 Install **Snakemake** _(i.e. v.6.12.1)_ using Conda  
 _Follow the screen prompt instructions_  
@@ -53,7 +60,6 @@ conda install -c conda-forge mamba --yes
 mamba install -c bioconda rename --yes
 mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
-
 
 ### GeVarLi repository ###
 Clone _(HTTPS or SSH)_ the [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository on GitLab _(ID: 399)_:
@@ -83,8 +89,8 @@ cd ./GeVarLi_macOSX/
 git pull --verbose
 ```
 
+## USAGE ##
 
-## Usage ##
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
 2. Execute the **GeVarLi.sh** bash script to run the GeVarLi pipeline
     - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
@@ -99,7 +105,8 @@ _Option-1: Edit **config.yaml** file in **./config/** directory_
 _Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
 
 
-## Results ##
+## RESULTS ##
+
 Yours results are available in **./results/** directory, as follow:  
 _(file names keep track which tools / params was used: \<**sample**\>\_\<**aligner**\>\_\<**mincov**\>)_  
 
@@ -170,7 +177,8 @@ _(an intermediate solution between above DAG of jobs and the rule graph)_
 _(columns: filename, modification time, rule version, status, plan)_
 
 
-##  Configuration ##
+## CONFIGURATION ##
+
 If you want see or edit default settings in **config.yaml** file in **./config/** directory  
 
 ### Resources ###
@@ -179,7 +187,6 @@ Edit to match your hardware configuration
 _**Note**: snakemake (if launch with default bash script) will always use all cpus to parallelize jobs_
 - **mem_gb**: for tools that can _(i.e. samtools)_ limit its use of memory to max n Gb _(default config: '4' Gb)_
 - **tmpdir**: for tools that can _(i.e. pangolin)_ specify where you want the temp stuff _(default config: '$TMPDIR')_
-
 
 ### Environments ###
 Edit if you change some environments _(i.e. new version)_ in ./workflow/envs/tools-version.yaml files
@@ -224,40 +231,94 @@ To select one or both, de/comment (#) as you wish:
 #### fastq-screen.conf ####
 - **databases**: enables you to configure multiple genomes databases _(aligner index files)_ to search against
 
+### Glossary ###
+- **BAM**: Binary Alignment Map
+- **BAI**: BAM Indexes
+- **FASTA**: Fast-All
+- **FASTQ**: FASTA with Quality
+- **FAI**: FASTA Indexes
+- **SAM**: Sequence Alignment Map
 
-## Support ##
-1. RTFM! (Read The Fabulous Manual! ^^.)
-2. Read de awsome wiki ;)
+### Directories tree structure ###
+```shell
+🖥️️  GeVarLi.sh
+📚 README.md
+📂 visuals/
+ └── 📈 rulegraph.png
+📂 config/
+ ├── ⚙️ config.yaml
+ └── ⚙️ fastq-screen.conf
+📂 resources/
+ ├── 📂 genomes/
+ │    └── 🧬 SARS-CoV-2_Wuhan-WIV04_2019.fasta
+ ├── 📂 indexes/
+ │    ├── 📂 bowtie2/
+ │    │    └── 🗂️ SARS-CoV-2_Wuhan-WIV04_2019
+ │    └── 📂 bwa/
+ │         ├── 🗂️ SARS-CoV-2_Wuhan-WIV04_2019
+ │         ├── 🗂️ Adapters
+ │         ├── 🗂️ Ebola_ZEBOV
+ │         ├── 🗂️ Echerichia_coli_U00096
+ │         ├── 🗂️ HIV_HXB2
+ │         ├── 🗂️ Phi-X174
+ │         └── 🗂️ UniVec_wo_phi-X174
+ ├── 📂 nextclade/
+ │    └── 📂 sars-cov-2/
+ │         ├── 🌍 genemap.gff
+ │         ├── 🧪 primers.csv
+ │         ├── ✅ qc.json
+ │         ├── 🦠 reference.fasta
+ │         ├── 🧬 sequences.fasta
+ │         ├── 🏷️  tag.json
+ │         └── 🌳 tree.json
+ └── 📂 reads/  
+      ├── 🛡️ .gitkeep
+      ├── 📦 Sample-A_R1.fastq.gz
+      ├── 📦 Sample-A_R2.fastq.gz
+	  ├── 📦 Sample-B_R1.fastq.gz
+      └── 📦 Sample-B_R2.fastq.gz
+📂 workflow/
+ ├── 📂 envs/
+ │    ├── 🍜 bcftools-1.14.yaml
+ │    ├── 🍜 bedtools-2.30.0.yaml
+ │    ├── 🍜 bowtie2-2.4.4.yaml
+ │    ├── 🍜 bwa-0.7.17.yaml
+ │    ├── 🍜 cutadapt-3.5.yaml
+ │    ├── 🍜 fastq-screen-0.14.0.yam
+ │    ├── 🍜 fastqc-0.11.9.yaml
+ │    ├── 🍜 gawk-5.1.0.yaml
+ │    ├── 🍜 lofreq-2.1.5.yaml
+ │    ├── 🍜 multiqc-1.11.yaml
+ │    ├── 🍜 nextclade-1.11.0.yaml
+ │    ├── 🍜 pangolin-3.1.17.yaml
+ │    ├── 🍜 samtools-1.14.yaml
+ │    └── 🍜 sickle-trim-1.33.yaml
+ └── 📂 rules/
+      └── 📜 gevarli.smk
+```
+
+## SUPPORT ##
+1. Read The Fabulous Manual!
+2. Read de Awsome Wiki! (todo...)
 3. Create a new issue: Issues > New issue > Describe your issue
 4. Send an email to [nicolas.fernandez@ird.fr](url)
-5. Call me to +33.(0)4.67.41.55... No don't please _O\_o_!
 
+## ROADMAP ##
+- Add a wiki!  
 
-## Roadmap ##
-Add a wiki ! And move may sections from README.md to the wiki !  
-End documentation about "results" and "configuration"...  
-Add new features ? (i.e. adding pangolin lineage)  
-
-
-## Contributing ##
-Open to contributions :)  
-Testing code, finding issues, asking for update, proposing new features ...  
-Use Git tools to share!  
-
-
-## Authors and acknowledgment ##
+## AUTHORS & ACKNOWLEDGMENTS ##
 - Nicolas Fernandez (Developer and Maintener)  
 - Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
 - Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
 
+## CONTRIBUTING ##
+Open to contributions!  
+Testing code, finding issues, asking for update, proposing new features...  
+Use Git tools to share!  
 
-## License ##
-[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
-
-
-## Project status ##
-This project is regularly update and actively maintened  
-However, you can be volunteer to step in as a maintainer  
+## STATUS ##
+This project is **regularly update** and **actively maintened**  
+However, you can be volunteer to step in as **developer** or **maintainer**  
 
 For information about main git roles:  
 - **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues  
@@ -268,69 +329,10 @@ _Unless something has been explicitly restricted_
 _This role is often held by maintainers and engineering managers_  
 - **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
 
+## LICENSE ##
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
 
-### Directories tree structure ###
-```shell
-🖥️️  GeVarLi.sh
-📚 README.md
-📂 config/
- ├── ⚙️ config.yaml
- └── ⚙️ fastq-screen.conf
-📂 resources/
- ├── 📂 genomes/
- │    ├── 🧬 Adapters.fasta
- │    ├── 🧬 Ebola_ZEBOV.fasta
- │    ├── 🧬 Echerichia_coli_U00096.fasta
- │    ├── 🧬 HIV_HXB2.fasta
- │    ├── 🧬 Phi-X174.fasta
- │    ├── 🧬 SARS-CoV-2_Wuhan-WIV04_2019.fasta
- │    └── 🧬 UniVec_wo_phi-X174.fasta
- ├── 📂 indexes/
- │    ├── 📂 bowtie2/
- │    │    └── 🗂️ SARS-CoV-2_Wuhan-WIV04_2019
- │    └── 📂 bwa/
- │         ├── 🗂️ SARS-CoV-2_Wuhan-WIV04_2019
- │         ├── 🗂️ Adapters
- │         ├── 🗂️ Ebola_ZEBOV
- │         ├── 🗂️ Echerichia_coli_U00096
- │         ├── 🗂️ HIV_HXB2
- │         ├── 🗂️ Phi-X174
- │         └── 🗂️ UniVec_wo_phi-X174
- ├── 📂 nextclade/
- │    ├── 🌍 genemap.gff
- │    ├── 🧪 primers.csv
- │    ├── ✅ qc.json
- │    ├── 🦠 reference.fasta
- │    ├── 🧬 sequences.fasta
- │    ├── 🏷️  tag.json
- │    └── 🌳 tree.json
- └── 📂 reads/  
-      ├── 🛡️ .gitkeep
-      ├── 📦 Sample-A_R1.fastq.gz
-      └── 📦 Sample-A_R2.fastq.gz
-📂 visuals/
- └── 📈 rulegraph.png
-📂 workflow/
- ├── 📂 envs/
- │    ├── 🍜 bcftools-1.14.yaml
- │    ├── 🍜 bedtools-2.30.0.yaml
- │    ├── 🍜 bowtie2-2.4.4.yaml
- │    ├── 🍜 bwa-0.7.17.yaml
- │    ├── 🍜 cutadapt-3.5.yaml
- │    ├── 🍜 fastq-screen-0.14.0.yaml
- │    ├── 🍜 fastqc-0.11.9.yaml
- │    ├── 🍜 lofreq-2.1.5.yaml
- │    ├── 🍜 multiqc-1.11.yaml
- │    ├── 🍜 nextclade-1.10.1.yaml
- │    ├── 🍜 pangolin-3.1.17.yaml
- │    ├── 🍜 samtools-1.14.yaml
- │    └── 🍜 sickle-trim-1.33.yaml
- └── 📂 rules/
-      └── 📜 gevarli.smk
-```
-
-### References ###
-
+## REFERENCES ##
 **Sustainable data analysis with Snakemake**  
 Felix Mölder, Kim Philipp Jablonski, Brice Letcher, Michael B. Hall, Christopher H. Tomkins-Tinch, Vanessa Sochat, Jan Forster, Soohyun Lee, Sven O. Twardziok, Alexander Kanitz, Andreas Wilm, Manuel Holtgrewe, Sven Rahmann, Sven Nahnsen, Johannes Köster  
 _F1000Research (2021)_  
@@ -462,12 +464,3 @@ _Online (2010)_
 **Publication**: []()  
 **Source code**: [https://github.com/s-andrews/FastQC](https://github.com/s-andrews/FastQC)  
 **Documentation**: [https://www.bioinformatics.babraham.ac.uk/projects/fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc)  
-
-
-### Glossary ###
-- **BAM**: Binary Alignment Map
-- **BAI**: BAM Indexes
-- **FASTA**: Fast-All
-- **FASTQ**: FASTA with Quality
-- **FAI**: FASTA Indexes
-- **SAM**: Sequence Alignment Map
