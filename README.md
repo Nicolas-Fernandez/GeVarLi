@@ -35,7 +35,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ### Version ###
 This is the **macOSX** version (_specific conda environements_) v.2022.04.25  
 
-### Visuals ###
+### Rulegraph ###
 <img src="./visuals/rulegraph.png" width="150" height="300">  
 
 ## ~ INSTALLATIONS ~ ##
@@ -59,7 +59,7 @@ mamba install -c bioconda rename --yes
 mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
 
-### GeVarLi repository ###
+### GeVarLi ###
 Clone _(HTTPS or SSH)_ the [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository on GitLab _(ID: 399)_:
 
 #### HTTPS ####
@@ -200,14 +200,14 @@ To select one or both, de/comment (#) as you wish:
 - **reference**: reference sequence path used for genome assmbling _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
 - **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default config: '10')_
 
-### Variant ####
+### Variant ###
 - **covmin**: minimum coverage allowed for SNVs and InDels filtering, if < 1 = off _(default config: '10' (INT))_
 - **afmin**: minimum allele frequency allowed for SNVs and InDels filtering, if < 1 = off _(default config: '0.2' (FLOAT))_
 
-### BWA ####
+### BWA ###
 - **index**: reference index path for bwa _(default config: 'SARS-CoV-2_Wuhan-WIV04_2019')_
 
-### Bowtie2 ####
+### Bowtie2 ###
 - **index**: reference index path for bowtie2 _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
 - **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
 
