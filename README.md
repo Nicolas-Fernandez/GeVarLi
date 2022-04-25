@@ -1,8 +1,6 @@
 
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
-## BADGES ##
-
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
 ![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.2.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
@@ -18,7 +16,7 @@
 ![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
 
 
-## ABOUT ##
+## ~ ABOUT ~ ##
 
 GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
 Writed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
@@ -40,7 +38,7 @@ This is the **macOSX** version (_specific conda environements_) v.2022.04.25
 ### Visuals ###
 <img src="./visuals/rulegraph.png" width="150" height="300">  
 
-## INSTALLATIONS ##
+## ~ INSTALLATIONS ~ ##
 
 ### Conda _(required)_ ###
 Install **Conda** _(i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit)_: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
@@ -89,7 +87,7 @@ cd ./GeVarLi_macOSX/
 git pull --verbose
 ```
 
-## USAGE ##
+## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
 2. Execute the **GeVarLi.sh** bash script to run the GeVarLi pipeline
@@ -105,7 +103,7 @@ _Option-1: Edit **config.yaml** file in **./config/** directory_
 _Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
 
 
-## RESULTS ##
+## ~ RESULTS ~ ##
 
 Yours results are available in **./results/** directory, as follow:  
 _(file names keep track which tools / params was used: \<**sample**\>\_\<**aligner**\>\_\<**mincov**\>)_  
@@ -177,7 +175,7 @@ _(an intermediate solution between above DAG of jobs and the rule graph)_
 _(columns: filename, modification time, rule version, status, plan)_
 
 
-## CONFIGURATION ##
+## ~ CONFIGURATION ~ ##
 
 If you want see or edit default settings in **config.yaml** file in **./config/** directory  
 
@@ -297,26 +295,26 @@ To select one or both, de/comment (#) as you wish:
       └── 📜 gevarli.smk
 ```
 
-## SUPPORT ##
+## ~ SUPPORT ~ ##
 1. Read The Fabulous Manual!
 2. Read de Awsome Wiki! (todo...)
 3. Create a new issue: Issues > New issue > Describe your issue
 4. Send an email to [nicolas.fernandez@ird.fr](url)
 
-## ROADMAP ##
+## ~ ROADMAP ~ ##
 - Add a wiki!  
 
-## AUTHORS & ACKNOWLEDGMENTS ##
+## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
 - Nicolas Fernandez (Developer and Maintener)  
 - Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
 - Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
 
-## CONTRIBUTING ##
+## ~ CONTRIBUTING ~ ##
 Open to contributions!  
 Testing code, finding issues, asking for update, proposing new features...  
 Use Git tools to share!  
 
-## STATUS ##
+## ~ PROJECT STATUS ~ ##
 This project is **regularly update** and **actively maintened**  
 However, you can be volunteer to step in as **developer** or **maintainer**  
 
@@ -329,10 +327,10 @@ _Unless something has been explicitly restricted_
 _This role is often held by maintainers and engineering managers_  
 - **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
 
-## LICENSE ##
+## ~ LICENSE ~ ##
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
 
-## REFERENCES ##
+## ~ REFERENCES ~ ##
 **Sustainable data analysis with Snakemake**  
 Felix Mölder, Kim Philipp Jablonski, Brice Letcher, Michael B. Hall, Christopher H. Tomkins-Tinch, Vanessa Sochat, Jan Forster, Soohyun Lee, Sven O. Twardziok, Alexander Kanitz, Andreas Wilm, Manuel Holtgrewe, Sven Rahmann, Sven Nahnsen, Johannes Köster  
 _F1000Research (2021)_  
