@@ -306,7 +306,7 @@ To select one or both, de/comment (#) as you wish:
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
 - Nicolas Fernandez (Developer and Maintener)  
-- Christelle Butel (Reporter, User-addict, Fetaures inspiration source)  
+- Christelle Butel (Reporter, User-addict, Features inspiration source)  
 - Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
 
 ## ~ CONTRIBUTING ~ ##
