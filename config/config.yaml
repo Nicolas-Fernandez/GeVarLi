@@ -5,15 +5,15 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.03.23
+# Latest modification: 2022.04.26
 # Todo: done
 ###############################################################################
 
 ### CLUSTER ------------------------------------------------------------------------------------------
 resources:
-  cpus: 4            # Set maximum cpus usage (for multithreading) [INT]
-  mem_gb: 4          # Set maximum memory unsage (in Gb) [INT]
-  tmpdir: '$TMPDIR'  # Temporary directory (default: '$TMPDIR')
+  cpus: 8           # Set maximum cpus usage (for multithreading) [INT]
+  mem_gb: 16        # Set maximum memory unsage (in Gb) [INT]
+  tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
     ## '$TMPDIR'      # System variable $TMPDIR (dafault)
     ## '.'            # Local (i.e. GeVarLi root directory)
     ## '/scratch'     # HPC (set it to match your HPC usage)
@@ -45,9 +45,9 @@ consensus:
   reference: 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # Path to your favorite reference
   mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
-  iupac:     # Output variants in the form of IUPAC ambiguity codes
-    - ''        # Deactivate
-    #- '--iupac' # Activate
+  iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
+    ## ''        # Deactivate
+    ## '--iupac' # Activate
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
@@ -74,11 +74,11 @@ sickle-trim:
     ## 'illumina'     # CASAVA 1.3 to 1.7 for "old" Illumina reads
     ## 'solexa'       # CASAVA < 1.3 for Solexa
   quality: '30'      # Phred score limit (default: '30')
-  length: '25'       # Read length limit after trim (default: '25')
+  length: '50'       # Read length limit after trim (default: '50')
 
 ### CUTADAPT -----------------------------------------------------------------------------------------
 cutadapt:
-  length: '25' # Discard reads shorter than 'length' after trim (default: '25')
+  length: '50' # Discard reads shorter than 'length' after trim (default: '50')
   kits:        # Sequence of an adapter ligated to the 3' end of the first read
     truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
     nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits

@@ -60,19 +60,10 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
 
 ### GeVarLi ###
-Clone _(HTTPS or SSH)_ the [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository on GitLab _(ID: 399)_:
+Clone _(with HTTPS)_ the [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository on GitLab _(ID: 399)_:
 
-#### HTTPS ####
-If you want to authenticate each time you perform an operation between your computer and GitLab
 ```shell
 git clone https://forge.ird.fr/transvihmi/GeVarLi_macOSX.git
-cd ./GeVarLi_macOSX/
-```
-
-#### SSH ####
-If you want to authenticate only one time _(follow instructions: [SSH documentation](https://docs.gitlab.com/ee/ssh/index.html))_
-```shell
-git clone git@forge.ird.fr:transvihmi/GeVarLi_macOSX.git
 cd ./GeVarLi_macOSX/
 ```
 
@@ -83,7 +74,6 @@ Difference between **Download** and **Clone**:
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
-cd ./GeVarLi_macOSX/
 git pull --verbose
 ```
 

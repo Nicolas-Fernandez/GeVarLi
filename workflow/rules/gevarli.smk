@@ -5,7 +5,7 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2021.03.23
+# Latest modification: 2022.04.26
 # Todo: done
 
 ###############################################################################
@@ -676,8 +676,8 @@ rule sickle_trim_quality:
         fwdreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
         revreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
     output:
-        fwdreads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz"),
-        revreads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"),
+        fwdreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
+        revreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz",
         single = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz")
     log:
         "results/11_Reports/sickle-trim/{sample}.log"
