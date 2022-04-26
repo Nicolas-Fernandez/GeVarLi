@@ -19,7 +19,7 @@ echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
 echo -e "${blue}Run${nc} ___________________ bash GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.02.22"
+echo -e "${blue}Latest Modification${nc} ___ 2022.04.26"
 echo -e "${blue}Todo${nc} __________________ done"
 
 
@@ -55,12 +55,12 @@ fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))            
 samples=$(expr ${fastq} \/ 2)                                                                      # / 2 = samples (paired-end)
 max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")          # Get user config for max threads
 max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //")       # Get user config for max memory
-reference=$(grep -o -E "reference: '.+\.fasta'" ${workdir}/config/config.yaml | sed "s/reference: 'resources\/genomes\///" | sed "s/\.fasta'//") # Get user config genome reference
+# Get user config genome reference
+reference=$(grep -o -E "reference: '.+\.fasta'" ${workdir}/config/config.yaml | sed "s/reference: 'resources\/genomes\///" | sed "s/\.fasta'//")
 aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")     # Get user config aligner
 min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")          # Get user config minimum coverage
-snvs_cov_min=$(grep -o -E "covmin: [0-9]+" ${workdir}/config/config.yaml | sed "s/covmin: //")     # Get user config snvs cov min
-snvs_af_min=$(grep -o -E "afmin: [0|1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/afmin: //") # Get user config snvs af min
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                         # Get date / hour starting analyzes
+min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")      # Get user config minimum allele frequency
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                         # Get analyzes starting time
 SECONDS=0                                                                                          # Initialize SECONDS counter
 
 echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                              # Print working directory
@@ -69,10 +69,9 @@ echo -e "${blue}Maximum Threads${nc} _______ ${red}${max_threads}${nc} of ${ylo}
 echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available"          # Print max memory
 echo -e "${blue}Genome Reference${nc} ______ ${reference}"                                                             # Print user config genome reference
 echo -e "${blue}Aligner${nc} _______________ ${aligner}"                                                               # Print user config aligner
-echo -e "${blue}Minimum Coverage${nc} ______ ${red}${min_cov}${nc}x"                                                   # Print user config minimum coverage
-echo -e "${blue}SNVs Min. Cov.${nc} ________ ${red}${snvs_cov_min}${nc}"                                               # Print user config snvs cov min
-echo -e "${blue}SNVs Min. Freq.${nc} _______ ${red}${snvs_af_min}${nc}"                                                # Print user config snvs af min
-echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                                      # Print date / hour starting analyzes
+echo -e "${blue}Min. Coverage${nc} _________ ${red}${min_cov}${nc}x"                                                   # Print user config minimum coverage
+echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"                                                     # Print user config snvs cov min
+echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                                      # Print analyzes starting time
 
 
 ###### Rename samples ######
@@ -99,10 +98,12 @@ echo -e "${blue}Unlocking working directory:${nc}"
 echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
+# Re-run all jobs the output of which is recognized as incomplete.
 # Remove a lock on the working directory.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --rerun-incomplete \
     --unlock
 
 echo ""
@@ -110,10 +111,12 @@ echo -e "${blue}Conda environments list:${nc}"
 echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
+# Re-run all jobs the output of which is recognized as incomplete.
 # List all conda environments and their location on disk.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --rerun-incomplete \
     --list-conda-envs
 
 echo ""
@@ -122,11 +125,13 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Re-run all jobs the output of which is recognized as incomplete.
 # Cleanup unused conda environments.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
+    --rerun-incomplete \
     --conda-cleanup-envs
 
 echo ""
@@ -135,6 +140,7 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
@@ -142,6 +148,7 @@ snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
+    --rerun-incomplete \
     --use-conda \
     --conda-create-envs-only \
     --conda-frontend mamba
@@ -152,14 +159,16 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
-# Do not execute anything, and display what would be done. If you have a very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
+# Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
+    --rerun-incomplete \
     --use-conda \
     --prioritize multiqc_reports_aggregation \
     --dry-run \
@@ -171,21 +180,20 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Re-run all jobs the output of which is recognized as incomplete.
+# Go on with independent jobs if a job fails.
 # If defined in the rule, run job in a conda environment.
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
-# Go on with independent jobs if a job fails.
-# Re-run all jobs the output of which is recognized as incomplete.
-# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --cores \
+    --rerun-incomplete \
+    --keep-going \
     --use-conda \
     --prioritize multiqc_reports_aggregation \
-    --printshellcmds \
-    --keep-going \
-    --rerun-incomplete
+    --printshellcmds
 
 
 ###### Create usefull graphs and summary ######
@@ -288,7 +296,7 @@ elapsed_time=${SECONDS}                  # Get SECONDS counter
 minutes=$((${elapsed_time}/60))          # / 60 = minutes
 seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
-echo -e "${blue}End Time${nc} ______________ ${time_stamp_end}"                                                       # Print date / hour ending analyzes
+echo -e "${blue}End Time${nc} ______________ ${time_stamp_end}"                                                       # Print analyzes ending time
 echo -e "${blue}Processing Time${nc} _______ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
 
 echo ""
