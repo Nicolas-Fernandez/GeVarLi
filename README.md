@@ -60,7 +60,7 @@ mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
 ```
 
 ### GeVarLi ###
-Clone _(with HTTPS)_ the [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository on GitLab _(ID: 399)_:
+Clone [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository from GitLab IRD-Forge _(ID: 399)_:
 
 ```shell
 git clone https://forge.ird.fr/transvihmi/GeVarLi_macOSX.git
