@@ -63,9 +63,9 @@ ENCODING = config["sickle-trim"]["encoding"] # Sickle-trim --qual-type
 QUALITY = config["sickle-trim"]["quality"]   # Sickle-trim --qual-threshold
 LENGTH = config["sickle-trim"]["length"]     # Sickle-trim --length-treshold
 
-CONFIG = config["fastq-screen"]["config"]   # Fastq-screen --conf
-ALIGNER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
-SUBSET = config["fastq-screen"]["subset"]   # Fastq-screen --subset
+CONFIG = config["fastq-screen"]["config"]  # Fastq-screen --conf
+MAPPER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
+SUBSET = config["fastq-screen"]["subset"]  # Fastq-screen --subset
 
 ALIGNER = config["aligner"] # Aligners ('bwa' or 'bowtie2')
 
@@ -773,7 +773,7 @@ rule fastqscreen_contamination_checking:
         cpus = CPUS
     params:
         config = CONFIG,
-        aligner = ALIGNER,
+        mapper = MAPPER,
         subset = SUBSET
     input:
         fastq = "resources/reads/"
@@ -786,7 +786,7 @@ rule fastqscreen_contamination_checking:
         "-q "                            # --quiet: Only show log warning
         "--threads {resources.cpus} "    # --threads: Specifies across how many threads bowtie will be allowed to run
         "--conf {params.config} "        # path to configuration file
-        "--aligner {params.aligner} "    # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
+        "--aligner {params.mapper} "     # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
         "--subset {params.subset} "      # Don't use the whole sequence file, but create a subset of specified size
         "--outdir {output.fastqscreen} " # Output directory
         "{input.fastq}/*.fastq.gz "      # Input file.fastq
