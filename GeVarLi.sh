@@ -188,7 +188,7 @@ echo ""
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores \
+    --cores 1 \
     --rerun-incomplete \
     --keep-going \
     --use-conda \

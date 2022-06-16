@@ -5,21 +5,21 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.04.26
-# Todo: done
+# Latest modification: 2022.06.16
+# Todo: Adding Monkeypox virus and Ebola virus for epidemic (re)-emergence
 ###############################################################################
 
 ### CLUSTER ------------------------------------------------------------------------------------------
 resources:
   cpus: 8           # Set maximum cpus usage (for multithreading) [INT]
-  mem_gb: 16        # Set maximum memory unsage (in Gb) [INT]
+  mem_gb: 16         # Set maximum memory unsage (in Gb) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
     ## '$TMPDIR'      # System variable $TMPDIR (dafault)
     ## '.'            # Local (i.e. GeVarLi root directory)
     ## '/scratch'     # HPC (set it to match your HPC usage)
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
-conda:                                             # Conda environement yaml files:
+conda:                                            # Conda environement yaml files:
   fastqc:       '../envs/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
   fastq-screen: '../envs/fastq-screen-0.14.0.yaml' # Fastq-Screen ver. 0.14.0
   multiqc:      '../envs/multiqc-1.11.yaml'        # MultiQC      ver. 1.11
@@ -37,26 +37,38 @@ conda:                                             # Conda environement yaml fil
 
 ### ALIGNER ------------------------------------------------------------------------------------------
 aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
+  ## Available options:
   ## 'bwa'      # Faster (default)
   ## 'bowtie2'  # Slower, 'sensitivity' requiried and should be set (see below "Bowtie2" options)
 
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
   reference: 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # Path to your favorite reference
+    ## Available options:
+    ## 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
+    ## 'resources/genomes/Monkeypox-virus_Zaire.fasta'       # Monkeypox_Zaire_NC_003310.1   (not working with Nextclade / Pangolin)
+    ## 'resources/genomes/Ebola-virus_Zaire.fasta'           # Ebola_Zaire_NC_002549.1       (not working with Nextclade / Pangolin)
+    ## 'resources/genomes/HIV-1_HXB2.fasta'                  # HIV-1_HXB2                    (not working with Nextclade / Pangolin)
   mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
+    ## Available options:
     ## ''        # Deactivate
     ## '--iupac' # Activate
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
   index: 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # BWA indexes (default: SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2)
+    ## Available options:
+    ## 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019 # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
+    ## 'resources/indexes/bwa/Monkeypox-virus_Zaire'      # Monkeypox_Zaire_NC_003310.1   (not working with Nextclade / Pangolin)
+    ## 'resources/indexes/bwa/Ebola-virus_Zaire'          # Ebola_Zaire_NC_002549.1       (not working with Nextclade / Pangolin)
+    ## 'resources/indexes/bwa/HIV-1_HXB2'                 # HIV-1_HXB2                    (not working with Nextclade / Pangolin)
 
 ### BOWTIE2 ------------------------------------------------------------------------------------------
 bowtie2:
   index: 'resources/indexes/bowtie2/SARS-CoV-2_Wuhan-WIV04_2019' # Bowtie2 indexes (default: SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2)
-  sensitivity: '--sensitive' # Bowtie2 sensitivity preset (default: '--sensitive')
+  sensitivity: '--very-sensitive' # Bowtie2 sensitivity preset (default: '--very-sensitive')
     ## '--very-fast'          # Same as: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
     ## '--fast'               # Same as: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
     ## '--sensitive'          # Same as: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15 (default)
