@@ -80,12 +80,12 @@ git pull --verbose
 ## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
-2. Execute the **GeVarLi.sh** bash script to run the GeVarLi pipeline
+2. Execute the **Start_GeVarLi.sh** bash script to run the GeVarLi pipeline
     - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
 	- with a **Right-click** > **Open with** > **Terminal.app**
 	- with **CLI** from a terminal:
 ```shell
-bash ./GeVarLi_macOSX/GeVarLi.sh
+bash ./GeVarLi_macOSX/Start_GeVarLi.sh
 ```
 Yours analyzes will start with default configuration settings  
 

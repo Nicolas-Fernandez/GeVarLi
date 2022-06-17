@@ -50,28 +50,27 @@ echo -e "${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                             # Get working directory
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                               # Count fastq.gz files
-samples=$(expr ${fastq} \/ 2)                                                                      # / 2 = samples (paired-end)
-max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")          # Get user config for max threads
-max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //")       # Get user config for max memory
-# Get user config genome reference
-reference=$(grep -o -E "reference: '.+\.fasta'" ${workdir}/config/config.yaml | sed "s/reference: 'resources\/genomes\///" | sed "s/\.fasta'//")
-aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")     # Get user config aligner
-min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")          # Get user config minimum coverage
-min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")      # Get user config minimum allele frequency
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                         # Get analyzes starting time
-SECONDS=0                                                                                          # Initialize SECONDS counter
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
+samples=$(expr ${fastq} \/ 2)                                                                   # / 2 = samples (paired-end)
+max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
+max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //")    # Get user config for max memory
+reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | sed "s/reference: //") # Get user config genome reference
+aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")  # Get user config aligner
+min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")       # Get user config minimum coverage
+min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")   # Get user config minimum allele frequency
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                      # Get analyzes starting time
+SECONDS=0                                                                                       # Initialize SECONDS counter
 
-echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                              # Print working directory
-echo -e "${blue}Samples Processed${nc} _____ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)"          # Print samples number 
+echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                     # Print working directory
+echo -e "${blue}Samples Processed${nc} _____ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)" # Print samples number 
 echo -e "${blue}Maximum Threads${nc} _______ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
-echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available"          # Print max memory
-echo -e "${blue}Genome Reference${nc} ______ ${reference}"                                                             # Print user config genome reference
-echo -e "${blue}Aligner${nc} _______________ ${aligner}"                                                               # Print user config aligner
-echo -e "${blue}Min. Coverage${nc} _________ ${red}${min_cov}${nc}x"                                                   # Print user config minimum coverage
-echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"                                                     # Print user config snvs cov min
-echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                                      # Print analyzes starting time
+echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available" # Print max memory
+echo -e "${blue}Genome Reference${nc} ______ ${red}${reference}${nc}"                                         # Print user config genome reference
+echo -e "${blue}Aligner${nc} _______________ ${ylo}${aligner}${nc}"                                           # Print user config aligner
+echo -e "${blue}Min. Coverage${nc} _________ ${red}${min_cov}${nc}x"                                          # Print user config minimum coverage
+echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"                                            # Print user config snvs cov min
+echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                             # Print analyzes starting time
 
 
 ###### Rename samples ######
