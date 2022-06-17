@@ -43,7 +43,7 @@ aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
 
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
-  reference: 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # Path to your favorite reference
+  reference: 'resources/genomes/Monkeypox-virus_Zaire.fasta' # Path to your favorite reference
     ## Available options:
     ## 'resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta' # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
     ## 'resources/genomes/Monkeypox-virus_Zaire.fasta'       # Monkeypox_Zaire_NC_003310.1   (not working with Nextclade / Pangolin)
@@ -58,7 +58,7 @@ consensus:
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
-  index: 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019' # BWA indexes (default: SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2)
+  index: 'resources/indexes/bwa/Monkeypox-virus_Zaire' # BWA indexes (default: SARS-CoV-2 Wuhan WIV04 2019 NC_045512.2)
     ## Available options:
     ## 'resources/indexes/bwa/SARS-CoV-2_Wuhan-WIV04_2019 # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
     ## 'resources/indexes/bwa/Monkeypox-virus_Zaire'      # Monkeypox_Zaire_NC_003310.1   (not working with Nextclade / Pangolin)
