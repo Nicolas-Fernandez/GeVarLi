@@ -21,20 +21,20 @@ resources:
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:                                            # Conda environement yaml files:
-  fastqc:       '../envs/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
-  fastq-screen: '../envs/fastq-screen-0.14.0.yaml' # Fastq-Screen ver. 0.14.0
-  multiqc:      '../envs/multiqc-1.11.yaml'        # MultiQC      ver. 1.11
-  cutadapt:     '../envs/cutadapt-3.5.yaml'        # Cutadapt     ver. 3.5
-  sickle-trim:  '../envs/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
-  bowtie2:      '../envs/bowtie2-2.4.4.yaml'       # Bowtie2      ver. 2.4.4
-  bwa:          '../envs/bwa-0.7.17.yaml'          # BWA          ver. 0.7.17
-  samtools:     '../envs/samtools-1.14.yaml'       # Samtools     ver. 1.14
+  bcftools:     '../envs/bcftools-1.15.1.yaml'     # Bcftools     ver. 1.15.1
   bedtools:     '../envs/bedtools-2.30.0.yaml'     # Bedtools     ver. 2.30.0
-  bcftools:     '../envs/bcftools-1.14.yaml'       # Bcftools     ver. 1.14
+  bowtie2:      '../envs/bowtie2-2.4.5.yaml'       # Bowtie2      ver. 2.4.5
+  bwa:          '../envs/bwa-0.7.17.yaml'          # BWA          ver. 0.7.17
+  cutadapt:     '../envs/cutadapt-4.1.yaml'        # Cutadapt     ver. 4.1
+  fastq-screen: '../envs/fastq-screen-0.15.2.yaml' # Fastq-Screen ver. 0.15.2
+  fastqc:       '../envs/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
   gawk:         '../envs/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
   lofreq:       '../envs/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
-  pangolin:     '../envs/pangolin-3.1.17.yaml'     # Pangolon     ver. 3.1.17
+  multiqc:      '../envs/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
   nextclade:    '../envs/nextclade-1.11.0.yaml'    # Nextclade    ver. 1.11.0
+  pangolin:     '../envs/pangolin-4.0.6.yaml'      # Pangolon     ver. 4.0.6
+  samtools:     '../envs/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
+  sickle-trim:  '../envs/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
 
 ### ALIGNER ------------------------------------------------------------------------------------------
 aligner: 'bwa' # Select your favorite aligner (default: 'bwa')

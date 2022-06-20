@@ -73,6 +73,38 @@ echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"              
 echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                             # Print analyzes starting time
 
 
+###### Snakemake installation ######
+echo ""
+echo -e "${green}------------------------------------------------------------------------${nc}"
+echo -e "${green}#####${nc} ${red}SNAKEMAKE INSTALLATION${nc} ${green}#####${nc}"
+echo -e "${green}----------------------------------${nc}"
+echo ""
+
+# Mamba
+if ls ~/miniconda3/bin/mamba 2> /dev/null
+then
+    echo ""
+else
+    conda install -n base -c conda-forge mamba --yes
+fi
+# Snakemake
+#snake_ver="7.8.2"
+snake_ver="6.12.3"
+if ls ~/miniconda3/bin/snakemake 2> /dev/null
+then
+    echo ""
+else
+    mamba install -n base -c conda-forge -c bioconda snakemake==${snake_ver} --yes
+fi
+# Rename
+if ls ~/miniconda3/bin/rename 2> /dev/null
+then
+    echo ""
+else
+    mamba install -n base -c bioconda rename --yes
+fi
+
+
 ###### Rename samples ######
 echo ""
 echo -e "${green}------------------------------------------------------------------------${nc}"
