@@ -5,8 +5,8 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.04.26
-# Todo: done
+# Latest modification: 2022.06.17
+# Todo: Testing a unique env.
 
 ###############################################################################
 # PUBLICATIONS #
@@ -27,23 +27,17 @@ SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 FASTQC = config["conda"]["fastqc"]            # FastQC
 FASTQSCREEN = config["conda"]["fastq-screen"] # Fastq-Screen
 MULTIQC = config["conda"]["multiqc"]          # MultiQC
-
-CUTADAPT = config["conda"]["cutadapt"]      # Cutadapt
-SICKLETRIM = config["conda"]["sickle-trim"] # Sickle-trim
-
-BOWTIE2 = config["conda"]["bowtie2"]  # Bowtie2
-BWA = config["conda"]["bwa"]          # Bwa
-
-SAMTOOLS = config["conda"]["samtools"] # SamTools
-BEDTOOLS = config["conda"]["bedtools"] # BedYools
-BCFTOOLS = config["conda"]["bcftools"] # BcfTools
-
-GAWK = config["conda"]["gawk"] # Gawk
-
-LOFREQ = config["conda"]["lofreq"] # LoFreq
-
-PANGOLIN = config["conda"]["pangolin"] # Pangolin
-NEXTCLADE = config["conda"]["nextclade"] # Nextclade
+CUTADAPT = config["conda"]["cutadapt"]        # Cutadapt
+SICKLETRIM = config["conda"]["sickle-trim"]   # Sickle-trim
+BOWTIE2 = config["conda"]["bowtie2"]          # Bowtie2
+BWA = config["conda"]["bwa"]                  # Bwa
+SAMTOOLS = config["conda"]["samtools"]        # SamTools
+BEDTOOLS = config["conda"]["bedtools"]        # BedTools
+BCFTOOLS = config["conda"]["bcftools"]        # BcfTools
+GAWK = config["conda"]["gawk"]                # Gawk
+LOFREQ = config["conda"]["lofreq"]            # LoFreq
+PANGOLIN = config["conda"]["pangolin"]        # Pangolin
+NEXTCLADE = config["conda"]["nextclade"]      # Nextclade
 
 ###############################################################################
 # RESOURCES #

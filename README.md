@@ -33,7 +33,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Nextclade and Pangolin classifications  
 
 ### Version ###
-This is the **macOSX** version (_specific conda environements_) v.2022.04.25  
+This is the **macOSX** version (_with some specific conda environements_) v.2022.06.20  
 
 ### Rulegraph ###
 <img src="./visuals/rulegraph.png" width="150" height="300">  
@@ -48,15 +48,10 @@ curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o .
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-- Please, **restart** now your shell (i.e. close and open a new terminal window)
-
-### Snakemake _(required)_ ###
-Install **Snakemake** _(i.e. v.6.12.1)_ using Conda  
-_Follow the screen prompt instructions_  
+- Please, **restart** now your shell, by closing and opening a new terminal window  
+Or in your bash terminal:
 ```shell
-conda install -c conda-forge mamba --yes
-mamba install -c bioconda rename --yes
-mamba install -c conda-forge -c bioconda snakemake=6.12.1 --yes
+source ~/.bash_profile
 ```
 
 ### GeVarLi ###
