@@ -48,11 +48,7 @@ curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o .
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-- Please, **restart** now your shell, by closing and opening a new terminal window  
-Or in your bash terminal:
-```shell
-source ~/.bash_profile
-```
+- Please, **restart** now your shell, i.e. by closing and opening a new terminal window  
 
 ### GeVarLi ###
 Clone [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository from GitLab IRD-Forge _(ID: 399)_:
