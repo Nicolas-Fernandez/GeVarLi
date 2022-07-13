@@ -12,7 +12,7 @@
 ### CLUSTER ------------------------------------------------------------------------------------------
 resources:
   cpus: 8           # Set maximum cpus usage (for multithreading) [INT]
-  mem_gb: 16        # Set maximum memory unsage (in Gb) [INT]
+  mem_gb: 4         # Set maximum memory unsage (in Gb) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)

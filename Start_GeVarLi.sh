@@ -19,7 +19,7 @@ echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
 echo -e "${blue}Run${nc} ___________________ bash GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.04.26"
+echo -e "${blue}Latest Modification${nc} ___ 2022.07.12"
 echo -e "${blue}Todo${nc} __________________ done"
 
 
@@ -41,7 +41,6 @@ echo -e "${blue}Chip Model Name${nc} _______ ${model_name}"                     
 echo -e "${blue}Physical CPUs${nc} _________  ${red}${physical_cpu}${nc} cores" # Print physical cpu
 echo -e "${blue}Logical CPUs${nc} __________ ${red}${logical_cpu}${nc} threads" # Print logical cpu
 echo -e "${blue}System Memory${nc} _________ ${red}${ram_size}${nc} Gb of RAM"  # Print RAM size
-
 
 ###### Settings ######
 echo ""
@@ -227,10 +226,10 @@ snakemake \
     --printshellcmds
 
 
-###### Create usefull graphs and summary ######
+###### Create usefull graphs, summary and logs ######
 echo ""
 echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}SNAKEMAKE PIPELINE GRAPHS${nc} ${green}#####${nc}"
+echo -e "${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}"
 echo -e "${green}-------------------------------------${nc}"
 echo ""
 
@@ -254,6 +253,24 @@ snakemake \
     --directory ${workdir} \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
     --summary > ${workdir}/results/11_Reports/files_summary.txt
+
+cp ${workdir}/config/config.yaml ${workdir}/results/11_Reports/config.yaml
+
+echo "                        Brand(R) | Type(R) | Model | @ Speed GHz" >> ${workdir}/results/11_Reports/settings.log # Print header chip model name
+echo "Chip Model Name _______ ${model_name}" >> ${workdir}/results/11_Reports/settings.log          # Print chip model name
+echo "Physical CPUs _________  ${physical_cpu} cores" >> ${workdir}/results/11_Reports/settings.log # Print physical cpu
+echo "Logical CPUs __________ ${logical_cpu} threads" >> ${workdir}/results/11_Reports/settings.log # Print logical cpu
+echo "System Memory _________ ${ram_size} Gb of RAM" >> ${workdir}/results/11_Reports/settings.log  # Print RAM size
+
+echo "Working Directory _____ ${workdir}/" >> ${workdir}/results/11_Reports/settings.log                        # Log working directory
+echo "Samples Processed _____ ${samples} samples (${fastq} fastq files)" >> ${workdir}/results/11_Reports/settings.log # Log samples number 
+echo "Maximum Threads _______ ${max_threads} of ${logical_cpu} threads available" >> ${workdir}/results/11_Reports/settings.log # Log max threads
+echo "Maximum Memory ________ ${max_memory} of ${ram_size} Gb available" >> ${workdir}/results/11_Reports/settings.log # Log max memory
+echo "Genome Reference ______ ${reference}" >> ${workdir}/results/11_Reports/settings.log                       # Log user config genome reference
+echo "Aligner _______________ ${aligner}" >> ${workdir}/results/11_Reports/settings.log                         # Log user config aligner
+echo "Min. Coverage _________ ${min_cov}" >> ${workdir}/results/11_Reports/settings.log                         # Log user config minimum coverage
+echo "Min. Allele Frequency _ ${min_af}" >> ${workdir}/results/11_Reports/settings.log                          # Log user config snvs cov min
+echo "Start Time ____________ ${time_stamp_start}" >> ${workdir}/results/11_Reports/settings.log                # Log analyzes starting time
 
 
 ###### Concatenate all consensus fasta ######
