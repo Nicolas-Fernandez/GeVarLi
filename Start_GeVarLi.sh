@@ -256,13 +256,13 @@ snakemake \
 
 cp ${workdir}/config/config.yaml ${workdir}/results/11_Reports/config.yaml
 
-echo "                        Brand(R) | Type(R) | Model | @ Speed GHz" >> ${workdir}/results/11_Reports/settings.log # Print header chip model name
-echo "Chip Model Name _______ ${model_name}" >> ${workdir}/results/11_Reports/settings.log          # Print chip model name
-echo "Physical CPUs _________  ${physical_cpu} cores" >> ${workdir}/results/11_Reports/settings.log # Print physical cpu
-echo "Logical CPUs __________ ${logical_cpu} threads" >> ${workdir}/results/11_Reports/settings.log # Print logical cpu
-echo "System Memory _________ ${ram_size} Gb of RAM" >> ${workdir}/results/11_Reports/settings.log  # Print RAM size
+echo "                        Brand(R) | Type(R) | Model | @ Speed GHz" >> ${workdir}/results/11_Reports/settings.log # Log header chip model name
+echo "Chip Model Name _______ ${model_name}" >> ${workdir}/results/11_Reports/settings.log                            # Log chip model name
+echo "Physical CPUs _________  ${physical_cpu} cores" >> ${workdir}/results/11_Reports/settings.log                   # Log physical cpu
+echo "Logical CPUs __________ ${logical_cpu} threads" >> ${workdir}/results/11_Reports/settings.log                   # Log logical cpu
+echo "System Memory _________ ${ram_size} Gb of RAM" >> ${workdir}/results/11_Reports/settings.log                    # Log RAM size
 
-echo "Working Directory _____ ${workdir}/" >> ${workdir}/results/11_Reports/settings.log                        # Log working directory
+echo "Working Directory _____ ${workdir}/" >> ${workdir}/results/11_Reports/settings.log                               # Log working directory
 echo "Samples Processed _____ ${samples} samples (${fastq} fastq files)" >> ${workdir}/results/11_Reports/settings.log # Log samples number 
 echo "Maximum Threads _______ ${max_threads} of ${logical_cpu} threads available" >> ${workdir}/results/11_Reports/settings.log # Log max threads
 echo "Maximum Memory ________ ${max_memory} of ${ram_size} Gb available" >> ${workdir}/results/11_Reports/settings.log # Log max memory
