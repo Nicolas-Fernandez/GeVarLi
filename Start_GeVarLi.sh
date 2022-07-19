@@ -19,7 +19,7 @@ echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
 echo -e "${blue}Run${nc} ___________________ bash GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.07.12"
+echo -e "${blue}Latest Modification${nc} ___ 2022.07.19"
 echo -e "${blue}Todo${nc} __________________ done"
 
 
@@ -112,9 +112,9 @@ echo -e "${green}------------------------------${nc}"
 echo ""
 
 # Rename fastq files to remove "_001" Illumina pattern. De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
-rename  "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
-rename  "s/_L\d+_/_/" ${workrdir}/resources/reads/*.fastq.gz               # Remove line-ID ID like {_L001_}
-rename  "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
+rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
+rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz               # Remove line-ID ID like {_L001_}
+rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
 
 
 ###### Call snakemake pipeline ######
