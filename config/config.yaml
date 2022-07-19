@@ -5,14 +5,14 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.06.17
+# Latest modification: 2022.07.19
 # Todo: Adding Monkeypox virus and Ebola virus for epidemic (re)-emergence
 ###############################################################################
 
 ### CLUSTER ------------------------------------------------------------------------------------------
 resources:
-  cpus: 8           # Set maximum cpus usage (for multithreading) [INT]
-  mem_gb: 4         # Set maximum memory unsage (in Gb) [INT]
+  cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
+  mem_gb: 4         # Set maximum memory unsage (in Gb, default: 4) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)
