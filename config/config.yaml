@@ -5,14 +5,14 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.07.19
-# Todo: Adding Monkeypox virus and Ebola virus for epidemic (re)-emergence
+# Latest modification: 2022.07.22
+# Done: Update Nextclade to 2.3.0 from 1.11.0 conda env
 ###############################################################################
 
 ### CLUSTER ------------------------------------------------------------------------------------------
 resources:
-  cpus: 12           # Set maximum cpus usage (for multithreading, default: 8) [INT]
-  mem_gb: 64         # Set maximum memory unsage (in Gb, default: 4) [INT]
+  cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
+  mem_gb: 4         # Set maximum memory unsage (in Gb, default: 4) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)
@@ -31,7 +31,7 @@ conda:                                            # Conda environement yaml file
   gawk:         '../envs/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
   lofreq:       '../envs/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
   multiqc:      '../envs/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
-  nextclade:    '../envs/nextclade-1.11.0.yaml'    # Nextclade    ver. 1.11.0
+  nextclade:    '../envs/nextclade-2.3.0.yaml'     # Nextclade    ver. 2.3.0
   pangolin:     '../envs/pangolin-4.0.6.yaml'      # Pangolon     ver. 4.0.6
   samtools:     '../envs/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
   sickle-trim:  '../envs/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
@@ -57,6 +57,14 @@ consensus:
   ## Available options:
     ## ''        # Deactivate
     ## '--iupac' # Activate
+
+### GISAID -------------------------------------------------------------------------------------------
+gisaid:
+  threshold: '30'
+  name: 'hCoV-19'
+  country: 'France'
+  #identifier: ''
+  year: '2022'
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:

@@ -1,6 +1,0 @@
-name: nextclade-1.11.0
-channels:
-  - bioconda
-  - defaults
-dependencies:
-  - nextclade=1.11.0=h527b516_0
