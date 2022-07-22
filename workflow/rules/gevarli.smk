@@ -124,7 +124,7 @@ rule nextclade_lineage:
         "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
         "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
         "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
-        "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
+        "--output-all {output.alignment} "  # -O: Produce all of the output files into this directory, using default basename
         "{input.consensus} "                # Path to a .fasta file with input sequences
         "&> {log}"                          # Log redirection
 
