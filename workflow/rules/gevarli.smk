@@ -5,8 +5,8 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.06.17
-# Todo: Testing a unique env.
+# Latest modification: 2022.06.22
+# Done: Nextclade and Pangolin conditioned by reference setting (SARS-CoV-2)
 
 ###############################################################################
 # PUBLICATIONS #
@@ -17,6 +17,19 @@ configfile: "config/config.yaml"
 
 ###############################################################################
 # FUNCTIONS #
+def get_pangolin(wildcards):
+    pangolin_list = []
+    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
+        pangolin_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_pangolin-report.csv",
+                               sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
+    return pangolin_list
+
+def get_nextclade(wildcards):
+    nextclade_list = []
+    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
+        nextclade_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
+                                sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
+    return nextclade_list
 
 ###############################################################################
 # WILDCARDS #
@@ -83,10 +96,8 @@ rule all:
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         consensus = expand("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta",
                            sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        pangolin = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_pangolin-report.csv",
-                          sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        nextclade = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
-                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
+        pangolin = get_pangolin,
+        nextclade = get_nextclade
 
 ###############################################################################
 rule nextclade_lineage:
