@@ -122,10 +122,10 @@ rule nextclade_lineage:
         "nextclade "                       # Nextclade, assign queries sequences to clades and reports potential quality issues
         "run "                              # Run analyzis
         "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
-        "--input-fasta {input.consensus} "  # -i: Path to a .fasta file with input sequences
         "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
         "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
         "--output-dir {output.alignment} "  # -d: Write output alignment and peptide files to this directory
+        "{input.consensus} "                # Path to a .fasta file with input sequences
         "&> {log}"                          # Log redirection
 
 ###############################################################################
