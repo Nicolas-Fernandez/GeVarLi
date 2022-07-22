@@ -115,7 +115,7 @@ rule nextclade_lineage:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta"
     output:
         lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
-        alignment = directory("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-alignment/")
+        alignment = directory("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-all/")
     log:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
     shell:
