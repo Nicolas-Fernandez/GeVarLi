@@ -1,0 +1,33 @@
+{
+  "comment": "Fix compatibility version string",
+  "compatibility": {
+    "nextcladeCli": {
+      "max": null,
+      "min": "2.0.0-alpha.0"
+    },
+    "nextcladeWeb": {
+      "max": null,
+      "min": "2.0.0-alpha.0"
+    }
+  },
+  "defaultRef": "NC_063383.1",
+  "enabled": true,
+  "files": {
+    "geneMap": "genemap.gff",
+    "primers": "primers.csv",
+    "qc": "qc.json",
+    "reference": "reference.fasta",
+    "sequences": "sequences.fasta",
+    "tree": "tree.json",
+    "virusPropertiesJson": "virus_properties.json"
+  },
+  "metadata": {},
+  "name": "hMPXV",
+  "nameFriendly": "Human Monkeypox (hMPXV)",
+  "reference": {
+    "accession": "NC_063383.1",
+    "source": "genbank",
+    "strainName": "MPXV-M5312_HM12_Rivers"
+  },
+  "tag": "2022-06-20T06:00:00Z"
+}

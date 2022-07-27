@@ -11,8 +11,8 @@
 
 ### CLUSTER ------------------------------------------------------------------------------------------
 resources:
-  cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
-  mem_gb: 4         # Set maximum memory unsage (in Gb, default: 4) [INT]
+  cpus: 12           # Set maximum cpus usage (for multithreading, default: 8) [INT]
+  mem_gb: 64         # Set maximum memory unsage (in Gb, default: 4) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)
@@ -44,14 +44,14 @@ aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
 
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
-  reference: 'SARS-CoV-2_Wuhan-WIV04_2019' # Your favorite reference, in fasta format
+  reference: 'Monkeypox-virus_Zaire' # Your favorite reference, in fasta format
   ## Available options:
     ## 'SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
     ## 'Monkeypox-virus_Zaire'       # Monkeypox_Zaire_NC_003310.1   (not working with Bowtie2, Nextclade and Pangolin)
     ## 'Ebola-virus_Zaire'           # Ebola_Zaire_NC_002549.1       (not working with Bowtie2, Nextclade and Pangolin)
     ## 'HIV-1_HXB2'                  # HIV-1_HXB2                    (not working with Bowtie2, Nextclade and Pangolin)
   genomes: 'resources/genomes/' # Path to your favorite reference 
-  mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
+  mincov: 3 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   ## Available options:
