@@ -1,6 +1,6 @@
 #!/bin/bash
 
-##### colors ######
+##### Colors ######
 red="\033[1;31m"   # red
 green="\033[1;32m" # green
 ylo="\033[1;33m"   # yellow
@@ -19,8 +19,7 @@ echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
 echo -e "${blue}Run${nc} ___________________ bash GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.07.19"
-echo -e "${blue}Todo${nc} __________________ done"
+echo -e "${blue}Latest Modification${nc} ___ 2022.08.03"
 
 
 ###### Hardware ######
@@ -68,7 +67,7 @@ echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}$
 echo -e "${blue}Genome Reference${nc} ______ ${red}${reference}${nc}"                                         # Print user config genome reference
 echo -e "${blue}Aligner${nc} _______________ ${ylo}${aligner}${nc}"                                           # Print user config aligner
 echo -e "${blue}Min. Coverage${nc} _________ ${red}${min_cov}${nc}x"                                          # Print user config minimum coverage
-echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"                                            # Print user config snvs cov min
+echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"                                            # Print user config minimum Al.Freq.
 echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                             # Print analyzes starting time
 
 
@@ -113,7 +112,7 @@ echo ""
 
 # Rename fastq files to remove "_001" Illumina pattern. De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
-rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz               # Remove line-ID ID like {_L001_}
+rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove line-ID ID like {_L001_}
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
 
 
