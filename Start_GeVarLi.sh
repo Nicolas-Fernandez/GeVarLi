@@ -13,13 +13,34 @@ echo -e "${green}---------------------------------------------------------------
 echo -e "${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}"
 echo -e "${green}-----------------${nc}"
 echo ""
-echo -e "${blue}Name${nc} __________________ GeVarLi.sh"
+echo -e "${blue}Name${nc} __________________ Start_GeVarLi.sh"
 echo -e "${blue}Author${nc} ________________ Nicolas Fernandez"
 echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
-echo -e "${blue}Run${nc} ___________________ bash GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.08.03"
+echo -e "${blue}Run${nc} ___________________ bash Start_GeVarLi.sh"
+echo -e "${blue}Latest Modification${nc} ___ 2022.08.30"
+
+
+###### Hardware ######
+echo ""
+echo -e "${green}------------------------------------------------------------------------${nc}"
+echo -e "${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}"
+echo -e "${green}--------------------${nc}"
+echo ""
+
+# Operating System
+case "$OSTYPE" in
+  linux*)   os="Linux" ;;
+  bsd*)     os="BSD" ;;
+  darwin*)  os="OSX" ;;
+  solaris*) os="Solaris" ;;
+  msys*)    os="Windows" ;;
+  cygwin*)  os="Windows" ;;
+  *)        os="Unknown (${OSTYPE})" ;;
+esac
+
+echo -e "${blue}Operating system${nc} _______ ${red}${os}${nc}" # Print operating system 
 
 
 ###### Hardware ######
@@ -29,11 +50,25 @@ echo -e "${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}"
 echo -e "${green}--------------------${nc}"
 echo ""
 
-model_name=$(sysctl -n machdep.cpu.brand_string) # Get chip model name
-physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
-logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
-mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
-ram_size=$(expr ${mem_size} \/ $((1024**3)) )    # / 1024**3 = Gb
+if [[ ${os} == "OSX" ]]
+then
+    model_name=$(sysctl -n machdep.cpu.brand_string) # Get chip model name
+    physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
+    logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
+    mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
+    ram_size=$(expr ${mem_size} \/ $((1024**3)) )    # / 1024**3 = Gb
+elif [[ ${os} == "Linux" ]]
+then
+    model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -r "s/Model name: +//")                           # Get chip model name
+    physical_cpu=$(lscpu | grep -o -E "^CPU\(s\): +[0-9]+" | sed -r "s/CPU\(s\): +//")                        # Get physical cpu
+    threads_cpu=$(lscpu | grep -o -E "^Thread\(s\) per core: +[0-9]+" | sed -r "s/Thread\(s\) per core: +//") # Get thread(s) per core
+    logical_cpu=$(expr ${physical_cpu} \* ${threads_cpu})                                                     # Calcul logical cpu
+    mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -r "s/MemTotal: +//")                       # Get memory size (Kb)
+    ram_size=$(expr ${mem_size} \/ $((1024**2)) )                                                             # / 1024**2 = Gb
+else
+    "Please, use 'OSX' or 'Linux' operating system"
+    exit 1
+fi
 
 echo -e "                        ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}" # Print header chip model name
 echo -e "${blue}Chip Model Name${nc} _______ ${model_name}"                     # Print chip model name
@@ -71,20 +106,21 @@ echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"              
 echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                             # Print analyzes starting time
 
 
-###### Snakemake installation ######
+###### Installations ######
 echo ""
 echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}SNAKEMAKE INSTALLATION${nc} ${green}#####${nc}"
-echo -e "${green}----------------------------------${nc}"
+echo -e "${green}#####${nc} ${red}INSTALLATIONS${nc} ${green}#####${nc}"
+echo -e "${green}-------------------------${nc}"
 echo ""
 
 # Mamba
-if ls ~/miniconda3/bin/mamba 2> /dev/null
-then
-    echo ""
-else
-    conda install -n base -c conda-forge mamba --yes
-fi
+#if ls ~/miniconda3/bin/mamba 2> /dev/null
+#then
+#    echo ""
+#else
+#    conda install -n base -c conda-forge mamba --yes
+#fi
+
 # Snakemake
 #snake_ver="7.8.2"
 snake_ver="6.12.3"
@@ -92,14 +128,17 @@ if ls ~/miniconda3/bin/snakemake 2> /dev/null
 then
     echo ""
 else
-    mamba install -n base -c conda-forge -c bioconda snakemake==${snake_ver} --yes
+    #mamba install -n base -c conda-forge -c bioconda snakemake==${snake_ver} --yes
+    conda install -n base -c conda-forge -c bioconda snakemake==${snake_ver} --yes
 fi
+
 # Rename
 if ls ~/miniconda3/bin/rename 2> /dev/null
 then
     echo ""
 else
-    mamba install -n base -c bioconda rename --yes
+    #mamba install -n base -c bioconda rename --yes
+    conda install -n base -c bioconda rename --yes
 fi
 
 
@@ -127,11 +166,13 @@ echo -e "${blue}Unlocking working directory:${nc}"
 echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
+# Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # Remove a lock on the working directory.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --config os=${os} \
     --rerun-incomplete \
     --unlock
 
@@ -140,11 +181,15 @@ echo -e "${blue}Conda environments list:${nc}"
 echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
+# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # List all conda environments and their location on disk.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
+    --cores ${max_threads} \
+    --config os=${os} \
     --rerun-incomplete \
     --list-conda-envs
 
@@ -155,11 +200,13 @@ echo ""
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
 # Re-run all jobs the output of which is recognized as incomplete.
+# Set or overwrite values in the workflow config object.
 # Cleanup unused conda environments.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores \
+    --cores ${max_threads} \
+    --config os=${os} \
     --rerun-incomplete \
     --conda-cleanup-envs
 
@@ -169,6 +216,7 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
@@ -176,11 +224,12 @@ echo ""
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores \
+    --cores ${max_threads} \
+    --config os=${os} \
     --rerun-incomplete \
     --use-conda \
     --conda-create-envs-only \
-    --conda-frontend mamba
+    --conda-frontend conda # Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib" 
 
 echo ""
 echo -e "${blue}Dry run:${nc}"
@@ -188,6 +237,7 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
@@ -196,7 +246,8 @@ echo ""
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores \
+    --cores ${max_threads}\
+    --config os=${os} \
     --rerun-incomplete \
     --use-conda \
     --prioritize multiqc_reports_aggregation \
@@ -209,6 +260,8 @@ echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Define a global maximum number of threads available to any rule. Rules requesting more threads will have their values reduced to the maximum. 
+# Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # Go on with independent jobs if a job fails.
 # If defined in the rule, run job in a conda environment.
@@ -217,7 +270,9 @@ echo ""
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores 1 \
+    --cores ${max_threads} \
+    --max-threads ${max_threads} \
+    --config os=${os} \
     --rerun-incomplete \
     --keep-going \
     --use-conda \

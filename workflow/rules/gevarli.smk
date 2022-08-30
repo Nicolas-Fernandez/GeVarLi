@@ -5,8 +5,8 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.06.22
-# Done: Nextclade and Pangolin conditioned by reference setting (SARS-CoV-2)
+# Latest modification: 2022.08.30
+# Done: Unifying MacOSX and Linux in one unique script / repo
 
 ###############################################################################
 # PUBLICATIONS #
@@ -36,27 +36,28 @@ def get_nextclade(wildcards):
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
-# ENVIRONMENTS #
-FASTQC = config["conda"]["fastqc"]            # FastQC
-FASTQSCREEN = config["conda"]["fastq-screen"] # Fastq-Screen
-MULTIQC = config["conda"]["multiqc"]          # MultiQC
-CUTADAPT = config["conda"]["cutadapt"]        # Cutadapt
-SICKLETRIM = config["conda"]["sickle-trim"]   # Sickle-trim
-BOWTIE2 = config["conda"]["bowtie2"]          # Bowtie2
-BWA = config["conda"]["bwa"]                  # Bwa
-SAMTOOLS = config["conda"]["samtools"]        # SamTools
-BEDTOOLS = config["conda"]["bedtools"]        # BedTools
-BCFTOOLS = config["conda"]["bcftools"]        # BcfTools
-GAWK = config["conda"]["gawk"]                # Gawk
-LOFREQ = config["conda"]["lofreq"]            # LoFreq
-PANGOLIN = config["conda"]["pangolin"]        # Pangolin
-NEXTCLADE = config["conda"]["nextclade"]      # Nextclade
+# RESOURCES #
+OS = config["os"]                      # Operating system
+CPUS = config["resources"]["cpus"]     # Threads
+MEM_GB = config["resources"]["mem_gb"] # Memory (RAM) in Gb
+TMPDIR = config["resources"]["tmpdir"] # Temporary directory
 
 ###############################################################################
-# RESOURCES #
-CPUS = config["resources"]["cpus"]     # resources thread
-MEM_GB = config["resources"]["mem_gb"] # resources mem in Gb
-TMPDIR = config["resources"]["tmpdir"] # resources temporary directory
+# ENVIRONMENTS #
+FASTQC = config["conda"][OS]["fastqc"]            # FastQC
+FASTQSCREEN = config["conda"][OS]["fastq-screen"] # Fastq-Screen
+MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
+CUTADAPT = config["conda"][OS]["cutadapt"]        # Cutadapt
+SICKLETRIM = config["conda"][OS]["sickle-trim"]   # Sickle-trim
+BOWTIE2 = config["conda"][OS]["bowtie2"]          # Bowtie2
+BWA = config["conda"][OS]["bwa"]                  # Bwa
+SAMTOOLS = config["conda"][OS]["samtools"]        # SamTools
+BEDTOOLS = config["conda"][OS]["bedtools"]        # BedTools
+BCFTOOLS = config["conda"][OS]["bcftools"]        # BcfTools
+GAWK = config["conda"][OS]["gawk"]                # Gawk
+LOFREQ = config["conda"][OS]["lofreq"]            # LoFreq
+PANGOLIN = config["conda"][OS]["pangolin"]        # Pangolin
+NEXTCLADE = config["conda"][OS]["nextclade"]      # Nextclade
 
 ###############################################################################
 # PARAMETERS #
