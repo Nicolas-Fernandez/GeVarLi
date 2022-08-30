@@ -34,7 +34,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Nextclade and Pangolin classifications  
 
 ### Version ###
-This is the **macOSX** version (_with some specific conda environements_) v.2022.06.20  
+*V.2022.08.30*  
 
 ### Rulegraph ###
 <img src="./visuals/rulegraph.png" width="150" height="300">  
