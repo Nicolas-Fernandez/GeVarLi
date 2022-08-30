@@ -5,11 +5,11 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.07.22
-# Done: Update Nextclade to 2.3.0 from 1.11.0 conda env
+# Latest modification: 2022.08.30
+# Done: Unifiying macOSX and Linux scripts / Git repo.
 ###############################################################################
 
-### CLUSTER ------------------------------------------------------------------------------------------
+### RESOURCES ----------------------------------------------------------------------------------------
 resources:
   cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
   mem_gb: 4         # Set maximum memory unsage (in Gb, default: 4) [INT]
@@ -19,22 +19,39 @@ resources:
     ## '.'        # Local (i.e. GeVarLi root directory)
     ## '/scratch' # HPC (set it to match your HPC usage)
 
+
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
-conda:                                            # Conda environement yaml files:
-  bcftools:     '../envs/bcftools-1.15.1.yaml'     # Bcftools     ver. 1.15.1
-  bedtools:     '../envs/bedtools-2.30.0.yaml'     # Bedtools     ver. 2.30.0
-  bowtie2:      '../envs/bowtie2-2.4.5.yaml'       # Bowtie2      ver. 2.4.5
-  bwa:          '../envs/bwa-0.7.17.yaml'          # BWA          ver. 0.7.17
-  cutadapt:     '../envs/cutadapt-4.1.yaml'        # Cutadapt     ver. 4.1
-  fastq-screen: '../envs/fastq-screen-0.15.2.yaml' # Fastq-Screen ver. 0.15.2
-  fastqc:       '../envs/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
-  gawk:         '../envs/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
-  lofreq:       '../envs/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
-  multiqc:      '../envs/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
-  nextclade:    '../envs/nextclade-2.3.0.yaml'     # Nextclade    ver. 2.3.0
-  pangolin:     '../envs/pangolin-4.0.6.yaml'      # Pangolon     ver. 4.0.6
-  samtools:     '../envs/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
-  sickle-trim:  '../envs/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
+conda:
+  OSX:                                                   # Conda OSX environement yaml files:
+    bcftools:     '../envs/osx/bcftools-1.15.1.yaml'       # Bcftools     ver. 1.15.1
+    bedtools:     '../envs/osx/bedtools-2.30.0.yaml'       # Bedtools     ver. 2.30.0
+    bowtie2:      '../envs/osx/bowtie2-2.4.5.yaml'         # Bowtie2      ver. 2.4.5
+    bwa:          '../envs/osx/bwa-0.7.17.yaml'            # BWA          ver. 0.7.17
+    cutadapt:     '../envs/osx/cutadapt-4.1.yaml'          # Cutadapt     ver. 4.1
+    fastq-screen: '../envs/osx/fastq-screen-0.15.2.yaml'   # Fastq-Screen ver. 0.15.2
+    fastqc:       '../envs/osx/fastqc-0.11.9.yaml'         # FastQC       ver. 0.11.9
+    gawk:         '../envs/osx/gawk-5.1.0.yaml'            # Awk          ver. 5.1.0
+    lofreq:       '../envs/osx/lofreq-2.1.5.yaml'          # Lofreq       ver. 2.1.5
+    multiqc:      '../envs/osx/multiqc-1.12.yaml'          # MultiQC      ver. 1.12
+    nextclade:    '../envs/osx/nextclade-2.3.0.yaml'       # Nextclade    ver. 2.3.0
+    pangolin:     '../envs/osx/pangolin-4.0.6.yaml'        # Pangolon     ver. 4.0.6
+    samtools:     '../envs/osx/samtools-1.15.1.yaml'       # Samtools     ver. 1.15.1
+    sickle-trim:  '../envs/osx/sickle-trim-1.33.yaml'      # Sickle-trim  ver. 1.33
+  Linux:                                                 # Conda Linux environement yaml files:
+    bcftools:     '../envs/linux/bcftools-1.15.1.yaml'     # Bcftools     ver. 1.15.1
+    bedtools:     '../envs/linux/bedtools-2.30.0.yaml'     # Bedtools     ver. 2.30.0
+    bowtie2:      '../envs/linux/bowtie2-2.4.5.yaml'       # Bowtie2      ver. 2.4.5
+    bwa:          '../envs/linux/bwa-0.7.17.yaml'          # BWA          ver. 0.7.17
+    cutadapt:     '../envs/linux/cutadapt-4.1.yaml'        # Cutadapt     ver. 4.1
+    fastq-screen: '../envs/linux/fastq-screen-0.15.2.yaml' # Fastq-Screen ver. 0.15.2
+    fastqc:       '../envs/linux/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
+    gawk:         '../envs/linux/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
+    lofreq:       '../envs/linux/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
+    multiqc:      '../envs/linux/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
+    nextclade:    '../envs/linux/nextclade-2.3.0.yaml'     # Nextclade    ver. 2.3.0
+    pangolin:     '../envs/linux/pangolin-4.0.6.yaml'      # Pangolon     ver. 4.0.6
+    samtools:     '../envs/linux/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
+    sickle-trim:  '../envs/linux/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
 
 ### ALIGNER ------------------------------------------------------------------------------------------
 aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
@@ -51,7 +68,7 @@ consensus:
     ## 'Ebola-virus_Zaire'           # Ebola_Zaire_NC_002549.1       (not working with Bowtie2, Nextclade and Pangolin)
     ## 'HIV-1_HXB2'                  # HIV-1_HXB2                    (not working with Bowtie2, Nextclade and Pangolin)
   genomes: 'resources/genomes/' # Path to your favorite reference 
-  mincov: 3 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
+  mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   ## Available options:
@@ -112,3 +129,12 @@ fastq-screen:
     ## 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see 'fastq-screen.conf')
     ## 'bowtie'  # Bowtie (indexes not provided)
     ## 'bowtie2' # Bowtie2 (indexes not provided)
+
+### OPERATING-SYSTEM ---------------------------------------------------------------------------------
+os: 'OSX' # Operating System (default: OSX)
+## Available options:
+  ## 'Linux'   # GNU Linux - Free [UNIX]
+  ## 'BSD'     # Free BSD - Free (UNIX)
+  ## 'OSX'     # Mac OSX - Apple (R) [UNIX]
+  ## 'Solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX]
+  ## 'Windows' # Windows - Microsoft Corporation (R)
