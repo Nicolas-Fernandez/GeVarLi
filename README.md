@@ -41,23 +41,36 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ## ~ INSTALLATIONS ~ ##
 
-### Conda _(required)_ ###
-Install **Conda** _(i.e. Miniconda3 with Python 3.9 on MacOSX-64-bit)_: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+# Conda _(required)_ #
+Install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)
+ 
+*Miniconda3 with Python 3.9 for MacOSX-64-bit*
 _Follow the screen prompt instructions_  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ./Miniconda3-latest-MacOSX-x86_64.sh 
 bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
-- Please, **restart** now your shell, i.e. by closing and opening a new terminal window  
 
-### GeVarLi ###
-Clone [GeVarLi_macOSX](https://forge.ird.fr/transvihmi/GeVarLi_macOSX) repository from GitLab IRD-Forge _(ID: 399)_:
+*Miniconda3 with Python 3.9 on Linux-64-bit)*
+_Follow the screen prompt instructions_
+```shell
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash ./Miniconda3-latest-Linux-x86_64.sh
+rm -f ./Miniconda3-latest-Linux-x86_64.sh
+```
+
+- Please, **restart** now your shell, i.e. closing and opening a new terminal window
+
+
+# GeVarLi #
+Clone _(HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
 
 ```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi_macOSX.git
-cd ./GeVarLi_macOSX/
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git
+cd ./GeVarLi/
 ```
+
 
 Difference between **Download** and **Clone**:  
 - To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
