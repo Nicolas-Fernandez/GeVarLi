@@ -61,36 +61,36 @@ aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
 
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
-  reference: 'SARS-CoV-2_Wuhan-WIV04_2019' # Your favorite reference, in fasta format
+  reference: 'SARS-CoV-2_Wuhan-WIV04_2019' # Your reference, in fasta format
   ## Available options:
     ## 'SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
     ## 'Monkeypox-virus_Zaire'       # Monkeypox_Zaire_NC_003310.1   (not working with Bowtie2, Nextclade and Pangolin)
     ## 'Ebola-virus_Zaire'           # Ebola_Zaire_NC_002549.1       (not working with Bowtie2, Nextclade and Pangolin)
     ## 'HIV-1_HXB2'                  # HIV-1_HXB2                    (not working with Bowtie2, Nextclade and Pangolin)
-  genomes: 'resources/genomes/' # Path to your favorite reference 
-  mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
+  path: 'resources/genomes/' # Path to genomes references
+  mincov: 3 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   ## Available options:
     ## ''        # Deactivate
     ## '--iupac' # Activate
 
-### GISAID -------------------------------------------------------------------------------------------
+### GISAID (soon) ------------------------------------------------------------------------------------
 gisaid:
   threshold: '30'
   name: 'hCoV-19'
   country: 'France'
-  #identifier: ''
+  identifier: ''
   year: '2022'
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
-  indexes: 'resources/indexes/bwa/' # Path to BWA indexes
+  path: 'resources/indexes/bwa/' # Path to BWA indexes
 
 ### BOWTIE2 ------------------------------------------------------------------------------------------
 bowtie2:
-  indexes: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes
-  sensitivity: '--very-sensitive' # Bowtie2 sensitivity preset (default: '--very-sensitive')
+  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes
+  sensitivity: '--very-sensitive'    # Bowtie2 sensitivity preset (default: '--very-sensitive')
   ## Available options:
     ## '--very-fast'      # Same as options: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
     ## '--fast'           # Same as options: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
@@ -99,7 +99,13 @@ bowtie2:
 
 ### NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
-  dataset: 'resources/nextclade/sars-cov-2/' # Nextclade sars-cov-2 default dataset (for nextclade 1.10.1)
+  dataset: 'sars-cov-2' # Nextclade dataset (2.3.0)
+  ## Available options:
+    ## 'sars-cov-2' # SARS-CoV-2 (default)
+    ## 'MPXV'       # Monkeypox all clades
+    ## 'hMPXV'      # human Monkeypox
+    ## 'hMPXV_B1'   # human Monkeypox Lineage B1*
+  path: 'resources/nextclade/' # Path to nextclade datasets
 
 ### SICKLE-TRIM --------------------------------------------------------------------------------------
 sickle-trim:
