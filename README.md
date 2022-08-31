@@ -90,7 +90,7 @@ git pull --verbose
 	- with a **Right-click** > **Open with** > **Terminal.app**
 	- with **CLI** from a terminal:
 ```shell
-bash ./GeVarLi_macOSX/Start_GeVarLi.sh
+bash Start_GeVarLi.sh
 ```
 Yours analyzes will start with default configuration settings  
 
