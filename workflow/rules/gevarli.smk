@@ -5,8 +5,8 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.08.30
-# Done: Unifying MacOSX and Linux in one unique script / repo
+# Latest modification: 2022.08.31
+# Done: Add Nextclade classification for Monkeypox
 
 ###############################################################################
 # PUBLICATIONS #
@@ -26,7 +26,7 @@ def get_pangolin(wildcards):
 
 def get_nextclade(wildcards):
     nextclade_list = []
-    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
+    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019" or REFERENCE == "Monkeypox-virus_Zaire":
         nextclade_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
                                 sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return nextclade_list
@@ -77,16 +77,17 @@ SUBSET = config["fastq-screen"]["subset"]  # Fastq-screen --subset
 
 ALIGNER = config["aligner"] # Aligners ('bwa' or 'bowtie2')
 
-INDEXBWA = config["bwa"]["indexes"]            # BWA path to indexes
-INDEXBT2 = config["bowtie2"]["indexes"]        # Bowtie2 path to indexes
+BWAPATH = config["bwa"]["path"]                # BWA path to indexes
+BT2PATH = config["bowtie2"]["path"]            # Bowtie2 path to indexes
 SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
-GENOMES = config["consensus"]["genomes"]     # Path to genomes references
+REFPATH = config["consensus"]["path"]        # Path to genomes references
 REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
 MINCOV = config["consensus"]["mincov"]       # Minimum coverage, mask lower regions with 'N' 
 MINAF = config["consensus"]["minaf"]         # Minimum allele frequency allowed
 IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
 
+NEXTPATH = config["nextclade"]["path"]   # Path to nextclade dataset
 DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 
 ###############################################################################
@@ -111,6 +112,7 @@ rule nextclade_lineage:
     resources:
         cpus = CPUS
     params:
+        path = NEXTPATH,
         dataset = DATASET
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta"
@@ -120,14 +122,14 @@ rule nextclade_lineage:
     log:
         "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
     shell:
-        "nextclade "                       # Nextclade, assign queries sequences to clades and reports potential quality issues
-        "run "                              # Run analyzis
-        "--jobs {resources.cpus} "          # -j: Number of CPU threads used by the algorithm (default: the algorithm will use all the available threads)
-        "--input-dataset {params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
-        "--output-tsv {output.lineage} "    # -t: Path to output TSV results file
-        "--output-all {output.alignment} "  # -O: Produce all of the output files into this directory, using default basename
-        "{input.consensus} "                # Path to a .fasta file with input sequences
-        "&> {log}"                          # Log redirection
+        "nextclade "                                    # Nextclade, assign queries sequences to clades and reports potential quality issues
+        "run "                                           # Run analyzis
+        "--jobs {resources.cpus} "                       # -j: Number of CPU threads used by the algorithm (default: all available threads)
+        "--input-dataset {params.path}{params.dataset} " # -raq: Path to a directory containing a dataset (root-seq, tree and qc-config required)
+        "--output-tsv {output.lineage} "                 # -t: Path to output TSV results file
+        "--output-all {output.alignment} "               # -O: Produce all of the output files into this directory, using default basename
+        "{input.consensus} "                             # Path to a .fasta file with input sequences
+        "&> {log}"                                       # Log redirection
 
 ###############################################################################
 rule pangolin_lineage:
@@ -358,7 +360,7 @@ rule bedtools_masking:
     conda:
         BEDTOOLS
     params:
-        genomes = GENOMES,
+        path = REFPATH,
         reference = REFERENCE
     input:
         lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}X_low-cov-mask.bed"
@@ -367,11 +369,11 @@ rule bedtools_masking:
     log:
         "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}X_masking.log"
     shell:
-        "bedtools maskfasta "                          # Bedtools maskfasta, mask a fasta file based on feature coordinates
-        "-fi {params.genomes}{params.reference}.fasta " # Input FASTA file 
-        "-bed {input.lowcovmask} "                      # BED/GFF/VCF file of ranges to mask in -fi
-        "-fo {output.maskedref} "                       # Output masked FASTA file
-        "&> {log}"                                      # Log redirection 
+        "bedtools maskfasta "                       # Bedtools maskfasta, mask a fasta file based on feature coordinates
+        "-fi {params.path}{params.reference}.fasta " # Input FASTA file 
+        "-bed {input.lowcovmask} "                   # BED/GFF/VCF file of ranges to mask in -fi
+        "-fo {output.maskedref} "                    # Output masked FASTA file
+        "&> {log}"                                   # Log redirection 
 
 ###############################################################################
 rule bedtools_merged_mask:
@@ -619,7 +621,7 @@ rule bwa_mapping:
     resources:
         cpus = CPUS
     params:
-        indexbwa = INDEXBWA,
+        bwapath = BWAPATH,
         reference = REFERENCE
     input:
         fwdreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
@@ -629,14 +631,14 @@ rule bwa_mapping:
     log:
         "results/11_Reports/bwa/{sample}.log"
     shell:
-        "bwa mem "                            # BWA-MEM algorithm, performs local alignment.
-        "-t {resources.cpus} "                 # -t: Number of threads (default: 12)
-        "-v 1 "                                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
-        "{params.indexbwa}{params.reference} " # Reference index filename prefix
-        "{input.fwdreads} "                    # Forward input reads
-        "{input.revreads} "                    # Reverse input reads
-        "1> {output.mapped} "                  # SAM output
-        "2> {log}"                             # Log redirection 
+        "bwa mem "                           # BWA-MEM algorithm, performs local alignment.
+        "-t {resources.cpus} "                # -t: Number of threads (default: 12)
+        "-v 1 "                               # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
+        "{params.bwapath}{params.reference} " # Reference index filename prefix
+        "{input.fwdreads} "                   # Forward input reads
+        "{input.revreads} "                   # Reverse input reads
+        "1> {output.mapped} "                 # SAM output
+        "2> {log}"                            # Log redirection 
 
 ###############################################################################
 rule bowtie2_mapping:
@@ -649,7 +651,7 @@ rule bowtie2_mapping:
     resources:
         cpus = CPUS
     params:
-        indexbt2 = INDEXBT2,
+        bt2path = BT2PATH,
         reference = REFERENCE,
         sensitivity = SENSITIVITY
     input:
@@ -663,7 +665,7 @@ rule bowtie2_mapping:
         "bowtie2 "                    # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.
         "--threads {resources.cpus} "  # -p: Number of alignment threads to launch (default: 1)
         "--reorder "                   # Keep the original read order (if multi-processor option -p is used)
-        "-x {params.indexbt2}{params.reference} " # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
+        "-x {params.bt2path}{params.reference} " # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
         "{params.sensitivity} "        # Preset (default: "--sensitive", same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]) 
         "-q "                          # -q: Query input files are FASTQ .fq/.fastq (default)
         "-1 {input.fwdreads} "         # Forward input reads
