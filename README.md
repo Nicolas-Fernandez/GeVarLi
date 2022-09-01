@@ -44,7 +44,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 # Conda _(required)_ #
 Install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)
  
-*Miniconda3 with Python 3.9 for MacOSX-64-bit*
+**Miniconda3 with Python 3.9 for MacOSX-64-bit**  
 _Follow the screen prompt instructions_  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ./Miniconda3-latest-MacOSX-x86_64.sh 
@@ -52,8 +52,8 @@ bash ./Miniconda3-latest-MacOSX-x86_64.sh
 rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
 ```
 
-*Miniconda3 with Python 3.9 on Linux-64-bit)*
-_Follow the screen prompt instructions_
+**Miniconda3 with Python 3.9 on Linux-64-bit**  
+_Follow the screen prompt instructions_  
 ```shell
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash ./Miniconda3-latest-Linux-x86_64.sh
