@@ -1,0 +1,7 @@
+name: nextclade-2.5.0
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - nextclade=2.5.0=h527b516_0
+prefix: /Users/2021nf001/miniconda3/envs/nextclade-2.5.0
