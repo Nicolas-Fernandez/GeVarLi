@@ -1,6 +1,0 @@
-name: nextclade-2.3.0
-channels:
-  - bioconda
-  - defaults
-dependencies:
-  - nextclade=2.3.0=h9ee0642_0

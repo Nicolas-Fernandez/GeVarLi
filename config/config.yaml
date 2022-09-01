@@ -5,8 +5,8 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.08.30
-# Done: Unifiying macOSX and Linux scripts / Git repo.
+# Latest modification: 2022.09.01
+# Done: Update Nextclade to 2.5.0 (from 2.3.0)
 ###############################################################################
 
 ### RESOURCES ----------------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ conda:
     gawk:         '../envs/osx/gawk-5.1.0.yaml'            # Awk          ver. 5.1.0
     lofreq:       '../envs/osx/lofreq-2.1.5.yaml'          # Lofreq       ver. 2.1.5
     multiqc:      '../envs/osx/multiqc-1.12.yaml'          # MultiQC      ver. 1.12
-    nextclade:    '../envs/osx/nextclade-2.3.0.yaml'       # Nextclade    ver. 2.3.0
+    nextclade:    '../envs/osx/nextclade-2.5.0.yaml'       # Nextclade    ver. 2.5.0
     pangolin:     '../envs/osx/pangolin-4.0.6.yaml'        # Pangolon     ver. 4.0.6
     samtools:     '../envs/osx/samtools-1.15.1.yaml'       # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/osx/sickle-trim-1.33.yaml'      # Sickle-trim  ver. 1.33
@@ -48,7 +48,7 @@ conda:
     gawk:         '../envs/linux/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
     lofreq:       '../envs/linux/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
     multiqc:      '../envs/linux/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
-    nextclade:    '../envs/linux/nextclade-2.3.0.yaml'     # Nextclade    ver. 2.3.0
+    nextclade:    '../envs/linux/nextclade-2.5.0.yaml'     # Nextclade    ver. 2.5.0
     pangolin:     '../envs/linux/pangolin-4.0.6.yaml'      # Pangolon     ver. 4.0.6
     samtools:     '../envs/linux/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/linux/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
