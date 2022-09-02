@@ -68,7 +68,7 @@ consensus:
     ## 'Ebola-virus_Zaire'           # Ebola_Zaire_NC_002549.1       (not working with Bowtie2, Nextclade and Pangolin)
     ## 'HIV-1_HXB2'                  # HIV-1_HXB2                    (not working with Bowtie2, Nextclade and Pangolin)
   path: 'resources/genomes/' # Path to genomes references
-  mincov: 3 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
+  mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   ## Available options:
