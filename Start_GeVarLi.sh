@@ -149,8 +149,9 @@ echo -e "${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}"
 echo -e "${green}------------------------------${nc}"
 echo ""
 
-# Rename fastq files to remove "_001" Illumina pattern. De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
-rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
+# Rename fastq files to remove "_001" Illumina pattern.
+## De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
+#rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
 rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove line-ID ID like {_L001_}
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
 
