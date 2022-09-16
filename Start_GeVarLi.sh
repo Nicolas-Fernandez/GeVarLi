@@ -19,7 +19,7 @@ echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
 echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
 echo -e "${blue}Date${nc} __________________ 2021.10.12"
 echo -e "${blue}Run${nc} ___________________ bash Start_GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.08.30"
+echo -e "${blue}Latest Modification${nc} ___ 2022.09.16"
 
 
 ###### Hardware ######
@@ -56,7 +56,7 @@ then
     physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
     logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
     mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
-    ram_size=$(expr ${mem_size} \/ $((1024**3)) )    # / 1024**3 = Gb
+    ram_gb=$(expr ${mem_size} \/ $((1024**3)) )      # mem_size / 1024**3 = Gb
 elif [[ ${os} == "Linux" ]]
 then
     model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -r "s/Model name: +//")                           # Get chip model name
@@ -64,17 +64,17 @@ then
     threads_cpu=$(lscpu | grep -o -E "^Thread\(s\) per core: +[0-9]+" | sed -r "s/Thread\(s\) per core: +//") # Get thread(s) per core
     logical_cpu=$(expr ${physical_cpu} \* ${threads_cpu})                                                     # Calcul logical cpu
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -r "s/MemTotal: +//")                       # Get memory size (Kb)
-    ram_size=$(expr ${mem_size} \/ $((1024**2)) )                                                             # / 1024**2 = Gb
+    ram_gb=$(expr ${mem_size} \/ $((1024**2)) )                                                               # mem_size / 1024**2 = Gb
 else
     "Please, use 'OSX' or 'Linux' operating system"
     exit 1
 fi
 
-echo -e "                        ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}" # Print header chip model name
-echo -e "${blue}Chip Model Name${nc} _______ ${model_name}"                     # Print chip model name
-echo -e "${blue}Physical CPUs${nc} _________  ${red}${physical_cpu}${nc} cores" # Print physical cpu
-echo -e "${blue}Logical CPUs${nc} __________ ${red}${logical_cpu}${nc} threads" # Print logical cpu
-echo -e "${blue}System Memory${nc} _________ ${red}${ram_size}${nc} Gb of RAM"  # Print RAM size
+echo -e "                         ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}" # Print header chip model name
+echo -e "${blue}Chip Model Name${nc} ________ ${model_name}"                     # Print chip model name
+echo -e "${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc} cores"  # Print physical cpu
+echo -e "${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads" # Print logical cpu
+echo -e "${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM"    # Print RAM size in Gb
 
 ###### Settings ######
 echo ""
@@ -85,9 +85,10 @@ echo ""
 
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
-samples=$(expr ${fastq} \/ 2)                                                                   # / 2 = samples (paired-end)
+samples=$(expr ${fastq} \/ 2)                                                                   # fastq files / 2 = samples (paired-end)
 max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
-max_memory=$(grep -o -E "mem_gb: [0-9]+" ${workdir}/config/config.yaml | sed "s/mem_gb: //")    # Get user config for max memory
+max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")          # Get user config for max memory
+memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                          # Calcul maximum memory usage per job
 reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | sed "s/reference: //") # Get user config genome reference
 aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")  # Get user config aligner
 min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")       # Get user config minimum coverage
@@ -95,15 +96,35 @@ min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                      # Get analyzes starting time
 SECONDS=0                                                                                       # Initialize SECONDS counter
 
-echo -e "${blue}Working Directory${nc} _____ ${workdir}/"                                                     # Print working directory
-echo -e "${blue}Samples Processed${nc} _____ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)" # Print samples number 
-echo -e "${blue}Maximum Threads${nc} _______ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
-echo -e "${blue}Maximum Memory${nc} ________ ${red}${max_memory}${nc} of ${ylo}${ram_size}${nc} Gb available" # Print max memory
-echo -e "${blue}Genome Reference${nc} ______ ${red}${reference}${nc}"                                         # Print user config genome reference
-echo -e "${blue}Aligner${nc} _______________ ${ylo}${aligner}${nc}"                                           # Print user config aligner
-echo -e "${blue}Min. Coverage${nc} _________ ${red}${min_cov}${nc}x"                                          # Print user config minimum coverage
-echo -e "${blue}Min. Allele Frequency${nc} _ ${red}${min_af}${nc}"                                            # Print user config minimum Al.Freq.
-echo -e "${blue}Start Time${nc} ____________ ${time_stamp_start}"                                             # Print analyzes starting time
+if [[ ${reference}=="SARS-CoV-2_Wuhan-WIV04_2019" ]]
+then
+    nextclade="Yes"
+    pangolin="Yes"
+elif [[ ${reference}=="Monkeypox-virus_Zaire" ]]
+then
+    nextclade="Yes"
+    pangolin="No"
+else
+    nextclade="No"
+    pangolin="No"
+fi
+
+echo -e "${blue}Working Directory${nc} ______ ${workdir}/"                                                     # Print working directory
+echo -e "${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)" # Print samples number 
+echo ""                                                                                                        # 
+echo -e "${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
+echo -e "${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available"   # Print max memory
+echo -e "${blue}Memory per job${nc} _________ ${red}${memory_per_job}${nc} Gb per job"                         # Print max memory per job
+echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
+echo -e "${blue}Genome Reference${nc} _______ ${red}${reference}${nc}"                                         # Print user config genome reference
+echo -e "${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}"                                           # Print user config aligner
+echo -e "${blue}Min. Coverage${nc} __________ ${red}${min_cov}${nc}x"                                          # Print user config minimum coverage
+echo -e "${blue}Min. Allele Frequency${nc} __ ${red}${min_af}${nc}"                                            # Print user config minimum Al.Freq.
+echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
+echo -e "${blue}Nextclade run${nc} __________ ${nextclade}"                                                    # Print if nexclade will run
+echo -e "${blue}Pangolin run${nc} ___________ ${pangolin}"                                                     # Print if pangolin will run
+echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
+echo -e "${blue}Start Time${nc} _____________ ${time_stamp_start}"                                             # Print analyzes starting time
 
 
 ###### Installations ######
@@ -220,8 +241,9 @@ echo ""
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
-# If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
+## Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
@@ -229,8 +251,9 @@ snakemake \
     --config os=${os} \
     --rerun-incomplete \
     --use-conda \
-    --conda-create-envs-only \
-    --conda-frontend conda # Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib" 
+    --conda-frontend conda \
+    --conda-create-envs-only 
+
 
 echo ""
 echo -e "${blue}Dry run:${nc}"
@@ -241,6 +264,8 @@ echo ""
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
+## Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
@@ -251,6 +276,7 @@ snakemake \
     --config os=${os} \
     --rerun-incomplete \
     --use-conda \
+    --conda-frontend conda \
     --prioritize multiqc_reports_aggregation \
     --dry-run \
     --quiet
@@ -266,6 +292,8 @@ echo ""
 # Re-run all jobs the output of which is recognized as incomplete.
 # Go on with independent jobs if a job fails.
 # If defined in the rule, run job in a conda environment.
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
+## Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
 snakemake \
@@ -277,6 +305,7 @@ snakemake \
     --rerun-incomplete \
     --keep-going \
     --use-conda \
+    --conda-frontend conda \
     --prioritize multiqc_reports_aggregation \
     --printshellcmds
 
@@ -288,7 +317,7 @@ echo -e "${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc
 echo -e "${green}-------------------------------------${nc}"
 echo ""
 
-mkdir ${workdir}/results/10_Graphs/ 2> /dev/null
+mkdir ${workdir}/results/10_Reports/graphs/ 2> /dev/null
 
 graph_list="dag rulegraph filegraph"
 extention_list="pdf png"
@@ -300,32 +329,40 @@ for graph in ${graph_list} ; do
             --snakefile ${workdir}/workflow/rules/gevarli.smk \
             --${graph} | \
 	    dot -T${extention} > \
-		${workdir}/results/10_Graphs/${graph}.${extention} ;
+		${workdir}/results/10_Reports/graphs/${graph}.${extention} ;
     done ;
 done
 
 snakemake \
     --directory ${workdir} \
     --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --summary > ${workdir}/results/11_Reports/files_summary.txt
+    --summary > ${workdir}/results/10_Reports/files_summary.txt
 
-cp ${workdir}/config/config.yaml ${workdir}/results/11_Reports/config.yaml
+cp ${workdir}/config/config.yaml ${workdir}/results/10_Reports/config.yaml
 
-echo "                        Brand(R) | Type(R) | Model | @ Speed GHz" >> ${workdir}/results/11_Reports/settings.log # Log header chip model name
-echo "Chip Model Name _______ ${model_name}" >> ${workdir}/results/11_Reports/settings.log                            # Log chip model name
-echo "Physical CPUs _________  ${physical_cpu} cores" >> ${workdir}/results/11_Reports/settings.log                   # Log physical cpu
-echo "Logical CPUs __________ ${logical_cpu} threads" >> ${workdir}/results/11_Reports/settings.log                   # Log logical cpu
-echo "System Memory _________ ${ram_size} Gb of RAM" >> ${workdir}/results/11_Reports/settings.log                    # Log RAM size
+settings_log="${workdir}/results/10_Reports/settings.txt"
 
-echo "Working Directory _____ ${workdir}/" >> ${workdir}/results/11_Reports/settings.log                               # Log working directory
-echo "Samples Processed _____ ${samples} samples (${fastq} fastq files)" >> ${workdir}/results/11_Reports/settings.log # Log samples number 
-echo "Maximum Threads _______ ${max_threads} of ${logical_cpu} threads available" >> ${workdir}/results/11_Reports/settings.log # Log max threads
-echo "Maximum Memory ________ ${max_memory} of ${ram_size} Gb available" >> ${workdir}/results/11_Reports/settings.log # Log max memory
-echo "Genome Reference ______ ${reference}" >> ${workdir}/results/11_Reports/settings.log                       # Log user config genome reference
-echo "Aligner _______________ ${aligner}" >> ${workdir}/results/11_Reports/settings.log                         # Log user config aligner
-echo "Min. Coverage _________ ${min_cov}" >> ${workdir}/results/11_Reports/settings.log                         # Log user config minimum coverage
-echo "Min. Allele Frequency _ ${min_af}" >> ${workdir}/results/11_Reports/settings.log                          # Log user config snvs cov min
-echo "Start Time ____________ ${time_stamp_start}" >> ${workdir}/results/11_Reports/settings.log                # Log analyzes starting time
+echo ""                                                                            >> ${settings_log} #  
+echo "Operating system _______ ${os}"                                              >> ${settings_log} # Log operating system
+echo ""                                                                            >> ${settings_log} #
+echo "                        Brand(R) | Type(R) | Model | @ Speed GHz"            >> ${settings_log} # Log header chip model name
+echo "Chip Model Name ________ ${model_name}"                                      >> ${settings_log} # Log chip model name
+echo "Physical CPUs __________ ${physical_cpu} cores"                              >> ${settings_log} # Log physical cpu
+echo "Logical CPUs ___________ ${logical_cpu} threads"                             >> ${settings_log} # Log logical cpu
+echo "System Memory __________ ${ram_size} Gb of RAM"                              >> ${settings_log} # Log RAM size
+echo ""                                                                            >> ${settings_log} #
+echo "Working Directory ______ ${workdir}/"                                        >> ${settings_log} # Log working directory
+echo "Samples Processed ______ ${samples} samples (${fastq} fastq files)"          >> ${settings_log} # Log samples number 
+echo "Maximum Threads ________ ${max_threads} of ${logical_cpu} threads available" >> ${settings_log} # Log max threads
+echo "Maximum Memory _________ ${max_memory} of ${ram_size} Gb available"          >> ${settings_log} # Log max memor
+echo "Memory per job _________ ${memory_per_job} Gb per job"                       >> ${settings_log} # Log max memory per job
+echo "Genome Reference _______ ${reference}"                                       >> ${settings_log} # Log user config genome reference
+echo "Aligner ________________ ${aligner}"                                         >> ${settings_log} # Log user config aligner
+echo "Min. Coverage __________ ${min_cov}"                                         >> ${settings_log} # Log user config minimum coverage
+echo "Min. Allele Frequency __ ${min_af}"                                          >> ${settings_log} # Log user config snvs cov min
+echo ""                                                                            >> ${settings_log} #
+echo "Nextclade run __________ ${nextclade}"                                       >> ${settings_log} # Log if nexclade will run
+echo "Pangolin run ___________ ${pangolin}"                                        >> ${settings_log} # Log if pangolin will run
 
 
 ###### Concatenate all consensus fasta ######
@@ -399,8 +436,14 @@ elapsed_time=${SECONDS}                  # Get SECONDS counter
 minutes=$((${elapsed_time}/60))          # / 60 = minutes
 seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
-echo -e "${blue}End Time${nc} ______________ ${time_stamp_end}"                                                       # Print analyzes ending time
-echo -e "${blue}Processing Time${nc} _______ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
+echo -e "${blue}End Time${nc} _______________ ${time_stamp_end}"                                                       # Print analyzes ending time
+echo -e "${blue}Processing Time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
+
+echo ""
+echo "Start Time _____________ ${time_stamp_start}"                               >> ${settings_log} # Log analyzes starting time
+echo "End Time _______________ ${time_stamp_end}"                                 >> ${settings_log} # Log analyzes ending time
+echo "Processing Time ________ ${minutes} minutes and ${seconds} seconds elapsed" >> ${settings_log} # Log analyzes total time
+
 
 echo ""
 echo -e "${green}------------------------------------------------------------------------${nc}"

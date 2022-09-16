@@ -5,8 +5,8 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.08.31
-# Done: Add Nextclade classification for Monkeypox
+# Latest modification: 2022.09.16
+# Done: Change 'MEM_GB' for 'RAM' and Nextclade dataset now auto-selected
 
 ###############################################################################
 # PUBLICATIONS #
@@ -17,19 +17,32 @@ configfile: "config/config.yaml"
 
 ###############################################################################
 # FUNCTIONS #
-def get_pangolin(wildcards):
+def get_pangolin_input(wildcards):
     pangolin_list = []
     if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
         pangolin_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_pangolin-report.csv",
                                sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return pangolin_list
 
-def get_nextclade(wildcards):
+def get_nextclade_input(wildcards):
     nextclade_list = []
     if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019" or REFERENCE == "Monkeypox-virus_Zaire":
         nextclade_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
                                 sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return nextclade_list
+
+def get_nextclade_dataset(wildcards):
+    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
+        nextclade_dataset = "sars-cov-2"
+    elif REFERENCE == "Monkeypox-virus_Zaire":
+        nextclade_dataset = "MPXV"
+    else:
+        nextclade_dataset = "none"
+    return nextclade_dataset
+
+def get_memory_per_thread(wildcards):
+    memory_per_thread = RAM // CPUS
+    return memory_per_thread
 
 ###############################################################################
 # WILDCARDS #
@@ -38,8 +51,9 @@ SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 ###############################################################################
 # RESOURCES #
 OS = config["os"]                      # Operating system
-CPUS = config["resources"]["cpus"]     # Threads
-MEM_GB = config["resources"]["mem_gb"] # Memory (RAM) in Gb
+CPUS = config["resources"]["cpus"]     # Threads (maximum)
+RAM = config["resources"]["ram"]       # Memory (RAM) in Gb (maximum)
+MEM_GB = get_memory_per_thread         # Memory per thread in GB (maximum)
 TMPDIR = config["resources"]["tmpdir"] # Temporary directory
 
 ###############################################################################
@@ -66,29 +80,29 @@ TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina Tr
 NEXTERA = config["cutadapt"]["kits"]["nextera"] # Cutadapt --adapter Illumina Nextera
 SMALL = config["cutadapt"]["kits"]["small"]     # Cutadapt --adapter Illumina Small
 
-COMMAND = config["sickle-trim"]["command"]   # Sickle-trim command
-ENCODING = config["sickle-trim"]["encoding"] # Sickle-trim --qual-type 
-QUALITY = config["sickle-trim"]["quality"]   # Sickle-trim --qual-threshold
-LENGTH = config["sickle-trim"]["length"]     # Sickle-trim --length-treshold
+COMMAND = config["sickle-trim"]["command"]      # Sickle-trim command
+ENCODING = config["sickle-trim"]["encoding"]    # Sickle-trim --qual-type 
+QUALITY = config["sickle-trim"]["quality"]      # Sickle-trim --qual-threshold
+LENGTH = config["sickle-trim"]["length"]        # Sickle-trim --length-treshold
 
-CONFIG = config["fastq-screen"]["config"]  # Fastq-screen --conf
-MAPPER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
-SUBSET = config["fastq-screen"]["subset"]  # Fastq-screen --subset
+CONFIG = config["fastq-screen"]["config"]       # Fastq-screen --conf
+MAPPER = config["fastq-screen"]["aligner"]      # Fastq-screen --aligner
+SUBSET = config["fastq-screen"]["subset"]       # Fastq-screen --subset
 
-ALIGNER = config["aligner"] # Aligners ('bwa' or 'bowtie2')
+ALIGNER = config["aligner"]                     # Aligners ('bwa' or 'bowtie2')
 
-BWAPATH = config["bwa"]["path"]                # BWA path to indexes
-BT2PATH = config["bowtie2"]["path"]            # Bowtie2 path to indexes
-SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
+BWAPATH = config["bwa"]["path"]                 # BWA path to indexes
+BT2PATH = config["bowtie2"]["path"]             # Bowtie2 path to indexes
+SENSITIVITY = config["bowtie2"]["sensitivity"]  # Bowtie2 sensitivity preset
 
-REFPATH = config["consensus"]["path"]        # Path to genomes references
-REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
-MINCOV = config["consensus"]["mincov"]       # Minimum coverage, mask lower regions with 'N' 
-MINAF = config["consensus"]["minaf"]         # Minimum allele frequency allowed
-IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
+REFPATH = config["consensus"]["path"]           # Path to genomes references
+REFERENCE = config["consensus"]["reference"]    # Genome reference sequence, in fasta format
+MINCOV = config["consensus"]["mincov"]          # Minimum coverage, mask lower regions with 'N' 
+MINAF = config["consensus"]["minaf"]            # Minimum allele frequency allowed
+IUPAC = config["consensus"]["iupac"]            # Output variants in the form of IUPAC ambiguity codes
 
-NEXTPATH = config["nextclade"]["path"]   # Path to nextclade dataset
-DATASET = config["nextclade"]["dataset"] # Nextclade dataset
+NEXTPATH = config["nextclade"]["path"]          # Path to nextclade dataset
+NEXTDATASET = get_nextclade_dataset             # Nextclade dataset
 
 ###############################################################################
 rule all:
@@ -98,8 +112,9 @@ rule all:
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         consensus = expand("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta",
                            sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
-        pangolin = get_pangolin,
-        nextclade = get_nextclade
+        pangolin = get_pangolin_input,
+        nextclade = get_nextclade_input
+        #gisaid = get_gisaid_input # soon
 
 ###############################################################################
 rule nextclade_lineage:
@@ -113,14 +128,14 @@ rule nextclade_lineage:
         cpus = CPUS
     params:
         path = NEXTPATH,
-        dataset = DATASET
+        dataset = NEXTDATASET
     input:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta"
     output:
         lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
         alignment = directory("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-all/")
     log:
-        "results/11_Reports/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
+        "results/10_Reports/tools-log/nextclade/{sample}_{aligner}_{mincov}X_lineage.log"
     shell:
         "nextclade "                                    # Nextclade, assign queries sequences to clades and reports potential quality issues
         "run "                                           # Run analyzis
@@ -148,7 +163,7 @@ rule pangolin_lineage:
     output:
         lineage = "results/06_Lineages/{sample}_{aligner}_{mincov}X_pangolin-report.csv"
     log:
-        "results/11_Reports/pangolin/{sample}_{aligner}_{mincov}X_lineage.log"
+        "results/10_Reports/tools-log/pangolin/{sample}_{aligner}_{mincov}X_lineage.log"
     shell:
         "pangolin "                  # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "          # Query fasta file of sequences to analyse
@@ -168,7 +183,7 @@ rule sed_rename_headers:
     output:
         consensus = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta"
     log:
-        "results/11_Reports/sed/{sample}_{aligner}_{mincov}X_fasta-header.log"
+        "results/10_Reports/tools-log/sed/{sample}_{aligner}_{mincov}X_fasta-header.log"
     shell:
         "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
         "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.mincov}/' "
@@ -193,7 +208,7 @@ rule bcftools_consensus:
     output:
         constmp = temp("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta.tmp")
     log:
-        "results/11_Reports/bcftools/{sample}_{aligner}_{mincov}X_consensus.log"
+        "results/10_Reports/tools-log/bcftools/{sample}_{aligner}_{mincov}X_consensus.log"
     shell:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
@@ -216,7 +231,7 @@ rule tabix_tabarch_indexing:
     output:
         index = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.bgz.tbi")
     log:
-        "results/11_Reports/tabix/{sample}_{aligner}_{mincov}X_variant-archive-index.log"
+        "results/10_Reports/tools-log/tabix/{sample}_{aligner}_{mincov}X_variant-archive-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.archive} "   # The input data file must be position sorted and compressed by bgzip
@@ -238,7 +253,7 @@ rule bgzip_variant_archive:
     output:
         archive = temp("results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf.bgz")
     log:
-        "results/11_Reports/bgzip/{sample}_{aligner}_{mincov}X_variant-archive.log"
+        "results/10_Reports/tools-log/bgzip/{sample}_{aligner}_{mincov}X_variant-archive.log"
     shell:
         "bgzip "                     # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
@@ -264,7 +279,7 @@ rule lofreq_variant_filtering:
     output:
         variantfilt = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-filt.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variant-filt.log"
+        "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{mincov}X_variant-filt.log"
     shell:
         "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                     # Filter SNVs and Indels parsed from vcf file
@@ -291,7 +306,7 @@ rule lofreq_variant_calling:
     output:
         variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-call.vcf"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_variant-call.log"
+        "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{mincov}X_variant-call.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         "call-parallel "                 # Call variants from BAM file
@@ -317,7 +332,7 @@ rule samtools_indel_indexing:
     output:
         index = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bai"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_{mincov}X_indel-qual-index.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_{mincov}X_indel-qual-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # Number of additional threads to use (default: 0)
@@ -341,7 +356,7 @@ rule lofreq_indel_qualities:
     output:
         indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bam"
     log:
-        "results/11_Reports/lofreq/{sample}_{aligner}_{mincov}X_indel-qual.log"
+        "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{mincov}X_indel-qual.log"
     shell:
         "lofreq "                  # LoFreq, fast and sensitive inference of SNVs and Indels 
         "indelqual "                # Insert indel qualities into BAM file (required for indel predictions)
@@ -367,7 +382,7 @@ rule bedtools_masking:
     output:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta"
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}X_masking.log"
+        "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_{mincov}X_masking.log"
     shell:
         "bedtools maskfasta "                       # Bedtools maskfasta, mask a fasta file based on feature coordinates
         "-fi {params.path}{params.reference}.fasta " # Input FASTA file 
@@ -388,7 +403,7 @@ rule bedtools_merged_mask:
     output:
         lowcovmask = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_low-cov-mask.bed")
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_{mincov}X_merging.log"
+        "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_{mincov}X_merging.log"
     shell:
         "bedtools merge "        # Bedtools merge, merges overlapping BED/GFF/VCF entries into a single interval
         "-i {input.mincovfilt} "  # -i: BED/GFF/VCF input to merge 
@@ -410,7 +425,7 @@ rule awk_mincovfilt:
     output:
         mincovfilt = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_min-cov-filt.bed")
     log:
-        "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_min-cov-filt.log"
+        "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_min-cov-filt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
         "'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence
@@ -433,7 +448,7 @@ rule awk_coverage_statistics:
     output:
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
-        "results/11_Reports/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
+        "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
         "awk ' "                                  # Awk, a program that you can use to select particular records in a file and perform operations upon them
         "$4 >= {params.mincov} "                   # Minimum coverage
@@ -471,7 +486,7 @@ rule bedtools_genome_coverage:
     output:
         genomecov = temp("results/03_Coverage/{sample}_{aligner}_genome-cov.bed")
     log:
-        "results/11_Reports/bedtools/{sample}_{aligner}_genome-cov.log"
+        "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_genome-cov.log"
     shell:
         "bedtools genomecov "    # Bedtools genomecov, compute the coverage of a feature file among a genome
         "-bga "                   # Report depth in BedGraph format, regions with zero coverage are also reported
@@ -494,7 +509,7 @@ rule samtools_index_markdup:
     output:
         index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bai"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_mark-dup-index.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)
@@ -518,7 +533,7 @@ rule samtools_markdup:
     output:
         markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_mark-dup.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup.log"
     shell:
         "samtools markdup "          # Samtools markdup, tools for alignments in the SAM format with command mark duplicates
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -547,7 +562,7 @@ rule samtools_sorting:
     output:
         sorted = temp("results/02_Mapping/{sample}_{aligner}_sorted.bam")
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_sorted.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_sorted.log"
     shell:
         "samtools sort "              # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} "  # -@: Number of additional threads to use (default: 1)
@@ -573,7 +588,7 @@ rule samtools_fixmate:
     output:
         fixmate = temp("results/02_Mapping/{sample}_{aligner}_fix-mate.bam")
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_fixmate.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_fixmate.log"
     shell:
         "samtools fixmate "           # Samtools fixmate, tools for alignments in the SAM format with command to fix mate information
         "--threads {resources.cpus} "  # -@: Number of additional threads to use (default: 1)
@@ -599,7 +614,7 @@ rule samtools_sortbynames:
     output:
         sortbynames = temp("results/02_Mapping/{sample}_{aligner}_sort-by-names.bam")
     log:
-        "results/11_Reports/samtools/{sample}_{aligner}_sort-by-names.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_sort-by-names.log"
     shell:
         "samtools sort "              # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} "  # -@: Number of additional threads to use (default: 1)
@@ -629,7 +644,7 @@ rule bwa_mapping:
     output:
         mapped = temp("results/02_Mapping/{sample}_bwa-mapped.sam")
     log:
-        "results/11_Reports/bwa/{sample}.log"
+        "results/10_Reports/tools-log/bwa/{sample}.log"
     shell:
         "bwa mem "                           # BWA-MEM algorithm, performs local alignment.
         "-t {resources.cpus} "                # -t: Number of threads (default: 12)
@@ -660,7 +675,7 @@ rule bowtie2_mapping:
     output:
         mapped = temp("results/02_Mapping/{sample}_bowtie2-mapped.sam")
     log:
-        "results/11_Reports/bowtie2/{sample}.log"
+        "results/10_Reports/tools-log/bowtie2/{sample}.log"
     shell:
         "bowtie2 "                    # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.
         "--threads {resources.cpus} "  # -p: Number of alignment threads to launch (default: 1)
@@ -690,11 +705,11 @@ rule sickle_trim_quality:
         fwdreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
         revreads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
     output:
-        fwdreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
-        revreads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz",
+        fwdreads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz"),
+        revreads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"),
         single = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz")
     log:
-        "results/11_Reports/sickle-trim/{sample}.log"
+        "results/10_Reports/tools-log/sickle-trim/{sample}.log"
     shell:
        "sickle "                # Sickle, a windowed adaptive trimming tool for FASTQ files using quality
         "{params.command} "      # Paired-end or single-end sequence trimming
@@ -732,7 +747,7 @@ rule cutadapt_adapters_removing:
         fwdreads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz"),
         revreads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz")
     log:
-        "results/11_Reports/cutadapt/{sample}.log"
+        "results/10_Reports/tools-log/cutadapt/{sample}.log"
     shell:
        "cutadapt "                          # Cutadapt, finds and removes unwanted sequence from your HT-seq reads
         "--cores {resources.cpus} "          # -j: Number of CPU cores to use. Use 0 to auto-detect (default: 1)
@@ -765,7 +780,7 @@ rule multiqc_reports_aggregation:
     output:
         multiqc = directory("results/00_Quality_Control/multiqc/")
     log:
-        "results/11_Reports/quality/multiqc.log"
+        "results/10_Reports/tools-log/multiqc.log"
     shell:
         "multiqc "                  # Multiqc, searches in given directories for analysis & compiles a HTML report
         "--quiet "                   # -q: Only show log warning
@@ -794,7 +809,7 @@ rule fastqscreen_contamination_checking:
     output:
         fastqscreen = directory("results/00_Quality_Control/fastq-screen/")
     log:
-        "results/11_Reports/quality/fastq-screen.log"
+        "results/10_Reports/tools-log/fastq-screen.log"
     shell:
         "fastq_screen "                 # FastqScreen, what did you expect ?
         "-q "                            # --quiet: Only show log warning
@@ -821,7 +836,7 @@ rule fastqc_quality_control:
     output:
         fastqc = directory("results/00_Quality_Control/fastqc/")
     log:
-        "results/11_Reports/quality/fastqc.log"
+        "results/10_Reports/tools-log/fastqc.log"
     shell:
         "mkdir -p {output.fastqc} " # (*) this directory must exist as the program will not create it
         "2> /dev/null && "          # in silence and then... 
