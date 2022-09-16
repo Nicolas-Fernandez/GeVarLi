@@ -242,7 +242,7 @@ echo ""
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
-## Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 snakemake \
     --directory ${workdir}/ \
@@ -265,7 +265,7 @@ echo ""
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
-## Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
@@ -293,7 +293,7 @@ echo ""
 # Go on with independent jobs if a job fails.
 # If defined in the rule, run job in a conda environment.
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
-## Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
 snakemake \
@@ -355,7 +355,7 @@ echo "Working Directory ______ ${workdir}/"                                     
 echo "Samples Processed ______ ${samples} samples (${fastq} fastq files)"          >> ${settings_log} # Log samples number 
 echo "Maximum Threads ________ ${max_threads} of ${logical_cpu} threads available" >> ${settings_log} # Log max threads
 echo "Maximum Memory _________ ${max_memory} of ${ram_size} Gb available"          >> ${settings_log} # Log max memor
-echo "Memory per job _________ ${memory_per_job} Gb per job"                       >> ${settings_log} # Log max memory per job
+echo "Memory per job _________ ${memory_per_job} Gb per job maximum"               >> ${settings_log} # Log max memory per job
 echo "Genome Reference _______ ${reference}"                                       >> ${settings_log} # Log user config genome reference
 echo "Aligner ________________ ${aligner}"                                         >> ${settings_log} # Log user config aligner
 echo "Min. Coverage __________ ${min_cov}"                                         >> ${settings_log} # Log user config minimum coverage
