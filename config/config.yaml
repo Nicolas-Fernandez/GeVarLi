@@ -5,14 +5,15 @@
 # Aim: Configuration file for gevarli.smk snakefile
 # Date: 2021.10.12
 # Use: Edit or de/comment (#) settings
-# Latest modification: 2022.09.01
-# Done: Update Nextclade to 2.5.0 (from 2.3.0)
+# Latest modification: 2022.09.16
+# Done: Change 'mem_gb' for 'ram' and Nextclade dataset now auto-selected
+
 ###############################################################################
 
 ### RESOURCES ----------------------------------------------------------------------------------------
 resources:
   cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
-  mem_gb: 4         # Set maximum memory unsage (in Gb, default: 4) [INT]
+  ram: 16           # Set maximum memory usage (in Gb, default: 16) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)
@@ -77,6 +78,7 @@ consensus:
 
 ### GISAID (soon) ------------------------------------------------------------------------------------
 gisaid:
+  username: 'username'
   threshold: '30'
   name: 'hCoV-19'
   country: 'France'
@@ -99,13 +101,14 @@ bowtie2:
 
 ### NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
-  dataset: 'sars-cov-2' # Nextclade dataset (2.3.0)
+  path: 'resources/nextclade/' # Path to nextclade datasets
+  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated)
   ## Available options:
-    ## 'sars-cov-2' # SARS-CoV-2 (default)
-    ## 'MPXV'       # Monkeypox all clades
+    ## 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
+    ## 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
     ## 'hMPXV'      # human Monkeypox
     ## 'hMPXV_B1'   # human Monkeypox Lineage B1*
-  path: 'resources/nextclade/' # Path to nextclade datasets
+
 
 ### SICKLE-TRIM --------------------------------------------------------------------------------------
 sickle-trim:
@@ -133,14 +136,14 @@ fastq-screen:
   aligner: 'bwa'                     # Aligner for fastq-screen (default and should be 'bwa')
   ## Available options:
     ## 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see 'fastq-screen.conf')
-    ## 'bowtie'  # Bowtie (indexes not provided)
-    ## 'bowtie2' # Bowtie2 (indexes not provided)
+    ## 'bowtie'  # Bowtie (indexes not provided for fastq-screen)
+    ## 'bowtie2' # Bowtie2 (indexes not provided for fastq-screen)
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
 os: 'OSX' # Operating System (default: OSX)
 ## Available options:
-  ## 'Linux'   # GNU Linux - Free [UNIX]
-  ## 'BSD'     # Free BSD - Free (UNIX)
-  ## 'OSX'     # Mac OSX - Apple (R) [UNIX]
-  ## 'Solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX]
-  ## 'Windows' # Windows - Microsoft Corporation (R)
+  ## 'Linux'   # GNU Linux - Free [UNIX] (suported)
+  ## 'BSD'     # Free BSD - Free (UNIX) (not tested. Need specific conda env. ?)
+  ## 'OSX'     # Mac OSX - Apple (R) [UNIX] (suported)
+  ## 'Solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
+  ## 'Windows' # Windows - Microsoft Corporation (R) (not suported)
