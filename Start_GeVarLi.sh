@@ -93,20 +93,35 @@ reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | sed "s/
 aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")  # Get user config aligner
 min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")       # Get user config minimum coverage
 min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")   # Get user config minimum allele frequency
+clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | sed "s/clipping: //")    # Get user config bamclipper option
+primers=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | sed "s/primers: //")       # Get user config bamclipper primers
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                      # Get analyzes starting time
 SECONDS=0                                                                                       # Initialize SECONDS counter
 
-if [[ ${reference}=="SARS-CoV-2_Wuhan-WIV04_2019" ]]
+if [[ "${reference}" = "'SARS-CoV-2_Wuhan_MN908947-3'" ]]
 then
     nextclade="Yes"
     pangolin="Yes"
-elif [[ ${reference}=="Monkeypox-virus_Zaire" ]]
+elif [[ "${reference}" = "'Monkeypox-virus_Zaire_AF380138-1'" ]]
 then
     nextclade="Yes"
     pangolin="No"
 else
     nextclade="No"
     pangolin="No"
+fi
+
+if [[ "${clipping}" = "'yes'" ]]
+then
+    bamclipper="Yes"
+    amplicon_kit=${primers}
+elif [[ "${clipping}" = "'no'" ]]
+then
+    bamclipper="No"
+    amplicon_kit="'none'"
+else
+    bamclipper="error_config_file"
+    amplicon_kit="'error_config_file'"
 fi
 
 echo -e "${blue}Working Directory${nc} ______ ${workdir}/"                                                     # Print working directory
@@ -116,14 +131,16 @@ echo -e "${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo
 echo -e "${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available"   # Print max memory
 echo -e "${blue}Memory per job${nc} _________ ${red}${memory_per_job}${nc} Gb per job"                         # Print max memory per job
 echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
-echo -e "${blue}Genome Reference${nc} _______ ${red}${reference}${nc}"                                         # Print user config genome reference
+echo -e "${blue}Genome Reference${nc} _______ ${ylo}${reference}${nc}"                                         # Print user config genome reference
 echo -e "${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}"                                           # Print user config aligner
 echo -e "${blue}Min. Coverage${nc} __________ ${red}${min_cov}${nc}x"                                          # Print user config minimum coverage
 echo -e "${blue}Min. Allele Frequency${nc} __ ${red}${min_af}${nc}"                                            # Print user config minimum Al.Freq.
 echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
-echo -e "${blue}Nextclade run${nc} __________ ${nextclade}"                                                    # Print if nexclade will run
-echo -e "${blue}Pangolin run${nc} ___________ ${pangolin}"                                                     # Print if pangolin will run
-echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
+echo -e "${blue}Nextclade run${nc} __________ ${red}${nextclade}${nc}"                                         # Print if nexclade will run
+echo -e "${blue}Pangolin run${nc} ___________ ${red}${pangolin}${nc}"                                          # Print if pangolin will run
+echo -e "${blue}BamClipper run${nc} _________ ${red}${bamclipper}${nc}"                                        # Print if bamclipper will run
+echo -e "${blue}Primers Kit${nc} ____________ ${ylo}${amplicon_kit}${nc}"                                      # Print if amplicon kit used
+echo ""                                                                                                        #
 echo -e "${blue}Start Time${nc} _____________ ${time_stamp_start}"                                             # Print analyzes starting time
 
 
@@ -135,12 +152,12 @@ echo -e "${green}-------------------------${nc}"
 echo ""
 
 # Mamba
-#if ls ~/miniconda3/bin/mamba 2> /dev/null
-#then
-#    echo ""
-#else
-#    conda install -n base -c conda-forge mamba --yes
-#fi
+if ls ~/miniconda3/bin/mamba 2> /dev/null
+then
+    echo ""
+else
+    conda install -n base -c conda-forge mamba --yes
+fi
 
 # Snakemake
 #snake_ver="7.8.2"
@@ -172,7 +189,7 @@ echo ""
 
 # Rename fastq files to remove "_001" Illumina pattern.
 ## De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
-#rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
+rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
 rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove line-ID ID like {_L001_}
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
 
@@ -184,6 +201,8 @@ echo -e "${green}#####${nc} ${red}SNAKEMAKE PIPELINE${nc} ${green}#####${nc}"
 echo -e "${green}------------------------------${nc}"
 echo ""
 
+snakefile_list="indexing_genomes quality_control gevarli"
+
 echo -e "${blue}Unlocking working directory:${nc}"
 echo ""
 # Specify working directory (relative paths in the snakefile will use this as their origin).
@@ -191,12 +210,17 @@ echo ""
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # Remove a lock on the working directory.
-snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --config os=${os} \
-    --rerun-incomplete \
-    --unlock
+
+for snakefile in ${snakefile_list} ; do
+    echo -e "${blue}For ${snakefile}:${nc}"
+    snakemake \
+	--directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --config os=${os} \
+        --rerun-incomplete \
+        --unlock
+    echo ""
+done
 
 echo ""
 echo -e "${blue}Conda environments list:${nc}"
@@ -207,13 +231,17 @@ echo ""
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # List all conda environments and their location on disk.
-snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores ${max_threads} \
-    --config os=${os} \
-    --rerun-incomplete \
-    --list-conda-envs
+
+for snakefile in ${snakefile_list} ; do
+    echo -e "${blue}For ${snakefile}:${nc}"
+    snakemake \
+        --directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --cores ${max_threads} \
+        --config os=${os} \
+        --rerun-incomplete \
+        --list-conda-envs
+done
 
 echo ""
 echo -e "${blue}Conda environments update:${nc}"
@@ -224,13 +252,17 @@ echo ""
 # Re-run all jobs the output of which is recognized as incomplete.
 # Set or overwrite values in the workflow config object.
 # Cleanup unused conda environments.
-snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores ${max_threads} \
-    --config os=${os} \
-    --rerun-incomplete \
-    --conda-cleanup-envs
+
+for snakefile in ${snakefile_list} ; do
+    echo -e "${blue}For ${snakefile}:${nc}"
+    snakemake \
+        --directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --cores ${max_threads} \
+        --config os=${os} \
+        --rerun-incomplete \
+        --conda-cleanup-envs
+done
 
 echo ""
 echo -e "${blue}Conda environments setup:${nc}"
@@ -244,16 +276,19 @@ echo ""
 # If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
 # Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
-snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores ${max_threads} \
-    --config os=${os} \
-    --rerun-incomplete \
-    --use-conda \
-    --conda-frontend conda \
-    --conda-create-envs-only 
 
+for snakefile in ${snakefile_list} ; do
+    echo -e "${blue}For ${snakefile}:${nc}"
+    snakemake \
+        --directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --cores ${max_threads} \
+        --config os=${os} \
+        --rerun-incomplete \
+        --use-conda \
+        --conda-frontend conda \
+        --conda-create-envs-only 
+done
 
 echo ""
 echo -e "${blue}Dry run:${nc}"
@@ -269,17 +304,20 @@ echo ""
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
-snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores ${max_threads}\
-    --config os=${os} \
-    --rerun-incomplete \
-    --use-conda \
-    --conda-frontend conda \
-    --prioritize multiqc_reports_aggregation \
-    --dry-run \
-    --quiet
+
+for snakefile in ${snakefile_list} ; do
+    echo -e "${blue}For ${snakefile}:${nc}"
+    snakemake \
+        --directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --cores ${max_threads}\
+        --config os=${os} \
+        --rerun-incomplete \
+        --use-conda \
+        --conda-frontend conda \
+        --dry-run \
+        --quiet
+done
 
 echo ""
 echo -e "${blue}Let's run!${nc}"
@@ -296,19 +334,21 @@ echo ""
 # Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
-snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --cores ${max_threads} \
-    --max-threads ${max_threads} \
-    --config os=${os} \
-    --rerun-incomplete \
-    --keep-going \
-    --use-conda \
-    --conda-frontend conda \
-    --prioritize multiqc_reports_aggregation \
-    --printshellcmds
 
+for snakefile in ${snakefile_list} ; do
+    echo -e "${blue}For ${snakefile}:${nc}"
+    snakemake \
+        --directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --cores ${max_threads} \
+        --max-threads ${max_threads} \
+        --config os=${os} \
+        --rerun-incomplete \
+        --keep-going \
+        --use-conda \
+        --conda-frontend conda \
+        --printshellcmds
+done
 
 ###### Create usefull graphs, summary and logs ######
 echo ""
@@ -322,26 +362,30 @@ mkdir ${workdir}/results/10_Reports/graphs/ 2> /dev/null
 graph_list="dag rulegraph filegraph"
 extention_list="pdf png"
 
-for graph in ${graph_list} ; do
-    for extention in ${extention_list} ; do
-	snakemake \
-	    --directory ${workdir}/ \
-            --snakefile ${workdir}/workflow/rules/gevarli.smk \
-            --${graph} | \
-	    dot -T${extention} > \
-		${workdir}/results/10_Reports/graphs/${graph}.${extention} ;
+for snakefile in ${snakefile_list} ; do
+    for graph in ${graph_list} ; do
+	for extention in ${extention_list} ; do
+	    snakemake \
+		--directory ${workdir}/ \
+                --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+                --${graph} | \
+	        dot -T${extention} > \
+		${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} ;
+	done ;
     done ;
 done
 
-snakemake \
-    --directory ${workdir} \
-    --snakefile ${workdir}/workflow/rules/gevarli.smk \
-    --summary > ${workdir}/results/10_Reports/files_summary.txt
+for snakefile in ${snakefile_list} ; do
+    snakemake \
+        --directory ${workdir} \
+        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --summary > ${workdir}/results/10_Reports/${snakefile}_files_summary.txt ;
+done
 
 cp ${workdir}/config/config.yaml ${workdir}/results/10_Reports/config.yaml
 
-settings_log="${workdir}/results/10_Reports/settings.txt"
 
+settings_log="${workdir}/results/10_Reports/settings.txt"
 echo ""                                                                            >> ${settings_log} #  
 echo "Operating system _______ ${os}"                                              >> ${settings_log} # Log operating system
 echo ""                                                                            >> ${settings_log} #
@@ -363,6 +407,8 @@ echo "Min. Allele Frequency __ ${min_af}"                                       
 echo ""                                                                            >> ${settings_log} #
 echo "Nextclade run __________ ${nextclade}"                                       >> ${settings_log} # Log if nexclade will run
 echo "Pangolin run ___________ ${pangolin}"                                        >> ${settings_log} # Log if pangolin will run
+echo "BamClipper run _________ ${bamclipper}"                                      >> ${settings_log} # Log if bamclipper will run
+echo "Primers Kit ____________ ${amplicon_kit}"                                    >> ${settings_log} # Log if amplicon kit used
 
 
 ###### Concatenate all consensus fasta ######
@@ -429,7 +475,7 @@ echo -e "${green}----------------------${nc}"
 echo ""
 
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
-find ${workdir}/results/ -type d -empty -delete # Remove empty directory
+#find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
 elapsed_time=${SECONDS}                  # Get SECONDS counter 
