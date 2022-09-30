@@ -24,6 +24,7 @@ resources:
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:
   OSX:                                                   # Conda OSX environement yaml files:
+    bamclipper:   '../envs/osx/bamclipper-1.0.yaml'        # BAMClipper   ver. 1.0
     bcftools:     '../envs/osx/bcftools-1.15.1.yaml'       # Bcftools     ver. 1.15.1
     bedtools:     '../envs/osx/bedtools-2.30.0.yaml'       # Bedtools     ver. 2.30.0
     bowtie2:      '../envs/osx/bowtie2-2.4.5.yaml'         # Bowtie2      ver. 2.4.5
@@ -35,10 +36,11 @@ conda:
     lofreq:       '../envs/osx/lofreq-2.1.5.yaml'          # Lofreq       ver. 2.1.5
     multiqc:      '../envs/osx/multiqc-1.12.yaml'          # MultiQC      ver. 1.12
     nextclade:    '../envs/osx/nextclade-2.5.0.yaml'       # Nextclade    ver. 2.5.0
-    pangolin:     '../envs/osx/pangolin-4.0.6.yaml'        # Pangolon     ver. 4.0.6
+    pangolin:     '../envs/osx/pangolin-4.0.6.yaml'        # Pangolin     ver. 4.0.6
     samtools:     '../envs/osx/samtools-1.15.1.yaml'       # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/osx/sickle-trim-1.33.yaml'      # Sickle-trim  ver. 1.33
   Linux:                                                 # Conda Linux environement yaml files:
+    bamclipper:   '../envs/linux/bamclipper-1.0.yaml'      # BAMClipper   ver. 1.0
     bcftools:     '../envs/linux/bcftools-1.15.1.yaml'     # Bcftools     ver. 1.15.1
     bedtools:     '../envs/linux/bedtools-2.30.0.yaml'     # Bedtools     ver. 2.30.0
     bowtie2:      '../envs/linux/bowtie2-2.4.5.yaml'       # Bowtie2      ver. 2.4.5
@@ -50,31 +52,9 @@ conda:
     lofreq:       '../envs/linux/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
     multiqc:      '../envs/linux/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
     nextclade:    '../envs/linux/nextclade-2.5.0.yaml'     # Nextclade    ver. 2.5.0
-    pangolin:     '../envs/linux/pangolin-4.0.6.yaml'      # Pangolon     ver. 4.0.6
+    pangolin:     '../envs/linux/pangolin-4.0.6.yaml'      # Pangolin     ver. 4.0.6
     samtools:     '../envs/linux/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/linux/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
-
-### ALIGNER ------------------------------------------------------------------------------------------
-aligner: 'bwa' # Select your favorite aligner (default: 'bwa')
-## Available options:
-  ## 'bwa'     # Faster (default)
-  ## 'bowtie2' # Slower, 'sensitivity' requiried and should be set (see below "Bowtie2" options)
-
-### CONSENSUS ----------------------------------------------------------------------------------------
-consensus:
-  reference: 'SARS-CoV-2_Wuhan-WIV04_2019' # Your reference, in fasta format
-  ## Available options:
-    ## 'SARS-CoV-2_Wuhan-WIV04_2019' # SARS-CoV-2_Wuhan_ NC_045512.2 (default)
-    ## 'Monkeypox-virus_Zaire'       # Monkeypox_Zaire_NC_003310.1   (not working with Bowtie2, Nextclade and Pangolin)
-    ## 'Ebola-virus_Zaire'           # Ebola_Zaire_NC_002549.1       (not working with Bowtie2, Nextclade and Pangolin)
-    ## 'HIV-1_HXB2'                  # HIV-1_HXB2                    (not working with Bowtie2, Nextclade and Pangolin)
-  path: 'resources/genomes/' # Path to genomes references
-  mincov: 10 # Minimum coverage, mask lower regions with 'N' (default: '10') [INT]
-  minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
-  iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
-  ## Available options:
-    ## ''        # Deactivate
-    ## '--iupac' # Activate
 
 ### GISAID (soon) ------------------------------------------------------------------------------------
 gisaid:
@@ -85,39 +65,94 @@ gisaid:
   identifier: ''
   year: '2022'
 
+### NEXTCLADE ----------------------------------------------------------------------------------------
+nextclade:
+  path: 'resources/nextclade/' # Path to nextclade datasets
+  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated)
+  # Available options:
+    #- 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
+    #- 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
+    #- 'hMPXV'      # human Monkeypox
+    #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
+  
+### CONSENSUS ----------------------------------------------------------------------------------------
+consensus:
+  path: 'resources/genomes/' # Path to genomes references
+  reference: 'SARS-CoV-2_Wuhan_MN908947-3' # Your reference, in fasta format
+  # Available options:
+    #- 'SARS-CoV-2_Wuhan_MN908947-3'      # SARS-CoV-2 (default)
+    #- 'Monkeypox-virus_Zaire_AF380138-1' # Monkeypox  (without BamClipper and Pangolin)
+    #- 'Ebola-virus_Zaire_AF272001-1'     # Ebola      (without Nextclade and Pangolin)
+    #- 'Nipah-virus_Malaysia_AJ564622-1'  # Nipah      (without Nextclade and Pangolin)
+    #- 'HIV-1_HXB2_K03455-1'              # HIV-1      (without BamClipper, Nextclade and Pangolin)
+    #- 'Add_your_favorite_genome_ref'     # Custom     (without BamClipper, Nextclade and Pangolin)
+  mincov: 30 # Minimum coverage, mask lower regions with 'N' (default: '30') [INT]
+  minaf: 0.2 # Minimum allele frequency allowed (default: '0.2') [FLOAT]
+  iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
+  # Available options:
+    #- ''        # Deactivate (default)
+    #- '--iupac' # Activate
+
+### BAMCLIPPER ---------------------------------------------------------------------------------------
+bamclipper:
+  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers bedpe file (or bed)
+  # Available options:
+    #- 'no'  # Deactivate (default)
+    #- 'yes' # Activate
+  path: 'resources/primers/bedpe/' # Path to primers bedpe files
+  primers: 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3'
+  # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
+  # Available options:
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1'       # SARS-CoV-2 Artic V1
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2'       # SARS-CoV-2 Artic V2
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3'       # SARS-CoV-2 Artic V3
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4'       # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_arctiv-primers-V4-1'    # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+    #- 'Ebola-virus_Zaire_KR063671-1_artic-primers-V1'      # EBOV Artic V1
+    #- 'Ebola-virus_Zaire_AF272001-1_artic-primers-V2'      # EBOV Artic V2 (based on AF272001.1)
+    #- 'Ebola-virus_Zaire_KR063671-1_artic-primers-V3'      # EBOV Artic V3
+    #- 'Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1'   # NIV Artic V1
+    #- 'Add_your_favorite_amplicon_kit'                     # Custom
+  upstream: '1'   # (default: 1)
+  downstream: '5' # (default: 5)
+
+### ALIGNER ------------------------------------------------------------------------------------------
+aligner: 'bwa' # Select your favorite aligner
+# Available options:
+  #- 'bwa'     # Faster (default)
+  #- 'bowtie2' # Slower, 'sensitivity' requiried and should be set (see below "Bowtie2" options)
+
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
   path: 'resources/indexes/bwa/' # Path to BWA indexes
+  algorithm: '' # Algorithm for constructing BWA index (default: auto)
+  # Available options:
+    #- ''         # Auto-select (default)
+    #- '-a is'    # Moderately fast, but does not work with database larger than 2GB
+    #- '-a bwtsw' # This method works with the whole human genome
 
 ### BOWTIE2 ------------------------------------------------------------------------------------------
 bowtie2:
   path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes
   sensitivity: '--very-sensitive'    # Bowtie2 sensitivity preset (default: '--very-sensitive')
-  ## Available options:
-    ## '--very-fast'      # Same as options: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
-    ## '--fast'           # Same as options: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
-    ## '--sensitive'      # Same as options: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15
-    ## '--very-sensitive' # Same as options: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50 (default)
-
-### NEXTCLADE ----------------------------------------------------------------------------------------
-nextclade:
-  path: 'resources/nextclade/' # Path to nextclade datasets
-  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated)
-  ## Available options:
-    ## 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
-    ## 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
-    ## 'hMPXV'      # human Monkeypox
-    ## 'hMPXV_B1'   # human Monkeypox Lineage B1*
-
+  # Available options:
+    #- '--very-fast'      # Same as options: -D 5 -R 1 -N 0 -L 22 -i S,0,2.50
+    #- '--fast'           # Same as options: -D 10 -R 2 -N 0 -L 22 -i S,0,2.50
+    #- '--sensitive'      # Same as options: -D 15 -R 2 -N 0 -L 22 -i S,1,1.15
+    #- '--very-sensitive' # Same as options: -D 20 -R 3 -N 0 -L 20 -i S,1,0.50 (default)
+  algorithm: '' # Algorithm for constructing BT2 index
+  # Available options:
+    #- ''              # (default)
+    #- '--large-index' # Force generated index to be 'large', even if reference has fewer than 4 billion nucleotides
 
 ### SICKLE-TRIM --------------------------------------------------------------------------------------
 sickle-trim:
   command: 'pe'      # Reading (default and should be 'pe' for paired-end sequences)
-  encoding: 'sanger' # Quality encoding (dafault, and sould be 'sanger')
-  ## Available options (only for information):
-    ## 'sanger'   # CASAVA >= 1.8 for "recent" Illumina reads (default)
-    ## 'illumina' # CASAVA 1.3 to 1.7 for "old" Illumina reads
-    ## 'solexa'   # CASAVA < 1.3 for Solexa
+  encoding: 'sanger' # Quality encoding (dafault, and should be 'sanger')
+  # Available options (only for information):
+    #- 'sanger'   # CASAVA >= 1.8 for "recent" Illumina reads (default)
+    #- 'illumina' # CASAVA 1.3 to 1.7 for "old" Illumina reads
+    #- 'solexa'   # CASAVA < 1.3 for Solexa
   quality: '30'      # Phred score limit (default: '30')
   length: '50'       # Read length limit after trim (default: '50')
 
@@ -134,16 +169,16 @@ fastq-screen:
   config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
   subset: 1000                       # Don't use the whole sequence file, but sub-dataset of specified number of read (default: '1000') [INT] (0='all')
   aligner: 'bwa'                     # Aligner for fastq-screen (default and should be 'bwa')
-  ## Available options:
-    ## 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see 'fastq-screen.conf')
-    ## 'bowtie'  # Bowtie (indexes not provided for fastq-screen)
-    ## 'bowtie2' # Bowtie2 (indexes not provided for fastq-screen)
+  # Available options:
+    #- 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see 'fastq-screen.conf')
+    #- 'bowtie'  # Bowtie (indexes not provided for fastq-screen)
+    #- 'bowtie2' # Bowtie2 (indexes not provided for fastq-screen)
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
 os: 'OSX' # Operating System (default: OSX)
-## Available options:
-  ## 'Linux'   # GNU Linux - Free [UNIX] (suported)
-  ## 'BSD'     # Free BSD - Free (UNIX) (not tested. Need specific conda env. ?)
-  ## 'OSX'     # Mac OSX - Apple (R) [UNIX] (suported)
-  ## 'Solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
-  ## 'Windows' # Windows - Microsoft Corporation (R) (not suported)
+# Available options:
+  #- 'OSX'     # Mac OSX - Apple (R) [UNIX] (suported)
+  #- 'Linux'   # GNU Linux - Free [UNIX] (suported)
+  #- 'BSD'     # Free BSD - Free [UNIX] (not tested. Need specific conda env. ?)
+  #- 'Solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
+  #- 'Windows' # Windows - Microsoft Corporation (R) (not suported, not [UNIX])

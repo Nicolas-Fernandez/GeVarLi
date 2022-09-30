@@ -5,51 +5,74 @@
 # Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
 # Date: 2021.10.12
 # Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.09.16
-# Done: Change 'MEM_GB' for 'RAM' and Nextclade dataset now auto-selected
+# Latest modification: 2022.09.28
+# Done: Add amplicon primers clipping option using  BamClipper
 
 ###############################################################################
 # PUBLICATIONS #
 
 ###############################################################################
 # CONFIGURATION #
+
 configfile: "config/config.yaml"
 
 ###############################################################################
 # FUNCTIONS #
+
+def get_memory_per_thread(wildcards):
+    memory_per_thread = RAM // CPUS
+    return memory_per_thread
+
+def get_bam_input(wildcards):
+    if BAMCLIP == "yes":
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam"
+    elif BAMCLIP == "no":
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+    else:
+        markdup = "error_config_file_yaml"
+    return markdup
+
+def get_bai_input(wildcards):
+    if BAMCLIP == "yes":
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
+    elif BAMCLIP == "no":
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+    else:
+        index = "error_config_file_yaml"
+    return index
+
 def get_pangolin_input(wildcards):
     pangolin_list = []
-    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
+    if REFERENCE == "SARS-CoV-2_Wuhan_MN908947-3":
         pangolin_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_pangolin-report.csv",
                                sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return pangolin_list
 
 def get_nextclade_input(wildcards):
     nextclade_list = []
-    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019" or REFERENCE == "Monkeypox-virus_Zaire":
+    if REFERENCE == "SARS-CoV-2_Wuhan_MN908947-3" or REFERENCE == "Monkeypox-virus_Zaire_AF380138-1":
         nextclade_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
                                 sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return nextclade_list
 
 def get_nextclade_dataset(wildcards):
-    if REFERENCE == "SARS-CoV-2_Wuhan-WIV04_2019":
+    if REFERENCE == "SARS-CoV-2_Wuhan_MN908947-3":
         nextclade_dataset = "sars-cov-2"
-    elif REFERENCE == "Monkeypox-virus_Zaire":
+    elif REFERENCE == "Monkeypox-virus_Zaire_AF380138-1":
         nextclade_dataset = "MPXV"
     else:
-        nextclade_dataset = "none"
+        nextclade_dataset = "error_config_file_yaml"
     return nextclade_dataset
 
-def get_memory_per_thread(wildcards):
-    memory_per_thread = RAM // CPUS
-    return memory_per_thread
 
 ###############################################################################
 # WILDCARDS #
+
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
 # RESOURCES #
+
 OS = config["os"]                      # Operating system
 CPUS = config["resources"]["cpus"]     # Threads (maximum)
 RAM = config["resources"]["ram"]       # Memory (RAM) in Gb (maximum)
@@ -58,14 +81,13 @@ TMPDIR = config["resources"]["tmpdir"] # Temporary directory
 
 ###############################################################################
 # ENVIRONMENTS #
-FASTQC = config["conda"][OS]["fastqc"]            # FastQC
-FASTQSCREEN = config["conda"][OS]["fastq-screen"] # Fastq-Screen
-MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
+
 CUTADAPT = config["conda"][OS]["cutadapt"]        # Cutadapt
 SICKLETRIM = config["conda"][OS]["sickle-trim"]   # Sickle-trim
 BOWTIE2 = config["conda"][OS]["bowtie2"]          # Bowtie2
 BWA = config["conda"][OS]["bwa"]                  # Bwa
 SAMTOOLS = config["conda"][OS]["samtools"]        # SamTools
+BAMCLIPPER = config["conda"][OS]["bamclipper"]    # BAMClipper
 BEDTOOLS = config["conda"][OS]["bedtools"]        # BedTools
 BCFTOOLS = config["conda"][OS]["bcftools"]        # BcfTools
 GAWK = config["conda"][OS]["gawk"]                # Gawk
@@ -75,6 +97,7 @@ NEXTCLADE = config["conda"][OS]["nextclade"]      # Nextclade
 
 ###############################################################################
 # PARAMETERS #
+
 LENGTHc = config["cutadapt"]["length"]          # Cutadapt --minimum-length
 TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
 NEXTERA = config["cutadapt"]["kits"]["nextera"] # Cutadapt --adapter Illumina Nextera
@@ -85,15 +108,20 @@ ENCODING = config["sickle-trim"]["encoding"]    # Sickle-trim --qual-type
 QUALITY = config["sickle-trim"]["quality"]      # Sickle-trim --qual-threshold
 LENGTH = config["sickle-trim"]["length"]        # Sickle-trim --length-treshold
 
-CONFIG = config["fastq-screen"]["config"]       # Fastq-screen --conf
-MAPPER = config["fastq-screen"]["aligner"]      # Fastq-screen --aligner
-SUBSET = config["fastq-screen"]["subset"]       # Fastq-screen --subset
-
 ALIGNER = config["aligner"]                     # Aligners ('bwa' or 'bowtie2')
 
 BWAPATH = config["bwa"]["path"]                 # BWA path to indexes
+BWAALGO = config["bwa"]["algorithm"]            # BWA indexing algorithm
+
 BT2PATH = config["bowtie2"]["path"]             # Bowtie2 path to indexes
 SENSITIVITY = config["bowtie2"]["sensitivity"]  # Bowtie2 sensitivity preset
+BT2ALGO = config["bowtie2"]["algorithm"]        # BT2 indexing algorithm
+
+BAMCLIP = config["bamclipper"]["clipping"]      # Bamclipper option on / off
+CLIPPATH = config["bamclipper"]["path"]         # Bamclipper path to primers
+PRIMERS = config["bamclipper"]["primers"]       # Bamclipper primers bed files
+UPSTREAM = config["bamclipper"]["upstream"]     # Bamclipper upstream nucleotides
+DOWNSTREAM = config["bamclipper"]["downstream"] # Bamclipper downstream nucleotides
 
 REFPATH = config["consensus"]["path"]           # Path to genomes references
 REFERENCE = config["consensus"]["reference"]    # Genome reference sequence, in fasta format
@@ -105,9 +133,10 @@ NEXTPATH = config["nextclade"]["path"]          # Path to nextclade dataset
 NEXTDATASET = get_nextclade_dataset             # Nextclade dataset
 
 ###############################################################################
+# RULES #
+
 rule all:
     input:
-        multiqc = "results/00_Quality_Control/multiqc/",
         covstats = expand("results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv",
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         consensus = expand("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta",
@@ -121,7 +150,7 @@ rule nextclade_lineage:
     # Aim: nextclade lineage assignation
     # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Nextclade lineage assignation for {wildcards.sample} sample consensus ({wildcards.aligner}-{wildcards.mincov})"
+        "Nextclade lineage assignation for {wildcards.sample} sample consensus ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         NEXTCLADE
     resources:
@@ -151,7 +180,7 @@ rule pangolin_lineage:
     # Aim: lineage mapping
     # Use: pangolin [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Pangolin lineage mapping for {wildcards.sample} sample consensus ({wildcards.aligner}-{wildcards.mincov})"
+        "Pangolin lineage mapping for {wildcards.sample} sample consensus ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         PANGOLIN
     resources:
@@ -177,7 +206,7 @@ rule sed_rename_headers:
     # Aim: rename all fasta header with sample name
     # Use: sed 's/[OLD]/[NEW]/' [IN] > [OUT]
     message:
-        "Sed rename header for {wildcards.sample} sample consensus fasta ({wildcards.aligner}-{wildcards.mincov})"
+        "Sed rename header for {wildcards.sample} sample consensus fasta ({wildcards.aligner}, @{wildcards.mincov}X)"
     input:
         constmp = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta.tmp"
     output:
@@ -196,7 +225,7 @@ rule bcftools_consensus:
     # Aim: create consensus
     # Use: bcftools consensus -f [REFERENCE] [VARIANTS.vcf.gz] -o [CONSENSUS.fasta] 
     message:
-        "BcfTools consensus for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "BcfTools consensus for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         BCFTOOLS
     params:
@@ -223,7 +252,7 @@ rule tabix_tabarch_indexing:
     # Aim: tab archive indexing
     # Use: tabix [OPTIONS] [TAB.bgz]
     message:
-        "Tabix tab archive indexing for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "Tabix tab archive indexing for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         SAMTOOLS
     input:
@@ -243,7 +272,7 @@ rule bgzip_variant_archive:
     # Aim: Variant block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
-        "Bgzip variant block compressing for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "Bgzip variant block compressing for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         SAMTOOLS
     resources:
@@ -268,11 +297,10 @@ rule lofreq_variant_filtering:
     # Use: lofreq filter [OPTIONS] -i [INDEL.vcf] -o [INDELFILT.vcf]
     # Note: without --no-defaults LoFreq's predefined filters are on
     message:
-        "LoFreq filtering SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "LoFreq filtering SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         LOFREQ
     params:
-        mincov = MINCOV,
         minaf = MINAF
     input:
         variantcall = "results/04_Variants/{sample}_{aligner}_{mincov}X_variant-call.vcf"
@@ -281,20 +309,20 @@ rule lofreq_variant_filtering:
     log:
         "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{mincov}X_variant-filt.log"
     shell:
-        "lofreq "                    # LoFreq, fast and sensitive inference of SNVs and indels
-        "filter "                     # Filter SNVs and Indels parsed from vcf file
-        "--cov-min {params.mincov} "  # -v: Minimum coverage allowed (INT)
-        "--af-min {params.minaf} "    # -a: Minimum allele freq allowed (FLOAT)
-        "--in {input.variantcall} "   # VCF input file, gzip suuported, no streaming supported
-        "--out {output.variantfilt} " # VCF output file, gzip supported (default: standard output)
-        "&> {log}"                    # Log redirection 
+        "lofreq "                      # LoFreq, fast and sensitive inference of SNVs and indels
+        "filter "                       # Filter SNVs and Indels parsed from vcf file
+        "--cov-min {wildcards.mincov} " # -v: Minimum coverage allowed (INT)
+        "--af-min {params.minaf} "      # -a: Minimum allele freq allowed (FLOAT)
+        "--in {input.variantcall} "     # VCF input file, gzip suuported, no streaming supported
+        "--out {output.variantfilt} "   # VCF output file, gzip supported (default: standard output)
+        "&> {log}"                      # Log redirection 
 
 ###############################################################################
 rule lofreq_variant_calling:
     # Aim: SNVs and Indels calling
     # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [MASKEDREF.fasta] -o [INDEL.vcf] [INDEL.bam]
     message:
-        "LoFreq calling SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "LoFreq calling SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         LOFREQ
     resources:
@@ -322,7 +350,7 @@ rule samtools_indel_indexing:
     # Aim: indexing indel qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDELQUAL.bam] [INDEX.bai]
     message:
-        "SamTools indexing indel qualities BAM file {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "SamTools indexing indel qualities BAM file {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         SAMTOOLS
     resources:
@@ -347,12 +375,13 @@ rule lofreq_indel_qualities:
     # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
     # Note: do not realign your BAM file afterwards!
     message:
-        "LoFreq insert indels qualities for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "LoFreq insert indels qualities for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         LOFREQ
     input:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta",
-        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+        markdup = get_bam_input,
+        index = get_bai_input
     output:
         indelqual = "results/04_Variants/{sample}_{aligner}_{mincov}X_indel-qual.bam"
     log:
@@ -371,7 +400,7 @@ rule bedtools_masking:
     # Aim: masking low coverage regions
     # Use: bedtools maskfasta [OPTIONS] -fi [REFERENCE.fasta] -bed [RANGE.bed] -fo [MASKEDREF.fasta]
     message:
-        "BedTools masking low coverage regions for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "BedTools masking low coverage regions for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         BEDTOOLS
     params:
@@ -395,7 +424,7 @@ rule bedtools_merged_mask:
     # Aim: merging overlaps
     # Use: bedtools merge [OPTIONS] -i [FILTERED.bed] -g [GENOME.fasta] 
     message:
-        "BedTools merging overlaps for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "BedTools merging overlaps for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         BEDTOOLS
     input:
@@ -415,11 +444,9 @@ rule awk_mincovfilt:
     # Aim: minimum coverage filtration
     # Use: awk '$4 < [MINCOV]' [BEDGRAPH.bed] 1> [FILTERED.bed]
     message:
-        "Awk minimum coverage filtration for {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "Awk minimum coverage filtration for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         GAWK
-    params:
-        mincov = MINCOV
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
@@ -428,7 +455,7 @@ rule awk_mincovfilt:
         "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_min-cov-filt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        "'$4 < {params.mincov}' "    # Minimum coverage for masking regions in consensus sequence
+        "'$4 < {wildcards.mincov}' " # Minimum coverage for masking regions in consensus sequence
         "{input.genomecov} "         # BedGraph coverage input
         "1> {output.mincovfilt} "    # Minimum coverage filtered bed output
         "2> {log} "                  # Log redirection
@@ -438,11 +465,9 @@ rule awk_coverage_statistics:
     # Aim: computing genomme coverage stats
     # Use: awk {FORMULA} END {{print [RESULTS.tsv] [BEDGRAPH.bed]
     message:
-        "Awk compute genome coverage statistics BED {wildcards.sample} sample ({wildcards.aligner}-{wildcards.mincov})"
+        "Awk compute genome coverage statistics BED {wildcards.sample} sample ({wildcards.aligner})"
     conda:
         GAWK
-    params:
-        mincov = MINCOV
     input:
         genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
@@ -450,27 +475,31 @@ rule awk_coverage_statistics:
     log:
         "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
-        "awk ' "                                  # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        "$4 >= {params.mincov} "                   # Minimum coverage
-        "{{supMinCov+=$3-$2}} ; "                  # Genome size >= @ mincov X
-        "{{genomeSize+=$3-$2}} ; "                 # Genome size
-        "{{totalBases+=($3-$2)*$4}} ; "            # Total bases @ 1 X 
-        "{{totalBasesSq+=(($3-$2)*$4)**2}} "       # Total bases square @ 1 X
-        "END "                                     # End
-        "{{print "                                 # Print
-        """ "sample_id", "\t", """                 # Sample ID header
-        """ "mean_depth", "\t", """                # Mean depth header
-        """ "standard_deviation", "\t", """        # Standard deviation header
-        """ "cov_percent_@{wildcards.mincov}X" """ # Coverage percent @ mincov X header
-        "ORS "                                     # \n newline
-        """ "{wildcards.sample}", "\t", """        # Sample ID value
-        """ int(totalBases/genomeSize), "\t", """  # Mean depth value
+        "awk ' "                            # Awk, a program to select particular records in a file and perform operations upon them
+        "$4 >= {wildcards.mincov} "          # Minimum coverage
+        "{{supMinCov+=$3-$2}} ; "            # Genome size >= @ mincov X
+        "{{genomeSize+=$3-$2}} ; "           # Genome size
+        "{{totalBases+=($3-$2)*$4}} ; "      # Total bases @ 1 X 
+        "{{totalBasesSq+=(($3-$2)*$4)**2}} " # Total bases square @ 1 X
+        "END "                                # END
+        "{{print "                             # Print
+        """ "sample_id", "\t", """              # Sample ID header
+        """ "mean_depth", "\t", """             # Mean depth header
+        """ "standard_deviation", "\t", """     # Standard deviation header
+        """ "cov_percent_%" "\t", """           # Coverage percent header
+        """ "@_min_cov_X" "\t", """             # @ mincov X header
+        """ "aligner" """                       # Aligner header
+        "ORS "                                   # \n newline
+        """ "{wildcards.sample}", "\t", """       # Sample ID value
+        """ int(totalBases/genomeSize), "\t", """ # Mean depth value
         """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
-        """ supMinCov/genomeSize*100 """           # Coverage percent @ mincov X value
-        "}}' "                                     #
-        "{input.genomecov} "                       # BedGraph coverage input
-        "1> {output.covstats} "                    # Mean depth output
-        "2> {log}"                                 # Log redirection
+        """ supMinCov/genomeSize*100 "\t", """     # Coverage percent (@ mincov X) value
+        """ "@{wildcards.mincov}X" "\t", """       # @ mincov X value
+        """ "{wildcards.aligner}" """              # Aligner value
+        "}}' "                                    # Close print
+        "{input.genomecov} "                     # BedGraph coverage input
+        "1> {output.covstats} "                  # Mean depth output
+        "2> {log}"                              # Log redirection
 
 ###############################################################################
 rule bedtools_genome_coverage:
@@ -481,8 +510,8 @@ rule bedtools_genome_coverage:
     conda:
         BEDTOOLS
     input:
-        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bai"
+        markdup = get_bam_input,
+        index = get_bai_input
     output:
         genomecov = temp("results/03_Coverage/{sample}_{aligner}_genome-cov.bed")
     log:
@@ -493,6 +522,41 @@ rule bedtools_genome_coverage:
         "-ibam {input.markdup} "  # The input file is in BAM format, must be sorted by position
         "1> {output.genomecov} "  # BedGraph output
         "2> {log} "               # Log redirection
+
+###############################################################################
+rule bamclipper_amplicon_primers:
+    # Aim: soft-clip primer sequences from BAM alignments of PCR amplicons
+    # Use: bamclipper.sh -n [THREADS] -b [MARKDUP.bam] -p [PRIMER.bed] -u [UPSTREAM] -d [DOWNSTREAM]
+    message:
+        "BAMClipper soft-clipping BAM alignments for {wildcards.sample} sample ({wildcards.aligner})"
+    conda:
+        BAMCLIPPER
+    resources:
+       cpus = CPUS
+    params:
+        path = CLIPPATH,
+        primers = PRIMERS,
+        upstream = UPSTREAM,
+        downstream = DOWNSTREAM
+    input:
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+    output:
+        bamclip = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam",
+        baiclip = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
+    log:
+        "results/10_Reports/tools-log/bamclipper/{sample}_{aligner}_primers-clip.log"
+    shell:
+        "bamclipper.sh "                          # BAMClipper, remove primer sequences from BAM alignments of PCR amplicons by soft-clipping
+        "-b {input.markdup} "                      # Indexed BAM alignment file
+        "-p {params.path}/{params.primers}.bedpe " # BEDPE of primer pair locations
+        "-n {resources.cpus} "                     # Number of threads (default: 1)
+        "-u {params.upstream} "                    # Number of nuc. upstream for assigning alignments to primers (default: 1)
+        "-d {params.downstream} "                  # Number of nuc. downstream for assigning alignments to primers (default: 5)
+        #"-o results/02_Mapping/ "                  # Path to write output (BamClipper v.1.1.3)
+        "&> {log} "                                # Log redirection
+        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam {output.bamclip} "
+        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam.bai {output.baiclip}"
 
 ###############################################################################
 rule samtools_index_markdup:
@@ -507,7 +571,7 @@ rule samtools_index_markdup:
     input:
         markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     output:
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bai"
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
     log:
         "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup-index.log"
     shell:
@@ -764,87 +828,5 @@ rule cutadapt_adapters_removing:
         "{input.fwdreads} "                  # Input forward reads R1.fastq
         "{input.revreads} "                  # Input reverse reads R2.fastq
         "&> {log}"                           # Log redirection
-
-###############################################################################
-rule multiqc_reports_aggregation:
-    # Aim: aggregates bioinformatics analyses results into a single report
-    # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
-    priority: 42
-    message:
-        "MultiQC reports aggregating"
-    conda:
-        MULTIQC
-    input:
-        fastqc = "results/00_Quality_Control/fastqc/",
-        fastqscreen = "results/00_Quality_Control/fastq-screen/"
-    output:
-        multiqc = directory("results/00_Quality_Control/multiqc/")
-    log:
-        "results/10_Reports/tools-log/multiqc.log"
-    shell:
-        "multiqc "                  # Multiqc, searches in given directories for analysis & compiles a HTML report
-        "--quiet "                   # -q: Only show log warning
-        "--outdir {output.multiqc} " # -o: Create report in the specified output directory
-        "{input.fastqc} "            # Input FastQC files
-        "{input.fastqscreen} "       # Input Fastq-Screen
-        "--no-ansi "                 # Disable coloured log
-        "&> {log}"                   # Log redirection
-
-###############################################################################
-rule fastqscreen_contamination_checking:
-    # Aim: screen if the composition of the library matches with  what you expect
-    # Use fastq_screen [OPTIONS] --outdir [DIR/] [SAMPLE_1.fastq] ... [SAMPLE_n.fastq]
-    message:
-        "Fastq-Screen reads contamination checking"
-    conda:
-        FASTQSCREEN
-    resources:
-        cpus = CPUS
-    params:
-        config = CONFIG,
-        mapper = MAPPER,
-        subset = SUBSET
-    input:
-        fastq = "resources/reads/"
-    output:
-        fastqscreen = directory("results/00_Quality_Control/fastq-screen/")
-    log:
-        "results/10_Reports/tools-log/fastq-screen.log"
-    shell:
-        "fastq_screen "                 # FastqScreen, what did you expect ?
-        "-q "                            # --quiet: Only show log warning
-        "--threads {resources.cpus} "    # --threads: Specifies across how many threads bowtie will be allowed to run
-        "--conf {params.config} "        # path to configuration file
-        "--aligner {params.mapper} "     # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
-        "--subset {params.subset} "      # Don't use the whole sequence file, but create a subset of specified size
-        "--outdir {output.fastqscreen} " # Output directory
-        "{input.fastq}/*.fastq.gz "      # Input file.fastq
-        "&> {log}"                       # Log redirection
-
-###############################################################################
-rule fastqc_quality_control:
-    # Aim: reads sequence files and produces a quality control report
-    # Use: fastqc [OPTIONS] --output [DIR/] [SAMPLE_1.fastq] ... [SAMPLE_n.fastq]
-    message:
-        "FastQC reads quality controling"
-    conda:
-        FASTQC
-    resources:
-        cpus = CPUS
-    input:
-        fastq = "resources/reads/"
-    output:
-        fastqc = directory("results/00_Quality_Control/fastqc/")
-    log:
-        "results/10_Reports/tools-log/fastqc.log"
-    shell:
-        "mkdir -p {output.fastqc} " # (*) this directory must exist as the program will not create it
-        "2> /dev/null && "          # in silence and then... 
-        "fastqc "                    # FastQC, a high throughput sequence QC analysis tool
-        "--quiet "                    # -q: Supress all progress messages on stdout and only report errors
-        "--threads {resources.cpus} " # -t: Specifies files number which can be processed simultaneously
-        "--outdir {output.fastqc} "   # -o: Create all output files in the specified output directory (*)
-        "{input.fastq}/*.fastq.gz "   # Input file.fastq
-        "&> {log}"                    # Log redirection
 
 ###############################################################################

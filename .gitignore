@@ -11,7 +11,12 @@
 *.done
 *.pdf
 *.txt
-Homo_sapiens_h38*
-Pteropus_vampyrus_v1*
-Arabidopsis_thaliana_t10*
+*.bt2
+*.bt2l
+*.amb
+*.ann
+*.bwt
+*.pac
+*.sa
+*.bedpe
 /results*

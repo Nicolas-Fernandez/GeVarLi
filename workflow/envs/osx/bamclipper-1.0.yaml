@@ -1,0 +1,25 @@
+name: bamclipper-1.0
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - bamclipper
+  - bzip2
+  - c-ares
+  - ca-certificates
+  - curl
+  - krb5
+  - libcurl
+  - libcxx
+  - libedit
+  - libev
+  - libnghttp2
+  - libssh2
+  - ncurses
+  - openssl
+  - parallel
+  - perl
+  - perl-threaded
+  - samtools
+  - xz
+  - zlib

@@ -19,8 +19,8 @@
 
 ## ~ ABOUT ~ ##
 
-GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genomes assembly from Illumina short reads with tiled libraries sequencing.  
-Writed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
+GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genome assembly with Illumina Inc, short reads COVIDSeq&trade; libraries sequencing.  
+Developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
 
 ### Genomic sequencing, a public health tool ###
 The establishment of a surveillance and sequencing network is an essential public health tool for detecting and containing pathogens with epidemic potential. Genomic sequencing makes it possible to identify pathogens, monitor the emergence and impact of variants, and adapt public health policies accordingly.
@@ -34,43 +34,47 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Nextclade and Pangolin classifications  
 
 ### Version ###
-*V.2022.09.01*  
+*V.2022.10*  
 
 ### Rulegraph ###
-<img src="./visuals/rulegraph.png" width="150" height="300">  
+<img src="./visuals/quality_control_rulegraph.png" width="150" height="300">
+<img src="./visuals/gevarli_rulegraph.png" width="150" height="300">
+<img src="./visuals/indexing_genomes_rulegraph.png" width="150" height="300">  
 
 ## ~ INSTALLATIONS ~ ##
 
 # Conda _(required)_ #
-Install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)
+If required, first install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)
  
-**Miniconda3 with Python 3.9 for MacOSX-64-bit**  
-_Follow the screen prompt instructions_  
+Example:  
+
+On **MacOSX-64-bit**:  
+_Download and follow the screen prompt instructions_  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ./Miniconda3-latest-MacOSX-x86_64.sh 
-bash ./Miniconda3-latest-MacOSX-x86_64.sh
-rm -f ./Miniconda3-latest-MacOSX-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh 
+bash ~/Miniconda3-latest-MacOSX-x86_64.sh
 ```
 
-**Miniconda3 with Python 3.9 on Linux-64-bit**  
-_Follow the screen prompt instructions_  
+On **Linux-64-bit**:  
+_Download and follow the screen prompt instructions_  
 ```shell
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash ./Miniconda3-latest-Linux-x86_64.sh
-rm -f ./Miniconda3-latest-Linux-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh
+bash ~/Miniconda3-latest-Linux-x86_64.sh
 ```
 
-- Please, **restart** now your shell, i.e. closing and opening a new terminal window
+- Please, **restart** now your shell _(i.e. closing and opening a new terminal window)_.
 
+_Optional cleaning, if the succeful installation:_  
+```shell
+rm -rf ~/Miniconda3-latest-*-x86_64.sh
+```
 
 # GeVarLi #
-Clone _(HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
-
+Clone _(with HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
 ```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git
-cd ./GeVarLi/
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
+cd ~/GeVarLi/
 ```
-
 
 Difference between **Download** and **Clone**:  
 - To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
@@ -401,6 +405,22 @@ _Bioinformatics, Volume 26, Issue 6 (2010)_
 **Publication**: [https://academic.oup.com/bioinformatics/article/26/6/841/244688](https://academic.oup.com/bioinformatics/article/26/6/841/244688)  
 **Source code**: [https://github.com/arq5x/bedtools2](https://github.com/arq5x/bedtools2)  
 **Documentation**: [https://bedtools.readthedocs.io/en/latest/](https://bedtools.readthedocs.io/en/latest/)  
+
+**ARTIC Network**  
+Authors
+Journal (year)  
+**DOI**: []()  
+**Publication**: []()  
+**Source code**: [https://github.com/artic-network/primer-schemes](https://github.com/artic-network/primer-schemes)
+**Documentation**:
+
+**BAMClipper: removing primers from alignments to minimize false-negative mutations in amplicon next-generation sequencing**  
+Chun Hang Au, Dona N. Ho, Ava Kwong, Tsun Leung Chan and Edmond S. K. Ma 
+Scientific Reports 7:1567 (2017)  
+**DOI**: [https://doi.org/10.1038/s41598-017-01703-6](https://doi.org/10.1038/s41598-017-01703-6)
+**Publication**: [https://www.nature.com/articles/s41598-017-01703-6](https://www.nature.com/articles/s41598-017-01703-6)
+**Source code**: [https://github.com/tommyau/bamclipper](https://github.com/tommyau/bamclipper)
+**Documentation**:
 
 **Twelve years of SAMtools and BCFtools**  
 Petr Danecek, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, Thomas Keane, Shane A McCarthy, Robert M Davies and Heng Li  
