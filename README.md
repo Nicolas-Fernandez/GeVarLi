@@ -309,7 +309,7 @@ To select one or both, de/comment (#) as you wish:
 4. Send an email to [nicolas.fernandez@ird.fr](url)
 
 ## ~ ROADMAP ~ ##
-- Add a wiki!  
+- Add GisAid submission files generation
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
 - Nicolas Fernandez (Developer and Maintener)  
