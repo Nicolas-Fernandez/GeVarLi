@@ -19,7 +19,7 @@
 
 ## ~ ABOUT ~ ##
 
-GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genome assembly with Illumina Inc, short reads COVIDSeq&trade; libraries sequencing.  
+GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genome assembly with Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
 Developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
 
 ### Genomic sequencing, a public health tool ###
@@ -37,9 +37,9 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 *V.2022.10*  
 
 ### Rulegraph ###
+<img src="./visuals/gevarli_rulegraph.png" width="300" height="1240">  
+<img src="./visuals/quality_control_rulegraph.png" width="240" height="145">  
 <img src="./visuals/indexing_genomes_rulegraph.png" width="300" height="90">  
-<img src="./visuals/quality_control_rulegraph.png" width="240" height="145">
-<img src="./visuals/gevarli_rulegraph.png" width="300" height="1240">
 
 
 ## ~ INSTALLATIONS ~ ##
