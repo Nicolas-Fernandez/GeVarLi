@@ -45,29 +45,35 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ## ~ INSTALLATIONS ~ ##
 
 # Conda _(required)_ #
-If required, first install **Conda**: [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)
+If required, first install **Conda**  
  
-Example:  
+1/ Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
-On **MacOSX-64-bit**:  
-_Download and follow the screen prompt instructions_  
+e.g. if **MacOSX-64-bit**:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh 
-bash ~/Miniconda3-latest-MacOSX-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda_installer.sh 
 ```
 
-On **Linux-64-bit**:  
-_Download and follow the screen prompt instructions_  
+e.g. if **Linux-64-bit**:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh
-bash ~/Miniconda3-latest-Linux-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda_installer.sh
 ```
 
-- Please, **restart** now your shell _(i.e. closing and opening a new terminal window)_.
-
-_Optional cleaning, if the succeful installation:_  
+2/ Execute installation _(and follow the screen prompt instructions)_:  
 ```shell
-rm -rf ~/Miniconda3-latest-*-x86_64.sh
+bash ~/Miniconda_installer.sh
+```
+_Press [ENTER] to continue_  
+_Press [SPACE] to scroll all license pages (untill end)_  
+_Specify [yes] to accept the license terms_  
+_Press [ENTER] to confirm the default Miniconda3 location (in your home: ~/miniconda3/)_  
+_Press [ENTER] to run conda init (initialize Miniconda3)_  
+ 
+3/ Restart now your shell _(close and reopen a new terminal window)_  
+
+_4/ Optional cleaning, if successful installation_:  
+```shell
+rm -f ~/Miniconda3_installer.sh
 ```
 
 # GeVarLi #
@@ -90,7 +96,7 @@ git pull --verbose
 ## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
-2. Execute the **Start_GeVarLi.sh** bash script to run the GeVarLi pipeline
+2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline
     - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
 	- with a **Right-click** > **Open with** > **Terminal.app**
 	- with **CLI** from a terminal:
@@ -123,8 +129,9 @@ This is the main results :
 - **multiqc**: fastq-screen and fastqc results agregation report for all samples, in _html_ format
 
 ### 01_Trimming ###
+_By default, temporary director. Removed at the end to save disk usage)_
+- **cutadapt/ directory**: paired reads, without adapters, in _fastq.gz_ format
 - **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
-- _cutadapt/ directory: paired reads, without adapters (default config: tempdir, removed, save disk usage)_
 
 ### 02_Mapping ###
 - **markdup.bam**: read alignments, in _bam_ format _(can be visualized in, i.e. IGV)_
