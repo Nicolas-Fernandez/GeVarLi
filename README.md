@@ -37,9 +37,10 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 *V.2022.10*  
 
 ### Rulegraph ###
-<img src="./visuals/quality_control_rulegraph.png" width="122" height="72">
-<img src="./visuals/gevarli_rulegraph.png" width="154" height="620">
-<img src="./visuals/indexing_genomes_rulegraph.png" width="154" height="44">  
+<img src="./visuals/indexing_genomes_rulegraph.png" width="300" height="90">  
+<img src="./visuals/quality_control_rulegraph.png" width="240" height="145">
+<img src="./visuals/gevarli_rulegraph.png" width="300" height="1240">
+
 
 ## ~ INSTALLATIONS ~ ##
 
