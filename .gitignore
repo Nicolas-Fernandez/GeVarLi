@@ -20,3 +20,4 @@
 *.sa
 *.bedpe
 /results*
+/resources/indexes*
