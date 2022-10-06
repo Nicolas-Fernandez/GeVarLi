@@ -1,7 +1,7 @@
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.2.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU/Linux](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![WSL](<https://badgen.net/badge/icon/WSL-Ubuntu (18.04) | (20.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
@@ -37,9 +37,9 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 *V.2022.10*  
 
 ### Rulegraph ###
-<img src=".resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
-<img src=".resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
-<img src=".resources/visuals/indexing_genomes_rulegraph.png" width="250" height="150">  
+<img src="./resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
+<img src="./resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
+<img src="./resources/visuals/indexing_genomes_rulegraph.png" width="250" height="150">  
 
 
 ## ~ INSTALLATIONS ~ ##
