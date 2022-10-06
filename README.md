@@ -37,9 +37,9 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 *V.2022.10*  
 
 ### Rulegraph ###
-<img src="./visuals/gevarli_rulegraph.png" width="300" height="1240">  
-<img src="./visuals/quality_control_rulegraph.png" width="240" height="145">  
-<img src="./visuals/indexing_genomes_rulegraph.png" width="300" height="90">  
+<img src=".resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
+<img src=".resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
+<img src=".resources/visuals/indexing_genomes_rulegraph.png" width="250" height="150">  
 
 
 ## ~ INSTALLATIONS ~ ##
@@ -47,7 +47,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 # Conda _(required)_ #
 If required, first install **Conda**  
  
-1/ Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+*1/* Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
 e.g. if **MacOSX-64-bit**:  
 ```shell
@@ -59,7 +59,7 @@ e.g. if **Linux-64-bit**:
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda_installer.sh
 ```
 
-2/ Execute installation _(and follow the screen prompt instructions)_:  
+*2/* Execute installation _(and follow the screen prompt instructions)_:  
 ```shell
 bash ~/Miniconda_installer.sh
 ```
@@ -69,9 +69,10 @@ _Specify [yes] to accept the license terms_
 _Press [ENTER] to confirm the default Miniconda3 location (in your home: ~/miniconda3/)_  
 _Press [ENTER] to run conda init (initialize Miniconda3)_  
  
-3/ Restart now your shell _(close and reopen a new terminal window)_  
+*3/* Restart now your shell _(close and reopen a new terminal window)_  
+(base) appear now at command prompt start 
 
-_4/ Optional cleaning, if successful installation_:  
+*4/* Optional cleaning, if successful installation:  
 ```shell
 rm -f ~/Miniconda3_installer.sh
 ```

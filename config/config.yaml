@@ -65,16 +65,6 @@ gisaid:
   identifier: ''
   year: '2022'
 
-### NEXTCLADE ----------------------------------------------------------------------------------------
-nextclade:
-  path: 'resources/nextclade/' # Path to nextclade datasets
-  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated)
-  # Available options:
-    #- 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
-    #- 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
-    #- 'hMPXV'      # human Monkeypox
-    #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
-  
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
   path: 'resources/genomes/' # Path to genomes references
@@ -82,6 +72,7 @@ consensus:
   # Available options:
     #- 'SARS-CoV-2_Wuhan_MN908947-3'      # SARS-CoV-2 (default)
     #- 'Monkeypox-virus_Zaire_AF380138-1' # Monkeypox  (without BamClipper and Pangolin)
+    #- 'Monkeypox-virus_UK_MT903345-1'    # Monkeypox  (without Pangolin)
     #- 'Ebola-virus_Zaire_AF272001-1'     # Ebola      (without Nextclade and Pangolin)
     #- 'Nipah-virus_Malaysia_AJ564622-1'  # Nipah      (without Nextclade and Pangolin)
     #- 'HIV-1_HXB2_K03455-1'              # HIV-1      (without BamClipper, Nextclade and Pangolin)
@@ -92,29 +83,6 @@ consensus:
   # Available options:
     #- ''        # Deactivate (default)
     #- '--iupac' # Activate
-
-### BAMCLIPPER ---------------------------------------------------------------------------------------
-bamclipper:
-  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers bedpe file (or bed)
-  # Available options:
-    #- 'no'  # Deactivate (default)
-    #- 'yes' # Activate
-  path: 'resources/primers/bedpe/' # Path to primers bedpe files
-  primers: 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3'
-  # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
-  # Available options:
-    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1'       # SARS-CoV-2 Artic V1
-    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2'       # SARS-CoV-2 Artic V2
-    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3'       # SARS-CoV-2 Artic V3
-    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4'       # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
-    #- 'SARS-CoV-2_Wuhan_MN908947-3_arctiv-primers-V4-1'    # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
-    #- 'Ebola-virus_Zaire_KR063671-1_artic-primers-V1'      # EBOV Artic V1
-    #- 'Ebola-virus_Zaire_AF272001-1_artic-primers-V2'      # EBOV Artic V2 (based on AF272001.1)
-    #- 'Ebola-virus_Zaire_KR063671-1_artic-primers-V3'      # EBOV Artic V3
-    #- 'Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1'   # NIV Artic V1
-    #- 'Add_your_favorite_amplicon_kit'                     # Custom
-  upstream: '1'   # (default: 1)
-  downstream: '5' # (default: 5)
 
 ### ALIGNER ------------------------------------------------------------------------------------------
 aligner: 'bwa' # Select your favorite aligner
@@ -145,6 +113,30 @@ bowtie2:
     #- ''              # (default)
     #- '--large-index' # Force generated index to be 'large', even if reference has fewer than 4 billion nucleotides
 
+### BAMCLIPPER ---------------------------------------------------------------------------------------
+bamclipper:
+  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers bedpe file (or bed)
+  # Available options:
+    #- 'no'  # Deactivate (default)
+    #- 'yes' # Activate
+  path: 'resources/primers/bedpe/' # Path to primers bedpe files
+  primers: 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3'
+  # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
+  # Available options:
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1'           # SARS-CoV-2 Artic V1
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2'           # SARS-CoV-2 Artic V2
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3'           # SARS-CoV-2 Artic V3
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4'           # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
+    #- 'SARS-CoV-2_Wuhan_MN908947-3_arctiv-primers-V4-1'        # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+    #- 'Ebola-virus_Zaire_KR063671-1_artic-primers-V1'          # EBOV Artic V1
+    #- 'Ebola-virus_Zaire_AF272001-1_artic-primers-V2'          # EBOV Artic V2 (based on AF272001.1)
+    #- 'Ebola-virus_Zaire_KR063671-1_artic-primers-V3'          # EBOV Artic V3
+    #- 'Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1'       # NIV Artic V1
+    #- 'Monkeypox-virus_UK_MT903345-1_custom-VGCARE-primers-V1' # MPXV VGCARE V1
+    #- 'Add_your_favorite_amplicon_kit'                         # Custom
+  upstream: '1'   # (default: 1)
+  downstream: '5' # (default: 5)
+
 ### SICKLE-TRIM --------------------------------------------------------------------------------------
 sickle-trim:
   command: 'pe'      # Reading (default and should be 'pe' for paired-end sequences)
@@ -173,6 +165,16 @@ fastq-screen:
     #- 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see 'fastq-screen.conf')
     #- 'bowtie'  # Bowtie (indexes not provided for fastq-screen)
     #- 'bowtie2' # Bowtie2 (indexes not provided for fastq-screen)
+
+### NEXTCLADE ----------------------------------------------------------------------------------------
+nextclade:
+  path: 'resources/nextclade/' # Path to nextclade datasets
+  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated)
+  # Available options:
+    #- 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
+    #- 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
+    #- 'hMPXV'      # human Monkeypox
+    #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
 os: 'OSX' # Operating System (default: OSX)

@@ -1,23 +1,40 @@
 
-~*
+
+# Ignore backup copies files
 *~
-*#
+
+# Ignore stale lock files 
+\#*#
+
+# Ignore system files
 .DS_Store
+Thumbs.db
+
+# Ignore local snakemake (include .snakemake/conda/)
 .snakemake
+
+# Ignore (raw) reads
 *.fastq
 *.gz
 *.fastq.gz
+
+# Ignore temp and touch files
 *.temp
 *.done
-*.pdf
-*.txt
+
+# Ignore results
+/results
+
+# Ignore indexes directory
+/resources/indexes
+
+# Ignore bt2 indexes
 *.bt2
 *.bt2l
+
+# Ignore baw indexes
 *.amb
 *.ann
 *.bwt
 *.pac
 *.sa
-*.bedpe
-/results*
-/resources/indexes*
