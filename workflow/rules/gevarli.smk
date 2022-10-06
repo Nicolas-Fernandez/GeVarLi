@@ -43,22 +43,22 @@ def get_bai_input(wildcards):
 
 def get_pangolin_input(wildcards):
     pangolin_list = []
-    if REFERENCE == "SARS-CoV-2_Wuhan_MN908947-3":
+    if "SARS-CoV-2" in REFERENCE:
         pangolin_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_pangolin-report.csv",
                                sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return pangolin_list
 
 def get_nextclade_input(wildcards):
     nextclade_list = []
-    if REFERENCE == "SARS-CoV-2_Wuhan_MN908947-3" or REFERENCE == "Monkeypox-virus_Zaire_AF380138-1":
+    if "SARS-CoV-2" in REFERENCE or "Monkeypox-virus" in REFERENCE:
         nextclade_list = expand("results/06_Lineages/{sample}_{aligner}_{mincov}X_nextclade-report.tsv",
                                 sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV)
     return nextclade_list
 
 def get_nextclade_dataset(wildcards):
-    if REFERENCE == "SARS-CoV-2_Wuhan_MN908947-3":
+    if "SARS-CoV-2" in REFERENCE:
         nextclade_dataset = "sars-cov-2"
-    elif REFERENCE == "Monkeypox-virus_Zaire_AF380138-1":
+    elif "Monkeypox-virus" in REFERENCE:
         nextclade_dataset = "MPXV"
     else:
         nextclade_dataset = "error_config_file_yaml"
@@ -710,7 +710,7 @@ rule bwa_mapping:
     log:
         "results/10_Reports/tools-log/bwa/{sample}.log"
     shell:
-        "bwa mem "                           # BWA-MEM algorithm, performs local alignment.
+        "bwa mem "                           # BWA-MEM algorithm, performs local alignment
         "-t {resources.cpus} "                # -t: Number of threads (default: 12)
         "-v 1 "                               # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
         "{params.bwapath}{params.reference} " # Reference index filename prefix
@@ -741,7 +741,7 @@ rule bowtie2_mapping:
     log:
         "results/10_Reports/tools-log/bowtie2/{sample}.log"
     shell:
-        "bowtie2 "                    # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences.
+        "bowtie2 "                    # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences
         "--threads {resources.cpus} "  # -p: Number of alignment threads to launch (default: 1)
         "--reorder "                   # Keep the original read order (if multi-processor option -p is used)
         "-x {params.bt2path}{params.reference} " # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
