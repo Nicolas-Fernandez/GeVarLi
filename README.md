@@ -34,7 +34,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Nextclade and Pangolin classifications  
 
 ### Version ###
-*V.2022.10*  
+*V.2022.11*  
 
 ### Rulegraph ###
 <img src="./resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
@@ -47,7 +47,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 # Conda _(required)_ #
 If required, first install **Conda**  
  
-*1/* Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+**1/** Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
 e.g. if **MacOSX-64-bit**:  
 ```shell
@@ -59,7 +59,7 @@ e.g. if **Linux-64-bit**:
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda_installer.sh
 ```
 
-*2/* Execute installation _(and follow the screen prompt instructions)_:  
+**2/** Execute installation _(and follow the screen prompt instructions)_:  
 ```shell
 bash ~/Miniconda_installer.sh
 ```
@@ -69,10 +69,10 @@ _Specify [yes] to accept the license terms_
 _Press [ENTER] to confirm the default Miniconda3 location (in your home: ~/miniconda3/)_  
 _Press [ENTER] to run conda init (initialize Miniconda3)_  
  
-*3/* Restart now your shell _(close and reopen a new terminal window)_  
+**3/** Restart now your shell _(close and reopen a new terminal window)_  
 (base) appear now at command prompt start 
 
-*4/* Optional cleaning, if successful installation:  
+**4/** Optional cleaning, if successful installation:  
 ```shell
 rm -f ~/Miniconda3_installer.sh
 ```
@@ -247,60 +247,159 @@ To select one or both, de/comment (#) as you wish:
 
 ### Directories tree structure ###
 ```shell
-🖥️️  GeVarLi.sh
-📚 README.md
-📂 visuals/
- └── 📈 rulegraph.png
-📂 config/
- ├── ⚙️ config.yaml
- └── ⚙️ fastq-screen.conf
-📂 resources/
- ├── 📂 genomes/
- │    └── 🧬 SARS-CoV-2_Wuhan-WIV04_2019.fasta
- ├── 📂 indexes/
- │    ├── 📂 bowtie2/
- │    │    └── 🗂️ SARS-CoV-2_Wuhan-WIV04_2019
- │    └── 📂 bwa/
- │         ├── 🗂️ SARS-CoV-2_Wuhan-WIV04_2019
- │         ├── 🗂️ Adapters
- │         ├── 🗂️ Ebola_ZEBOV
- │         ├── 🗂️ Echerichia_coli_U00096
- │         ├── 🗂️ HIV_HXB2
- │         ├── 🗂️ Phi-X174
- │         └── 🗂️ UniVec_wo_phi-X174
- ├── 📂 nextclade/
- │    └── 📂 sars-cov-2/
- │         ├── 🌍 genemap.gff
- │         ├── 🧪 primers.csv
- │         ├── ✅ qc.json
- │         ├── 🦠 reference.fasta
- │         ├── 🧬 sequences.fasta
- │         ├── 🏷️  tag.json
- │         └── 🌳 tree.json
- └── 📂 reads/  
-      ├── 🛡️ .gitkeep
-      ├── 📦 Sample-A_R1.fastq.gz
-      ├── 📦 Sample-A_R2.fastq.gz
-	  ├── 📦 Sample-B_R1.fastq.gz
-      └── 📦 Sample-B_R2.fastq.gz
-📂 workflow/
- ├── 📂 envs/
- │    ├── 🍜 bcftools-1.14.yaml
- │    ├── 🍜 bedtools-2.30.0.yaml
- │    ├── 🍜 bowtie2-2.4.4.yaml
- │    ├── 🍜 bwa-0.7.17.yaml
- │    ├── 🍜 cutadapt-3.5.yaml
- │    ├── 🍜 fastq-screen-0.14.0.yam
- │    ├── 🍜 fastqc-0.11.9.yaml
- │    ├── 🍜 gawk-5.1.0.yaml
- │    ├── 🍜 lofreq-2.1.5.yaml
- │    ├── 🍜 multiqc-1.11.yaml
- │    ├── 🍜 nextclade-1.11.0.yaml
- │    ├── 🍜 pangolin-3.1.17.yaml
- │    ├── 🍜 samtools-1.14.yaml
- │    └── 🍜 sickle-trim-1.33.yaml
- └── 📂 rules/
-      └── 📜 gevarli.smk
+ /
+ ├── 🖥️️  Start_GeVarLi.sh
+ ├── 📚 README.md
+ ├── 🪪 LICENSE
+ ├── 🛑 .gitignore
+ ├── 📂 .git/
+ ├── 📂 .snakemake/
+ ├── 📂 config/
+ │    ├── ⚙️  config.yaml
+ │    └── ⚙️  fastq-screen.conf
+ ├── 📂 resources/
+ │    ├── 📂 genomes/
+ │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN908947-3.fasta
+ │    │    ├── 🧬 Monkeypox-virus_Zaire_AF380138-1.fasta
+ │    │    ├── 🧬 Monkeypox-virus_UK_MT903345-1.fasta
+ │    │    ├── 🧬 Ebola-virus_Zaire_AF272001-1.fasta
+ │    │    ├── 🧬 Nipah-virus_Malaysia_AJ564622-1.fasta
+ │    │    ├── 🧬 HIV-1_HXB2_K03455-1.fasta.fasta
+ │    │    ├── 🧬 (your_favorite_genome_reference}.fasta
+ │    │    ├── 🧬 QC_Echerichia-coli_CP060121-1.fasta
+ │    │    ├── 🧬 QC_Kanamycin-Resistance-Gene.fasta
+ │    │    ├── 🧬 QC_NGS-adapters.fasta
+ │    │    ├── 🧬 QC_phi-X174_Coliphage_NC-001422-1.fasta
+ │    │    ├── 🧬 QC_UniVec_wo_phiX_and_kanamycin.fasta
+ │    │    └── 🧬 {your_favorite_qc_reference}.fasta
+ │    ├── 📂 indexes/
+ │    │    ├── 📂 bwa/
+ │    │    │    ├── 🗂️  {genomes}.amb
+ │    │    │    ├── 🗂️  {genomes}.ann
+ │    │    │    ├── 🗂️  {genomes}.bwt
+ │    │    │    ├── 🗂️  {genomes}.pac
+ │    │    │    └── 🗂️  {genomes}.sa
+ │    │    └── 📂 bowtie2/
+ │    │         ├── 🗂️  {genomes}.1.bt2
+ │    │         ├── 🗂️  {genomes}.2.bt2
+ │    │         ├── 🗂️  {genomes}.3.bt2
+ │    │         ├── 🗂️  {genomes}.4.bt2
+ │    │         ├── 🗂️  {genomes}.rev.1.bt2
+ │    │         └── 🗂️  {genomes}.rev.2.bt2
+ │    ├── 📂 nextclade/
+ │    │    ├── 📂 sars-cov-2/
+ │    │    │    ├── 🌍 genemap.gff
+ │    │    │    ├── 🧪 primers.csv
+ │    │    │    ├── ✅ qc.json
+ │    │    │    ├── 🦠 reference.fasta
+ │    │    │    ├── 🧬 sequences.fasta
+ │    │    │    ├── 🏷️  tag.json
+ │    │    │    └── 🌳 tree.json
+ │    │    ├── 📂 MPXV/
+ │    │    │    ├── 🌍 genemap.gff
+ │    │    │    ├── 🧪 primers.csv
+ │    │    │    ├── ✅ qc.json
+ │    │    │    ├── 🦠 reference.fasta
+ │    │    │    ├── 🧬 sequences.fasta
+ │    │    │    ├── 🏷️  tag.json
+ │    │    │    └── 🌳 tree.json
+ │    │    ├── 📂 hMPWV/
+ │    │    │    ├── 🌍 genemap.gff
+ │    │    │    ├── 🧪 primers.csv
+ │    │    │    ├── ✅ qc.json
+ │    │    │    ├── 🦠 reference.fasta
+ │    │    │    ├── 🧬 sequences.fasta
+ │    │    │    ├── 🏷️  tag.json
+ │    │    │    └── 🌳 tree.json
+ │    │    └── 📂 hMPXV_B1/
+ │    │         ├── 🌍 genemap.gff
+ │    │         ├── 🧪 primers.csv
+ │    │         ├── ✅ qc.json
+ │    │         ├── 🦠 reference.fasta
+ │    │         ├── 🧬 sequences.fasta
+ │    │         ├── 🏷️  tag.json
+ │    │         └── 🌳 tree.json
+ │    ├── 📂 primers/
+ │    │    ├── 📂 bedpe/
+ │    │    │    ├── 🛡️  .gitkeep
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4-1.bedpe
+ │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR063671-1_artic-primers-V1.bedpe
+ │    │    │    ├── 🛌️  Ebola-virus_Zaire_AF272001-1_artic-primers-V2.bedpe
+ │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR063671-1_artic-primers-V3.bedpe
+ │    │    │    ├── 🛌️  Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1.bedpe
+ │    │    │    └── 🛌️  {your_favorite_kit_primers}.bedpe
+ │    │    ├── 📂 bed/
+ │    │    │    ├── 🛡️  .gitkeep
+ │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1.bed
+ │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2.bed
+ │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3.bed
+ │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4.bed
+ │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4-1.bed
+ │    │    │    ├── 🛏️  Ebola-virus_Zaire_KR063671-1_artic-primers-V1.bed
+ │    │    │    ├── 🛏️  Ebola-virus_Zaire_AF272001-1_artic-primers-V2.bed
+ │    │    │    ├── 🛏️  Ebola-virus_Zaire_KR063671-1_artic-primers-V3.bed
+ │    │    │    ├── 🛏️  Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1.bed
+ │    │    │    └── 🛏️  {your_favorite_kit_primers}.bed
+ │    │    └── 📂 fasta/
+ │    │         ├── 🛡️  .gitkeep
+ │    │         ├── 🧬 Monkeypox-virus_UK_MT903345-1_custom-VGCARE-primers-V1.fasta
+ │    │         └── 🧬 {your_favorite_kit_primers}.fasta
+ │    ├── 📂 reads/
+ │    │    ├── 🛡️  .gitkeep
+ │    │    ├── 📦 {samples}_R1.fastq.gz
+ │    │    └── 📦 {samples}_R2.fastq.gz
+ │    ├── 📂 test_data/
+ │    │    ├── 🛡️  .gitkeep
+ │    │    ├── 📦 Sample-test_SARS-CoV-2_R1.fastq.gz
+ │    │    ├── 📦 Sample-test_SARS-CoV-2_R2.fastq.gz
+ │    │    ├── 📦 Sample-test_MPXV_R1.fastq.gz
+ │    │    └── 📦 Sample-test_MPXV_R2.fastq.gz
+ │    └── 📂 visuals/
+ │         ├── 📈 gevarli_rulegraph.png
+ │         ├── 📈 indexing_genomes_rulegraph.png
+ │         └── 📈 quality_control_rulegraph.png
+ └── 📂 workflow/
+      ├── 📂 envs/
+	  │    ├── 📂 linux/
+      │    │    ├── 🍜 bamclipper-1.0.yaml
+      │    │    ├── 🍜 bcftools-1.15.1.yaml
+      │    │    ├── 🍜 bedtools-2.30.0.yaml
+      │    │    ├── 🍜 bowtie2-2.4.5.yaml
+      │    │    ├── 🍜 bwa-0.7.17.yaml
+      │    │    ├── 🍜 cutadapt-4.1.yaml
+      │    │    ├── 🍜 fastq-screen-0.15.2.yaml
+      │    │    ├── 🍜 fastqc-0.11.9.yaml
+      │    │    ├── 🍜 gawk-5.1.0.yaml
+      │    │    ├── 🍜 lofreq-2.1.5.yaml
+      │    │    ├── 🍜 multiqc-1.12.yaml
+      │    │    ├── 🍜 nextclade-2.5.0.yaml
+      │    │    ├── 🍜 pangolin-4.0.6.yaml
+      │    │    ├── 🍜 samtools-1.15.1.yaml
+      │    │    └── 🍜 sickle-trim-1.33.yaml
+      │    └── 📂 osx/
+      │    │    ├── 🍜 bamclipper-1.0.yaml
+      │    │    ├── 🍜 bcftools-1.15.1.yaml
+      │    │    ├── 🍜 bedtools-2.30.0.yaml
+      │    │    ├── 🍜 bowtie2-2.4.5.yaml
+      │    │    ├── 🍜 bwa-0.7.17.yaml
+      │    │    ├── 🍜 cutadapt-4.1.yaml
+      │    │    ├── 🍜 fastq-screen-0.15.2.yaml
+      │    │    ├── 🍜 fastqc-0.11.9.yaml
+      │    │    ├── 🍜 gawk-5.1.0.yaml
+      │    │    ├── 🍜 lofreq-2.1.5.yaml
+      │    │    ├── 🍜 multiqc-1.12.yaml
+      │    │    ├── 🍜 nextclade-2.5.0.yaml
+      │    │    ├── 🍜 pangolin-4.0.6.yaml
+      │    │    ├── 🍜 samtools-1.15.1.yaml
+      │    │    └── 🍜 sickle-trim-1.33.yaml
+      └── 📂 rules/
+	       ├── 📜 gevarli.smk
+	       ├── 📜 indexing_genomes.smk
+           └── 📜 quality_control.smk
 ```
 
 ## ~ SUPPORT ~ ##
@@ -486,3 +585,5 @@ _Online (2010)_
 **Publication**: []()  
 **Source code**: [https://github.com/s-andrews/FastQC](https://github.com/s-andrews/FastQC)  
 **Documentation**: [https://www.bioinformatics.babraham.ac.uk/projects/fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc)  
+
+###############################################################################

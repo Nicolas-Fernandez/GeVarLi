@@ -1,46 +1,43 @@
-#######T######R#####A#####N######S######V######I######H#######M######I#########
-# Name: quality_control.smk
-# Author: Nicolas Fernandez
-# Affiliation: IRD_U233_TransVIHMI
-# Aim: Snakefile for Quality Control
-# Date: 2022.09.28
-# Run: snakemake --snakefile quality_control.smk --cores --use-conda 
-# Latest modification: 2022.09.28
-# Done: Produce Quality Control for sample reads
+
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name __________________ quality_control.smk
+# Author ________________ Nicolas Fernandez
+# Affiliation ___________ IRD_U233_TransVIHMI
+# Aim ___________________ Snakefile with quality control rules
+# Date __________________ 2021.09.28
+# Latest modification ___ 2022.11.03
+# Run ___________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
-# PUBLICATIONS #
-
-###############################################################################
-# CONFIGURATION #
+###### CONFIGURATION ######
 
 configfile: "config/config.yaml"
 
 ###############################################################################
-# FUNCTIONS #
+###### FUNCTIONS ######
 
 def get_memory_per_thread(wildcards):
     memory_per_thread = RAM // CPUS
     return memory_per_thread
 
 ###############################################################################
-# WILDCARDS #
+###### WILDCARDS ######
 
 ###############################################################################
-# RESOURCES #
+###### RESOURCES ######
 
 OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
-# ENVIRONMENTS #
+###### ENVIRONMENTS ######
 
 FASTQC = config["conda"][OS]["fastqc"]            # FastQC
 FASTQSCREEN = config["conda"][OS]["fastq-screen"] # Fastq-Screen
 MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
 
 ###############################################################################
-# PARAMETERS #
+###### PARAMETERS ######
 
 CONFIG = config["fastq-screen"]["config"]   # Fastq-screen --conf
 ALIGNER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
@@ -48,7 +45,7 @@ SUBSET = config["fastq-screen"]["subset"]   # Fastq-screen --subset
 
 
 ###############################################################################
-# RULES #
+###### RULES ######
 
 rule all:
     input:
