@@ -106,12 +106,10 @@ ${green}--------------------${nc}
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
 samples=$(expr ${fastq} \/ 2)                                                                   # fastq files / 2 = samples (paired-end)
-snakemake_version=$(grep -o -E "snakemake_version: '[0-9]+\.[0-9]+\.[0-9]+'" \
-			 ${workdir}/config/config.yaml \
-			| sed "s/snakemake_version: //")                                        # Get snakemake version
-conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'" \
-		      ${workdir}/config/config.yaml \
-		     | sed "s/conda_frontend: //")                                              # Get conda frontend
+snakemake_version=$(grep -o -E "snakemake_version: '[0-9]+\.[0-9]+\.[0-9]+'" ${workdir}/config/config.yaml | \
+			sed "s/snakemake_version: //" | sed "s/'//g")                           # Get snakemake version
+conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'"  ${workdir}/config/config.yaml | \
+		     sed "s/conda_frontend: //" | sed "s/'//g")                                 # Get conda frontend
 max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
 max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")          # Get user config for max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                          # Calcul maximum memory usage per job
