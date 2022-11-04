@@ -153,8 +153,8 @@ echo -e "
 ${blue}Working Directory${nc} ______ ${workdir}/
 ${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
-${blue}Snakemake version${nc} ______ ${snakemake_version} 
-${blue}Conda frontend${nc} _________ ${conda_frontend}
+${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
+${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
 
 ${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
 ${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
@@ -196,7 +196,7 @@ if ls ~/miniconda3/bin/snakemake 2> /dev/null
 then
     echo ""
 else
-    ${conda_frontend} install -n base -c conda-forge -c bioconda snakemake==${snake_version} --yes
+    ${conda_frontend} install -n base -c conda-forge -c bioconda snakemake==${snakemake_version} --yes
 fi
 
 # Rename (to rename fastq files)
