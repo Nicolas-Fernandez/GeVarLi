@@ -1,5 +1,16 @@
 #!/bin/bash
 
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name __________________ Start_GeVarLi.sh
+# Version _______________ v.2022.11
+# Author ________________ Nicolas Fernandez
+# Affiliation ___________ IRD_U233_TransVIHMI
+# Aim ___________________ Bash script running gevarli.smk snakefile
+# Date __________________ 2021.10.12
+# Latest modification ___ 2022.11.03
+# Use ___________________ bash Start_GeVarLi.sh
+
+###############################################################################
 ##### Colors ######
 red="\033[1;31m"   # red
 green="\033[1;32m" # green
@@ -7,29 +18,31 @@ ylo="\033[1;33m"   # yellow
 blue="\033[1;34m"  # blue
 nc="\033[0m"       # no color
 
+###############################################################################
 ###### About ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}"
-echo -e "${green}-----------------${nc}"
-echo ""
-echo -e "${blue}Name${nc} __________________ Start_GeVarLi.sh"
-echo -e "${blue}Author${nc} ________________ Nicolas Fernandez"
-echo -e "${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI"
-echo -e "${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation"
-echo -e "${blue}Date${nc} __________________ 2021.10.12"
-echo -e "${blue}Run${nc} ___________________ bash Start_GeVarLi.sh"
-echo -e "${blue}Latest Modification${nc} ___ 2022.09.16"
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
+${green}-----------------${nc}
 
+${blue}Name${nc} __________________ Start_GeVarLi.sh
+${blue}Version${nc} _______________ v.2022.11
+${blue}Author${nc} ________________ Nicolas Fernandez
+${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI
+${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation
+${blue}Date${nc} __________________ 2021.10.12
+${blue}Latest modification${nc} ___ 2022.11.03
+${blue}Run${nc} ___________________ bash Start_GeVarLi.sh
+"
 
-###### Hardware ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}"
-echo -e "${green}--------------------${nc}"
-echo ""
+###############################################################################
+###### Operating System ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}
+${green}--------------------${nc}
+echo "
 
-# Operating System
 case "$OSTYPE" in
   linux*)   os="Linux" ;;
   bsd*)     os="BSD" ;;
@@ -40,15 +53,18 @@ case "$OSTYPE" in
   *)        os="Unknown (${OSTYPE})" ;;
 esac
 
-echo -e "${blue}Operating system${nc} _______ ${red}${os}${nc}" # Print operating system 
+# Print operating system 
+echo -e "
+${blue}Operating system${nc} _______ ${red}${os}${nc}
+"
 
-
+###############################################################################
 ###### Hardware ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}"
-echo -e "${green}--------------------${nc}"
-echo ""
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}
+${green}--------------------${nc}
+"
 
 if [[ ${os} == "OSX" ]]
 then
@@ -70,18 +86,22 @@ else
     exit 1
 fi
 
-echo -e "                         ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}" # Print header chip model name
-echo -e "${blue}Chip Model Name${nc} ________ ${model_name}"                     # Print chip model name
-echo -e "${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc} cores"  # Print physical cpu
-echo -e "${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads" # Print logical cpu
-echo -e "${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM"    # Print RAM size in Gb
+# Print some hardware specifications
+echo -e "
+                         ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}
+${blue}Chip Model Name${nc} ________ ${model_name}
+${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc} cores
+${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
+${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
+"
 
+###############################################################################
 ###### Settings ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}"
-echo -e "${green}--------------------${nc}"
-echo ""
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
+${green}--------------------${nc}
+"
 
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
@@ -124,32 +144,37 @@ else
     amplicon_kit="'error_config_file'"
 fi
 
-echo -e "${blue}Working Directory${nc} ______ ${workdir}/"                                                     # Print working directory
-echo -e "${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)" # Print samples number 
-echo ""                                                                                                        # 
-echo -e "${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available" # Print max threads
-echo -e "${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available"   # Print max memory
-echo -e "${blue}Memory per job${nc} _________ ${red}${memory_per_job}${nc} Gb per job"                         # Print max memory per job
-echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
-echo -e "${blue}Genome Reference${nc} _______ ${ylo}${reference}${nc}"                                         # Print user config genome reference
-echo -e "${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}"                                           # Print user config aligner
-echo -e "${blue}Min. Coverage${nc} __________ ${red}${min_cov}${nc}x"                                          # Print user config minimum coverage
-echo -e "${blue}Min. Allele Frequency${nc} __ ${red}${min_af}${nc}"                                            # Print user config minimum Al.Freq.
-echo ""       	      	      	      	      	      	      	      	      	      	      	      	       # 
-echo -e "${blue}Nextclade run${nc} __________ ${red}${nextclade}${nc}"                                         # Print if nexclade will run
-echo -e "${blue}Pangolin run${nc} ___________ ${red}${pangolin}${nc}"                                          # Print if pangolin will run
-echo -e "${blue}BamClipper run${nc} _________ ${red}${bamclipper}${nc}"                                        # Print if bamclipper will run
-echo -e "${blue}Primers Kit${nc} ____________ ${ylo}${amplicon_kit}${nc}"                                      # Print if amplicon kit used
-echo ""                                                                                                        #
-echo -e "${blue}Start Time${nc} _____________ ${time_stamp_start}"                                             # Print analyzes starting time
+# Print some analyzes settings
+echo -e "
+${blue}Working Directory${nc} ______ ${workdir}/
+${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
+${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
+${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
+${blue}Memory per job${nc} _________ ${red}${memory_per_job}${nc} Gb per job
 
+${blue}Genome Reference${nc} _______ ${ylo}${reference}${nc}
+${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
+
+${blue}Min. Coverage${nc} __________ ${red}${min_cov}${nc}x
+${blue}Min. Allele Frequency${nc} __ ${red}${min_af}${nc}
+
+${blue}Nextclade run${nc} __________ ${red}${nextclade}${nc}
+${blue}Pangolin run${nc} ___________ ${red}${pangolin}${nc}
+
+${blue}BamClipper run${nc} _________ ${red}${bamclipper}${nc}
+${blue}Primers Kit${nc} ____________ ${ylo}${amplicon_kit}${nc}
+
+${blue}Start Time${nc} _____________ ${time_stamp_start}
+"
+
+###############################################################################
 ###### Installations ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}INSTALLATIONS${nc} ${green}#####${nc}"
-echo -e "${green}-------------------------${nc}"
-echo ""
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}INSTALLATIONS${nc} ${green}#####${nc}
+${green}-------------------------${nc}
+"
 
 # Mamba
 if ls ~/miniconda3/bin/mamba 2> /dev/null
@@ -160,7 +185,6 @@ else
 fi
 
 # Snakemake
-#snake_ver="7.8.2"
 snake_ver="6.12.3"
 if ls ~/miniconda3/bin/snakemake 2> /dev/null
 then
@@ -179,13 +203,13 @@ else
     conda install -n base -c bioconda rename --yes
 fi
 
-
+###############################################################################
 ###### Rename samples ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}"
-echo -e "${green}------------------------------${nc}"
-echo ""
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}
+${green}------------------------------${nc}
+"
 
 # Rename fastq files to remove "_001" Illumina pattern.
 ## De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
@@ -194,17 +218,19 @@ rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remo
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
 
 
-###### Call snakemake pipeline ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}SNAKEMAKE PIPELINE${nc} ${green}#####${nc}"
-echo -e "${green}------------------------------${nc}"
-echo ""
+###############################################################################
+###### Call snakemake pipelines ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}SNAKEMAKE PIPELINE${nc} ${green}#####${nc}
+${green}------------------------------${nc}
+"
 
 snakefile_list="indexing_genomes quality_control gevarli"
 
-echo -e "${blue}Unlocking working directory:${nc}"
-echo ""
+echo -e "
+${blue}Unlocking working directory:${nc}
+"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Set or overwrite values in the workflow config object.
@@ -222,9 +248,9 @@ for snakefile in ${snakefile_list} ; do
     echo ""
 done
 
-echo ""
-echo -e "${blue}Conda environments list:${nc}"
-echo ""
+echo -e "
+${blue}Conda environments list:${nc}
+"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
@@ -243,9 +269,9 @@ for snakefile in ${snakefile_list} ; do
         --list-conda-envs
 done
 
-echo ""
-echo -e "${blue}Conda environments setup:${nc}"
-echo ""
+echo -e "
+${blue}Conda environments setup:${nc}
+"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
@@ -269,9 +295,9 @@ for snakefile in ${snakefile_list} ; do
         --conda-create-envs-only 
 done
 
-echo ""
-echo -e "${blue}Dry run:${nc}"
-echo ""
+echo -e "
+${blue}Dry run:${nc}
+"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
@@ -298,9 +324,9 @@ for snakefile in ${snakefile_list} ; do
         --quiet
 done
 
-echo ""
-echo -e "${blue}Let's run!${nc}"
-echo ""
+echo -e "
+${blue}Let's run!${nc}
+"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
@@ -329,13 +355,66 @@ for snakefile in ${snakefile_list} ; do
         --printshellcmds
 done
 
-###### Create usefull graphs, summary and logs ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}"
-echo -e "${green}-------------------------------------${nc}"
-echo ""
+###############################################################################
+###### Concatenate all consensus fasta ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONCATENATE FASTA FILES${nc} ${green}#####${nc}
+${green}-----------------------------------${nc}
+"
+cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
 
+cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_readsQC_reports.html
+
+###############################################################################
+###### Concatenate all coverage stats ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONCATENATE COVERAGE STATS${nc} ${green}#####${nc}
+${green}--------------------------------------${nc}
+"
+cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_genome_coverages.tsv
+
+awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
+    && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
+
+###############################################################################
+###### Concatenate all Pangolin lineage reports ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONCATENATE PANGOLIN REPORTS${nc} ${green}#####${nc}
+${green}----------------------------------------${nc}
+"
+
+cat ${workdir}/results/06_Lineages/*_pangolin-report.csv > ${workdir}/results/All_pangolin_lineages.csv
+
+awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/PANGO.tmp \
+    && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv
+
+sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
+
+rm -f ${workdir}/results/All_pangolin_lineages.csv
+
+###############################################################################
+###### Concatenate all Nextclade lineage reports ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONCATENATE NEXTCLADE REPORTS${nc} ${green}#####${nc}
+${green}-----------------------------------------${nc}
+"
+
+cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv > ${workdir}/results/All_nextclade_lineages.tsv
+
+awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
+    && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv
+
+###############################################################################
+###### Create usefull graphs, summary and logs ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}
+${green}-------------------------------------${nc}
+"
 mkdir ${workdir}/results/10_Reports/graphs/ 2> /dev/null
 
 graph_list="dag rulegraph filegraph"
@@ -361,115 +440,73 @@ for snakefile in ${snakefile_list} ; do
         --summary > ${workdir}/results/10_Reports/${snakefile}_files_summary.txt ;
 done
 
-cp ${workdir}/config/config.yaml ${workdir}/results/10_Reports/config.yaml
+cp ${workdir}/config/config.yaml ${workdir}/results/10_Reports/config_used.yaml
 
-
-settings_log="${workdir}/results/10_Reports/settings.txt"
-echo ""                                                                            >> ${settings_log} #  
-echo "Operating system _______ ${os}"                                              >> ${settings_log} # Log operating system
-echo ""                                                                            >> ${settings_log} #
-echo "                        Brand(R) | Type(R) | Model | @ Speed GHz"            >> ${settings_log} # Log header chip model name
-echo "Chip Model Name ________ ${model_name}"                                      >> ${settings_log} # Log chip model name
-echo "Physical CPUs __________ ${physical_cpu} cores"                              >> ${settings_log} # Log physical cpu
-echo "Logical CPUs ___________ ${logical_cpu} threads"                             >> ${settings_log} # Log logical cpu
-echo "System Memory __________ ${ram_size} Gb of RAM"                              >> ${settings_log} # Log RAM size
-echo ""                                                                            >> ${settings_log} #
-echo "Working Directory ______ ${workdir}/"                                        >> ${settings_log} # Log working directory
-echo "Samples Processed ______ ${samples} samples (${fastq} fastq files)"          >> ${settings_log} # Log samples number 
-echo "Maximum Threads ________ ${max_threads} of ${logical_cpu} threads available" >> ${settings_log} # Log max threads
-echo "Maximum Memory _________ ${max_memory} of ${ram_size} Gb available"          >> ${settings_log} # Log max memor
-echo "Memory per job _________ ${memory_per_job} Gb per job maximum"               >> ${settings_log} # Log max memory per job
-echo "Genome Reference _______ ${reference}"                                       >> ${settings_log} # Log user config genome reference
-echo "Aligner ________________ ${aligner}"                                         >> ${settings_log} # Log user config aligner
-echo "Min. Coverage __________ ${min_cov}"                                         >> ${settings_log} # Log user config minimum coverage
-echo "Min. Allele Frequency __ ${min_af}"                                          >> ${settings_log} # Log user config snvs cov min
-echo ""                                                                            >> ${settings_log} #
-echo "Nextclade run __________ ${nextclade}"                                       >> ${settings_log} # Log if nexclade will run
-echo "Pangolin run ___________ ${pangolin}"                                        >> ${settings_log} # Log if pangolin will run
-echo "BamClipper run _________ ${bamclipper}"                                      >> ${settings_log} # Log if bamclipper will run
-echo "Primers Kit ____________ ${amplicon_kit}"                                    >> ${settings_log} # Log if amplicon kit used
-
-
-###### Concatenate all consensus fasta ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}CONCATENATE FASTA FILES${nc} ${green}#####${nc}"
-echo -e "${green}-----------------------------------${nc}"
-echo ""
-
-cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
-
-# and copy multiqc_report.html to results/ dir root
-cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_readsQC_reports.html
-
-
-###### Concatenate all coverage stats ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}CONCATENATE COVERAGE STATS${nc} ${green}#####${nc}"
-echo -e "${green}--------------------------------------${nc}"
-echo ""
-
-cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_genome_coverages.tsv
-
-awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
-    && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
-
-
-###### Concatenate all Pangolin lineage reports ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}CONCATENATE PANGOLIN REPORTS${nc} ${green}#####${nc}"
-echo -e "${green}----------------------------------------${nc}"
-echo ""
-
-cat ${workdir}/results/06_Lineages/*_pangolin-report.csv > ${workdir}/results/All_pangolin_lineages.csv
-
-awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/PANGO.tmp \
-    && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv
-
-sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
-
-rm -f ${workdir}/results/All_pangolin_lineages.csv
-
-
-###### Concatenate all Nextclade lineage reports ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}CONCATENATE NEXTCLADE REPORTS${nc} ${green}#####${nc}"
-echo -e "${green}-----------------------------------------${nc}"
-echo ""
-
-cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv > ${workdir}/results/All_nextclade_lineages.tsv
-
-awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
-    && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv
-
-
+###############################################################################
 ###### End managment ######
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo -e "${green}#####${nc} ${red}SCRIPT END${nc} ${green}#####${nc}"
-echo -e "${green}----------------------${nc}"
-echo ""
-
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}SCRIPT END${nc} ${green}#####${nc}
+${green}----------------------${nc}
+"
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
-#find ${workdir}/results/ -type d -empty -delete # Remove empty directory
+find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
 elapsed_time=${SECONDS}                  # Get SECONDS counter 
 minutes=$((${elapsed_time}/60))          # / 60 = minutes
 seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
-echo -e "${blue}End Time${nc} _______________ ${time_stamp_end}"                                                       # Print analyzes ending time
-echo -e "${blue}Processing Time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed" # Print total time elapsed
+# Print analyzes ending time and total time elapsed
+echo -e "
+${blue}End Time${nc} _______________ ${time_stamp_end}
+${blue}Processing Time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed
+"
 
-echo ""
-echo "Start Time _____________ ${time_stamp_start}"                               >> ${settings_log} # Log analyzes starting time
-echo "End Time _______________ ${time_stamp_end}"                                 >> ${settings_log} # Log analyzes ending time
-echo "Processing Time ________ ${minutes} minutes and ${seconds} seconds elapsed" >> ${settings_log} # Log analyzes total time
+# Log analyzes settings
+echo "
+${blue}Name${nc} __________________ Start_GeVarLi.sh
+${blue}Version${nc} _______________ v.2022.11
+${blue}Author${nc} ________________ Nicolas Fernandez
+${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI
+${blue}Aim${nc} ___________________ Bash script for GeVarLi
+${blue}Date${nc} __________________ 2021.10.12
+${blue}Latest modification${nc} ___ 2022.11.03
+${blue}Run${nc} ___________________ bash Start_GeVarLi.sh
 
+Operating system __________________ ${os}
 
-echo ""
-echo -e "${green}------------------------------------------------------------------------${nc}"
-echo ""
+                                   Brand(R) | Type(R) | Model | @ Speed GHz
+Chip Model Name ___________________ ${model_name}
+Physical CPUs _____________________ ${physical_cpu} cores
+Logical CPUs ______________________ ${logical_cpu} threads
+System Memory _____________________ ${ram_size} Gb of RAM
+
+Working Directory _________________ ${workdir}/
+Samples Processed _________________ ${samples} samples (${fastq} fastq files)
+
+Maximum Threads ___________________ ${max_threads} of ${logical_cpu} threads available
+Maximum Memory ____________________ ${max_memory} of ${ram_size} Gb available
+Memory per job ____________________ ${memory_per_job} Gb per job maximum
+
+Genome Reference __________________ ${reference}
+Aligner ___________________________ ${aligner}
+
+Min. Coverage _____________________ ${min_cov}
+Min. Allele Frequency _____________ ${min_af}
+
+Nextclade run _____________________ ${nextclade}
+Pangolin run ______________________ ${pangolin}
+
+BamClipper run ____________________ ${bamclipper}
+Primers Kit _______________________ ${amplicon_kit}
+
+Start Time ________________________ ${time_stamp_start}
+End Time __________________________ ${time_stamp_end}
+Processing Time ___________________ ${minutes} minutes and ${seconds} seconds elapsed
+" > ${workdir}/results/10_Reports/settings_logs.txt
+
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+"
+###############################################################################

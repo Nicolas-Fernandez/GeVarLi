@@ -1,13 +1,14 @@
 ---
-###############################################################################
-# Author: Nicolas Fernandez
-# Affiliation: IRD_TransVIHMI
-# Aim: Configuration file for gevarli.smk snakefile
-# Date: 2021.10.12
-# Use: Edit or de/comment (#) settings
-# Latest modification: 2022.09.16
-# Done: Change 'mem_gb' for 'ram' and Nextclade dataset now auto-selected
 
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name __________________ config.yaml
+# Version _______________ v.2022.11
+# Author ________________ Nicolas Fernandez
+# Affiliation ___________ IRD_U233_TransVIHMI
+# Aim ___________________ Configuration yaml file for gevarli.smk snakefile
+# Date __________________ 2021.10.12
+# Latest modification ___ 2022.11.03
+# Use ___________________ Edit default settings
 ###############################################################################
 
 ### RESOURCES ----------------------------------------------------------------------------------------
@@ -20,6 +21,8 @@ resources:
     ## '.'        # Local (i.e. GeVarLi root directory)
     ## '/scratch' # HPC (set it to match your HPC usage)
 
+snakemake_version: '6.12.3' # Snakemake version (down from 7.8.2)
+conda_frontend: 'conda'     # Conda frontend ('conda' or 'mamba')
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:

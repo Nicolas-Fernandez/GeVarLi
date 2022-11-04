@@ -1,23 +1,20 @@
-#######T######R#####A#####N######S######V######I######H#######M######I#########
-# Name: gevarli.smk
-# Author: Nicolas Fernandez
-# Affiliation: IRD_U233_TransVIHMI
-# Aim: Snakefile for GEnome assembling, VARiant calling and LIneage assignation 
-# Date: 2021.10.12
-# Run: snakemake --snakefile gevarli.smk --cores --use-conda 
-# Latest modification: 2022.09.28
-# Done: Add amplicon primers clipping option using  BamClipper
+
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name __________________ gevarli.smk
+# Author ________________ Nicolas Fernandez
+# Affiliation ___________ IRD_U233_TransVIHMI
+# Aim ___________________ Snakefile with GeVarLi rules
+# Date __________________ 2021.10.12
+# Latest modification ___ 2022.11.03
+# Use ___________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
-# PUBLICATIONS #
-
-###############################################################################
-# CONFIGURATION #
+###### CONFIGURATION ######
 
 configfile: "config/config.yaml"
 
 ###############################################################################
-# FUNCTIONS #
+###### FUNCTIONS ######
 
 def get_memory_per_thread(wildcards):
     memory_per_thread = RAM // CPUS
@@ -66,12 +63,12 @@ def get_nextclade_dataset(wildcards):
 
 
 ###############################################################################
-# WILDCARDS #
+###### WILDCARDS ######
 
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
-# RESOURCES #
+###### RESOURCES ######
 
 OS = config["os"]                      # Operating system
 CPUS = config["resources"]["cpus"]     # Threads (maximum)
@@ -80,7 +77,7 @@ MEM_GB = get_memory_per_thread         # Memory per thread in GB (maximum)
 TMPDIR = config["resources"]["tmpdir"] # Temporary directory
 
 ###############################################################################
-# ENVIRONMENTS #
+###### ENVIRONMENTS ######
 
 CUTADAPT = config["conda"][OS]["cutadapt"]        # Cutadapt
 SICKLETRIM = config["conda"][OS]["sickle-trim"]   # Sickle-trim
@@ -96,7 +93,7 @@ PANGOLIN = config["conda"][OS]["pangolin"]        # Pangolin
 NEXTCLADE = config["conda"][OS]["nextclade"]      # Nextclade
 
 ###############################################################################
-# PARAMETERS #
+###### PARAMETERS ######
 
 LENGTHc = config["cutadapt"]["length"]          # Cutadapt --minimum-length
 TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
@@ -133,7 +130,7 @@ NEXTPATH = config["nextclade"]["path"]          # Path to nextclade dataset
 NEXTDATASET = get_nextclade_dataset             # Nextclade dataset
 
 ###############################################################################
-# RULES #
+###### RULES ######
 
 rule all:
     input:

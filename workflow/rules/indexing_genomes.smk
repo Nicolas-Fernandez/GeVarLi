@@ -1,49 +1,46 @@
-#######T######R#####A#####N######S######V######I######H#######M######I#########
-# Name: indexing_genomes.smk
-# Author: Nicolas Fernandez
-# Affiliation: IRD_U233_TransVIHMI
-# Aim: Snakefile for Indexing Genomes
-# Date: 2022.09.28
-# Run: snakemake --snakefile indexing_genomes.smk --cores --use-conda 
-# Latest modification: 2022.09.30
-# Done: Produce indexes for BWA and Bowtie2 aligners if needed
+
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name __________________ indexing_genomes.smk
+# Author ________________ Nicolas Fernandez
+# Affiliation ___________ IRD_U233_TransVIHMI
+# Aim ___________________ Snakefile with indexing genomes rules
+# Date __________________ 2022.09.28
+# Latest modification ___ 2022.11.03
+# Use ___________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
-# PUBLICATIONS #
-
-###############################################################################
-# CONFIGURATION #
+###### CONFIGURATION ######
 
 configfile: "config/config.yaml"
 
 ###############################################################################
-# FUNCTIONS #
+###### FUNCTIONS ######
 
 ###############################################################################
-# WILDCARDS #
+###### WILDCARDS ######
 
 REFSEQ, = glob_wildcards("resources/genomes/{refseq}.fasta")
 
 ###############################################################################
-# RESOURCES #
+###### RESOURCES ######
 
 OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
-# ENVIRONMENTS #
+###### ENVIRONMENTS ######
 
 BOWTIE2 = config["conda"][OS]["bowtie2"] # Bowtie2
 BWA = config["conda"][OS]["bwa"]         # Bwa
 
 ###############################################################################
-# PARAMETERS #
+###### PARAMETERS ######
 
 BWAALGO = config["bwa"]["algorithm"]         # BWA indexing algorithm
 BT2ALGO = config["bowtie2"]["algorithm"]     # BT2 indexing algorithm
 
 ###############################################################################
-# RULES #
+###### RULES ######
 
 rule all:
     input:

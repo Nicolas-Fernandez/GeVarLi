@@ -1,5 +1,4 @@
 
-
 # Ignore backup copies files
 *~
 
@@ -10,6 +9,10 @@
 .DS_Store
 Thumbs.db
 
+# Ignore temp and touch files
+*.temp
+*.done
+
 # Ignore local snakemake (include .snakemake/conda/)
 .snakemake
 
@@ -18,12 +21,8 @@ Thumbs.db
 *.gz
 *.fastq.gz
 
-# Ignore temp and touch files
-*.temp
-*.done
-
-# Ignore results
-/results
+# Ignore fasta indexes
+.fai
 
 # Ignore indexes directory
 /resources/indexes
@@ -38,3 +37,6 @@ Thumbs.db
 *.bwt
 *.pac
 *.sa
+
+# Ignore results
+/results
