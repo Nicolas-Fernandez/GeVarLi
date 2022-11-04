@@ -103,11 +103,11 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-snakemake_version=$(grep -o -E "snakemake_version: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/snakemake_version: //") # Get snakemake version
-conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/conda_frontend: //")          # Get conda frontend
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
 samples=$(expr ${fastq} \/ 2)                                                                   # fastq files / 2 = samples (paired-end)
+snakemake_version=$(grep -o -E "snakemake_version: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/snakemake_version: //") # Get snakemake version
+conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/conda_frontend: //")          # Get conda frontend
 max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
 max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")          # Get user config for max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                          # Calcul maximum memory usage per job
@@ -148,11 +148,11 @@ fi
 
 # Print some analyzes settings
 echo -e "
-${blue}Snakemake version${nc} ______ ${snakemake_version} 
-${blue}Conda frontend${nc} _________ ${conda_frontend}
-
 ${blue}Working Directory${nc} ______ ${workdir}/
 ${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
+
+${blue}Snakemake version${nc} ______ ${snakemake_version} 
+${blue}Conda frontend${nc} _________ ${conda_frontend}
 
 ${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
 ${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
@@ -206,11 +206,11 @@ else
 fi
 
 # Graphviz (to dot snakemake DAG)
-if ls ~/miniconda3/bin/rename 2> /dev/null
+if ls ~/miniconda3/bin/graphviz 2> /dev/null
 then
     echo ""
 else
-    ${conda_frontend} install -n base -c bioconda rename --yes
+    ${conda_frontend} install -n base -c anaconda graphviz --yes
 fi
 
 ###############################################################################
