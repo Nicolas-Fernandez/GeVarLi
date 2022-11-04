@@ -16,16 +16,17 @@ Thumbs.db
 # Ignore local snakemake (include .snakemake/conda/)
 .snakemake
 
-# Ignore (raw) reads
-*.fastq
-*.gz
-*.fastq.gz
+# Ignore (raw) reads (commented because test_data fastq files)
+#*.fastq
+#*.gz
+#*.fastq.gz
 
 # Ignore fasta indexes
 .fai
 
 # Ignore indexes directory
 /resources/indexes
+/resources/reads/*.fastq.gz
 
 # Ignore bt2 indexes
 *.bt2

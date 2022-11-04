@@ -41,7 +41,7 @@ echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}
 ${green}--------------------${nc}
-echo "
+"
 
 case "$OSTYPE" in
   linux*)   os="Linux" ;;
@@ -103,6 +103,8 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
+snakemake_version=$(grep -o -E "snakemake_version: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/snakemake_version: //") # Get snakemake version
+conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/conda_frontend: //")          # Get conda frontend
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
 samples=$(expr ${fastq} \/ 2)                                                                   # fastq files / 2 = samples (paired-end)
@@ -146,6 +148,9 @@ fi
 
 # Print some analyzes settings
 echo -e "
+${blue}Snakemake version${nc} ______ ${snakemake_version} 
+${blue}Conda frontend${nc} _________ ${conda_frontend}
+
 ${blue}Working Directory${nc} ______ ${workdir}/
 ${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
@@ -176,7 +181,7 @@ ${green}#####${nc} ${red}INSTALLATIONS${nc} ${green}#####${nc}
 ${green}-------------------------${nc}
 "
 
-# Mamba
+# Mamba (to install environments)
 if ls ~/miniconda3/bin/mamba 2> /dev/null
 then
     echo ""
@@ -184,23 +189,28 @@ else
     conda install -n base -c conda-forge mamba --yes
 fi
 
-# Snakemake
-snake_ver="6.12.3"
+# Snakemake (to run GeVarLi)
 if ls ~/miniconda3/bin/snakemake 2> /dev/null
 then
     echo ""
 else
-    #mamba install -n base -c conda-forge -c bioconda snakemake==${snake_ver} --yes
-    conda install -n base -c conda-forge -c bioconda snakemake==${snake_ver} --yes
+    ${conda_frontend} install -n base -c conda-forge -c bioconda snakemake==${snake_version} --yes
 fi
 
-# Rename
+# Rename (to rename fastq files)
 if ls ~/miniconda3/bin/rename 2> /dev/null
 then
     echo ""
 else
-    #mamba install -n base -c bioconda rename --yes
-    conda install -n base -c bioconda rename --yes
+    ${conda_frontend} install -n base -c bioconda rename --yes
+fi
+
+# Graphviz (to dot snakemake DAG)
+if ls ~/miniconda3/bin/rename 2> /dev/null
+then
+    echo ""
+else
+    ${conda_frontend} install -n base -c bioconda rename --yes
 fi
 
 ###############################################################################
@@ -449,15 +459,17 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}SCRIPT END${nc} ${green}#####${nc}
 ${green}----------------------${nc}
 "
-find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
-find ${workdir}/results/ -type d -empty -delete # Remove empty directory
+# Cleanup
+#find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
+#find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
+# Timer
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
 elapsed_time=${SECONDS}                  # Get SECONDS counter 
 minutes=$((${elapsed_time}/60))          # / 60 = minutes
 seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
-# Print analyzes ending time and total time elapsed
+# Print timer
 echo -e "
 ${blue}End Time${nc} _______________ ${time_stamp_end}
 ${blue}Processing Time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed
