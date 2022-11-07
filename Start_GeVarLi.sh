@@ -29,7 +29,7 @@ ${blue}Name${nc} __________________ Start_GeVarLi.sh
 ${blue}Version${nc} _______________ v.2022.11
 ${blue}Author${nc} ________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ___________________ Bash script for ${red}GE${nc}ome assembling, ${red}VAR${nc}iant calling and ${red}LI${nc}neage assignation
+${blue}Aim${nc} ___________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} __________________ 2021.10.12
 ${blue}Latest modification${nc} ___ 2022.11.03
 ${blue}Run${nc} ___________________ bash Start_GeVarLi.sh
@@ -321,7 +321,7 @@ for snakefile in ${snakefile_list} ; do
         --config os=${os} \
         --rerun-incomplete \
         --use-conda \
-        --conda-frontend conda \
+        --conda-frontend ${conda_frontend} \
         --conda-create-envs-only 
 done
 
@@ -349,7 +349,7 @@ for snakefile in ${snakefile_list} ; do
         --config os=${os} \
         --rerun-incomplete \
         --use-conda \
-        --conda-frontend conda \
+        --conda-frontend ${conda_frontend} \
         --dry-run \
         --quiet
 done
@@ -381,7 +381,7 @@ for snakefile in ${snakefile_list} ; do
         --rerun-incomplete \
         --keep-going \
         --use-conda \
-        --conda-frontend conda \
+        --conda-frontend ${conda_frontend} \
         --printshellcmds
 done
 
