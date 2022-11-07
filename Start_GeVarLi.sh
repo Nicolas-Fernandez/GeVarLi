@@ -194,9 +194,13 @@ ${green}-------------------------${nc}
 # Test if a 'gevarli' environment exist
 if [[ $(conda info --envs | grep -o -E "^gevarli_${gevarli_version}") ]]
 then
-    echo "Conda environment ${ylo}gevarli_${gevarli_version}${nc} already installed"
+    echo -e "
+    Conda environment ${ylo}gevarli_${gevarli_version}${nc} it's already created
+    "
 else
-    echo "Conda environment ${ylo}gevarli_${gevarli_version}${nc} will be installed"
+    echo -e "
+    Conda environment ${ylo}gevarli_${gevarli_version}${nc} will be now created
+    "
     # Create an empty 'gevarli' environment
     conda create --name gevarli_${gevarli_version} --yes
     # Mamba (to install conda environments faster)
