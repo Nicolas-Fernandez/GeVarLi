@@ -108,22 +108,22 @@ workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                          
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Get fastq.gz files count
 samples=$(expr ${fastq} \/ 2)                                                                   # {fastq.gz count} / 2 = samples count (paired-end)
 conda_version=$(conda --version | sed "s/conda//")                                              # Get conda version
-snakemake_version=$(grep -o -E "snakemake_version: '*'" ${workdir}/config/config.yaml | \
+snakemake_version=$(grep -o -E "snakemake_version: '.+'" ${workdir}/config/config.yaml | \
 		    sed "s/snakemake_version: //" | sed "s/'//g")                               # Get snakemake version
-conda_frontend=$(grep -o -E "conda_frontend: '*'"  ${workdir}/config/config.yaml | \
+conda_frontend=$(grep -o -E "conda_frontend: '.+'"  ${workdir}/config/config.yaml | \
 		 sed "s/conda_frontend: //" | sed "s/'//g")                                     # Get conda frontend
 max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
 max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")          # Get user config for max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                          # Calcul maximum memory usage per job
-reference=$(grep -o -E "reference: '*'" ${workdir}/config/config.yaml | \
+reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | \
 	    sed "s/reference: //" | sed "s/'//g")                                               # Get user config genome reference
-aligner=$(grep -o -E "aligner: '*'" ${workdir}/config/config.yaml | \
+aligner=$(grep -o -E "aligner: '.+'" ${workdir}/config/config.yaml | \
 	  sed "s/aligner: //" | sed "s/'//g")                                                   # Get user config aligner
 min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")       # Get user config minimum coverage
 min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")   # Get user config minimum allele frequency
-clipping=$(grep -o -E "clipping: '*'" ${workdir}/config/config.yaml | \
+clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | \
 	   sed "s/clipping: //"  | sed "s/'//g")                                                # Get user config bamclipper option
-primers_kit=$(grep -o -E "primers: '*'" ${workdir}/config/config.yaml | \
+primers_kit=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | \
 	      sed "s/primers: //" | sed "s/'//g")                                               # Get user config bamclipper primers
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                      # Get analyzes starting time
 SECONDS=0                                                                                       # Initialize SECONDS counter
@@ -190,20 +190,41 @@ ${green}#####${nc} ${red}CONDA INSTALLATIONS${nc} ${green}#####${nc}
 ${green}-------------------------${nc}
 "
 
-# Create a 'gevarli' empty environment
-conda create -n gevarli_${gevarli_version}
 
-# Mamba (to install environments faster)
-conda install -n gevarli_${gevarli_version} -c conda-forge mamba --yes
-
-# Snakemake (to run GeVarLi)
-${conda_frontend} install -n gevarli_${gevarli_version} -c conda-forge -c bioconda snakemake==${snakemake_version} --yes
-
-# Rename (to rename fastq files)
-${conda_frontend} install -n gevarli_${gevarli_version} -c bioconda rename --yes
-
-# Graphviz (to dot snakemake DAG)
-${conda_frontend} install -n gevarli_${gevarli_version} -c anaconda graphviz --yes
+# Test if a 'gevarli' environment exist
+if [[ conda info --envs | grep -o -E "^gevarli_${gevarli_version}" ]]
+then
+    echo "Conda environment ${ylo}gevarli_${gevarli_version}${nc} already installed"
+else
+    echo "Conda environment ${ylo}gevarli_${gevarli_version}${nc} will be installed"
+    # Create an empty 'gevarli' environment
+    conda create --name gevarli_${gevarli_version} --yes
+    # Mamba (to install conda environments faster)
+    conda install \
+        --name gevarli_${gevarli_version} \
+	--channel conda-forge \
+	mamba \
+	--yes
+    # Snakemake (to run GeVarLi)
+    ${conda_frontend} install \
+	--name gevarli_${gevarli_version} \
+	---channel conda-forge \
+	--channel bioconda \
+	snakemake==${snakemake_version} \
+	--yes
+    # Rename (to rename fastq files)
+    ${conda_frontend} install \
+	--name gevarli_${gevarli_version} \
+	--channel bioconda \
+	rename \
+	--yes
+    # Graphviz (to dot snakemake DAG)
+    ${conda_frontend} install \
+	--name gevarli_${gevarli_version} \
+	--channel anaconda \
+	graphviz \
+	--yes
+fi
 
 # Active Gevarli env.
 conda activate gevarli_${gevarli_version}
@@ -479,7 +500,8 @@ ${green}#####${nc} ${red}SCRIPT END${nc} ${green}#####${nc}
 ${green}----------------------${nc}
 "
 
-# Deactive Gevarli env.
+# Save and Deactive Gevarli environment
+conda env export > ${workdir}/results/10_Reports/gevarli_${gevarli_version}.yaml
 conda deactivate gevarli_${gevarli_version}
 
 # Cleanup
