@@ -27,7 +27,7 @@ ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
 ${blue}Name${nc} ___________________ Start_GeVarLi.sh
-${blue}Version${nc} ________________ ${gevarli_version}
+${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
@@ -107,7 +107,7 @@ ${green}--------------------${nc}
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Get fastq.gz files count
 samples=$(expr ${fastq} \/ 2)                                                                   # {fastq.gz count} / 2 = samples count (paired-end)
-conda_version=$(conda --version | sed "s/conda//")                                              # Get conda version
+conda_version=$(conda --version | sed "s/conda //")                                              # Get conda version
 snakemake_version=$(grep -o -E "snakemake_version: '.+'" ${workdir}/config/config.yaml | \
 		    sed "s/snakemake_version: //" | sed "s/'//g")                               # Get snakemake version
 conda_frontend=$(grep -o -E "conda_frontend: '.+'"  ${workdir}/config/config.yaml | \
@@ -195,12 +195,12 @@ ${green}-------------------------${nc}
 if [[ $(conda info --envs | grep -o -E "^gevarli_${gevarli_version}") ]]
 then
     echo -e "
-    Conda environment ${ylo}gevarli_${gevarli_version}${nc} it's already created
-    "
+Conda environment ${ylo}gevarli_${gevarli_version}${nc} it's already created
+"
 else
     echo -e "
-    Conda environment ${ylo}gevarli_${gevarli_version}${nc} will be now created
-    "
+Conda environment ${ylo}gevarli_${gevarli_version}${nc} will be now created
+"
     # Create an empty 'gevarli' environment
     conda create --name gevarli_${gevarli_version} --yes
     # Mamba (to install conda environments faster)
