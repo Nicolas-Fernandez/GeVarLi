@@ -27,7 +27,7 @@ ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
 ${blue}Name${nc} ___________________ Start_GeVarLi.sh
-${blue}Version${nc} ________________ ${gervali_version}
+${blue}Version${nc} ________________ ${gevarli_version}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
@@ -191,22 +191,22 @@ ${green}-------------------------${nc}
 "
 
 # Create a 'gevarli' empty environment
-conda create -n gevarli_${gervali_version}
+conda create -n gevarli_${gevarli_version}
 
 # Mamba (to install environments faster)
-conda install -n gevarli_${gervali_version} -c conda-forge mamba --yes
+conda install -n gevarli_${gevarli_version} -c conda-forge mamba --yes
 
 # Snakemake (to run GeVarLi)
-${conda_frontend} install -n gevarli_${gervali_version} -c conda-forge -c bioconda snakemake==${snakemake_version} --yes
+${conda_frontend} install -n gevarli_${gevarli_version} -c conda-forge -c bioconda snakemake==${snakemake_version} --yes
 
 # Rename (to rename fastq files)
-${conda_frontend} install -n gevarli_${gervali_version} -c bioconda rename --yes
+${conda_frontend} install -n gevarli_${gevarli_version} -c bioconda rename --yes
 
 # Graphviz (to dot snakemake DAG)
-${conda_frontend} install -n gevarli_${gervali_version} -c anaconda graphviz --yes
+${conda_frontend} install -n gevarli_${gevarli_version} -c anaconda graphviz --yes
 
 # Active Gevarli env.
-conda activate gevarli_${gervali_version}
+conda activate gevarli_${gevarli_version}
 
 ###############################################################################
 ###### Rename samples ######
@@ -480,7 +480,7 @@ ${green}----------------------${nc}
 "
 
 # Deactive Gevarli env.
-conda deactivate gevarli_${gervali_version}
+conda deactivate gevarli_${gevarli_version}
 
 # Cleanup
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
@@ -502,7 +502,7 @@ ${blue}Processing time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${s
 # Log analyzes settings
 echo "
 Name ___________________ Start_GeVarLi.sh
-Version ________________ v.2022.11
+Version ________________ ${gevarli_version}
 Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
