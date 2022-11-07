@@ -1,12 +1,11 @@
-
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name __________________ gevarli.smk
-# Author ________________ Nicolas Fernandez
-# Affiliation ___________ IRD_U233_TransVIHMI
-# Aim ___________________ Snakefile with GeVarLi rules
-# Date __________________ 2021.10.12
-# Latest modification ___ 2022.11.03
-# Use ___________________ snakemake -s gevarli.smk --use-conda 
+# Name ___________________ gevarli.smk
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Snakefile with GeVarLi rules
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2022.11.07
+# Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
 ###### CONFIGURATION ######
