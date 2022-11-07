@@ -163,18 +163,18 @@ ${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
 ${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
 
-${blue}max Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
-${blue}max Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
-${blue}job Memory${nc} _________ ${red}${memory_per_job}${nc} Gb per job
+${blue}max Threads${nc} ____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
+${blue}max Memory${nc} _____________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
+${blue}job Memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
 
 ${blue}genome Reference${nc} _______ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
 
-${blue}min Coverage${nc} __________ ${red}${min_cov}${nc}x
-${blue}min Allele Frequency${nc} __ ${red}${min_af}${nc}
+${blue}min Coverage${nc} ___________ ${red}${min_cov}${nc}x
+${blue}min Allele Frequency${nc} ___ ${red}${min_af}${nc}
 
 ${blue}run Nextclade${nc} __________ ${red}${nextclade}${nc}
-${blue}run Pangolin ${nc} ___________ ${red}${pangolin}${nc}
+${blue}run Pangolin ${nc} __________ ${red}${pangolin}${nc}
 
 ${blue}run BamClipper${nc} _________ ${red}${bamclipper}${nc}
 ${blue}Primers kit${nc} ____________ ${ylo}${amplicons_kit}${nc}
@@ -192,7 +192,7 @@ ${green}-------------------------${nc}
 
 
 # Test if a 'gevarli' environment exist
-if [[ (conda info --envs | grep -o -E "^gevarli_${gevarli_version}") ]]
+if [[ $(conda info --envs | grep -o -E "^gevarli_${gevarli_version}") ]]
 then
     echo "Conda environment ${ylo}gevarli_${gevarli_version}${nc} already installed"
 else
