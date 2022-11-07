@@ -308,8 +308,8 @@ ${blue}Conda environments setup:${nc}
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
-# Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
+## Default "mamba", recommended because much faster !
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 
 for snakefile in ${snakefile_list} ; do
@@ -334,8 +334,8 @@ ${blue}Dry run:${nc}
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
-# Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
+## Default "mamba", recommended because much faster !
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
@@ -365,8 +365,8 @@ ${blue}Let's run!${nc}
 # Re-run all jobs the output of which is recognized as incomplete.
 # Go on with independent jobs if a job fails.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting (default: 'mamba').
-# Default "mamba", recommended because much faster, but : "Library not loaded: @rpath/libarchive.13.dylib"
+# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
+## Default "mamba", recommended because much faster !
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
 
