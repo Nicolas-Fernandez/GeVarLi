@@ -192,7 +192,7 @@ ${green}-------------------------${nc}
 
 
 # Test if a 'gevarli' environment exist
-if [[ conda info --envs | grep -o -E "^gevarli_${gevarli_version}" ]]
+if [[ (conda info --envs | grep -o -E "^gevarli_${gevarli_version}") ]]
 then
     echo "Conda environment ${ylo}gevarli_${gevarli_version}${nc} already installed"
 else
