@@ -1,4 +1,4 @@
-#!/bin/bash
+OAOA#!/bin/bash
 
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name __________________ Start_GeVarLi.sh
@@ -222,16 +222,16 @@ else
 fi
 
 # Graphviz (to dot snakemake DAG)
-if ls ~/miniconda3/bin/graphviz 2> /dev/null
-then
-    echo ""
-else
-    ${conda_frontend} install \
-		      -n base \
-		      -c anaconda \
-		      graphviz \
-		      --yes
-fi
+#if ls ~/miniconda3/bin/graphviz 2> /dev/null
+#then
+#    echo ""
+#else
+#    ${conda_frontend} install \
+#		      -n base \
+#		      -c anaconda \
+#		      graphviz \
+#		      --yes
+#fi
 
 ###############################################################################
 ###### Rename samples ######
@@ -476,9 +476,10 @@ for snakefile in ${snakefile_list} ; do
 	    snakemake \
 		--directory ${workdir}/ \
                 --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
-                --${graph} | \
-	        dot -T${extention} > \
-		${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} ;
+                --${graph} \
+	    | dot -T${extention} \
+	    1> ${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} \
+	    2> /dev/null ;
 	done ;
     done ;
 done
