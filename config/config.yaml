@@ -13,8 +13,8 @@
 
 ### RESOURCES ----------------------------------------------------------------------------------------
 resources:
-  cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
-  ram: 16           # Set maximum memory usage (in Gb, default: 16) [INT]
+  cpus: 12           # Set maximum cpus usage (for multithreading, default: 8) [INT]
+  ram: 326           # Set maximum memory usage (in Gb, default: 16) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)
@@ -22,7 +22,7 @@ resources:
     ## '/scratch' # HPC (set it to match your HPC usage)
 
 snakemake_version: '7.18.1' # Snakemake version (upgrade from  6.12.3)
-conda_frontend: 'conda'     # Conda frontend ('conda' or 'mamba')
+conda_frontend: 'mamba'     # Conda frontend ('conda' or 'mamba')
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:
