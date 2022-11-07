@@ -268,13 +268,13 @@ ${blue}Unlocking working directory:${nc}
 # Remove a lock on the working directory.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}"
+    echo -e "${blue}For ${snakefile}:${nc}" ;
     snakemake \
 	--directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
         --config os=${os} \
         --rerun-incomplete \
-        --unlock
+        --unlock ;
     echo ""
 done
 
@@ -289,14 +289,14 @@ ${blue}Conda environments list:${nc}
 # List all conda environments and their location on disk.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}"
+    echo -e "${blue}For ${snakefile}:${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
-        --list-conda-envs
+        --list-conda-envs ;
 done
 
 echo -e "
@@ -313,7 +313,7 @@ ${blue}Conda environments setup:${nc}
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}"
+    echo -e "${blue}For ${snakefile}:${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
@@ -322,7 +322,7 @@ for snakefile in ${snakefile_list} ; do
         --rerun-incomplete \
         --use-conda \
         --conda-frontend ${conda_frontend} \
-        --conda-create-envs-only 
+        --conda-create-envs-only ;
 done
 
 echo -e "
@@ -341,7 +341,7 @@ ${blue}Dry run:${nc}
 # Do not output any progress or rule information.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}"
+    echo -e "${blue}For ${snakefile}:${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
@@ -351,7 +351,7 @@ for snakefile in ${snakefile_list} ; do
         --use-conda \
         --conda-frontend ${conda_frontend} \
         --dry-run \
-        --quiet
+        --quiet ;
 done
 
 echo -e "
@@ -371,7 +371,7 @@ ${blue}Let's run!${nc}
 # Print out the shell commands that will be executed.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}"
+    echo -e "${blue}For ${snakefile}:${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
@@ -382,7 +382,7 @@ for snakefile in ${snakefile_list} ; do
         --keep-going \
         --use-conda \
         --conda-frontend ${conda_frontend} \
-        --printshellcmds
+        --printshellcmds ;
 done
 
 ###############################################################################
