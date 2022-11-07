@@ -1,12 +1,11 @@
-
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name __________________ quality_control.smk
-# Author ________________ Nicolas Fernandez
-# Affiliation ___________ IRD_U233_TransVIHMI
-# Aim ___________________ Snakefile with quality control rules
-# Date __________________ 2021.09.28
-# Latest modification ___ 2022.11.03
-# Run ___________________ snakemake -s quality_control.smk --use-conda 
+# Name ___________________ quality_control.smk
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Snakefile with quality control rules
+# Date ___________________ 2021.09.28
+# Latest modifications ___ 2022.11.07
+# Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
 ###### CONFIGURATION ######
@@ -39,9 +38,9 @@ MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
 ###############################################################################
 ###### PARAMETERS ######
 
-CONFIG = config["fastq-screen"]["config"]   # Fastq-screen --conf
-ALIGNER = config["fastq-screen"]["aligner"] # Fastq-screen --aligner
-SUBSET = config["fastq-screen"]["subset"]   # Fastq-screen --subset
+CONFIG = config["fastq-screen"]["config"] # Fastq-screen --conf
+MAPPER = config["fastq-screen"]["mapper"] # Fastq-screen --aligner
+SUBSET = config["fastq-screen"]["subset"] # Fastq-screen --subset
 
 
 ###############################################################################
@@ -87,7 +86,7 @@ rule fastqscreen_contamination_checking:
         cpus = CPUS
     params:
         config = CONFIG,
-        aligner = ALIGNER,
+        mapper = MAPPER,
         subset = SUBSET
     input:
         fastq = "resources/reads/"
@@ -100,7 +99,7 @@ rule fastqscreen_contamination_checking:
         "-q "                            # --quiet: Only show log warning
         "--threads {resources.cpus} "    # --threads: Specifies across how many threads bowtie will be allowed to run
         "--conf {params.config} "        # path to configuration file
-        "--aligner {params.aligner} "    # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
+        "--aligner {params.mapper}  "    # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
         "--subset {params.subset} "      # Don't use the whole sequence file, but create a subset of specified size
         "--outdir {output.fastqscreen} " # Output directory
         "{input.fastq}/*.fastq.gz "      # Input file.fastq

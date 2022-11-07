@@ -1,14 +1,15 @@
-OAOA#!/bin/bash
+#!/bin/bash
 
+gevarli_version="v.2022.11"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name __________________ Start_GeVarLi.sh
-# Version _______________ v.2022.11
-# Author ________________ Nicolas Fernandez
-# Affiliation ___________ IRD_U233_TransVIHMI
-# Aim ___________________ Bash script running gevarli.smk snakefile
-# Date __________________ 2021.10.12
-# Latest modification ___ 2022.11.03
-# Use ___________________ bash Start_GeVarLi.sh
+# Name ___________________ Start_GeVarLi.sh
+# Version ________________ v.2022.11
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Bash script running gevarli.smk snakefile
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2022.11.07
+# Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
 ##### Colors ######
@@ -25,14 +26,14 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
-${blue}Name${nc} __________________ Start_GeVarLi.sh
-${blue}Version${nc} _______________ v.2022.11
-${blue}Author${nc} ________________ Nicolas Fernandez
-${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ___________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
-${blue}Date${nc} __________________ 2021.10.12
-${blue}Latest modification${nc} ___ 2022.11.03
-${blue}Run${nc} ___________________ bash Start_GeVarLi.sh
+${blue}Name${nc} ___________________ Start_GeVarLi.sh
+${blue}Version${nc} ________________ ${gervali_version}
+${blue}Author${nc} _________________ Nicolas Fernandez
+${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
+${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
+${blue}Date${nc} ___________________ 2021.10.12
+${blue}Latest modifications${nc} ___ 2022.11.07
+${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
 ###############################################################################
@@ -82,7 +83,7 @@ then
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -r "s/MemTotal: +//")                       # Get memory size (Kb)
     ram_gb=$(expr ${mem_size} \/ $((1024**2)) )                                                               # mem_size / 1024**2 = Gb
 else
-    "Please, use 'OSX' or 'Linux' operating system"
+    echo -e "Please, use '${red}OSX${nc}' or '${red}Linux${nc}' operating systems"
     exit 1
 fi
 
@@ -106,28 +107,32 @@ ${green}--------------------${nc}
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Get fastq.gz files count
 samples=$(expr ${fastq} \/ 2)                                                                   # {fastq.gz count} / 2 = samples count (paired-end)
-conda_version=$(conda --version)                                                                # Get conda version
-snakemake_version=$(grep -o -E "snakemake_version: '[0-9]+\.[0-9]+\.[0-9]+'" ${workdir}/config/config.yaml | \
-			sed "s/snakemake_version: //" | sed "s/'//g")                           # Get snakemake version
-conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'"  ${workdir}/config/config.yaml | \
-		     sed "s/conda_frontend: //" | sed "s/'//g")                                 # Get conda frontend
+conda_version=$(conda --version | sed "s/conda//")                                              # Get conda version
+snakemake_version=$(grep -o -E "snakemake_version: '*'" ${workdir}/config/config.yaml | \
+		    sed "s/snakemake_version: //" | sed "s/'//g")                               # Get snakemake version
+conda_frontend=$(grep -o -E "conda_frontend: '*'"  ${workdir}/config/config.yaml | \
+		 sed "s/conda_frontend: //" | sed "s/'//g")                                     # Get conda frontend
 max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
 max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")          # Get user config for max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                          # Calcul maximum memory usage per job
-reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | sed "s/reference: //") # Get user config genome reference
-aligner=$(grep -o -E "^aligner: '[a-z]+'" ${workdir}/config/config.yaml | sed "s/aligner: //")  # Get user config aligner
+reference=$(grep -o -E "reference: '*'" ${workdir}/config/config.yaml | \
+	    sed "s/reference: //" | sed "s/'//g")                                               # Get user config genome reference
+aligner=$(grep -o -E "aligner: '*'" ${workdir}/config/config.yaml | \
+	  sed "s/aligner: //" | sed "s/'//g")                                                   # Get user config aligner
 min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")       # Get user config minimum coverage
 min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")   # Get user config minimum allele frequency
-clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | sed "s/clipping: //")    # Get user config bamclipper option
-primers=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | sed "s/primers: //")       # Get user config bamclipper primers
+clipping=$(grep -o -E "clipping: '*'" ${workdir}/config/config.yaml | \
+	   sed "s/clipping: //"  | sed "s/'//g")                                                # Get user config bamclipper option
+primers_kit=$(grep -o -E "primers: '*'" ${workdir}/config/config.yaml | \
+	      sed "s/primers: //" | sed "s/'//g")                                               # Get user config bamclipper primers
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                      # Get analyzes starting time
 SECONDS=0                                                                                       # Initialize SECONDS counter
 
-if [[ "${reference}" = "'SARS-CoV-2_Wuhan_MN908947-3'" ]]
+if [[ "${reference}" == *"SARS-CoV-2"* ]]
 then
     nextclade="Yes"
     pangolin="Yes"
-elif [[ "${reference}" = "'Monkeypox-virus_Zaire_AF380138-1'" ]]
+elif [[ "${reference}" == *"Monkeypox-virus"* ]]
 then
     nextclade="Yes"
     pangolin="No"
@@ -136,102 +141,72 @@ else
     pangolin="No"
 fi
 
-if [[ "${clipping}" = "'yes'" ]]
+if [[ "${clipping}" == "yes" ]]
 then
     bamclipper="Yes"
-    amplicon_kit=${primers}
-elif [[ "${clipping}" = "'no'" ]]
+    amplicons_kit=${primers_kit}
+elif [[ "${clipping}" == "no" ]]
 then
     bamclipper="No"
-    amplicon_kit="'none'"
+    amplicons_kit="None"
 else
     bamclipper="error_config_file"
-    amplicon_kit="'error_config_file'"
+    amplicons_kit="'error_config_file'"
 fi
 
 # Print some analyzes settings
 echo -e "
 ${blue}Working Directory${nc} ______ ${workdir}/
-${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
+${blue}Samples processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
 ${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
 ${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
 
-${blue}Maximum Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
-${blue}Maximum Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
-${blue}Memory per job${nc} _________ ${red}${memory_per_job}${nc} Gb per job
+${blue}max Threads${nc} ________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
+${blue}max Memory${nc} _________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
+${blue}job Memory${nc} _________ ${red}${memory_per_job}${nc} Gb per job
 
-${blue}Genome Reference${nc} _______ ${ylo}${reference}${nc}
+${blue}genome Reference${nc} _______ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
 
-${blue}Min. Coverage${nc} __________ ${red}${min_cov}${nc}x
-${blue}Min. Allele Frequency${nc} __ ${red}${min_af}${nc}
+${blue}min Coverage${nc} __________ ${red}${min_cov}${nc}x
+${blue}min Allele Frequency${nc} __ ${red}${min_af}${nc}
 
-${blue}Nextclade run${nc} __________ ${red}${nextclade}${nc}
-${blue}Pangolin run${nc} ___________ ${red}${pangolin}${nc}
+${blue}run Nextclade${nc} __________ ${red}${nextclade}${nc}
+${blue}run Pangolin ${nc} ___________ ${red}${pangolin}${nc}
 
-${blue}BamClipper run${nc} _________ ${red}${bamclipper}${nc}
-${blue}Primers Kit${nc} ____________ ${ylo}${amplicon_kit}${nc}
+${blue}run BamClipper${nc} _________ ${red}${bamclipper}${nc}
+${blue}Primers kit${nc} ____________ ${ylo}${amplicons_kit}${nc}
 
-${blue}Start Time${nc} _____________ ${time_stamp_start}
+${blue}Start time${nc} _____________ ${time_stamp_start}
 "
 
 ###############################################################################
-###### Installations ######
+###### Conda Installations ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}INSTALLATIONS${nc} ${green}#####${nc}
+${green}#####${nc} ${red}CONDA INSTALLATIONS${nc} ${green}#####${nc}
 ${green}-------------------------${nc}
 "
 
-# Mamba (to install environments)
-if ls ~/miniconda3/bin/mamba 2> /dev/null
-then
-    echo ""
-else
-    conda install \
-	  -n base \
-	  -c conda-forge \
-	  mamba \
-	  --yes
-fi
+# Create a 'gevarli' empty environment
+conda create -n gevarli_${gervali_version}
+
+# Mamba (to install environments faster)
+conda install -n gevarli_${gervali_version} -c conda-forge mamba --yes
 
 # Snakemake (to run GeVarLi)
-if ls ~/miniconda3/bin/snakemake 2> /dev/null
-then
-    echo ""
-else
-    ${conda_frontend} install \
-		      -n base \
-		      -c conda-forge \
-		      -c bioconda snakemake==${snakemake_version} \
-		      --yes
-fi
+${conda_frontend} install -n gevarli_${gervali_version} -c conda-forge -c bioconda snakemake==${snakemake_version} --yes
 
 # Rename (to rename fastq files)
-if ls ~/miniconda3/bin/rename 2> /dev/null
-then
-    echo ""
-else
-    ${conda_frontend} install \
-		      -n base \
-		      -c bioconda \
-		      rename \
-		      --yes
-fi
+${conda_frontend} install -n gevarli_${gervali_version} -c bioconda rename --yes
 
 # Graphviz (to dot snakemake DAG)
-#if ls ~/miniconda3/bin/graphviz 2> /dev/null
-#then
-#    echo ""
-#else
-#    ${conda_frontend} install \
-#		      -n base \
-#		      -c anaconda \
-#		      graphviz \
-#		      --yes
-#fi
+${conda_frontend} install -n gevarli_${gervali_version} -c anaconda graphviz --yes
+
+# Active Gevarli env.
+conda activate gevarli_${gervali_version}
 
 ###############################################################################
 ###### Rename samples ######
@@ -243,9 +218,9 @@ ${green}------------------------------${nc}
 
 # Rename fastq files to remove "_001" Illumina pattern.
 ## De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
-rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove barcode-ID like {_S001_}
-rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz                # Remove line-ID ID like {_L001_}
-rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz # Remove end-name ID like {_001}.fastq.gz
+rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 
 ###############################################################################
@@ -503,8 +478,12 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}SCRIPT END${nc} ${green}#####${nc}
 ${green}----------------------${nc}
 "
+
+# Deactive Gevarli env.
+conda deactivate gevarli_${gervali_version}
+
 # Cleanup
-#find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
+find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 #find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
 # Timer
@@ -515,55 +494,56 @@ seconds=$((${elapsed_time}%60))          # % 60 = seconds
 
 # Print timer
 echo -e "
-${blue}End Time${nc} _______________ ${time_stamp_end}
-${blue}Processing Time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed
+${blue}Start time${nc} _____________ ${time_stamp_start}
+${blue}End time${nc} _______________ ${time_stamp_end}
+${blue}Processing time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed
 "
 
 # Log analyzes settings
 echo "
-Name ____________________ Start_GeVarLi.sh
-Version _________________ v.2022.11
-Author __________________ Nicolas Fernandez
-Affiliation _____________ IRD_U233_TransVIHMI
-Aim _____________________ Bash script for GeVarLi
-Date ____________________ 2021.10.12
-Latest modification _____ 2022.11.03
-Run _____________________ bash Start_GeVarLi.sh
+Name ___________________ Start_GeVarLi.sh
+Version ________________ v.2022.11
+Author _________________ Nicolas Fernandez
+Affiliation ____________ IRD_U233_TransVIHMI
+Aim ____________________ Bash script for GeVarLi
+Date ___________________ 2021.10.12
+Latest modifications ___ 2022.11.03
+Run ____________________ bash Start_GeVarLi.sh
 
-Operating system ________ ${os}
+Operating System _______ ${os}
 
-                    Brand(R) | Type(R) | Model | @ Speed GHz
-Chip Model Name _________ ${model_name}
-Physical CPUs ___________ ${physical_cpu} cores
-Logical CPUs ____________ ${logical_cpu} threads
-System Memory ___________ ${ram_size} Gb of RAM
+                   Brand(R) | Type(R) | Model | @ Speed GHz
+Chip Model Name ________ ${model_name}
+Physical CPUs __________ ${physical_cpu} cores
+Logical CPUs ___________ ${logical_cpu} threads
+System Memory __________ ${ram_size} Gb of RAM
 
-Conda version ___________ ${conda_version}
-Snakemake version _______ ${snakemake_version}
-Conda frontend __________ ${conda_frontend}
+Conda version __________ ${conda_version}
+Snakemake version ______ ${snakemake_version}
+Conda frontend _________ ${conda_frontend}
 
-Working Directory _______ ${workdir}/
-Samples Processed _______ ${samples} samples (${fastq} fastq files)
+Working directory ______ ${workdir}/
+Samples processed ______ ${samples} samples (${fastq} fastq files)
 
-Maximum Threads _________ ${max_threads} of ${logical_cpu} threads available
-Maximum Memory __________ ${max_memory} of ${ram_size} Gb available
-Memory per job __________ ${memory_per_job} Gb per job maximum
+max Threads ____________ ${max_threads} of ${logical_cpu} threads available
+max Memory _____________ ${max_memory} of ${ram_size} Gb available
+job Memory  ____________ ${memory_per_job} Gb per job maximum
 
-Genome Reference ________ ${reference}
-Aligner _________________ ${aligner}
+genome Reference _______ ${reference}
+Aligner ________________ ${aligner}
 
-Min. Coverage ___________ ${min_cov}
-Min. Allele Frequency ___ ${min_af}
+min Coverage ___________ ${min_cov}
+min Allele Frequency ___ ${min_af}
 
-Nextclade run ___________ ${nextclade}
-Pangolin run ____________ ${pangolin}
+run Nextclade __________ ${nextclade}
+run Pangolin ___________ ${pangolin}
 
-BamClipper run __________ ${bamclipper}
-Primers Kit _____________ ${amplicon_kit}
+run BamClipper _________ ${bamclipper}
+Primers kit ____________ ${amplicons_kit}
 
-Start Time ______________ ${time_stamp_start}
-End Time ________________ ${time_stamp_end}
-Processing Time _________ ${minutes} minutes and ${seconds} seconds elapsed
+Start time _____________ ${time_stamp_start}
+End time _______________ ${time_stamp_end}
+Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
 " > ${workdir}/results/10_Reports/settings_logs.txt
 
 echo -e "

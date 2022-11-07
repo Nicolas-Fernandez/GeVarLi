@@ -1,12 +1,11 @@
-
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name __________________ indexing_genomes.smk
-# Author ________________ Nicolas Fernandez
-# Affiliation ___________ IRD_U233_TransVIHMI
-# Aim ___________________ Snakefile with indexing genomes rules
-# Date __________________ 2022.09.28
-# Latest modification ___ 2022.11.03
-# Use ___________________ snakemake -s indexing_genomes.smk --use-conda 
+# Name ___________________ indexing_genomes.smk
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Snakefile with indexing genomes rules
+# Date ___________________ 2022.09.28
+# Latest modifications ___ 2022.11.07
+# Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
 ###### CONFIGURATION ######

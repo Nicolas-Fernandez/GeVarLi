@@ -1,14 +1,14 @@
 ---
-
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name __________________ config.yaml
-# Version _______________ v.2022.11
-# Author ________________ Nicolas Fernandez
-# Affiliation ___________ IRD_U233_TransVIHMI
-# Aim ___________________ Configuration yaml file for gevarli.smk snakefile
-# Date __________________ 2021.10.12
-# Latest modification ___ 2022.11.03
-# Use ___________________ Edit default settings
+# Name ___________________ config.yaml
+# Version ________________ v.2022.11
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Configuration yaml file for gevarli.smk snakefile
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2022.11.07
+# Use ____________________ Edit default settings
+
 ###############################################################################
 
 ### RESOURCES ----------------------------------------------------------------------------------------
@@ -162,8 +162,8 @@ cutadapt:
 ### FASTQSCREEN --------------------------------------------------------------------------------------
 fastq-screen:
   config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: 1000                       # Don't use the whole sequence file, but sub-dataset of specified number of read (default: '1000') [INT] (0='all')
-  aligner: 'bwa'                     # Aligner for fastq-screen (default and should be 'bwa')
+  subset: 1000                       # Don't use whole sequences, but a subset reads (default: '1000') [INT] (0='all')
+  mapper: 'bwa'                      # Mapper used by fastq-screen for alignments (default and should be 'bwa')
   # Available options:
     #- 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see 'fastq-screen.conf')
     #- 'bowtie'  # Bowtie (indexes not provided for fastq-screen)
