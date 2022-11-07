@@ -104,8 +104,9 @@ ${green}--------------------${nc}
 "
 
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Count fastq.gz files
-samples=$(expr ${fastq} \/ 2)                                                                   # fastq files / 2 = samples (paired-end)
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Get fastq.gz files count
+samples=$(expr ${fastq} \/ 2)                                                                   # {fastq.gz count} / 2 = samples count (paired-end)
+conda_version=$(conda --version)                                                                # Get conda version
 snakemake_version=$(grep -o -E "snakemake_version: '[0-9]+\.[0-9]+\.[0-9]+'" ${workdir}/config/config.yaml | \
 			sed "s/snakemake_version: //" | sed "s/'//g")                           # Get snakemake version
 conda_frontend=$(grep -o -E "conda_frontend: '[a-z]+'"  ${workdir}/config/config.yaml | \
@@ -153,6 +154,7 @@ echo -e "
 ${blue}Working Directory${nc} ______ ${workdir}/
 ${blue}Samples Processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
+${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
 ${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
 
@@ -188,7 +190,11 @@ if ls ~/miniconda3/bin/mamba 2> /dev/null
 then
     echo ""
 else
-    conda install -n base -c conda-forge mamba --yes
+    conda install \
+	  -n base \
+	  -c conda-forge \
+	  mamba \
+	  --yes
 fi
 
 # Snakemake (to run GeVarLi)
@@ -196,7 +202,11 @@ if ls ~/miniconda3/bin/snakemake 2> /dev/null
 then
     echo ""
 else
-    ${conda_frontend} install -n base -c conda-forge -c bioconda snakemake==${snakemake_version} --yes
+    ${conda_frontend} install \
+		      -n base \
+		      -c conda-forge \
+		      -c bioconda snakemake==${snakemake_version} \
+		      --yes
 fi
 
 # Rename (to rename fastq files)
@@ -204,7 +214,11 @@ if ls ~/miniconda3/bin/rename 2> /dev/null
 then
     echo ""
 else
-    ${conda_frontend} install -n base -c bioconda rename --yes
+    ${conda_frontend} install \
+		      -n base \
+		      -c bioconda \
+		      rename \
+		      --yes
 fi
 
 # Graphviz (to dot snakemake DAG)
@@ -212,7 +226,11 @@ if ls ~/miniconda3/bin/graphviz 2> /dev/null
 then
     echo ""
 else
-    ${conda_frontend} install -n base -c anaconda graphviz --yes
+    ${conda_frontend} install \
+		      -n base \
+		      -c anaconda \
+		      graphviz \
+		      --yes
 fi
 
 ###############################################################################
@@ -374,9 +392,13 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CONCATENATE FASTA FILES${nc} ${green}#####${nc}
 ${green}-----------------------------------${nc}
 "
-cat ${workdir}/results/05_Consensus/*_consensus.fasta > ${workdir}/results/All_consensus_sequences.fasta
+cat ${workdir}/results/05_Consensus/*_consensus.fasta \
+    1> ${workdir}/results/All_consensus_sequences.fasta \
+    2> /dev/null
 
-cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html ${workdir}/results/All_readsQC_reports.html
+cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html \
+   ${workdir}/results/All_readsQC_reports.html \
+   2> /dev/null
 
 ###############################################################################
 ###### Concatenate all coverage stats ######
@@ -385,10 +407,15 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CONCATENATE COVERAGE STATS${nc} ${green}#####${nc}
 ${green}--------------------------------------${nc}
 "
-cat ${workdir}/results/03_Coverage/*coverage-stats.tsv > ${workdir}/results/All_genome_coverages.tsv
+cat ${workdir}/results/03_Coverage/*coverage-stats.tsv \
+    1> ${workdir}/results/All_genome_coverages.tsv \
+    2> /dev/null
 
-awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv > ${workdir}/results/GENCOV.tmp \
-    && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv
+awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv \
+    1> ${workdir}/results/GENCOV.tmp \
+    2> /dev/null \
+    && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv \
+    2> /dev/null
 
 ###############################################################################
 ###### Concatenate all Pangolin lineage reports ######
@@ -398,14 +425,20 @@ ${green}#####${nc} ${red}CONCATENATE PANGOLIN REPORTS${nc} ${green}#####${nc}
 ${green}----------------------------------------${nc}
 "
 
-cat ${workdir}/results/06_Lineages/*_pangolin-report.csv > ${workdir}/results/All_pangolin_lineages.csv
+cat ${workdir}/results/06_Lineages/*_pangolin-report.csv \
+    1> ${workdir}/results/All_pangolin_lineages.csv \
+    2> /dev/null
 
-awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/PANGO.tmp \
-    && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv
+awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv \
+    > ${workdir}/results/PANGO.tmp \
+    && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv \
+    2> /dev/null
 
-sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv > ${workdir}/results/All_pangolin_lineages.tsv
+sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv \
+    1> ${workdir}/results/All_pangolin_lineages.tsv \
+    2> /dev/null
 
-rm -f ${workdir}/results/All_pangolin_lineages.csv
+rm -f ${workdir}/results/All_pangolin_lineages.csv 2> /dev/null
 
 ###############################################################################
 ###### Concatenate all Nextclade lineage reports ######
@@ -415,10 +448,15 @@ ${green}#####${nc} ${red}CONCATENATE NEXTCLADE REPORTS${nc} ${green}#####${nc}
 ${green}-----------------------------------------${nc}
 "
 
-cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv > ${workdir}/results/All_nextclade_lineages.tsv
+cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv \
+    1> ${workdir}/results/All_nextclade_lineages.tsv \
+    2> /dev/null
 
-awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv > ${workdir}/results/NEXT.tmp \
-    && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv
+awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv \
+    1> ${workdir}/results/NEXT.tmp \
+    2> /dev/null \
+    && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv \
+    2> /dev/null
 
 ###############################################################################
 ###### Create usefull graphs, summary and logs ######
@@ -427,7 +465,7 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}
 ${green}-------------------------------------${nc}
 "
-mkdir ${workdir}/results/10_Reports/graphs/ 2> /dev/null
+mkdir -p ${workdir}/results/10_Reports/graphs/ 2> /dev/null
 
 graph_list="dag rulegraph filegraph"
 extention_list="pdf png"
@@ -449,10 +487,13 @@ for snakefile in ${snakefile_list} ; do
     snakemake \
         --directory ${workdir} \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
-        --summary > ${workdir}/results/10_Reports/${snakefile}_files_summary.txt ;
+        --summary > ${workdir}/results/10_Reports/${snakefile}_files_summary.txt \
+    2> /dev/null ;
 done
 
-cp ${workdir}/config/config.yaml ${workdir}/results/10_Reports/config_used.yaml
+cp ${workdir}/config/config.yaml \
+   ${workdir}/results/10_Reports/config_used.yaml \
+   2> /dev/null
 
 ###############################################################################
 ###### End managment ######
@@ -479,45 +520,49 @@ ${blue}Processing Time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${s
 
 # Log analyzes settings
 echo "
-${blue}Name${nc} __________________ Start_GeVarLi.sh
-${blue}Version${nc} _______________ v.2022.11
-${blue}Author${nc} ________________ Nicolas Fernandez
-${blue}Affiliation${nc} ___________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ___________________ Bash script for GeVarLi
-${blue}Date${nc} __________________ 2021.10.12
-${blue}Latest modification${nc} ___ 2022.11.03
-${blue}Run${nc} ___________________ bash Start_GeVarLi.sh
+Name ____________________ Start_GeVarLi.sh
+Version _________________ v.2022.11
+Author __________________ Nicolas Fernandez
+Affiliation _____________ IRD_U233_TransVIHMI
+Aim _____________________ Bash script for GeVarLi
+Date ____________________ 2021.10.12
+Latest modification _____ 2022.11.03
+Run _____________________ bash Start_GeVarLi.sh
 
-Operating system __________________ ${os}
+Operating system ________ ${os}
 
-                                   Brand(R) | Type(R) | Model | @ Speed GHz
-Chip Model Name ___________________ ${model_name}
-Physical CPUs _____________________ ${physical_cpu} cores
-Logical CPUs ______________________ ${logical_cpu} threads
-System Memory _____________________ ${ram_size} Gb of RAM
+                    Brand(R) | Type(R) | Model | @ Speed GHz
+Chip Model Name _________ ${model_name}
+Physical CPUs ___________ ${physical_cpu} cores
+Logical CPUs ____________ ${logical_cpu} threads
+System Memory ___________ ${ram_size} Gb of RAM
 
-Working Directory _________________ ${workdir}/
-Samples Processed _________________ ${samples} samples (${fastq} fastq files)
+Conda version ___________ ${conda_version}
+Snakemake version _______ ${snakemake_version}
+Conda frontend __________ ${conda_frontend}
 
-Maximum Threads ___________________ ${max_threads} of ${logical_cpu} threads available
-Maximum Memory ____________________ ${max_memory} of ${ram_size} Gb available
-Memory per job ____________________ ${memory_per_job} Gb per job maximum
+Working Directory _______ ${workdir}/
+Samples Processed _______ ${samples} samples (${fastq} fastq files)
 
-Genome Reference __________________ ${reference}
-Aligner ___________________________ ${aligner}
+Maximum Threads _________ ${max_threads} of ${logical_cpu} threads available
+Maximum Memory __________ ${max_memory} of ${ram_size} Gb available
+Memory per job __________ ${memory_per_job} Gb per job maximum
 
-Min. Coverage _____________________ ${min_cov}
-Min. Allele Frequency _____________ ${min_af}
+Genome Reference ________ ${reference}
+Aligner _________________ ${aligner}
 
-Nextclade run _____________________ ${nextclade}
-Pangolin run ______________________ ${pangolin}
+Min. Coverage ___________ ${min_cov}
+Min. Allele Frequency ___ ${min_af}
 
-BamClipper run ____________________ ${bamclipper}
-Primers Kit _______________________ ${amplicon_kit}
+Nextclade run ___________ ${nextclade}
+Pangolin run ____________ ${pangolin}
 
-Start Time ________________________ ${time_stamp_start}
-End Time __________________________ ${time_stamp_end}
-Processing Time ___________________ ${minutes} minutes and ${seconds} seconds elapsed
+BamClipper run __________ ${bamclipper}
+Primers Kit _____________ ${amplicon_kit}
+
+Start Time ______________ ${time_stamp_start}
+End Time ________________ ${time_stamp_end}
+Processing Time _________ ${minutes} minutes and ${seconds} seconds elapsed
 " > ${workdir}/results/10_Reports/settings_logs.txt
 
 echo -e "
