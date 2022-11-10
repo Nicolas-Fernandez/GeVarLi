@@ -263,7 +263,7 @@ snakefile_list="indexing_genomes quality_control gevarli"
 
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
----------------------------------
+${blue}---------------------------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -283,7 +283,7 @@ done
 
 echo -e "
 ${blue}## Conda Environments List ##${nc}
------------------------------
+${blue}-----------------------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -305,7 +305,7 @@ done
 
 echo -e "
 ${blue}## Conda Environments Setup ##${nc}
-------------------------------
+${blue}------------------------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -332,7 +332,7 @@ done
 
 echo -e "
 ${blue}## Dry Run ##${nc}
--------------
+${blue}-------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -362,7 +362,7 @@ done
 
 echo -e "
 ${blue}## Let's Run! ##${nc}
-----------------
+${blue}----------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
