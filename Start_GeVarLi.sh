@@ -256,7 +256,8 @@ ${green}------------------------------${nc}
 snakefile_list="indexing_genomes quality_control gevarli"
 
 echo -e "
-${blue}Unlocking working directory:${nc}
+${blue}## Unlocking Working Directory ##${nc}
+---------------------------------
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -265,18 +266,18 @@ ${blue}Unlocking working directory:${nc}
 # Remove a lock on the working directory.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}" ;
+    echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
 	--directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
         --config os=${os} \
         --rerun-incomplete \
-        --unlock \
-    2> /dev/null ;
+        --unlock ;
 done
 
 echo -e "
-${blue}Conda environments list:${nc}
+${blue}## Conda Environments List ##${nc}
+-----------------------------
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -286,19 +287,19 @@ ${blue}Conda environments list:${nc}
 # List all conda environments and their location on disk.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}" ;
+    echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
-        --list-conda-envs \
-    2> /dev/null ;
+        --list-conda-envs ;
 done
 
 echo -e "
-${blue}Conda environments setup:${nc}
+${blue}## Conda Environments Setup ##${nc}
+------------------------------
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -311,7 +312,7 @@ ${blue}Conda environments setup:${nc}
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}" ;
+    echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
@@ -320,12 +321,12 @@ for snakefile in ${snakefile_list} ; do
         --rerun-incomplete \
         --use-conda \
         --conda-frontend ${conda_frontend} \
-        --conda-create-envs-only \
-    2> /dev/null ;
+        --conda-create-envs-only ;
 done
 
 echo -e "
-${blue}Dry run:${nc}
+${blue}## Dry Run ##${nc}
+-------------
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -340,7 +341,7 @@ ${blue}Dry run:${nc}
 # Do not output any progress or rule information.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}" ;
+    echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
@@ -350,12 +351,12 @@ for snakefile in ${snakefile_list} ; do
         --use-conda \
         --conda-frontend ${conda_frontend} \
         --dry-run \
-        --quiet \
-    2> /dev/null ;
+        --quiet ;
 done
 
 echo -e "
-${blue}Let's run!${nc}
+${blue}## Let's Run! ##${nc}
+----------------
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
@@ -371,7 +372,7 @@ ${blue}Let's run!${nc}
 # Print out the shell commands that will be executed.
 
 for snakefile in ${snakefile_list} ; do
-    echo -e "${blue}For ${snakefile}:${nc}" ;
+    echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
@@ -382,8 +383,7 @@ for snakefile in ${snakefile_list} ; do
         --keep-going \
         --use-conda \
         --conda-frontend ${conda_frontend} \
-        --printshellcmds \
-    2> /dev/null ;
+        --printshellcmds ;
 done
 
 ###############################################################################
