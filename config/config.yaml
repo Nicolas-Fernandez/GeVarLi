@@ -13,8 +13,8 @@
 
 ### RESOURCES ----------------------------------------------------------------------------------------
 resources:
-  cpus: 8           # Set maximum cpus usage (for multithreading, default: 8) [INT]
-  ram: 16           # Set maximum memory usage (in Gb, default: 16) [INT]
+  cpus: 12           # Set maximum cpus usage (for multithreading, default: 8) [INT]
+  ram: 48           # Set maximum memory usage (in Gb, default: 16) [INT]
   tmpdir: '$TMPDIR' # Temporary directory (default: '$TMPDIR')
   ## Examples:
     ## '$TMPDIR'  # System variable $TMPDIR (dafault)
@@ -27,37 +27,39 @@ conda_frontend: 'mamba'     # Conda frontend (conda or mamba)
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:
   OSX:                                                   # Conda OSX environement yaml files:
-    bamclipper:   '../envs/osx/bamclipper-1.0.yaml'        # BAMClipper   ver. 1.0
-    bcftools:     '../envs/osx/bcftools-1.15.1.yaml'       # Bcftools     ver. 1.15.1
-    bedtools:     '../envs/osx/bedtools-2.30.0.yaml'       # Bedtools     ver. 2.30.0
-    bowtie2:      '../envs/osx/bowtie2-2.4.5.yaml'         # Bowtie2      ver. 2.4.5
-    bwa:          '../envs/osx/bwa-0.7.17.yaml'            # BWA          ver. 0.7.17
-    cutadapt:     '../envs/osx/cutadapt-4.1.yaml'          # Cutadapt     ver. 4.1
-    fastq-screen: '../envs/osx/fastq-screen-0.15.2.yaml'   # Fastq-Screen ver. 0.15.2
-    fastqc:       '../envs/osx/fastqc-0.11.9.yaml'         # FastQC       ver. 0.11.9
-    gawk:         '../envs/osx/gawk-5.1.0.yaml'            # Awk          ver. 5.1.0
-    lofreq:       '../envs/osx/lofreq-2.1.5.yaml'          # Lofreq       ver. 2.1.5
-    multiqc:      '../envs/osx/multiqc-1.12.yaml'          # MultiQC      ver. 1.12
-    nextclade:    '../envs/osx/nextclade-2.5.0.yaml'       # Nextclade    ver. 2.5.0
-    pangolin:     '../envs/osx/pangolin-4.0.6.yaml'        # Pangolin     ver. 4.0.6
-    samtools:     '../envs/osx/samtools-1.15.1.yaml'       # Samtools     ver. 1.15.1
-    sickle-trim:  '../envs/osx/sickle-trim-1.33.yaml'      # Sickle-trim  ver. 1.33
+    bamclipper:   '../envs/osx/bamclipper_1.0.yaml'        # BAMClipper   ver. 1.0
+    bcftools:     '../envs/osx/bcftools_1.15.1.yaml'       # Bcftools     ver. 1.15.1
+    bedtools:     '../envs/osx/bedtools_2.30.0.yaml'       # Bedtools     ver. 2.30.0
+    bowtie2:      '../envs/osx/bowtie2_2.4.5.yaml'         # Bowtie2      ver. 2.4.5
+    bwa:          '../envs/osx/bwa_0.7.17.yaml'            # BWA          ver. 0.7.17
+    cutadapt:     '../envs/osx/cutadapt_4.1.yaml'          # Cutadapt     ver. 4.1
+    fastq-screen: '../envs/osx/fastq-screen_0.15.2.yaml'   # Fastq-Screen ver. 0.15.2
+    fastqc:       '../envs/osx/fastqc_0.11.9.yaml'         # FastQC       ver. 0.11.9
+    gawk:         '../envs/osx/gawk_5.1.0.yaml'            # Awk          ver. 5.1.0
+    gevarli-base: '../envs/osx/gavarli-vase_v.2022.11'     # GeVarLi-Base ver. 2022.11
+    lofreq:       '../envs/osx/lofreq_2.1.5.yaml'          # Lofreq       ver. 2.1.5
+    multiqc:      '../envs/osx/multiqc_1.12.yaml'          # MultiQC      ver. 1.12
+    nextclade:    '../envs/osx/nextclade_2.5.0.yaml'       # Nextclade    ver. 2.5.0
+    pangolin:     '../envs/osx/pangolin_4.0.6.yaml'        # Pangolin     ver. 4.0.6
+    samtools:     '../envs/osx/samtools_1.15.1.yaml'       # Samtools     ver. 1.15.1
+    sickle-trim:  '../envs/osx/sickle-trim_1.33.yaml'      # Sickle-trim  ver. 1.33
   Linux:                                                 # Conda Linux environement yaml files:
-    bamclipper:   '../envs/linux/bamclipper-1.0.yaml'      # BAMClipper   ver. 1.0
-    bcftools:     '../envs/linux/bcftools-1.15.1.yaml'     # Bcftools     ver. 1.15.1
-    bedtools:     '../envs/linux/bedtools-2.30.0.yaml'     # Bedtools     ver. 2.30.0
-    bowtie2:      '../envs/linux/bowtie2-2.4.5.yaml'       # Bowtie2      ver. 2.4.5
-    bwa:          '../envs/linux/bwa-0.7.17.yaml'          # BWA          ver. 0.7.17
-    cutadapt:     '../envs/linux/cutadapt-4.1.yaml'        # Cutadapt     ver. 4.1
-    fastq-screen: '../envs/linux/fastq-screen-0.15.2.yaml' # Fastq-Screen ver. 0.15.2
-    fastqc:       '../envs/linux/fastqc-0.11.9.yaml'       # FastQC       ver. 0.11.9
-    gawk:         '../envs/linux/gawk-5.1.0.yaml'          # Awk          ver. 5.1.0
-    lofreq:       '../envs/linux/lofreq-2.1.5.yaml'        # Lofreq       ver. 2.1.5
-    multiqc:      '../envs/linux/multiqc-1.12.yaml'        # MultiQC      ver. 1.12
-    nextclade:    '../envs/linux/nextclade-2.5.0.yaml'     # Nextclade    ver. 2.5.0
-    pangolin:     '../envs/linux/pangolin-4.0.6.yaml'      # Pangolin     ver. 4.0.6
-    samtools:     '../envs/linux/samtools-1.15.1.yaml'     # Samtools     ver. 1.15.1
-    sickle-trim:  '../envs/linux/sickle-trim-1.33.yaml'    # Sickle-trim  ver. 1.33
+    bamclipper:   '../envs/linux/bamclipper_1.0.yaml'      # BAMClipper   ver. 1.0
+    bcftools:     '../envs/linux/bcftools_1.15.1.yaml'     # Bcftools     ver. 1.15.1
+    bedtools:     '../envs/linux/bedtools_2.30.0.yaml'     # Bedtools     ver. 2.30.0
+    bowtie2:      '../envs/linux/bowtie2_2.4.5.yaml'       # Bowtie2      ver. 2.4.5
+    bwa:          '../envs/linux/bwa_0.7.17.yaml'          # BWA          ver. 0.7.17
+    cutadapt:     '../envs/linux/cutadapt_4.1.yaml'        # Cutadapt     ver. 4.1
+    fastq-screen: '../envs/linux/fastq-screen_0.15.2.yaml' # Fastq-Screen ver. 0.15.2
+    fastqc:       '../envs/linux/fastqc_0.11.9.yaml'       # FastQC       ver. 0.11.9
+    gawk:         '../envs/linux/gawk_5.1.0.yaml'          # Awk          ver. 5.1.0
+    gevarli-base: '../envs/linux/gavarli-vase_v.2022.11'   # GeVarLi-Base ver. 2022.11
+    lofreq:       '../envs/linux/lofreq_2.1.5.yaml'        # Lofreq       ver. 2.1.5
+    multiqc:      '../envs/linux/multiqc_1.12.yaml'        # MultiQC      ver. 1.12
+    nextclade:    '../envs/linux/nextclade_2.5.0.yaml'     # Nextclade    ver. 2.5.0
+    pangolin:     '../envs/linux/pangolin_4.0.6.yaml'      # Pangolin     ver. 4.0.6
+    samtools:     '../envs/linux/samtools_1.15.1.yaml'     # Samtools     ver. 1.15.1
+    sickle-trim:  '../envs/linux/sickle-trim_1.33.yaml'    # Sickle-trim  ver. 1.33
 
 ### GISAID (soon) ------------------------------------------------------------------------------------
 gisaid:

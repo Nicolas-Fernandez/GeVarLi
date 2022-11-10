@@ -183,54 +183,47 @@ ${blue}Start time${nc} _____________ ${time_stamp_start}
 "
 
 ###############################################################################
-###### Conda Installations ######
+###### GeVarLi Base Conda Environment Installation ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONDA INSTALLATIONS${nc} ${green}#####${nc}
+${green}#####${nc} ${red}GEVARLI-BASE CONDA ENVIRONMENT INSTALLATION${nc} ${green}#####${nc}
 ${green}-------------------------${nc}
 "
 
-
-# Test if a 'gevarli' environment exist
-if [[ $(conda info --envs | grep -o -E "^gevarli_${gevarli_version}") ]]
+# Test if 'gevarli-base' environment exist
+if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_version}") ]]
 then
-    echo -e "
-Conda environment ${ylo}gevarli_${gevarli_version}${nc} it's already created
-"
+    echo -e " Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} it's already created"
 else
-    echo -e "
-Conda environment ${ylo}gevarli_${gevarli_version}${nc} will be now created
-"
-    # Create an empty 'gevarli' environment
-    conda create --name gevarli_${gevarli_version} --yes
-    # Mamba (to install conda environments faster)
-    conda install \
-        --name gevarli_${gevarli_version} \
-	--channel conda-forge \
-	mamba \
-	--yes
-    # Snakemake (to run GeVarLi)
-    ${conda_frontend} install \
-	--name gevarli_${gevarli_version} \
-	---channel conda-forge \
-	--channel bioconda \
-	snakemake==${snakemake_version} \
-	--yes
-    # Rename (to rename fastq files)
-    ${conda_frontend} install \
-	--name gevarli_${gevarli_version} \
-	--channel bioconda \
-	rename \
-	--yes
-    # Graphviz (to dot snakemake DAG)
-    ${conda_frontend} install \
-	--name gevarli_${gevarli_version} \
-	--channel anaconda \
-	graphviz \
-	--yes
+    echo -e "Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created"
+    # Create a 'gevarli-base' environment, with :
+      # Mamba (to create snakemake-conda's environments faster)
+      # Snakemake (to run GeVarLi)
+      # Rename (to rename fastq files)
+      # Graphviz (to dot snakemake DAG)
+    conda env create -f ${workdir}/workflow/envs/${os}/gevarli-base_${gevarli_version}
 fi
+#conda create \
+#	  --name gevarli_${gevarli_version} \
+#	  --channel conda-forge \
+#	  --channel bioconda \
+#	  --channel anaconda \
+#	  mamba \
+#         snakemake==${snakemake_version} \
+#	  rename \
+#	  graphviz \
+#	  --yes
+#fi
 
-# Active Gevarli env.
+###############################################################################
+###### Conda Env. Activation ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
+${green}-------------------------${nc}
+"
+
+source ~/miniconda3/etc/profile.d/conda.sh
 conda activate gevarli_${gevarli_version}
 
 ###############################################################################
@@ -506,7 +499,7 @@ ${green}----------------------${nc}
 
 # Save and Deactive Gevarli environment
 conda env export > ${workdir}/results/10_Reports/gevarli_${gevarli_version}.yaml
-conda deactivate gevarli_${gevarli_version}
+conda deactivate
 
 # Cleanup
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)

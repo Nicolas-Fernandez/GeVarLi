@@ -72,7 +72,13 @@ _Press [ENTER] to run conda init (initialize Miniconda3)_
 **3/** Restart now your shell _(close and reopen a new terminal window)_  
 (base) appear now at command prompt start 
 
-**4/** Optional cleaning, if successful installation:  
+
+**4/** Update conda _(from 4.12.0 to 22.9.0 or higher)_:  
+```shell
+conda update -n base -c defaults conda
+```
+
+**5/** Optional cleaning _(if successful installation)_::  
 ```shell
 rm -f ~/Miniconda3_installer.sh
 ```
