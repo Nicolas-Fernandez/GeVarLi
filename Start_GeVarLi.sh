@@ -201,7 +201,7 @@ else
       # Snakemake (to run GeVarLi)
       # Rename (to rename fastq files)
       # Graphviz (to dot snakemake DAG)
-    conda env create -f ${workdir}/workflow/envs/${os}/gevarli-base_${gevarli_version}
+    conda env create -f ${workdir}/workflow/envs/${os}/gevarli-base_${gevarli_version}.yaml
 fi
 #conda create \
 #	  --name gevarli_${gevarli_version} \
