@@ -41,7 +41,7 @@ ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}
-${green}--------------------${nc}
+${green}----------------------------${nc}
 "
 
 case "$OSTYPE" in
@@ -64,7 +64,7 @@ ${blue}Operating system${nc} _______ ${red}${os}${nc}
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}
-${green}--------------------${nc}
+${green}-------------------${nc}
 "
 
 if [[ ${os} == "osx" ]]
@@ -187,16 +187,20 @@ ${blue}Start time${nc} _____________ ${time_stamp_start}
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}GEVARLI-BASE CONDA ENVIRONMENT INSTALLATION${nc} ${green}#####${nc}
-${green}-------------------------${nc}
+${green}-------------------------------------------------------${nc}
 "
 
 # Test if 'gevarli-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_version}") ]]
 then
-    echo -e " Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} it's already created"
+    echo -e "
+Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} it's already created
+"
 else
-    echo -e "Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created"
-    # Create a 'gevarli-base' environment, with :
+    echo -e "
+Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created
+"
+   # Create a 'gevarli-base' environment, with :
       # Mamba (to create snakemake-conda's environments faster)
       # Snakemake (to run GeVarLi)
       # Rename (to rename fastq files)
@@ -220,11 +224,11 @@ fi
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
-${green}-------------------------${nc}
+${green}----------------------------${nc}
 "
 
 source ~/miniconda3/etc/profile.d/conda.sh
-conda activate gevarli_${gevarli_version}
+conda activate gevarli-base_${gevarli_version}
 
 ###############################################################################
 ###### Rename samples ######
@@ -267,8 +271,8 @@ for snakefile in ${snakefile_list} ; do
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
         --config os=${os} \
         --rerun-incomplete \
-        --unlock ;
-    echo ""
+        --unlock \
+    2> /dev/null ;
 done
 
 echo -e "
@@ -289,7 +293,8 @@ for snakefile in ${snakefile_list} ; do
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
-        --list-conda-envs ;
+        --list-conda-envs \
+    2> /dev/null ;
 done
 
 echo -e "
@@ -315,7 +320,8 @@ for snakefile in ${snakefile_list} ; do
         --rerun-incomplete \
         --use-conda \
         --conda-frontend ${conda_frontend} \
-        --conda-create-envs-only ;
+        --conda-create-envs-only \
+    2> /dev/null ;
 done
 
 echo -e "
@@ -344,7 +350,8 @@ for snakefile in ${snakefile_list} ; do
         --use-conda \
         --conda-frontend ${conda_frontend} \
         --dry-run \
-        --quiet ;
+        --quiet \
+    2> /dev/null ;
 done
 
 echo -e "
@@ -375,7 +382,8 @@ for snakefile in ${snakefile_list} ; do
         --keep-going \
         --use-conda \
         --conda-frontend ${conda_frontend} \
-        --printshellcmds ;
+        --printshellcmds \
+    2> /dev/null ;
 done
 
 ###############################################################################
@@ -386,12 +394,12 @@ ${green}#####${nc} ${red}CONCATENATE FASTA FILES${nc} ${green}#####${nc}
 ${green}-----------------------------------${nc}
 "
 cat ${workdir}/results/05_Consensus/*_consensus.fasta \
-    1> ${workdir}/results/All_consensus_sequences.fasta \
-    2> /dev/null
+    2> /dev/null \
+    1> ${workdir}/results/All_consensus_sequences.fasta
 
 cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html \
-   ${workdir}/results/All_readsQC_reports.html \
-   2> /dev/null
+   2> /dev/null \
+   ${workdir}/results/All_readsQC_reports.html
 
 ###############################################################################
 ###### Concatenate all coverage stats ######
@@ -401,12 +409,12 @@ ${green}#####${nc} ${red}CONCATENATE COVERAGE STATS${nc} ${green}#####${nc}
 ${green}--------------------------------------${nc}
 "
 cat ${workdir}/results/03_Coverage/*coverage-stats.tsv \
-    1> ${workdir}/results/All_genome_coverages.tsv \
-    2> /dev/null
+    2> /dev/null \
+    1> ${workdir}/results/All_genome_coverages.tsv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv \
-    1> ${workdir}/results/GENCOV.tmp \
     2> /dev/null \
+    1> ${workdir}/results/GENCOV.tmp \
     && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv \
     2> /dev/null
 
@@ -419,17 +427,18 @@ ${green}----------------------------------------${nc}
 "
 
 cat ${workdir}/results/06_Lineages/*_pangolin-report.csv \
-    1> ${workdir}/results/All_pangolin_lineages.csv \
-    2> /dev/null
+    2> /dev/null \
+    1> ${workdir}/results/All_pangolin_lineages.csv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv \
-    > ${workdir}/results/PANGO.tmp \
+    2> /dev/null \
+    1> ${workdir}/results/PANGO.tmp \
     && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv \
     2> /dev/null
 
 sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv \
-    1> ${workdir}/results/All_pangolin_lineages.tsv \
-    2> /dev/null
+    2> /dev/null \
+    1> ${workdir}/results/All_pangolin_lineages.tsv
 
 rm -f ${workdir}/results/All_pangolin_lineages.csv 2> /dev/null
 
@@ -442,12 +451,12 @@ ${green}-----------------------------------------${nc}
 "
 
 cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv \
-    1> ${workdir}/results/All_nextclade_lineages.tsv \
-    2> /dev/null
+    2> /dev/null \
+    1> ${workdir}/results/All_nextclade_lineages.tsv
 
 awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv \
-    1> ${workdir}/results/NEXT.tmp \
     2> /dev/null \
+    1> ${workdir}/results/NEXT.tmp \
     && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv \
     2> /dev/null
 
@@ -456,7 +465,7 @@ awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv \
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}
-${green}-------------------------------------${nc}
+${green}-----------------------------------${nc}
 "
 mkdir -p ${workdir}/results/10_Reports/graphs/ 2> /dev/null
 
@@ -471,8 +480,8 @@ for snakefile in ${snakefile_list} ; do
                 --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
                 --${graph} \
 	    | dot -T${extention} \
-	    1> ${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} \
-	    2> /dev/null ;
+            2> /dev/null \
+	    1> ${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} ;
 	done ;
     done ;
 done
