@@ -21,7 +21,7 @@ resources:
     ## '.'        # Local (i.e. GeVarLi root directory)
     ## '/scratch' # HPC (set it to match your HPC usage)
 
-snakemake_version: '7.18.1' # Snakemake version (upgrade from  6.12.3)
+#snakemake_version: '7.18.1' # Snakemake version (upgrade from  6.12.3)
 conda_frontend: 'mamba'     # Conda frontend (conda or mamba)
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
