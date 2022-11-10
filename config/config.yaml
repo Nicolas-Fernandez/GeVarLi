@@ -26,7 +26,7 @@ conda_frontend: 'mamba'     # Conda frontend (conda or mamba)
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:
-  OSX:                                                   # Conda OSX environement yaml files:
+  osx:                                                   # Conda OSX environement yaml files:
     bamclipper:   '../envs/osx/bamclipper_1.0.yaml'        # BAMClipper   ver. 1.0
     bcftools:     '../envs/osx/bcftools_1.15.1.yaml'       # Bcftools     ver. 1.15.1
     bedtools:     '../envs/osx/bedtools_2.30.0.yaml'       # Bedtools     ver. 2.30.0
@@ -43,7 +43,7 @@ conda:
     pangolin:     '../envs/osx/pangolin_4.0.6.yaml'        # Pangolin     ver. 4.0.6
     samtools:     '../envs/osx/samtools_1.15.1.yaml'       # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/osx/sickle-trim_1.33.yaml'      # Sickle-trim  ver. 1.33
-  Linux:                                                 # Conda Linux environement yaml files:
+  linux:                                                 # Conda Linux environement yaml files:
     bamclipper:   '../envs/linux/bamclipper_1.0.yaml'      # BAMClipper   ver. 1.0
     bcftools:     '../envs/linux/bcftools_1.15.1.yaml'     # Bcftools     ver. 1.15.1
     bedtools:     '../envs/linux/bedtools_2.30.0.yaml'     # Bedtools     ver. 2.30.0
