@@ -45,48 +45,28 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ## ~ INSTALLATIONS ~ ##
 
 # Conda _(required)_ #
-If required, first install **Conda**  
+GeVarLi and Snakemake use the wonderfull **Conda** environment manager,  
+So if required _(not already installed)_, please, first install **Conda** :  
  
- WARNOING _ NEW INSTALLATION PROCEDURE TESTING !!!
- 
- Wait tests end please :)
- 
-**1/** Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+You can download and install your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
-e.g. if **MacOSX-64-bit**:  
+e.g. for **MacOSX-64-bit**:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda_installer.sh 
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh \
+     -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
+bash ~/Miniconda3-latest-MacOSX-x86_64.sh -p && \
+conda update conda --yes && \
+rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh
+
 ```
 
-e.g. if **Linux-64-bit**:  
+e.g. for **Linux-64-bit**:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda_installer.sh
-```
-
-**2/** Execute installation _(and follow the screen prompt instructions)_:  
-```shell
-bash ~/Miniconda_installer.sh -p
-conda update conda
-rm -f ~/Miniconda3_installer.sh
-```
-_Press [ENTER] to continue_  
-_Press [SPACE] to scroll all license pages (untill end)_  
-_Specify [yes] to accept the license terms_  
-_Press [ENTER] to confirm the default Miniconda3 location (in your home: ~/miniconda3/)_  
-_Press [ENTER] to run conda init (initialize Miniconda3)_  
- 
-**3/** Restart now your shell _(close and reopen a new terminal window)_  
-(base) appear now at command prompt start 
-
-
-**4/** Update conda _(from 4.12.0 to 22.9.0 or higher)_:  
-```shell
-conda update -n base -c defaults conda
-```
-
-**5/** Optional cleaning _(if successful installation)_::  
-```shell
-rm -f ~/Miniconda3_installer.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+     -o ~/Miniconda3-latest-Linux-x86_64.sh && \
+bash ~/Miniconda3-latest-Linux-x86_64.sh -p && \
+conda update conda --yes && \
+rm -f ~/Miniconda3-latest-Linux-x86_64.sh
 ```
 
 # GeVarLi #
@@ -103,13 +83,14 @@ Difference between **Download** and **Clone**:
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
+remove config/config.yaml && \
 git pull --verbose
 ```
 
 ## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
-2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline
+2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline _(according to your choice)_:
     - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
 	- with a **Right-click** > **Open with** > **Terminal.app**
 	- with **CLI** from a terminal:
