@@ -44,6 +44,7 @@ ${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
+# Get and print operating system 
 case "$OSTYPE" in
   linux*)   os="linux" ;;
   bsd*)     os="bsd" ;;
@@ -53,18 +54,23 @@ case "$OSTYPE" in
   cygwin*)  os="windows" ;;
   *)        os="unknown (${OSTYPE})" ;;
 esac
-
-# Print operating system 
 echo -e "
 ${blue}Operating system${nc} _______ ${red}${os}${nc}
 "
+
+# Get and print shell
+shell=$SHELL
+echo -e "
+${blue}Shell${nc} __________________ ${ylo}${shell}${nc}
+"
+
 
 ###############################################################################
 ###### Hardware ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}
-${green}-------------------${nc}
+${green}--------------------${nc}
 "
 
 if [[ ${os} == "osx" ]]
@@ -201,10 +207,10 @@ else
 Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created
 "
    # Create a 'gevarli-base' environment, with :
-      # Mamba (to create snakemake-conda's environments faster)
-      # Snakemake (to run GeVarLi)
-      # Rename (to rename fastq files)
-      # Graphviz (to dot snakemake DAG)
+      # Snakemake ver. 7.18.1 (to run GeVarLi)
+      # Mamba     ver. 1.0.0  (to create snakemake-conda's environments faster)
+      # Rename    ver. 1.601  (to rename fastq files)
+      # Graphviz  ver. 6.0.1  (to dot snakemake DAG)
     conda env create -f ${workdir}/workflow/envs/${os}/gevarli-base_${gevarli_version}.yaml
 fi
 #conda create \
@@ -539,6 +545,7 @@ Latest modifications ___ 2022.11.10
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
+Shell __________________ ${shell}
 
                    Brand(R) | Type(R) | Model | @ Speed GHz
 Chip Model Name ________ ${model_name}
