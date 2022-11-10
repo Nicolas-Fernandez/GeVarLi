@@ -28,4 +28,3 @@ dependencies:
   - samtools=1.7=1
   - xz=5.2.5=h7f8727e_1
   - zlib=1.2.11=h7f8727e_4
-prefix: /home/fernandez/.conda/envs/bamclipper-1.0

@@ -47,6 +47,10 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 # Conda _(required)_ #
 If required, first install **Conda**  
  
+ WARNOING _ NEW INSTALLATION PROCEDURE TESTING !!!
+ 
+ Wait tests end please :)
+ 
 **1/** Download your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
 e.g. if **MacOSX-64-bit**:  
@@ -61,7 +65,9 @@ curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/
 
 **2/** Execute installation _(and follow the screen prompt instructions)_:  
 ```shell
-bash ~/Miniconda_installer.sh
+bash ~/Miniconda_installer.sh -p
+conda update conda
+rm -f ~/Miniconda3_installer.sh
 ```
 _Press [ENTER] to continue_  
 _Press [SPACE] to scroll all license pages (untill end)_  
