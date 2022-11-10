@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2022.11.07
+# Latest modifications ___ 2022.11.10
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################

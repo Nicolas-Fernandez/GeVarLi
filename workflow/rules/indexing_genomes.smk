@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2022.11.07
+# Latest modifications ___ 2022.11.10
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
