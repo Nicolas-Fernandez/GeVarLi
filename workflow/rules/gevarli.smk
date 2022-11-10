@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.07
+# Latest modifications ___ 2022.11.10
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################

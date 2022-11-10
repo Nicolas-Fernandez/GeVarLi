@@ -8,7 +8,7 @@ gevarli_version="v.2022.11"
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.07
+# Latest modifications ___ 2022.11.10
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -32,7 +32,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2022.11.07
+${blue}Latest modifications${nc} ___ 2022.11.10
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -45,13 +45,13 @@ ${green}--------------------${nc}
 "
 
 case "$OSTYPE" in
-  linux*)   os="Linux" ;;
-  bsd*)     os="BSD" ;;
-  darwin*)  os="OSX" ;;
-  solaris*) os="Solaris" ;;
-  msys*)    os="Windows" ;;
-  cygwin*)  os="Windows" ;;
-  *)        os="Unknown (${OSTYPE})" ;;
+  linux*)   os="linux" ;;
+  bsd*)     os="bsd" ;;
+  darwin*)  os="osx" ;;
+  solaris*) os="solaris" ;;
+  msys*)    os="windows" ;;
+  cygwin*)  os="windows" ;;
+  *)        os="unknown (${OSTYPE})" ;;
 esac
 
 # Print operating system 
@@ -67,14 +67,14 @@ ${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-if [[ ${os} == "OSX" ]]
+if [[ ${os} == "osx" ]]
 then
     model_name=$(sysctl -n machdep.cpu.brand_string) # Get chip model name
     physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
     logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
     mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
     ram_gb=$(expr ${mem_size} \/ $((1024**3)) )      # mem_size / 1024**3 = Gb
-elif [[ ${os} == "Linux" ]]
+elif [[ ${os} == "linux" ]]
 then
     model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -r "s/Model name: +//")                           # Get chip model name
     physical_cpu=$(lscpu | grep -o -E "^CPU\(s\): +[0-9]+" | sed -r "s/CPU\(s\): +//")                        # Get physical cpu
@@ -83,7 +83,7 @@ then
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -r "s/MemTotal: +//")                       # Get memory size (Kb)
     ram_gb=$(expr ${mem_size} \/ $((1024**2)) )                                                               # mem_size / 1024**2 = Gb
 else
-    echo -e "Please, use '${red}OSX${nc}' or '${red}Linux${nc}' operating systems"
+    echo -e "Please, use '${red}osx${nc}' or '${red}linux${nc}' operating systems"
     exit 1
 fi
 
@@ -526,7 +526,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2022.11.03
+Latest modifications ___ 2022.11.10
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}

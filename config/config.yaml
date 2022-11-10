@@ -6,7 +6,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.07
+# Latest modifications ___ 2022.11.10
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -182,10 +182,10 @@ nextclade:
     #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
-os: 'OSX' # Operating System (default: OSX)
+os: 'osx' # Operating System (default: OSX)
 # Available options:
-  #- 'OSX'     # Mac OSX - Apple (R) [UNIX] (suported)
-  #- 'Linux'   # GNU Linux - Free [UNIX] (suported)
-  #- 'BSD'     # Free BSD - Free [UNIX] (not tested. Need specific conda env. ?)
-  #- 'Solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
-  #- 'Windows' # Windows - Microsoft Corporation (R) (not suported, not [UNIX])
+  #- 'osx'     # Mac OSX - Apple (R) [UNIX] (suported)
+  #- 'linux'   # GNU Linux - Free [UNIX] (suported)
+  #- 'bsd'     # Free BSD - Free [UNIX] (not tested. Need specific conda env. ?)
+  #- 'solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
+  #- 'windows' # Windows - Microsoft Corporation (R) (not suported, not [UNIX])
