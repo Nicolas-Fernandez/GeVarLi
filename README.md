@@ -45,26 +45,27 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ## ~ INSTALLATIONS ~ ##
 
 # Conda _(required)_ #
-GeVarLi and Snakemake use the wonderfull **Conda** environment manager,  
-So if required _(not already installed)_, please, first install **Conda** :  
+_GeVarLi_ and _Snakemake_ use the usefull **Conda** environment manager  
+So, only if required _(not already installed)_, please, first install **Conda** !  
  
-You can download and install your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+Download and install your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
 e.g. for **MacOSX-64-bit**:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh \
      -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
-bash ~/Miniconda3-latest-MacOSX-x86_64.sh -p && \
+bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b && \
+conda init --user --all --quiet && \
 conda update conda --yes && \
 rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh
-
 ```
 
 e.g. for **Linux-64-bit**:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
      -o ~/Miniconda3-latest-Linux-x86_64.sh && \
-bash ~/Miniconda3-latest-Linux-x86_64.sh -p && \
+bash ~/Miniconda3-latest-Linux-x86_64.sh -b && \
+conda init --user --all --quiet && \
 conda update conda --yes && \
 rm -f ~/Miniconda3-latest-Linux-x86_64.sh
 ```
@@ -72,7 +73,7 @@ rm -f ~/Miniconda3-latest-Linux-x86_64.sh
 # GeVarLi #
 Clone _(with HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
 ```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/ && \
 cd ~/GeVarLi/
 ```
 
@@ -83,7 +84,7 @@ Difference between **Download** and **Clone**:
 - You can then modify the files locally and upload the changes to the remote repository on GitLab  
 - You can then **update** the files locally and download the changes from the remote repository on GitLab  
 ```shell
-remove config/config.yaml && \
+git reset --hard HEAD && \
 git pull --verbose
 ```
 
@@ -97,11 +98,18 @@ git pull --verbose
 ```shell
 bash Start_GeVarLi.sh
 ```
-Yours analyzes will start with default configuration settings  
+Yours analyzes will start, with default configuration settings  
 
 _Option-1: Edit **config.yaml** file in **./config/** directory_  
 _Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
 
+First run will auto-created _(only once)_:
+	- Gevarli-Base conda environment _(Snakemake, Mamba, Rename, GraphViz)_
+	- Snakemake-conda environments _(for each tools used by GeVarLi)_
+	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources)_
+	
+_This may take some time, depending on your internet connection and your computer_
+	
 
 ## ~ RESULTS ~ ##
 
