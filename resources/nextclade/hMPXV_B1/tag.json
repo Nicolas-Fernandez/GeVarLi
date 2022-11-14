@@ -1,5 +1,5 @@
 {
-  "comment": "Add new sequences",
+  "comment": "",
   "compatibility": {
     "nextcladeCli": {
       "max": null,
@@ -23,11 +23,11 @@
   },
   "metadata": {},
   "name": "hMPXV_B1",
-  "nameFriendly": "Human Monkeypox Clade B.1",
+  "nameFriendly": "Human Monkeypox Lineage B.1*",
   "reference": {
     "accession": "pseudo_ON563414",
     "source": "genbank",
     "strainName": "MPXV_USA_2022_MA001 in NC_063383 coordinates"
   },
-  "tag": "2022-06-29T12:00:00Z"
+  "tag": "2022-11-03T12:00:00Z"
 }

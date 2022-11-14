@@ -3,7 +3,10 @@
   "privateMutations": {
     "enabled": true,
     "typical": 5,
-    "cutoff": 50
+    "cutoff": 50,
+    "weightLabeledSubstitutions": 6,
+    "weightReversionSubstitutions": 6,
+    "weightUnlabeledSubstitutions": 1
   },
   "missingData": {
     "enabled": true,
@@ -27,6 +30,9 @@
   "stopCodons": {
     "enabled": true,
     "scoreWeight": 40,
-    "ignoredStopCodons": []
+    "ignoredStopCodons": [
+      { "geneName": "NBT03_gp175", "codon": 187 },
+      { "geneName": "OPG015", "codon": 187 }
+    ]
   }
 }
