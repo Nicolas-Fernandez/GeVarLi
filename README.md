@@ -54,9 +54,10 @@ e.g. for **MacOSX-64-bit**:
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh \
      -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
-bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b && \
-conda init --user --all --quiet && \
-conda update conda --yes && \
+bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b \
+     -p ~/miniconda3/ && \
+~/miniconda3/condabin/conda init --user --all --quiet && \
+~/miniconda3/condabin/conda update conda --yes && \
 rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh
 ```
 
@@ -64,11 +65,14 @@ e.g. for **Linux-64-bit**:
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
      -o ~/Miniconda3-latest-Linux-x86_64.sh && \
-bash ~/Miniconda3-latest-Linux-x86_64.sh -b && \
-conda init --user --all --quiet && \
-conda update conda --yes && \
+bash ~/Miniconda3-latest-Linux-x86_64.sh -b \
+     -p ~/miniconda3/ && \
+~/miniconda3/condabin/conda init --user --all --quiet && \
+~/miniconda3/condabin/conda update conda --yes && \
 rm -f ~/Miniconda3-latest-Linux-x86_64.sh
 ```
+
+And restar shell terminal (close / open)
 
 # GeVarLi #
 Clone _(with HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
@@ -91,6 +95,8 @@ git pull --verbose
 ## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
+_SARS-CoV-2 sample reads are available for test into ./resources/test\_data/ directory_
+
 2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline _(according to your choice)_:
     - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
 	- with a **Right-click** > **Open with** > **Terminal.app**
@@ -98,7 +104,7 @@ git pull --verbose
 ```shell
 bash Start_GeVarLi.sh
 ```
-Yours analyzes will start, with default configuration settings  
+3. Yours analyzes will start, with default configuration settings  
 
 _Option-1: Edit **config.yaml** file in **./config/** directory_  
 _Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
@@ -114,16 +120,103 @@ _This may take some time, depending on your internet connection and your compute
 ## ~ RESULTS ~ ##
 
 Yours results are available in **./results/** directory, as follow:  
-_(file names keep track which tools / params was used: \<**sample**\>\_\<**aligner**\>\_\<**mincov**\>)_  
 
-### root ###
-This is the main results :   
-
-- **All_consensus_sequences.fasta**: all consensus sequences, in _fasta_ format
-- **All_genome_coverages.tsv**: all genome coverages, in _tsv_ format
-- **All_nextclade_lineages.tsv**: all nextclade lineage reports, in _tsv_ format
-- **All_pangolin_lineages.tsv**: all pangolin lineage reports, in _tsv_ format
-- **All_readsQC_reports.html**: all reads quality reports from MultiQC, in _html_ format
+```shell
+ 📂 GeVarLi/
+  └── 📂 results/
+       ├── 🧬 All_consensus_sequences.fasta
+       ├── 📊 All_genome_coverages.tsv
+       ├── 📊 All_nextclade_lineages.tsv
+       ├── 📊 All_pangolin_lineages.tsv
+       ├── 🌐 All_readsQC_reports.html
+       ├── 📂 00_Quality_Control/
+       │    ├── 📂 fastq-screen/
+       │    │    ├── 🌐 {SAMPLE}_R{MATE}_screen.html
+       │    │    ├── 📈 {SAMPLE}_R{MATE}_screen.png
+       │    │    └── 📄 {SAMPLE}_R{MATE}_screen.txt
+       │    ├── 📂 fastqc/
+       │    │    ├── 🌐 {SAMPLE}_R{MATE}_fastqc.html
+       │    │    └── 📦 {SAMPLE}_R{MATE}_fastqc.zip
+       │    └── 📂 multiqc/
+       │         ├── 🌐 multiqc_report.html
+       │         └──📂 multiqc_data/
+       │             ├── 📋 multiqc.log
+       │             ├── 📄 multiqc_citations.txt
+       │             ├── 🌀 multiqc_data.json
+       │             ├── 📄 multiqc_fastq_screen.txt
+       │             ├── 📄 multiqc_fastqc.txt
+       │             ├── 📄 multiqc_general_stats.txt
+       │             └── 📄 multiqc_sources.txt
+       ├── 📂 01_Trimming/
+       │    ├── 
+       │    └── 
+       ├── 📂 02_Mapping/
+       │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam
+       │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
+       ├── 📂 03_Coverage/
+       │    └── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
+       ├── 📂 04_Variants/
+       │    ├── 📶 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai
+       │    ├── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai
+       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf
+       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf
+       │    └── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi
+       ├── 📂 05_Consensus/
+       │    └── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_consensus.fasta
+       ├── 📂 06_Lineages/
+       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-report.tsv
+       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_pangolin-report.csv
+       │    └── 📂 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-all/
+       │         ├── 🧬 nextclade.aligned.fasta
+       │         ├── 📊 nextclade.csv
+       │         ├── 📊 nextclade.errors.csv
+       │         ├── 📊 nextclade.insertions.csv
+       │         ├── 🌀 nextclade.json
+       │         ├── 🌀 nextclade.ndjson
+       │         ├── 🌀 nextclade.auspice.json
+       │         ├── 🧬 nextclade_gene_E.translation.fasta
+       │         ├── 🧬 nextclade_gene_M.translation.fasta
+       │         ├── 🧬 nextclade_gene_N.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF1a.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF1b.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF3a.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF6.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF7a.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF7b.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF8.translation.fasta
+       │         ├── 🧬 nextclade_gene_ORF9b.translation.fasta
+       │         └── 🧬 nextclade_gene_S.translation.fasta
+       └── 📂 10_Reports/
+            ├── ⚙️  config.yaml
+            ├── 📄 gevarli_files_summary.txt
+            ├── 🍜 gevarli_v.2022.11.yaml
+            ├── 📄 indexing_genomes_files_summary.txt
+            ├── 📄 quality_control_files_summary.txt
+            ├── 📄 settings.txt
+            ├── 📂 graphs/
+            │    ├── 📈 {PIPELINE}_dag.{PNG/PDF}
+            │    ├── 📈 {PIPELINE}_filegraph.{PNG/PDF}
+            │    └── 📈 {PIPELINE}_rulegraph.{PNG/PDF}
+            └── 📂 tools-log/
+                 ├── 📂 awk/
+                 ├── 📂 bcftools/
+                 ├── 📂 bedtools/
+                 ├── 📂 bgzip/
+                 ├── 📂 bwa/
+                 ├── 📂 cutadapt/
+                 ├── 📂 lofreq/
+                 ├── 📂 nextclade/
+                 ├── 📂 pangolin/
+                 ├── 📂 samtools/
+                 ├── 📂 sed/
+                 ├── 📂 sickle-trim/
+                 ├── 📂 tabix/
+                 ├── 📋 fastq-screen.log
+                 ├── 📋 fastqc.log
+                 └── 📋 multiqc.log
+```
 
 ### 00_Quality_Control ###
 - **fastq-screen**: raw reads putative contaminations reports for each samples, in _html_, _png_ and _txt_ formats 
@@ -248,7 +341,7 @@ To select one or both, de/comment (#) as you wish:
 
 ### Directories tree structure ###
 ```shell
- /
+ 📂 GeVarLi/
  ├── 🖥️️  Start_GeVarLi.sh
  ├── 📚 README.md
  ├── 🪪 LICENSE
@@ -263,6 +356,7 @@ To select one or both, de/comment (#) as you wish:
  │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN908947-3.fasta
  │    │    ├── 🧬 Monkeypox-virus_Zaire_AF380138-1.fasta
  │    │    ├── 🧬 Monkeypox-virus_UK_MT903345-1.fasta
+ │    │    ├── 🧬 Swinepox-virus_India_MW036632-1.fasta
  │    │    ├── 🧬 Ebola-virus_Zaire_AF272001-1.fasta
  │    │    ├── 🧬 Nipah-virus_Malaysia_AJ564622-1.fasta
  │    │    ├── 🧬 HIV-1_HXB2_K03455-1.fasta.fasta
@@ -355,10 +449,8 @@ To select one or both, de/comment (#) as you wish:
  │    │    └── 📦 {samples}_R2.fastq.gz
  │    ├── 📂 test_data/
  │    │    ├── 🛡️  .gitkeep
- │    │    ├── 📦 Sample-test_SARS-CoV-2_R1.fastq.gz
- │    │    ├── 📦 Sample-test_SARS-CoV-2_R2.fastq.gz
- │    │    ├── 📦 Sample-test_MPXV_R1.fastq.gz
- │    │    └── 📦 Sample-test_MPXV_R2.fastq.gz
+ │    │    ├── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
+ │    │    └── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
  │    └── 📂 visuals/
  │         ├── 📈 gevarli_rulegraph.png
  │         ├── 📈 indexing_genomes_rulegraph.png
@@ -366,37 +458,39 @@ To select one or both, de/comment (#) as you wish:
  └── 📂 workflow/
       ├── 📂 envs/
 	  │    ├── 📂 linux/
-      │    │    ├── 🍜 bamclipper-1.0.yaml
-      │    │    ├── 🍜 bcftools-1.15.1.yaml
-      │    │    ├── 🍜 bedtools-2.30.0.yaml
-      │    │    ├── 🍜 bowtie2-2.4.5.yaml
-      │    │    ├── 🍜 bwa-0.7.17.yaml
-      │    │    ├── 🍜 cutadapt-4.1.yaml
-      │    │    ├── 🍜 fastq-screen-0.15.2.yaml
-      │    │    ├── 🍜 fastqc-0.11.9.yaml
-      │    │    ├── 🍜 gawk-5.1.0.yaml
-      │    │    ├── 🍜 lofreq-2.1.5.yaml
-      │    │    ├── 🍜 multiqc-1.12.yaml
-      │    │    ├── 🍜 nextclade-2.5.0.yaml
-      │    │    ├── 🍜 pangolin-4.0.6.yaml
-      │    │    ├── 🍜 samtools-1.15.1.yaml
-      │    │    └── 🍜 sickle-trim-1.33.yaml
+      │    │    ├── 🍜 bamclipper_v.1.0.yaml
+      │    │    ├── 🍜 bcftools_v.1.15.1.yaml
+      │    │    ├── 🍜 bedtools_v.2.30.0.yaml
+      │    │    ├── 🍜 bowtie2_v.2.4.5.yaml
+      │    │    ├── 🍜 bwa_v.0.7.17.yaml
+      │    │    ├── 🍜 cutadapt_v.4.1.yaml
+      │    │    ├── 🍜 fastq-screen_v.0.15.2.yaml
+      │    │    ├── 🍜 fastqc_v.0.11.9.yaml
+      │    │    ├── 🍜 gawk_v.5.1.0.yaml
+      │    │    ├── 🍜 gevarli-base_v.2022.11.yaml
+      │    │    ├── 🍜 lofreq_v.2.1.5.yaml
+      │    │    ├── 🍜 multiqc_v.1.12.yaml
+      │    │    ├── 🍜 nextclade_v.2.8.0.yaml
+      │    │    ├── 🍜 pangolin_v.4.0.6.yaml
+      │    │    ├── 🍜 samtools_v.1.15.1.yaml
+      │    │    └── 🍜 sickle-trim_v.1.33.yaml
       │    └── 📂 osx/
-      │    │    ├── 🍜 bamclipper-1.0.yaml
-      │    │    ├── 🍜 bcftools-1.15.1.yaml
-      │    │    ├── 🍜 bedtools-2.30.0.yaml
-      │    │    ├── 🍜 bowtie2-2.4.5.yaml
-      │    │    ├── 🍜 bwa-0.7.17.yaml
-      │    │    ├── 🍜 cutadapt-4.1.yaml
-      │    │    ├── 🍜 fastq-screen-0.15.2.yaml
-      │    │    ├── 🍜 fastqc-0.11.9.yaml
-      │    │    ├── 🍜 gawk-5.1.0.yaml
-      │    │    ├── 🍜 lofreq-2.1.5.yaml
-      │    │    ├── 🍜 multiqc-1.12.yaml
-      │    │    ├── 🍜 nextclade-2.5.0.yaml
-      │    │    ├── 🍜 pangolin-4.0.6.yaml
-      │    │    ├── 🍜 samtools-1.15.1.yaml
-      │    │    └── 🍜 sickle-trim-1.33.yaml
+      │    │    ├── 🍜 bamclipper_v.1.0.yaml
+      │    │    ├── 🍜 bcftools_v.1.15.1.yaml
+      │    │    ├── 🍜 bedtools_v.2.30.0.yaml
+      │    │    ├── 🍜 bowtie2_v.2.4.5.yaml
+      │    │    ├── 🍜 bwa_v.0.7.17.yaml
+      │    │    ├── 🍜 cutadapt_v.4.1.yaml
+      │    │    ├── 🍜 fastq-screen_v.0.15.2.yaml
+      │    │    ├── 🍜 fastqc_v.0.11.9.yaml
+      │    │    ├── 🍜 gawk_v.5.1.0.yaml
+      │    │    ├── 🍜 gevarli-base_v.2022.11.yaml
+      │    │    ├── 🍜 lofreq_v.2.1.5.yaml
+      │    │    ├── 🍜 multiqc_v.1.12.yaml
+      │    │    ├── 🍜 nextclade_v.2.8.0.yaml
+      │    │    ├── 🍜 pangolin_v.4.0.6.yaml
+      │    │    ├── 🍜 samtools_v.1.15.1.yaml
+      │    │    └── 🍜 sickle-trim_v.1.33.yaml
       └── 📂 rules/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk
