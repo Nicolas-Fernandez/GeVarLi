@@ -1,7 +1,0 @@
-name: nextclade-2.5.0
-channels:
-  - bioconda
-  - defaults
-dependencies:
-  - nextclade=2.5.0=h9ee0642_0
-prefix: /home/fernandez/.conda/envs/nextclade-2.5.0
