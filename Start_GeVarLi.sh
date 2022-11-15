@@ -495,7 +495,7 @@ for snakefile in ${snakefile_list} ; do
     snakemake \
         --directory ${workdir} \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
-        --summary > ${workdir}/results/10_Reports/file-summaries/${snakefile}_files-summary.txt \
+        --summary > ${workdir}/results/10_Reports/files-summaries/${snakefile}_files-summary.txt \
     2> /dev/null ;
 done
 
