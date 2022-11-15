@@ -229,7 +229,8 @@ ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
-source ~/miniconda3/etc/profile.d/conda.sh
+source ~/miniconda3/etc/profile.d/conda.sh     # local user
+source /usr/local/miniconda3/condabin/conda    # HPC server
 conda activate gevarli-base_${gevarli_version}
 
 ###############################################################################
