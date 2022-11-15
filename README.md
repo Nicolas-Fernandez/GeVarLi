@@ -332,6 +332,42 @@ To select one or both, de/comment (#) as you wish:
 - **FAI**: FASTA Indexes
 - **SAM**: Sequence Alignment Map
 
+## ~ SUPPORT ~ ##
+1. Read The Fabulous Manual!
+2. Read de Awsome Wiki! (todo...)
+3. Create a new issue: Issues > New issue > Describe your issue
+4. Send an email to [nicolas.fernandez@ird.fr](url)
+
+## ~ ROADMAP ~ ##
+- Add GisAid submission files generation
+
+## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
+- Nicolas Fernandez (Developer and Maintener)  
+- Christelle Butel (Reporter, User-addict, Features inspiration source)  
+- Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
+
+## ~ CONTRIBUTING ~ ##
+Open to contributions!  
+Testing code, finding issues, asking for update, proposing new features...  
+Use Git tools to share!  
+
+## ~ PROJECT STATUS ~ ##
+This project is **regularly update** and **actively maintened**  
+However, you can be volunteer to step in as **developer** or **maintainer**  
+
+For information about main git roles:  
+- **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues  
+- **Reporters** are _read-only contributors_, they can't write to the repository, but can on issues  
+- **Developers** are _direct contributors_, they have access to everything to go from idea to production  
+_Unless something has been explicitly restricted_  
+- **Maintainers** are _super-developers_, they are able to push to master, deploy to production  
+_This role is often held by maintainers and engineering managers_  
+- **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
+
+
+## ~ LICENSE ~ ##
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+
 ### Directories tree structure ###
 ```shell
  📂 GeVarLi/
@@ -490,40 +526,6 @@ To select one or both, de/comment (#) as you wish:
            └── 📜 quality_control.smk
 ```
 
-## ~ SUPPORT ~ ##
-1. Read The Fabulous Manual!
-2. Read de Awsome Wiki! (todo...)
-3. Create a new issue: Issues > New issue > Describe your issue
-4. Send an email to [nicolas.fernandez@ird.fr](url)
-
-## ~ ROADMAP ~ ##
-- Add GisAid submission files generation
-
-## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
-- Nicolas Fernandez (Developer and Maintener)  
-- Christelle Butel (Reporter, User-addict, Features inspiration source)  
-- Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
-
-## ~ CONTRIBUTING ~ ##
-Open to contributions!  
-Testing code, finding issues, asking for update, proposing new features...  
-Use Git tools to share!  
-
-## ~ PROJECT STATUS ~ ##
-This project is **regularly update** and **actively maintened**  
-However, you can be volunteer to step in as **developer** or **maintainer**  
-
-For information about main git roles:  
-- **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues  
-- **Reporters** are _read-only contributors_, they can't write to the repository, but can on issues  
-- **Developers** are _direct contributors_, they have access to everything to go from idea to production  
-_Unless something has been explicitly restricted_  
-- **Maintainers** are _super-developers_, they are able to push to master, deploy to production  
-_This role is often held by maintainers and engineering managers_  
-- **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
-
-## ~ LICENSE ~ ##
-[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
 
 ## ~ REFERENCES ~ ##
 **Sustainable data analysis with Snakemake**  
@@ -673,5 +675,13 @@ _Online (2010)_
 **Publication**: []()  
 **Source code**: [https://github.com/s-andrews/FastQC](https://github.com/s-andrews/FastQC)  
 **Documentation**: [https://www.bioinformatics.babraham.ac.uk/projects/fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc)  
+
+**Seqtk: A fast and lightweight tool for processing sequences in the FASTA or FASTQ format**  
+Heng Li  
+_Online (2014)_  
+**DOI**: [https://doi.org/](https://doi.org/)  
+**Publication**: []()  
+**Source code**: [https://github.com/lh3/seqtk](https://github.com/lh3/seqtk)  
+**Documentation**: [https://bioweb.pasteur.fr/packages/pack@seqtk@1.3](https://bioweb.pasteur.fr/packages/pack@seqtk@1.3)  
 
 ###############################################################################
