@@ -54,15 +54,11 @@ case "$OSTYPE" in
   cygwin*)  os="windows" ;;
   *)        os="unknown (${OSTYPE})" ;;
 esac
-echo -e "
-${blue}Operating system${nc} _______ ${red}${os}${nc}
-"
+echo -e "${blue}Operating system${nc} _______ ${red}${os}${nc}"
 
 # Get and print shell
 shell=$SHELL
-echo -e "
-${blue}Shell${nc} __________________ ${ylo}${shell}${nc}
-"
+echo -e "${blue}Shell${nc} __________________ ${ylo}${shell}${nc}"
 
 
 ###############################################################################
