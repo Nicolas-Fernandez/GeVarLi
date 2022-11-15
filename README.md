@@ -100,9 +100,9 @@ git pull --verbose
 _SARS-CoV-2 sample reads are available for test into ./resources/test\_data/ directory_
 
 2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline _(according to your choice)_:
-    - with a **Double-click** on it _(if default app for .sh files is Terminal.app)_
-	- with a **Right-click** > **Open with** > **Terminal.app**
-	- with **CLI** from a terminal:
+    - or with a **Double-click** on it _(if you make .sh files executable files with Terminal.app)_
+	- or with a **Right-click** > **Open with** > **Terminal.app**
+	- or with **CLI** from a terminal:
 ```shell
 bash Start_GeVarLi.sh
 ```
@@ -151,12 +151,12 @@ Yours results are available in **./results/** directory, as follow:
        |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimming/
 	   │    ├── 📂 cutadapt/
-       │    |    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz
+       │    |    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz        # Temp-files, removed at end to save disk usage
 	   │    └── 📂 sickle/
-       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz
-       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz
+       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz          # Temp-files, removed at end to save disk usage
+       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz              # Temp-files, removed at end to save disk usage
        ├── 📂 02_Mapping/
-       │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam
+       │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam                       #
        │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
        ├── 📂 03_Coverage/
        │    └── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
