@@ -124,7 +124,7 @@ _This may take some time, depending on your internet connection and your compute
 Yours results are available in **./results/** directory, as follow:  
 
 ```shell
- 📂 GeVarLi/
+ 🧩 GeVarLi/
   └── 📂 results/
        ├── 🧬 All_consensus_sequences.fasta
        ├── 📊 All_genome_coverages.tsv
@@ -370,7 +370,7 @@ _This role is often held by maintainers and engineering managers_
 
 ### Directories tree structure ###
 ```shell
- 📂 GeVarLi/
+ 🧩 GeVarLi/
  ├── 🖥️️  Start_GeVarLi.sh
  ├── 📚 README.md
  ├── 🪪 LICENSE
