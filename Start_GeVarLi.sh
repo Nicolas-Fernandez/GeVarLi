@@ -473,7 +473,10 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}
 ${green}-----------------------------------${nc}
 "
+
+# Make directories
 mkdir -p ${workdir}/results/10_Reports/graphs/ 2> /dev/null
+mkdir -p ${workdir}/results/10_Reports/files-summaries/ 2> /dev/null
 
 graph_list="dag rulegraph filegraph"
 extention_list="pdf png"
@@ -496,12 +499,12 @@ for snakefile in ${snakefile_list} ; do
     snakemake \
         --directory ${workdir} \
         --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
-        --summary > ${workdir}/results/10_Reports/${snakefile}_files_summary.txt \
+        --summary > ${workdir}/results/10_Reports/file-summaries/${snakefile}_files-summary.txt \
     2> /dev/null ;
 done
 
 cp ${workdir}/config/config.yaml \
-   ${workdir}/results/10_Reports/config_used.yaml \
+   ${workdir}/results/10_Reports/config.log \
    2> /dev/null
 
 ###############################################################################
@@ -579,7 +582,7 @@ Primers kit ____________ ${amplicons_kit}
 Start time _____________ ${time_stamp_start}
 End time _______________ ${time_stamp_end}
 Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
-" > ${workdir}/results/10_Reports/settings_logs.txt
+" > ${workdir}/results/10_Reports/settings.log
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}

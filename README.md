@@ -133,12 +133,12 @@ Yours results are available in **./results/** directory, as follow:
        ├── 🌐 All_readsQC_reports.html
        ├── 📂 00_Quality_Control/
        │    ├── 📂 fastq-screen/
-       │    │    ├── 🌐 {SAMPLE}_R{MATE}_screen.html
-       │    │    ├── 📈 {SAMPLE}_R{MATE}_screen.png
-       │    │    └── 📄 {SAMPLE}_R{MATE}_screen.txt
+       │    │    ├── 🌐 {SAMPLE}_R{1/2}_screen.html
+       │    │    ├── 📈 {SAMPLE}_R{1/2}_screen.png
+       │    │    └── 📄 {SAMPLE}_R{1/2}_screen.txt
        │    ├── 📂 fastqc/
-       │    │    ├── 🌐 {SAMPLE}_R{MATE}_fastqc.html
-       │    │    └── 📦 {SAMPLE}_R{MATE}_fastqc.zip
+       │    │    ├── 🌐 {SAMPLE}_R{1/2}_fastqc.html
+       │    │    └── 📦 {SAMPLE}_R{1/2}_fastqc.zip
        │    └── 📂 multiqc/
        │         ├── 🌐 multiqc_report.html
        │         └──📂 multiqc_data/
@@ -148,10 +148,13 @@ Yours results are available in **./results/** directory, as follow:
        │             ├── 📄 multiqc_fastq_screen.txt
        │             ├── 📄 multiqc_fastqc.txt
        │             ├── 📄 multiqc_general_stats.txt
-       │             └── 📄 multiqc_sources.txt
+       |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimming/
-       │    ├── 
-       │    └── 
+	   │    ├── 📂 cutadapt/
+       │    |    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz
+	   │    └── 📂 sickle/
+       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz
+       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz
        ├── 📂 02_Mapping/
        │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam
        │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
@@ -183,7 +186,7 @@ Yours results are available in **./results/** directory, as follow:
             ├── ⚙️  config.log
             ├── 📝 settings.log
             ├── 🍜 gevarli_v.2022.11.yaml
-            ├── 📂 files-summary
+            ├── 📂 files-summaries
             │    └── 📄 {PIPELINE}_files-summary.txt
             ├── 📂 graphs/
             │    ├── 📈 {PIPELINE}_dag.{PNG/PDF}
@@ -359,18 +362,18 @@ To select one or both, de/comment (#) as you wish:
  │    │    └── 🧬 {your_favorite_qc_reference}.fasta
  │    ├── 📂 indexes/
  │    │    ├── 📂 bwa/
- │    │    │    ├── 🗂️  {genomes}.amb
- │    │    │    ├── 🗂️  {genomes}.ann
- │    │    │    ├── 🗂️  {genomes}.bwt
- │    │    │    ├── 🗂️  {genomes}.pac
- │    │    │    └── 🗂️  {genomes}.sa
+ │    │    │    ├── 🗂️  {GENOME}.amb
+ │    │    │    ├── 🗂️  {GENOME}.ann
+ │    │    │    ├── 🗂️  {GENOME}.bwt
+ │    │    │    ├── 🗂️  {GENOME}.pac
+ │    │    │    └── 🗂️  {GENOME}.sa
  │    │    └── 📂 bowtie2/
- │    │         ├── 🗂️  {genomes}.1.bt2
- │    │         ├── 🗂️  {genomes}.2.bt2
- │    │         ├── 🗂️  {genomes}.3.bt2
- │    │         ├── 🗂️  {genomes}.4.bt2
- │    │         ├── 🗂️  {genomes}.rev.1.bt2
- │    │         └── 🗂️  {genomes}.rev.2.bt2
+ │    │         ├── 🗂️  {GENOME}.1.bt2
+ │    │         ├── 🗂️  {GENOME}.2.bt2
+ │    │         ├── 🗂️  {GENOME}.3.bt2
+ │    │         ├── 🗂️  {GENOME}.4.bt2
+ │    │         ├── 🗂️  {GENOME}.rev.1.bt2
+ │    │         └── 🗂️  {GENOME}.rev.2.bt2
  │    ├── 📂 nextclade/
  │    │    ├── 📂 sars-cov-2/
  │    │    │    ├── 🌍 genemap.gff
@@ -435,8 +438,8 @@ To select one or both, de/comment (#) as you wish:
  │    │         └── 🧬 {your_favorite_kit_primers}.fasta
  │    ├── 📂 reads/
  │    │    ├── 🛡️  .gitkeep
- │    │    ├── 📦 {samples}_R1.fastq.gz
- │    │    └── 📦 {samples}_R2.fastq.gz
+ │    │    ├── 📦 {SAMPLE}_R1.fastq.gz
+ │    │    └── 📦 {SAMPLE}_R2.fastq.gz
  │    ├── 📂 test_data/
  │    │    ├── 🛡️  .gitkeep
  │    │    ├── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
