@@ -57,7 +57,8 @@ curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh \
 bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b \
      -p ~/miniconda3/ && \
 ~/miniconda3/condabin/conda init --user --all --quiet && \
-~/miniconda3/condabin/conda update conda --yes && \
+source .bash_profile .bashrc .tcshrc .xonshrc .zshrc && \
+conda update conda --yes && \
 rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh
 ```
 
@@ -68,7 +69,8 @@ curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
 bash ~/Miniconda3-latest-Linux-x86_64.sh -b \
      -p ~/miniconda3/ && \
 ~/miniconda3/condabin/conda init --user --all --quiet && \
-~/miniconda3/condabin/conda update conda --yes && \
+source .bash_profile .bashrc .tcshrc .xonshrc .zshrc && \
+conda update conda --yes && \
 rm -f ~/Miniconda3-latest-Linux-x86_64.sh
 ```
 
@@ -140,7 +142,7 @@ Yours results are available in **./results/** directory, as follow:
        │    └── 📂 multiqc/
        │         ├── 🌐 multiqc_report.html
        │         └──📂 multiqc_data/
-       │             ├── 📋 multiqc.log
+       │             ├── 📝 multiqc.log
        │             ├── 📄 multiqc_citations.txt
        │             ├── 🌀 multiqc_data.json
        │             ├── 📄 multiqc_fastq_screen.txt
@@ -176,25 +178,13 @@ Yours results are available in **./results/** directory, as follow:
        │         ├── 🌀 nextclade.json
        │         ├── 🌀 nextclade.ndjson
        │         ├── 🌀 nextclade.auspice.json
-       │         ├── 🧬 nextclade_gene_E.translation.fasta
-       │         ├── 🧬 nextclade_gene_M.translation.fasta
-       │         ├── 🧬 nextclade_gene_N.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF1a.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF1b.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF3a.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF6.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF7a.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF7b.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF8.translation.fasta
-       │         ├── 🧬 nextclade_gene_ORF9b.translation.fasta
-       │         └── 🧬 nextclade_gene_S.translation.fasta
+       │         └── 🧬 nextclade_{GENE}.translation.fasta
        └── 📂 10_Reports/
-            ├── ⚙️  config.yaml
-            ├── 📄 gevarli_files_summary.txt
+            ├── ⚙️  config.log
+            ├── 📝 settings.log
             ├── 🍜 gevarli_v.2022.11.yaml
-            ├── 📄 indexing_genomes_files_summary.txt
-            ├── 📄 quality_control_files_summary.txt
-            ├── 📄 settings.txt
+            ├── 📂 files-summary
+            │    └── 📄 {PIPELINE}_files-summary.txt
             ├── 📂 graphs/
             │    ├── 📈 {PIPELINE}_dag.{PNG/PDF}
             │    ├── 📈 {PIPELINE}_filegraph.{PNG/PDF}
@@ -213,9 +203,9 @@ Yours results are available in **./results/** directory, as follow:
                  ├── 📂 sed/
                  ├── 📂 sickle-trim/
                  ├── 📂 tabix/
-                 ├── 📋 fastq-screen.log
-                 ├── 📋 fastqc.log
-                 └── 📋 multiqc.log
+                 ├── 📝 fastq-screen.log
+                 ├── 📝 fastqc.log
+                 └── 📝 multiqc.log
 ```
 
 ### 00_Quality_Control ###
