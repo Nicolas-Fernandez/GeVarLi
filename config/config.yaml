@@ -127,7 +127,7 @@ bowtie2:
 
 ### BAMCLIPPER ---------------------------------------------------------------------------------------
 bamclipper:
-  clipping: 'yes' # Do you need to clip amplicon primers ? Need to provide primers bedpe file (or bed)
+  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers bedpe file (or bed)
   # Available options:
     #- 'no'  # Deactivate (default)
     #- 'yes' # Activate
