@@ -117,7 +117,7 @@ _This may take some time, depending on your internet connection and your compute
 ## ~ RESULTS ~ ##
 
 Yours results are available in **./results/** directory, as follow:  
-_Some "temp" files are default removed at end, to save disk usage_
+_Some [temp] tagged files are removed by default, to save disk usage_
 
 ```shell
  🧩 GeVarLi/
@@ -129,9 +129,9 @@ _Some "temp" files are default removed at end, to save disk usage_
        ├── 🌐 All_readsQC_reports.html
        ├── 📂 00_Quality_Control/
        │    ├── 📂 fastq-screen/
-       │    │    ├── 🌐 {SAMPLE}_R{1/2}_screen.html
-       │    │    ├── 📈 {SAMPLE}_R{1/2}_screen.png
-       │    │    └── 📄 {SAMPLE}_R{1/2}_screen.txt
+       │    │    ├── 🌐 {SAMPLE}_R{1/2}_screen.html __________________ #
+       │    │    ├── 📈 {SAMPLE}_R{1/2}_screen.png ___________________ #
+       │    │    └── 📄 {SAMPLE}_R{1/2}_screen.txt ___________________ #
        │    ├── 📂 fastqc/
        │    │    ├── 🌐 {SAMPLE}_R{1/2}_fastqc.html
        │    │    └── 📦 {SAMPLE}_R{1/2}_fastqc.zip
@@ -147,29 +147,29 @@ _Some "temp" files are default removed at end, to save disk usage_
        |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimming/
 	   │    ├── 📂 cutadapt/
-       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # Tem removed at end to save disk usage
+       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
 	   │    └── 📂 sickle/
-       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz         # Temp-files, removed at end to save disk usage
-       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz             # Temp-files, removed at end to save disk usage
+       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz         # [temp]
+       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz             # [temp]
        ├── 📂 02_Mapping/
        │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam                      #
-       │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
+       │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai                  #
        ├── 📂 03_Coverage/                                           
        │    └── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv       #
-       ├── 📂 04_Variants/                                             #
+       ├── 📂 04_Variants/                                              
        │    ├── 📶 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam           #
        │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai           #
        │    ├── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta         #
        │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai     #
-       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf
+       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf         #
        │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf         #
        │    └── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi #
        ├── 📂 05_Consensus/
-       │    └── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_consensus.fasta
+       │    └── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_consensus.fasta          #
        ├── 📂 06_Lineages/
-       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-report.tsv
-       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_pangolin-report.csv
-       │    └── 📂 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-all/
+       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-report.tsv     #
+       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_pangolin-report.csv      #
+       │    └── 📂 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-all/           #
        │         ├── 🧬 nextclade.aligned.fasta
        │         ├── 📊 nextclade.csv
        │         ├── 📊 nextclade.errors.csv
