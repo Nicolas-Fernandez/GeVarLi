@@ -52,29 +52,24 @@ Download and install your OS adapted version of [Latest Miniconda Installer](htt
 
 e.g. for **MacOSX-64-bit**:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh \
-     -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
-bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b \
-     -p ~/miniconda3/ && \
-~/miniconda3/condabin/conda init --user --all --quiet && \
-source .bash_profile .bashrc .tcshrc .xonshrc .zshrc && \
-conda update conda --yes && \
-rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
+bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda3/ && \
+rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
+~/miniconda3/condabin/conda update conda --yes && \
+~/miniconda3/condabin/conda init && \
+exit
 ```
 
 e.g. for **Linux-64-bit**:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-     -o ~/Miniconda3-latest-Linux-x86_64.sh && \
-bash ~/Miniconda3-latest-Linux-x86_64.sh -b \
-     -p ~/miniconda3/ && \
-~/miniconda3/condabin/conda init --user --all --quiet && \
-source .bash_profile .bashrc .tcshrc .xonshrc .zshrc && \
-conda update conda --yes && \
-rm -f ~/Miniconda3-latest-Linux-x86_64.sh
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh && \
+bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda3/ && \
+rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
+~/miniconda3/condabin/conda update conda --yes && \
+~/miniconda3/condabin/conda init && \
+exit
 ```
 
-And restar shell terminal (close / open)
 
 # GeVarLi #
 Clone _(with HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
@@ -122,6 +117,7 @@ _This may take some time, depending on your internet connection and your compute
 ## ~ RESULTS ~ ##
 
 Yours results are available in **./results/** directory, as follow:  
+_Some "temp" files are default removed at end, to save disk usage_
 
 ```shell
  🧩 GeVarLi/
@@ -151,23 +147,23 @@ Yours results are available in **./results/** directory, as follow:
        |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimming/
 	   │    ├── 📂 cutadapt/
-       │    |    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz        # Temp-files, removed at end to save disk usage
+       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # Tem removed at end to save disk usage
 	   │    └── 📂 sickle/
-       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz          # Temp-files, removed at end to save disk usage
-       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz              # Temp-files, removed at end to save disk usage
+       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz         # Temp-files, removed at end to save disk usage
+       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz             # Temp-files, removed at end to save disk usage
        ├── 📂 02_Mapping/
-       │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam                       #
+       │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam                      #
        │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
-       ├── 📂 03_Coverage/
-       │    └── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
-       ├── 📂 04_Variants/
-       │    ├── 📶 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai
-       │    ├── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai
+       ├── 📂 03_Coverage/                                           
+       │    └── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv       #
+       ├── 📂 04_Variants/                                             #
+       │    ├── 📶 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam           #
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai           #
+       │    ├── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta         #
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai     #
        │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf
-       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf
-       │    └── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi
+       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf         #
+       │    └── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi #
        ├── 📂 05_Consensus/
        │    └── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_consensus.fasta
        ├── 📂 06_Lineages/
@@ -211,85 +207,24 @@ Yours results are available in **./results/** directory, as follow:
                  └── 📝 multiqc.log
 ```
 
-### 00_Quality_Control ###
-- **fastq-screen**: raw reads putative contaminations reports for each samples, in _html_, _png_ and _txt_ formats 
-- **fastqc**: raw reads quality reports for each samples, in _html_ and _zip_ formats
-- **multiqc**: fastq-screen and fastqc results agregation report for all samples, in _html_ format
-
-### 01_Trimming ###
-_By default, temporary director. Removed at the end to save disk usage)_
-- **cutadapt/ directory**: paired reads, without adapters, in _fastq.gz_ format
-- **sickle/ directory**: paired reads, without adapters and quality trimmed, in _fastq.gz_ format
-
-### 02_Mapping ###
-- **markdup.bam**: read alignments, in _bam_ format _(can be visualized in, i.e. IGV)_
-- **markdup.bai**: bam indexes _bai_ use in i.e. IGV with _./resources/genomes/SARS-CoV-2_Wuhan-WIV04_2019.fasta_
-- _mapped.sam_: (default config: tempdir, removed, save disk usage)_
-- _sortbynames.bam_: (default config: tempdir, removed, save disk usage)_
-- _fixmate.bam_: (default config: tempdir, removed, save disk usage)_
-- _sorted.bam_: (default config: tempdir, removed, save disk usage)_
-
-### 03_Coverage ###
-- **coverage-stats.tsv**: information about genome coverage
-    - **mean_depth**: mean coverage depth across all genome reference sequence
-	- **standard_deviation**: standard deviation for mean_depth
-	- **cov_percent_@nX**: genome reference coverage percentage at at-least n X of depth
-
-### 04_Variants ###
-- **maskedref.fasta**: reference sequence, masked for low coverage regions, in _fasta_ format
-- **maskedref.fasta.fai**: reference sequence indexes, masked for low coverages regions, in _fai_ format
-- **indelqual.bam**: read alignments with indel qualities, in _bam_ format _(can be visualized in, i.e. IGV)_
-- **indelqual.bai**: bam indexes _bai_ use in i.e. IGV with _./results/04_Variants/maskedref.fasta_
-- **variantcall.vcf**: SNVs and Indels calling in _vcf_ format
-- **variantfilt.vcf**: SNVs and Indels passing filters, in _vcf_ format
-- **variantfilt.vcf.bgz**: SNVs and Indels passing filters archive, in _vcf.bgz_ format
-- **variantfilt.vcf.bgz.tbi**: SNVs and Indels passing filters archive indexed, in _vcf.bgz.tbi_ format
-
-### 05_Consensus ###
-- **consensus.fasta**: consensus sequence, without low coverage regions, in _fasta_ format
-
-### 06_Lineages ###
-- **pangolin-report.csv**: pangolin and scorpio lineage assignation and quality report, in _csv_ format
-- **nextclade-report.tsv**: nextclade lineage assignation and quality report, in _tsv_ format
-- **nextclade-alignement/ directory**:
-    - **consensus.aligned.fasta**: aligned sequences, in _fasta_ format
-    - **consensus.insertions.csv**: stripped insertions data, in _csv_ format
-    - **consensus.errors.csv**: errors and warnings occurred during processing, in _csv_ format
-    - **consensus.gene.\<gene\>.fasta**: peptide sequences for genes E, M, N, S and ORFs 1a, 1b, 3a, 6, 7a, 7b, 8, 9b
-
-### 10_graphs ###
-- **dag**: directed acyclic graph of jobs, in _pdf_ and _png_ formats
-- **rulegraph**: dependency graph of rules, in _pdf_ and _png_ formats  
-_(less crowded than above DAG of jobs, but also show less information)_  
-- **filegraph**: dependency graph of rules with their input and output files in the dot language, in _pdf_ and _png_ formats  
-_(an intermediate solution between above DAG of jobs and the rule graph)_  
-
-### 11_Reports ###
-- All _non-empty_ **log** for each tool and each sample
-- files_summary.txt: summary of all files created by the workflow, in _txt_ format  
-_(columns: filename, modification time, rule version, status, plan)_
-
-
 ## ~ CONFIGURATION ~ ##
 
-If you want see or edit default settings in **config.yaml** file in **./config/** directory  
+You can edit default settings in **config.yaml** file into **./config/** directory:  
 
 ### Resources ###
 Edit to match your hardware configuration  
-- **cpus**: for tools that can _(i.e. bwa)_ could be use at most n cpus to run in parallel _(default config: '4')_  
-_**Note**: snakemake (if launch with default bash script) will always use all cpus to parallelize jobs_
-- **mem_gb**: for tools that can _(i.e. samtools)_ limit its use of memory to max n Gb _(default config: '4' Gb)_
-- **tmpdir**: for tools that can _(i.e. pangolin)_ specify where you want the temp stuff _(default config: '$TMPDIR')_
+- **cpus**: for tools that can _(i.e. bwa)_, could be use at most n cpus to run in parallel _(default config: '8')_  
+_**Note**: snakemake (with default Start bash script) will always use all cpus to parallelize jobs_
+- **ram**: for tools that can _(i.e. samtools)_, limit memory usage to max n Gb _(default config: '16' Gb)_
+- **tmpdir**: for tools that can _(i.e. pangolin)_, specify where you want the temp stuff _(default config: '$TMPDIR')_
 
 ### Environments ###
-Edit if you change some environments _(i.e. new version)_ in ./workflow/envs/tools-version.yaml files
+Edit if you want change some environments _(e.g. test a new version)_ in ./workflow/envs/{tools}_v.{version}.yaml files
 
 ### Aligner ###
-You can choose to align your reads using either **BWA** or **Bowtie2** or both tools  
-To select one or both, de/comment (#) as you wish:
-
-- **bwa**: faster _(default config)_
-- **bowtie2**: slower, sensitivity requiried could be set _(see below "Bowtie2" options)_
+Edit to choose align your reads using either **BWA** or **Bowtie2**  
+- **bwa**: faster _(default)_
+- **bowtie2**: slower, 'sensitivity' is requiried and could be set _(see below "Bowtie2" options)_
 
 ### Consensus ###
 - **reference**: reference sequence path used for genome assmbling _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
