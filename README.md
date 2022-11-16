@@ -1,9 +1,9 @@
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
 ![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0)/E6055C?icon=apple&label&list=|&scale=0.9>)
-![GNU/Linux](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
-![WSL](<https://badgen.net/badge/icon/WSL-Ubuntu (18.04) | (20.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
+![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.0.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![GNU-Linux Ubuntu](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
+![WSL/WSL2](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
 ![Issues opened](<https://badgen.net/badge/Issues opened/0/yellow?scale=0.9>)
 ![Maintened](<https://badgen.net/badge/Maintened/Yes/red?scale=0.9>)
@@ -44,13 +44,13 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ## ~ INSTALLATIONS ~ ##
 
-# Conda _(required)_ #
-_GeVarLi_ and _Snakemake_ use the usefull **Conda** environment manager  
-So, only if required _(not already installed)_, please, first install **Conda** !  
+# Conda _(mandatory)_ #
+GeVarLi _(with Snakemake)_ use the usefull **Conda** environment manager  
+So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
  
 Download and install your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
-e.g. for **MacOSX-64-bit**:  
+e.g. for **MacOSX-64-bit** systems:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda3/ && \
@@ -60,7 +60,7 @@ rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 exit
 ```
 
-e.g. for **Linux-64-bit**:  
+e.g. for **Linux-64-bit** systems:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh && \
 bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda3/ && \
