@@ -8,7 +8,7 @@ gevarli_version="v.2022.11"
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.10
+# Latest modifications ___ 2022.11.16
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -32,7 +32,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2022.11.10
+${blue}Latest modifications${nc} ___ 2022.11.16
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -106,29 +106,29 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                          # Get working directory
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                            # Get fastq.gz files count
-samples=$(expr ${fastq} \/ 2)                                                                   # {fastq.gz count} / 2 = samples count (paired-end)
-conda_version=$(conda --version | sed "s/conda //")                                              # Get conda version
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                        # Get working directory
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                          # Get fastq.gz files count
+samples=$(expr ${fastq} \/ 2)                                                                 # {fastq.gz count} / 2 = samples count (paired-end)
+conda_version=$(conda --version | sed "s/conda //")                                           # Get conda version
 snakemake_version=$(grep -o -E "snakemake_version: '.+'" ${workdir}/config/config.yaml | \
-		    sed "s/snakemake_version: //" | sed "s/'//g")                               # Get snakemake version
+		    sed "s/snakemake_version: //" | sed "s/'//g")                             # Get snakemake version
 conda_frontend=$(grep -o -E "conda_frontend: '.+'"  ${workdir}/config/config.yaml | \
-		 sed "s/conda_frontend: //" | sed "s/'//g")                                     # Get conda frontend
-max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")       # Get user config for max threads
-max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")          # Get user config for max memory
-memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                          # Calcul maximum memory usage per job
+		 sed "s/conda_frontend: //" | sed "s/'//g")                                   # Get conda frontend
+max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")     # Get user config for max threads
+max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")        # Get user config for max memory
+memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                        # Calcul maximum memory usage per job
 reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | \
-	    sed "s/reference: //" | sed "s/'//g")                                               # Get user config genome reference
+	    sed "s/reference: //" | sed "s/'//g")                                             # Get user config genome reference
 aligner=$(grep -o -E "aligner: '.+'" ${workdir}/config/config.yaml | \
-	  sed "s/aligner: //" | sed "s/'//g")                                                   # Get user config aligner
-min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")       # Get user config minimum coverage
-min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //")   # Get user config minimum allele frequency
+	  sed "s/aligner: //" | sed "s/'//g")                                                 # Get user config aligner
+min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")     # Get user config minimum coverage
+min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //") # Get user config minimum allele frequency
 clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | \
-	   sed "s/clipping: //"  | sed "s/'//g")                                                # Get user config bamclipper option
+	   sed "s/clipping: //"  | sed "s/'//g")                                              # Get user config bamclipper option
 primers_kit=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | \
-	      sed "s/primers: //" | sed "s/'//g")                                               # Get user config bamclipper primers
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                      # Get analyzes starting time
-SECONDS=0                                                                                       # Initialize SECONDS counter
+	      sed "s/primers: //" | sed "s/'//g")                                             # Get user config bamclipper primers
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                    # Get analyzes starting time
+SECONDS=0                                                                                     # Initialize SECONDS counter
 
 if [[ "${reference}" == *"SARS-CoV-2"* ]]
 then
@@ -203,23 +203,12 @@ else
 Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created
 "
    # Create a 'gevarli-base' environment, with :
-      # Snakemake ver. 7.18.1 (to run GeVarLi)
-      # Mamba     ver. 1.0.0  (to create snakemake-conda's environments faster)
-      # Rename    ver. 1.601  (to rename fastq files)
-      # Graphviz  ver. 6.0.1  (to dot snakemake DAG)
+    # Mamba     ver. 1.0.0  (to create snakemake-conda's environments faster)
+    # Snakemake ver. 7.18.1 (to run GeVarLi)
+    # Rename    ver. 1.601  (to rename fastq files)
+    # Graphviz  ver. 6.0.1  (to dot snakemake DAG)
     conda env create -f ${workdir}/workflow/envs/${os}/gevarli-base_${gevarli_version}.yaml
 fi
-#conda create \
-#	  --name gevarli_${gevarli_version} \
-#	  --channel conda-forge \
-#	  --channel bioconda \
-#	  --channel anaconda \
-#	  mamba \
-#         snakemake==${snakemake_version} \
-#	  rename \
-#	  graphviz \
-#	  --yes
-#fi
 
 ###############################################################################
 ###### Conda Env. Activation ######
@@ -229,6 +218,7 @@ ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
+# intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
 source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
 conda activate gevarli-base_${gevarli_version}
@@ -517,6 +507,7 @@ conda env export > ${workdir}/results/10_Reports/gevarli_${gevarli_version}.yaml
 conda deactivate
 
 # Cleanup
+touch ${workdir}/results/01_Trimming/.keep
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 #find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
@@ -541,7 +532,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2022.11.10
+Latest modifications ___ 2022.11.16
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
