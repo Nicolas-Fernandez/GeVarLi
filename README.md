@@ -152,23 +152,33 @@ _Some [temp] tagged files are removed by default, to save disk usage_
        |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimming/
        │    ├── 📂 cutadapt/
-       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz # [temp]
+       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
        │    └── 📂 sickle/
-       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz   # [temp]
-       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz       # [temp]
+       │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz         # [temp]
+       │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz             # [temp]
        ├── 📂 02_Mapping/
-       │    ├── 📶 {SAMPLE}_{ALIGNER}_mark-dup.bam
-       │    └── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
+       │    ├── 🧭 {SAMPLE}_{ALIGNER}_mark-dup.bam
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
+       │    ├── 🧭 {SAMPLE}_{ALIGNER}_mark-dup.primerclipped.bam
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.primerclipped.bam.bai
+       │    ├── 🧭 {SAMPLE}_{ALIGNER}-mapped.sam                        # [temp]
+       │    ├── 🧭 {SAMPLE}_{ALIGNER}_sorted-by-names.bam               # [temp]
+       │    ├── 🧭 {SAMPLE}_{ALIGNER}_fixed-mate.bam                    # [temp]
+       │    └── 🧭 {SAMPLE}_{ALIGNER}_sorted.bam                        # [temp]
        ├── 📂 03_Coverage/
-       │    └── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
+       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
+       │    ├── 🛏️  {SAMPLE}_{ALIGNER}_genome-cov.bed                    # [temp]
+       │    ├── 🛏️  {SAMPLE}_{ALIGNER}_{MINCOV}_min-cov-filt.bed         # [temp]
+       │    └── 🛏️  {SAMPLE}_{ALIGNER}_{MINCOV}_low-cov-mask.bed         # [temp]
        ├── 📂 04_Variants/
-       │    ├── 📶 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai
        │    ├── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta
        │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai
-       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf
-       │    ├── ↕️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf
-       │    └── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi
+       │    ├── 🧭 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam
+       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai
+       │    ├── 🧮️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf
+       │    ├── 🧮️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf
+       │    ├── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz     # [temp]
+       │    └── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi # [temp]
        ├── 📂 05_Consensus/
        │    └── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_consensus.fasta
        ├── 📂 06_Lineages/
