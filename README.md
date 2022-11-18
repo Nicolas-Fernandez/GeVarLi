@@ -117,7 +117,7 @@ First run will auto-created _(only once)_:
 	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources)_
 	
 _This may take some time, depending on your internet connection and your computer_
-	
+
 
 ## ~ RESULTS ~ ##
 
@@ -208,6 +208,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
                  ├── 📂 bcftools/
                  ├── 📂 bedtools/
                  ├── 📂 bgzip/
+                 ├── 📂 bowtie2/
                  ├── 📂 bwa/
                  ├── 📂 cutadapt/
                  ├── 📂 lofreq/
@@ -297,9 +298,9 @@ Edit to choose align your reads using either **BWA** or **Bowtie2**
 - Eddy Kinganda-Lusamaki - INRB _(looking for open source unix and biologiist friendly pipeline)_  
 
 ## ~ CONTRIBUTING ~ ##
-Open to contributions!  
-Testing code, finding issues, asking for update, proposing new features...  
-Use Git tools to share!  
+- Open to contributions!
+- Testing code, finding issues, asking for update, proposing new features...
+- Use Git tools to share!
 
 ## ~ PROJECT STATUS ~ ##
 This project is **regularly update** and **actively maintened**  
@@ -320,9 +321,9 @@ Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
 
 Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 
-
-### GeVarLi map ###
 ```shell
+### GeVarLi map ###
+├── 📂 .git/```shell
  🧩 GeVarLi/
  ├── 🖥️️  Start_GeVarLi.sh
  ├── 📚 README.md
