@@ -36,6 +36,10 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ### Version ###
 *V.2022.11*  
 
+
+### Citation ###
+_(soon)_
+
 ### Rulegraph ###
 <img src="./resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
 <img src="./resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
@@ -277,9 +281,9 @@ Edit to choose align your reads using either **BWA** or **Bowtie2**
 - Add GisAid submission files generation
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
-- Nicolas Fernandez (Developer and Maintener)  
-- Christelle Butel (Reporter, User-addict, Features inspiration source)  
-- Eddy Kinganda-Lusamaki (who ask me to find a free open source unix friendly pipeline, now we have Eddy)  
+- Nicolas Fernandez - IRD _(Developer and Maintener)_  
+- Christelle Butel - IRD _(Reporter, User-addict, Features inspiration source)_  
+- Eddy Kinganda-Lusamaki - INRB _(looking for open source unix and biologiist friendly pipeline)_  
 
 ## ~ CONTRIBUTING ~ ##
 Open to contributions!  
@@ -301,9 +305,12 @@ _This role is often held by maintainers and engineering managers_
 
 
 ## ~ LICENSE ~ ##
-[GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
 
-### Directories tree structure ###
+Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
+
+
+### GeVarLi map ###
 ```shell
  🧩 GeVarLi/
  ├── 🖥️️  Start_GeVarLi.sh
