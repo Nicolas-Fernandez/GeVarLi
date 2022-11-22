@@ -22,7 +22,7 @@ Thumbs.db
 #*.fastq.gz
 
 # Ignore fasta indexes
-.fai
+*.fai
 
 # Ignore indexes directory
 /resources/indexes
