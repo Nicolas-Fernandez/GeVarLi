@@ -6,7 +6,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.14
+# Latest modifications ___ 2022.11.22
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -46,7 +46,7 @@ conda:
     lofreq:       '../envs/osx/lofreq_v.2.1.5.yaml'          # Lofreq       ver. 2.1.5
     multiqc:      '../envs/osx/multiqc_v.1.12.yaml'          # MultiQC      ver. 1.12
     nextclade:    '../envs/osx/nextclade_v.2.8.0.yaml'       # Nextclade    ver. 2.5.0
-    pangolin:     '../envs/osx/pangolin_v.4.0.6.yaml'        # Pangolin     ver. 4.0.6
+    pangolin:     '../envs/osx/pangolin_v.4.1.3.yaml'        # Pangolin     ver. 4.1.3
     samtools:     '../envs/osx/samtools_v.1.15.1.yaml'       # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/osx/sickle-trim_v.1.33.yaml'      # Sickle-trim  ver. 1.33
   linux:                                                   # Conda Linux environement yaml files:
@@ -63,18 +63,9 @@ conda:
     lofreq:       '../envs/linux/lofreq_v.2.1.5.yaml'        # Lofreq       ver. 2.1.5
     multiqc:      '../envs/linux/multiqc_v.1.12.yaml'        # MultiQC      ver. 1.12
     nextclade:    '../envs/linux/nextclade_v.2.8.0.yaml'     # Nextclade    ver. 2.5.0
-    pangolin:     '../envs/linux/pangolin_v.4.0.6.yaml'      # Pangolin     ver. 4.0.6
+    pangolin:     '../envs/linux/pangolin_v.4.1.3.yaml'      # Pangolin     ver. 4.1.3
     samtools:     '../envs/linux/samtools_v.1.15.1.yaml'     # Samtools     ver. 1.15.1
     sickle-trim:  '../envs/linux/sickle-trim_v.1.33.yaml'    # Sickle-trim  ver. 1.33
-
-### GISAID (soon) ------------------------------------------------------------------------------------
-gisaid:
-  username: 'username'
-  threshold: '30'
-  name: 'hCoV-19'
-  country: 'France'
-  identifier: ''
-  year: '2022'
 
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
@@ -124,6 +115,15 @@ bowtie2:
   # Available options:
     #- ''              # (default)
     #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
+
+### GISAID (soon) ------------------------------------------------------------------------------------
+gisaid:
+  username: 'username'
+  threshold: '30'
+  name: 'hCoV-19'
+  country: 'France'
+  identifier: ''
+  year: '2022'
 
 ### BAMCLIPPER ---------------------------------------------------------------------------------------
 bamclipper:
@@ -181,7 +181,7 @@ fastq-screen:
 ### NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
   path: 'resources/nextclade/' # Path to nextclade datasets
-  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated)
+  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated, set by Start_GeVarLi.sh)
   # Available options:
     #- 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
     #- 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
@@ -189,7 +189,7 @@ nextclade:
     #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
-os: 'osx' # Operating System (default: "osx")
+os: 'osx' # Operating System (default: "osx", but set by Start_GeVarLi.sh)
 # Available options:
   #- 'osx'     # Mac OSX - Apple (R) [UNIX] (suported)
   #- 'linux'   # GNU Linux - Free [UNIX] (suported)
