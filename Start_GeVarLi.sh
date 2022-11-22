@@ -128,6 +128,7 @@ clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | \
 primers_kit=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | \
 	      sed "s/primers: //" | sed "s/'//g")                                             # Get user config bamclipper primers
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                    # Get analyzes starting time
+time_stamp_archive=$(date +"%Y-%m-%d_%H:%M")                                                  # Get analyzes time to archive (wo space)
 SECONDS=0                                                                                     # Initialize SECONDS counter
 
 if [[ "${reference}" == *"SARS-CoV-2"* ]]
@@ -495,11 +496,11 @@ cp ${workdir}/config/config.yaml \
    2> /dev/null
 
 ###############################################################################
-###### End managment ######
+###### Clean and save ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SCRIPT END${nc} ${green}#####${nc}
-${green}----------------------${nc}
+${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
+${green}------------------------${nc}
 "
 
 # Save and Deactive Gevarli environment
@@ -507,9 +508,8 @@ conda env export > ${workdir}/results/10_Reports/gevarli_${gevarli_version}.yaml
 conda deactivate
 
 # Cleanup
-touch ${workdir}/results/01_Trimming/.keep
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
-#find ${workdir}/results/ -type d -empty -delete # Remove empty directory
+find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 
 # Timer
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
@@ -571,6 +571,24 @@ Start time _____________ ${time_stamp_start}
 End time _______________ ${time_stamp_end}
 Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
 " > ${workdir}/results/10_Reports/settings.log
+
+# Gzip reports directory
+gzip \
+    --best \
+    --recursive \
+    --keep \
+    --stdout \
+    ${workdir}/results/10_Reports/ \
+    > ${workdir}/results/10_Reports_archive.gz
+
+# Gzip results directory
+gzip \
+    --best \
+    --recursive \
+    --keep \
+    --stdout \
+    ${workdir}/results/ \
+    > ${workdir}/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.gz
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}

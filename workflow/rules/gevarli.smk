@@ -782,7 +782,8 @@ rule sickle_trim_quality:
         "-o {output.fwdreads} "  # --output-pe1: Output trimmed forward fastq file
         "-p {output.revreads} "  # --output-pe2: Output trimmed reverse fastq file (must use -s option)
         "-s {output.single} "    # --output-single: Output trimmed singles fastq file
-        "&> {log}"               # Log redirection
+        "&> {log} "              # Log redirection
+        "&& touch results/01_Trimming/sickle/.keep"
 
 ###############################################################################
 rule cutadapt_adapters_removing:
@@ -824,5 +825,6 @@ rule cutadapt_adapters_removing:
         "{input.fwdreads} "                  # Input forward reads R1.fastq
         "{input.revreads} "                  # Input reverse reads R2.fastq
         "&> {log}"                           # Log redirection
+        "&& touch results/01_Trimming/cutadapt/.keep"
 
 ###############################################################################
