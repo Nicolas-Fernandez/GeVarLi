@@ -1,4 +1,4 @@
-name: cutadapt-4.1
+name: cutadapt_v.4.1
 channels:
   - bioconda
   - conda-forge

@@ -1,4 +1,4 @@
-name: bowtie2-2.4.5
+name: bowtie2_v.2.4.5
 channels:
   - bioconda
   - conda-forge

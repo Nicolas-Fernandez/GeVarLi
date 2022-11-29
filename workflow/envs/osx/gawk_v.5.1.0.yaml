@@ -1,4 +1,4 @@
-name: gawk-5.1.0
+name: gawk_v.5.1.0
 channels:
   - defaults
 dependencies:
