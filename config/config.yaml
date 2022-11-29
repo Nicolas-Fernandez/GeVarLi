@@ -44,7 +44,7 @@ conda:
     gawk:         '../envs/osx/gawk_v.5.1.0.yaml'            # Awk          ver. 5.1.0
     gevarli-base: '../envs/osx/gavarli-base_v.2022.11'       # GeVarLi-Base ver. 2022.11
     lofreq:       '../envs/osx/lofreq_v.2.1.5.yaml'          # Lofreq       ver. 2.1.5
-    multiqc:      '../envs/osx/multiqc_v.1.12.yaml'          # MultiQC      ver. 1.12
+    multiqc:      '../envs/osx/multiqc_v.1.13.yaml'          # MultiQC      ver. 1.13
     nextclade:    '../envs/osx/nextclade_v.2.8.0.yaml'       # Nextclade    ver. 2.5.0
     pangolin:     '../envs/osx/pangolin_v.4.1.3.yaml'        # Pangolin     ver. 4.1.3
     samtools:     '../envs/osx/samtools_v.1.15.1.yaml'       # Samtools     ver. 1.15.1
@@ -61,7 +61,7 @@ conda:
     gawk:         '../envs/linux/gawk_v.5.1.0.yaml'          # Awk          ver. 5.1.0
     gevarli-base: '../envs/linux/gavarli-base_v.2022.11'     # GeVarLi-Base ver. 2022.11
     lofreq:       '../envs/linux/lofreq_v.2.1.5.yaml'        # Lofreq       ver. 2.1.5
-    multiqc:      '../envs/linux/multiqc_v.1.12.yaml'        # MultiQC      ver. 1.12
+    multiqc:      '../envs/linux/multiqc_v.1.13.yaml'        # MultiQC      ver. 1.13
     nextclade:    '../envs/linux/nextclade_v.2.8.0.yaml'     # Nextclade    ver. 2.5.0
     pangolin:     '../envs/linux/pangolin_v.4.1.3.yaml'      # Pangolin     ver. 4.1.3
     samtools:     '../envs/linux/samtools_v.1.15.1.yaml'     # Samtools     ver. 1.15.1

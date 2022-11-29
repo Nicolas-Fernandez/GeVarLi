@@ -474,7 +474,7 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
       │    │    ├── 🍜 pangolin_v.4.0.6.yaml
       │    │    ├── 🍜 samtools_v.1.15.1.yaml
       │    │    └── 🍜 sickle-trim_v.1.33.yaml
-      └── 📂 rules/
+      └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk
            └── 📜 quality_control.smk
