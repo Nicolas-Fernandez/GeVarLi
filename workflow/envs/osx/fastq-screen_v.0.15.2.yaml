@@ -1,4 +1,4 @@
-name: fastq-screen-0.15.2
+name: fastq-screen_v.0.15.2
 channels:
   - conda-forge
   - bioconda

@@ -1,4 +1,4 @@
-name: lofreq-2.1.5
+name: lofreq_v.2.1.5
 channels:
   - bioconda
   - conda-forge

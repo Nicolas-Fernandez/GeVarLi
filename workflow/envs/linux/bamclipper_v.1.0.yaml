@@ -1,4 +1,4 @@
-name: bamclipper-1.0
+name: bamclipper_v.1.0
 channels:
   - bioconda
   - defaults

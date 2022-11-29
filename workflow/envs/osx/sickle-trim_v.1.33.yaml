@@ -1,4 +1,4 @@
-name: sickle-trim-1.33
+name: sickle-trim_v.1.33
 channels:
   - bioconda
   - defaults

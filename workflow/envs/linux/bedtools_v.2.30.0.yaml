@@ -1,4 +1,4 @@
-name: bedtools-2.30.0
+name: bedtools_v.2.30.0
 channels:
   - bioconda
   - defaults
