@@ -263,7 +263,7 @@ for snakefile in ${snakefile_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
 	--directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --config os=${os} \
         --rerun-incomplete \
         --unlock ;
@@ -284,7 +284,7 @@ for snakefile in ${snakefile_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
@@ -309,7 +309,7 @@ for snakefile in ${snakefile_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
@@ -338,7 +338,7 @@ for snakefile in ${snakefile_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --cores ${max_threads}\
         --config os=${os} \
         --rerun-incomplete \
@@ -355,7 +355,7 @@ ${blue}----------------${nc}
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Define a global maximum number of threads available to any rule. Rules requesting more threads will have their values reduced to the maximum. 
+# Define a global maximum number of threads available to any rule. Snakefiles requesting more threads will have their values reduced to the maximum. 
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # Go on with independent jobs if a job fails.
@@ -369,7 +369,7 @@ for snakefile in ${snakefile_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --cores ${max_threads} \
         --max-threads ${max_threads} \
         --config os=${os} \
@@ -474,7 +474,7 @@ for snakefile in ${snakefile_list} ; do
 	for extention in ${extention_list} ; do
 	    snakemake \
 		--directory ${workdir}/ \
-                --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+                --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
                 --${graph} \
 	    | dot -T${extention} \
             2> /dev/null \
@@ -486,7 +486,7 @@ done
 for snakefile in ${snakefile_list} ; do
     snakemake \
         --directory ${workdir} \
-        --snakefile ${workdir}/workflow/rules/${snakefile}.smk \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --summary > ${workdir}/results/10_Reports/files-summaries/${snakefile}_files-summary.txt \
     2> /dev/null ;
 done
