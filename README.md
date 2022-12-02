@@ -321,9 +321,10 @@ Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
 
 Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 
-```shell
+
 ### GeVarLi map ###
-├── 📂 .git/```shell
+
+```shell
  🧩 GeVarLi/
  ├── 🖥️️  Start_GeVarLi.sh
  ├── 📚 README.md
@@ -333,7 +334,8 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
  ├── 📂 .snakemake/
  ├── 📂 config/
  │    ├── ⚙️  config.yaml
- │    └── ⚙️  fastq-screen.conf
+ │    ├── ⚙️  fastq-screen_bwa.conf
+ │    └── ⚙️  fastq-screen_bowtie2.conf
  ├── 📂 resources/
  │    ├── 📂 genomes/
  │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN908947-3.fasta
