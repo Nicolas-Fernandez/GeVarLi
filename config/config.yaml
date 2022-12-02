@@ -170,9 +170,9 @@ cutadapt:
 
 ### FASTQSCREEN --------------------------------------------------------------------------------------
 fastq-screen:
-  config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: 1000                       # Don't use whole sequences, but a subset reads (default: "1000") [INT] (0=all)
-  mapper: 'bwa'                      # Mapper used by fastq-screen for alignments (default and should be 'bwa')
+  config: 'config/fastq-screen_bwa.conf' # Path to the fastq-screen configuration file
+  subset: 1000                           # Don't use whole sequences, but a subset reads (default: "1000") [INT] (0=all)
+  mapper: 'bwa'                          # Mapper used by fastq-screen for alignments (default and should be 'bwa')
   # Available options:
     #- 'bwa'     # Burrows-Wheeler Aligner (default, somme small genomes indexes provided, see "fastq-screen.conf")
     #- 'bowtie'  # Bowtie (indexes not provided for fastq-screen)
