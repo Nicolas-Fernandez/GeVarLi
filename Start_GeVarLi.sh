@@ -582,13 +582,9 @@ gzip \
     > ${workdir}/results/10_Reports_archive.gz
 
 # Gzip results directory
-gzip \
-    --best \
-    --recursive \
-    --keep \
-    --stdout \
+tar -xcf \
+    ${workdir}/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz \
     ${workdir}/results/ \
-    > ${workdir}/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.gz
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
