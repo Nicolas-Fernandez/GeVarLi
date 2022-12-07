@@ -128,7 +128,7 @@ clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | \
 primers_kit=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | \
 	      sed "s/primers: //" | sed "s/'//g")                                             # Get user config bamclipper primers
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                    # Get analyzes starting time
-time_stamp_archive=$(date +"%Y-%m-%d_%H:%M")                                                  # Get analyzes time to archive (wo space)
+time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")                                                  # Get analyzes time to archive (wo space)
 SECONDS=0                                                                                     # Initialize SECONDS counter
 
 if [[ "${reference}" == *"SARS-CoV-2"* ]]

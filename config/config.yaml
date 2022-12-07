@@ -70,7 +70,7 @@ conda:
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
   path: 'resources/genomes/' # Path to genomes references
-  reference: 'SARS-CoV-2_Wuhan_MN908947-3' # Your reference, in fasta format
+  reference: 'Swinepox-virus_India_MW036632-1' # Your reference, in fasta format
   # Available options:
     #- 'SARS-CoV-2_Wuhan_MN908947-3'      # SARS-CoV-2 (default)
     #- 'Monkeypox-virus_Zaire_AF380138-1' # Monkeypox  (without BamClipper and Pangolin)
@@ -80,7 +80,7 @@ consensus:
     #- 'Nipah-virus_Malaysia_AJ564622-1'  # Nipah      (without Nextclade and Pangolin)
     #- 'HIV-1_HXB2_K03455-1'              # HIV-1      (without BamClipper, Nextclade and Pangolin)
     #- 'Add_your_favorite_genome_ref'     # Custom     (without BamClipper, Nextclade and Pangolin)
-  mincov: 30 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
+  mincov: 1 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   # Available options:
