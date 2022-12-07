@@ -41,4 +41,5 @@ Thumbs.db
 
 # Ignore results
 /results
-/*archive.gz
+/Results*
+/*_archive.tar.gz
