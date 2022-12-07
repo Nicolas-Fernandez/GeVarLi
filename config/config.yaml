@@ -70,7 +70,7 @@ conda:
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
   path: 'resources/genomes/' # Path to genomes references
-  reference: 'Swinepox-virus_India_MW036632-1' # Your reference, in fasta format
+  reference: 'Monkeypox-virus_Zaire_AF380138-1' # Your reference, in fasta format
   # Available options:
     #- 'SARS-CoV-2_Wuhan_MN908947-3'      # SARS-CoV-2 (default)
     #- 'Monkeypox-virus_Zaire_AF380138-1' # Monkeypox  (without BamClipper and Pangolin)
