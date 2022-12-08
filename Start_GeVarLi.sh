@@ -582,7 +582,7 @@ gzip \
     > ${workdir}/results/10_Reports_archive.gz
 
 # Gzip results directory
-tar -xcf \
+tar -zcf \
     ${workdir}/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz \
     ${workdir}/results/ \
 
