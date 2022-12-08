@@ -80,7 +80,7 @@ consensus:
     #- 'Nipah-virus_Malaysia_AJ564622-1'  # Nipah      (without Nextclade and Pangolin)
     #- 'HIV-1_HXB2_K03455-1'              # HIV-1      (without BamClipper, Nextclade and Pangolin)
     #- 'Add_your_favorite_genome_ref'     # Custom     (without BamClipper, Nextclade and Pangolin)
-  mincov: 1 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
+  mincov: 30 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   # Available options:
