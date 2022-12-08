@@ -573,18 +573,12 @@ Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
 " > ${workdir}/results/10_Reports/settings.log
 
 # Gzip reports directory
-gzip \
-    --best \
-    --recursive \
-    --keep \
-    --stdout \
-    ${workdir}/results/10_Reports/ \
-    > ${workdir}/results/10_Reports_archive.gz
+cd ${workdir}/results/
+tar -zcf 10_Reports_archive.tar.gz 10_Reports
 
 # Gzip results directory
-tar -zcf \
-    ${workdir}/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz \
-    ${workdir}/results/ \
+cd ${workdir}/
+tar -zcf Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz results
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
