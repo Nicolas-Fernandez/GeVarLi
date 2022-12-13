@@ -211,7 +211,7 @@ rule sed_rename_headers:
         "results/10_Reports/tools-log/sed/{sample}_{aligner}_{mincov}X_fasta-header.log"
     shell:
         "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
-        "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.mincov}/' "
+        "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.mincov}X/' "
         "{input.constmp} "       # Input file
         "1> {output.consensus} " # Output file
         "2> {log}"               # Log redirection
@@ -465,6 +465,7 @@ rule awk_coverage_statistics:
     conda:
         GAWK
     input:
+        #rawreads = "results/00_Quality_Control/multiqc/multiqc_data/multiqc_general_stats.txt",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
@@ -496,7 +497,7 @@ rule awk_coverage_statistics:
         "{input.genomecov} "                     # BedGraph coverage input
         "1> {output.covstats} "                  # Mean depth output
         "2> {log}"                              # Log redirection
-
+        
 ###############################################################################
 rule bedtools_genome_coverage:
     # Aim: computing genome coverage sequencing
