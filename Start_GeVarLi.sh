@@ -203,7 +203,7 @@ Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created
     # Snakemake ver. 7.18.1 (to run GeVarLi)
     # Rename    ver. 1.601  (to rename fastq files)
     # Graphviz  ver. 6.0.1  (to dot snakemake DAG)
-    conda env create -f ${workdir}/workflow/envs/${os}/gevarli-base_${gevarli_version}.yaml
+    conda env create -f ${workdir}/workflow/environments/${os}/gevarli-base_${gevarli_version}.yaml
 fi
 
 ###############################################################################
