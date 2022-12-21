@@ -332,7 +332,7 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
  ├── 🛑 .gitignore
  ├── 📂 .git/
  ├── 📂 .snakemake/
- ├── 📂 config/
+ ├── 📂 configuration/
  │    ├── ⚙️  config.yaml
  │    ├── ⚙️  fastq-screen_bwa.conf
  │    └── ⚙️  fastq-screen_bowtie2.conf
@@ -441,8 +441,8 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
  │         ├── 📈 indexing_genomes_rulegraph.png
  │         └── 📈 quality_control_rulegraph.png
  └── 📂 workflow/
-      ├── 📂 envs/
-	  │    ├── 📂 linux/
+      ├── 📂 environments/
+      │    ├── 📂 linux/
       │    │    ├── 🍜 bamclipper_v.1.0.yaml
       │    │    ├── 🍜 bcftools_v.1.15.1.yaml
       │    │    ├── 🍜 bedtools_v.2.30.0.yaml
@@ -479,7 +479,7 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk
-           └── 📜 quality_control.smk
+	       └── 📜 quality_control.smk
 ```
 
 

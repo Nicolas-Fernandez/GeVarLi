@@ -4,13 +4,13 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.10
+# Latest modifications ___ 2022.12.20
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
 ###### CONFIGURATION ######
 
-configfile: "config/config.yaml"
+configfile: "configuration/config.yaml"
 
 ###############################################################################
 ###### FUNCTIONS ######
@@ -59,7 +59,6 @@ def get_nextclade_dataset(wildcards):
     else:
         nextclade_dataset = "error_config_file_yaml"
     return nextclade_dataset
-
 
 ###############################################################################
 ###### WILDCARDS ######
@@ -465,19 +464,19 @@ rule awk_coverage_statistics:
     conda:
         GAWK
     input:
-        #rawreads = "results/00_Quality_Control/multiqc/multiqc_data/multiqc_general_stats.txt",
+        cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
         "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
-        "awk ' "                            # Awk, a program to select particular records in a file and perform operations upon them
-        "$4 >= {wildcards.mincov} "          # Minimum coverage
-        "{{supMinCov+=$3-$2}} ; "            # Genome size >= @ mincov X
+        "awk "                              # Awk, a program to select particular records in a file and perform operations upon them
+        "'$4 >= {wildcards.mincov} "         # Minimum coverage
+        "{{supMinCov+=$3-$2}} ; "            # Genome size >= mincov @X
         "{{genomeSize+=$3-$2}} ; "           # Genome size
-        "{{totalBases+=($3-$2)*$4}} ; "      # Total bases @ 1 X 
-        "{{totalBasesSq+=(($3-$2)*$4)**2}} " # Total bases square @ 1 X
+        "{{totalBases+=($3-$2)*$4}} ; "      # Total bases @1X 
+        "{{totalBasesSq+=(($3-$2)*$4)**2}} " # Total bases square @1X
         "END "                                # END
         "{{print "                             # Print
         """ "sample_id", "\t", """              # Sample ID header
@@ -490,13 +489,13 @@ rule awk_coverage_statistics:
         """ "{wildcards.sample}", "\t", """       # Sample ID value
         """ int(totalBases/genomeSize), "\t", """ # Mean depth value
         """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
-        """ supMinCov/genomeSize*100 "\t", """     # Coverage percent (@ mincov X) value
-        """ "@{wildcards.mincov}X" "\t", """       # @ mincov X value
-        """ "{wildcards.aligner}" """              # Aligner value
-        "}}' "                                    # Close print
-        "{input.genomecov} "                     # BedGraph coverage input
-        "1> {output.covstats} "                  # Mean depth output
-        "2> {log}"                              # Log redirection
+        """ supMinCov/genomeSize*100 "\t", """    # Coverage percent (@ mincov X) value
+        """ "@{wildcards.mincov}X" "\t", """      # @ mincov X value
+        """ "{wildcards.aligner}" """             # Aligner value
+        "}}' "                                   # Close print
+        "{input.genomecov} "                    # BedGraph coverage input
+        "1> {output.covstats} "                # Mean depth output
+        "2> {log}"                            # Log redirection
         
 ###############################################################################
 rule bedtools_genome_coverage:

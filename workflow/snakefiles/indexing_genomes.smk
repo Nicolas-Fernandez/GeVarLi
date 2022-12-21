@@ -4,13 +4,13 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2022.11.10
+# Latest modifications ___ 2022.12.20
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
 ###### CONFIGURATION ######
 
-configfile: "config/config.yaml"
+configfile: "configuration/config.yaml"
 
 ###############################################################################
 ###### FUNCTIONS ######
@@ -29,27 +29,25 @@ CPUS = config["resources"]["cpus"] # Threads (maximum)
 ###############################################################################
 ###### ENVIRONMENTS ######
 
-BOWTIE2 = config["conda"][OS]["bowtie2"] # Bowtie2
 BWA = config["conda"][OS]["bwa"]         # Bwa
+BOWTIE2 = config["conda"][OS]["bowtie2"] # Bowtie2
 
 ###############################################################################
 ###### PARAMETERS ######
 
-BWAALGO = config["bwa"]["algorithm"]         # BWA indexing algorithm
-BT2ALGO = config["bowtie2"]["algorithm"]     # BT2 indexing algorithm
+ALIGNER = config["aligner"]              # Aligners ('bwa' or 'bowtie2') 
+BWAALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
+BT2ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
 ###############################################################################
 ###### RULES ######
 
 rule all:
     input:
-        bwaindex = expand("resources/indexes/bwa/{refseq}.{ext}",
-                          refseq = REFSEQ,
-                          ext = ["amb", "ann", "bwt", "pac", "sa"]),
-        bt2index = expand("resources/indexes/bowtie2/{refseq}.{ext}",
-                          refseq = REFSEQ,
-                          ext = ["1.bt2", "2.bt2", "3.bt2", "4.bt2",
-                                 "rev.1.bt2", "rev.2.bt2"])
+        indexes = expand("resources/indexes/{aligner}/{refseq}.{ext}",
+                         aligner = ALIGNER,
+                         refseq = REFSEQ,
+                         ext = ["amb", "ann", "bwt", "pac", "sa"])
 
 ###############################################################################
 rule bwa_genome_indexing:

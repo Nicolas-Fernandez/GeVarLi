@@ -4,23 +4,21 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2022.11.10
+# Latest modifications ___ 2022.12.20
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
 ###### CONFIGURATION ######
 
-configfile: "config/config.yaml"
+configfile: "configuration/config.yaml"
 
 ###############################################################################
 ###### FUNCTIONS ######
 
-def get_memory_per_thread(wildcards):
-    memory_per_thread = RAM // CPUS
-    return memory_per_thread
-
 ###############################################################################
 ###### WILDCARDS ######
+
+FASTQ, = glob_wildcards("resources/reads/{fastq}.fastq.gz")
 
 ###############################################################################
 ###### RESOURCES ######
@@ -38,17 +36,20 @@ MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
 ###############################################################################
 ###### PARAMETERS ######
 
+MAPPER = config["aligner"]                # Fastq-screen --aligner
 CONFIG = config["fastq-screen"]["config"] # Fastq-screen --conf
-MAPPER = config["fastq-screen"]["mapper"] # Fastq-screen --aligner
 SUBSET = config["fastq-screen"]["subset"] # Fastq-screen --subset
-
 
 ###############################################################################
 ###### RULES ######
 
 rule all:
     input:
-        multiqc = "results/00_Quality_Control/multiqc/"
+        multiqc = "results/00_Quality_Control/multiqc/",
+        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
+                             fastq = FASTQ),
+        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
+                        fastq = FASTQ)
 
 ###############################################################################
 rule multiqc_reports_aggregation:
@@ -58,9 +59,13 @@ rule multiqc_reports_aggregation:
         "MultiQC reports aggregating"
     conda:
         MULTIQC
+    params:
+        config = CONFIG
     input:
-        fastqc = "results/00_Quality_Control/fastqc/",
-        fastqscreen = "results/00_Quality_Control/fastq-screen/"
+        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
+                        fastq = FASTQ),
+        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}",
+                             fastq = FASTQ)
     output:
         multiqc = directory("results/00_Quality_Control/multiqc/")
     log:
@@ -68,10 +73,14 @@ rule multiqc_reports_aggregation:
     shell:
         "multiqc "                  # Multiqc, searches in given directories for analysis & compiles a HTML report
         "--quiet "                   # -q: Only show log warning
+        "--no-ansi "                 # Disable coloured log
+        #"--config {params.config} "  # Specific config file to load
+        "--tag pangolin "            # Use only modules which tagged with this keyword (eg. pangolin)
+        "--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
+        "--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
         "{input.fastqc} "            # Input FastQC files
         "{input.fastqscreen} "       # Input Fastq-Screen
-        "--no-ansi "                 # Disable coloured log
         "&> {log}"                   # Log redirection
 
 ###############################################################################
@@ -85,25 +94,25 @@ rule fastqscreen_contamination_checking:
     resources:
         cpus = CPUS
     params:
-        config = CONFIG,
         mapper = MAPPER,
+        config = CONFIG,
         subset = SUBSET
     input:
-        fastq = "resources/reads/"
+        fastq = "resources/reads/{fastq}.fastq.gz"
     output:
-        fastqscreen = directory("results/00_Quality_Control/fastq-screen/")
+        fastqscreen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
     log:
-        "results/10_Reports/tools-log/fastq-screen.log"
+        "results/10_Reports/tools-log/fastq-screen/{fastq}.log"
     shell:
-        "fastq_screen "                 # FastqScreen, what did you expect ?
-        "-q "                            # --quiet: Only show log warning
-        "--threads {resources.cpus} "    # --threads: Specifies across how many threads bowtie will be allowed to run
-        "--conf {params.config} "        # path to configuration file
-        "--aligner {params.mapper}  "    # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
-        "--subset {params.subset} "      # Don't use the whole sequence file, but create a subset of specified size
-        "--outdir {output.fastqscreen} " # Output directory
-        "{input.fastq}/*.fastq.gz "      # Input file.fastq
-        "&> {log}"                       # Log redirection
+        "fastq_screen "                               # FastqScreen, what did you expect ?
+        "-q "                                          # --quiet: Only show log warning
+        "--threads {resources.cpus} "                  # --threads: Specifies across how many threads bowtie will be allowed to run
+        "--aligner {params.mapper}  "                  # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
+        "--conf {params.config}_{params.mapper}.conf " # path to configuration file
+        "--subset {params.subset} "                    # Don't use the whole sequence file, but create a subset of specified size
+        "--outdir {output.fastqscreen} "               # Output directory
+        "{input.fastq} "                               # Input file.fastq
+        "&> {log}"                                     # Log redirection
 
 ###############################################################################
 rule fastqc_quality_control:
@@ -116,11 +125,11 @@ rule fastqc_quality_control:
     resources:
         cpus = CPUS
     input:
-        fastq = "resources/reads/"
+        fastq = "resources/reads/{fastq}.fastq.gz"
     output:
-        fastqc = directory("results/00_Quality_Control/fastqc/")
+        fastqc = directory("results/00_Quality_Control/fastqc/{fastq}")
     log:
-        "results/10_Reports/tools-log/fastqc.log"
+        "results/10_Reports/tools-log/fastqc/{fastq}.log"
     shell:
         "mkdir -p {output.fastqc} " # (*) this directory must exist as the program will not create it
         "2> /dev/null && "          # in silence and then... 
@@ -128,7 +137,7 @@ rule fastqc_quality_control:
         "--quiet "                    # -q: Supress all progress messages on stdout and only report errors
         "--threads {resources.cpus} " # -t: Specifies files number which can be processed simultaneously
         "--outdir {output.fastqc} "   # -o: Create all output files in the specified output directory (*)
-        "{input.fastq}/*.fastq.gz "   # Input file.fastq
+        "{input.fastq} "              # Input file.fastq
         "&> {log}"                    # Log redirection
 
 ###############################################################################
