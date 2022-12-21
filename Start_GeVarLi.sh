@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bashA
 
 gevarli_version="v.2022.11"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
@@ -106,30 +106,25 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                                        # Get working directory
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))                          # Get fastq.gz files count
-samples=$(expr ${fastq} \/ 2)                                                                 # {fastq.gz count} / 2 = samples count (paired-end)
-conda_version=$(conda --version | sed "s/conda //")                                           # Get conda version
-snakemake_version=$(grep -o -E "snakemake_version: '.+'" ${workdir}/config/config.yaml | \
-		    sed "s/snakemake_version: //" | sed "s/'//g")                             # Get snakemake version
-conda_frontend=$(grep -o -E "conda_frontend: '.+'"  ${workdir}/config/config.yaml | \
-		 sed "s/conda_frontend: //" | sed "s/'//g")                                   # Get conda frontend
-max_threads=$(grep -o -E "cpus: [0-9]+" ${workdir}/config/config.yaml | sed "s/cpus: //")     # Get user config for max threads
-max_memory=$(grep -o -E "ram: [0-9]+" ${workdir}/config/config.yaml | sed "s/ram: //")        # Get user config for max memory
-memory_per_job=$(expr ${max_memory} \/ ${max_threads})                                        # Calcul maximum memory usage per job
-reference=$(grep -o -E "reference: '.+'" ${workdir}/config/config.yaml | \
-	    sed "s/reference: //" | sed "s/'//g")                                             # Get user config genome reference
-aligner=$(grep -o -E "aligner: '.+'" ${workdir}/config/config.yaml | \
-	  sed "s/aligner: //" | sed "s/'//g")                                                 # Get user config aligner
-min_cov=$(grep -o -E "mincov: [0-9]+" ${workdir}/config/config.yaml | sed "s/mincov: //")     # Get user config minimum coverage
-min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${workdir}/config/config.yaml | sed "s/minaf: //") # Get user config minimum allele frequency
-clipping=$(grep -o -E "clipping: '.+'" ${workdir}/config/config.yaml | \
-	   sed "s/clipping: //"  | sed "s/'//g")                                              # Get user config bamclipper option
-primers_kit=$(grep -o -E "primers: '.+'" ${workdir}/config/config.yaml | \
-	      sed "s/primers: //" | sed "s/'//g")                                             # Get user config bamclipper primers
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                                    # Get analyzes starting time
-time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")                                                  # Get analyzes time to archive (wo space)
-SECONDS=0                                                                                     # Initialize SECONDS counter
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                         # Get working directory
+config_file="${workdir}/configuration/config.yaml"                             # Get configuration file
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))           # Get fastq.gz files count
+samples=$(expr ${fastq} \/ 2)                                                  # {fastq.gz count} / 2 = samples count (paired-end)
+conda_version=$(conda --version | sed "s/conda //")                            # Get conda version
+snakemake_version=$(grep -o -E "snakemake_version: '.+'" ${config_file} | sed "s/snakemake_version: //" | sed "s/'//g") # Get snakemake version
+conda_frontend=$(grep -o -E "frontend: '.+'"  ${config_file} | sed "s/frontend: //" | sed "s/'//g")                     # Get conda frontend
+max_threads=$(grep -o -E "cpus: [0-9]+" ${config_file} | sed "s/cpus: //")     # Get user config for max threads
+max_memory=$(grep -o -E "ram: [0-9]+" ${config_file} | sed "s/ram: //")        # Get user config for max memory
+memory_per_job=$(expr ${max_memory} \/ ${max_threads})                         # Calcul maximum memory usage per job
+reference=$(grep -o -E "reference: '.+'" ${config_file} | sed "s/reference: //" | sed "s/'//g") # Get user config genome reference
+aligner=$(grep -o -E "aligner: '.+'" ${config_file} | sed "s/aligner: //" | sed "s/'//g")       # Get user config aligner
+min_cov=$(grep -o -E "mincov: [0-9]+" ${config_file} | sed "s/mincov: //")     # Get user config minimum coverage
+min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${config_file} | sed "s/minaf: //") # Get user config minimum allele frequency
+clipping=$(grep -o -E "clipping: '.+'" ${config_file} | sed "s/clipping: //"  | sed "s/'//g") # Get user config bamclipper option
+primers_kit=$(grep -o -E "primers: '.+'" ${config_file} | sed "s/primers: //" | sed "s/'//g") # Get user config bamclipper primers
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                     # Get analyzes starting time
+time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")                                   # Get analyzes time to archive (wo space)
+SECONDS=0                                                                      # Initialize SECONDS counter
 
 if [[ "${reference}" == *"SARS-CoV-2"* ]]
 then
@@ -491,9 +486,7 @@ for snakefile in ${snakefile_list} ; do
     2> /dev/null ;
 done
 
-cp ${workdir}/config/config.yaml \
-   ${workdir}/results/10_Reports/config.log \
-   2> /dev/null
+cp ${config_file} ${workdir}/results/10_Reports/config.log 2> /dev/null
 
 ###############################################################################
 ###### Clean and save ######
