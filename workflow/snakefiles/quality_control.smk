@@ -36,9 +36,10 @@ MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
 ###############################################################################
 ###### PARAMETERS ######
 
-MAPPER = config["aligner"]                # Fastq-screen --aligner
-CONFIG = config["fastq-screen"]["config"] # Fastq-screen --conf
-SUBSET = config["fastq-screen"]["subset"] # Fastq-screen --subset
+MAPPER = config["aligner"]                    # Fastq-Screen --aligner
+SUBSET = config["fastq-screen"]["subset"]     # Fastq-Screen --subset
+FQS_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
+MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
 
 ###############################################################################
 ###### RULES ######
@@ -60,7 +61,7 @@ rule multiqc_reports_aggregation:
     conda:
         MULTIQC
     params:
-        config = CONFIG
+        config = MQC_CONFIG
     input:
         fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
                         fastq = FASTQ),
@@ -95,7 +96,7 @@ rule fastqscreen_contamination_checking:
         cpus = CPUS
     params:
         mapper = MAPPER,
-        config = CONFIG,
+        config = FQS_CONFIG,
         subset = SUBSET
     input:
         fastq = "resources/reads/{fastq}.fastq.gz"
