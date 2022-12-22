@@ -412,21 +412,11 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
  │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR063671-1_artic-primers-V3.bedpe
  │    │    │    ├── 🛌️  Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1.bedpe
  │    │    │    └── 🛌️  {your_favorite_kit_primers}.bedpe
- │    │    ├── 📂 bed/
+ │    │    ├── 📂 bed/ (soon)
  │    │    │    ├── 🛡️  .gitkeep
- │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1.bed
- │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2.bed
- │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3.bed
- │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4.bed
- │    │    │    ├── 🛏️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4-1.bed
- │    │    │    ├── 🛏️  Ebola-virus_Zaire_KR063671-1_artic-primers-V1.bed
- │    │    │    ├── 🛏️  Ebola-virus_Zaire_AF272001-1_artic-primers-V2.bed
- │    │    │    ├── 🛏️  Ebola-virus_Zaire_KR063671-1_artic-primers-V3.bed
- │    │    │    ├── 🛏️  Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1.bed
  │    │    │    └── 🛏️  {your_favorite_kit_primers}.bed
- │    │    └── 📂 fasta/
+ │    │    └── 📂 fasta/ (soon)
  │    │         ├── 🛡️  .gitkeep
- │    │         ├── 🧬 Monkeypox-virus_UK_MT903345-1_custom-VGCARE-primers-V1.fasta
  │    │         └── 🧬 {your_favorite_kit_primers}.fasta
  │    ├── 📂 reads/
  │    │    ├── 🛡️  .gitkeep

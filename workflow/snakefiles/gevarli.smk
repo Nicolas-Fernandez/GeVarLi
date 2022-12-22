@@ -509,7 +509,7 @@ rule bedtools_genome_coverage:
         markdup = get_bam_input,
         index = get_bai_input
     output:
-        genomecov = temp("results/03_Coverage/{sample}_{aligner}_genome-cov.bed")
+        genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     log:
         "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_genome-cov.log"
     shell:

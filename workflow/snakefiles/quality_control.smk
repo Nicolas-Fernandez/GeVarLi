@@ -40,6 +40,7 @@ MAPPER = config["aligner"]                    # Fastq-Screen --aligner
 SUBSET = config["fastq-screen"]["subset"]     # Fastq-Screen --subset
 FQS_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
 MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
+TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
 ###############################################################################
 ###### RULES ######
@@ -62,11 +63,13 @@ rule multiqc_reports_aggregation:
         MULTIQC
     params:
         config = MQC_CONFIG
+        tag = TAG
     input:
-        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
-                        fastq = FASTQ),
-        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}",
-                             fastq = FASTQ)
+        reports = "results/"
+        #fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
+        #                fastq = FASTQ),
+        #fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}",
+        #                     fastq = FASTQ)
     output:
         multiqc = directory("results/00_Quality_Control/multiqc/")
     log:
@@ -76,12 +79,13 @@ rule multiqc_reports_aggregation:
         "--quiet "                   # -q: Only show log warning
         "--no-ansi "                 # Disable coloured log
         #"--config {params.config} "  # Specific config file to load
-        "--tag pangolin "            # Use only modules which tagged with this keyword (eg. pangolin)
+        #"--tag {params.tag} "        # Use only modules which tagged with this keyword
         "--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
         "--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
-        "{input.fastqc} "            # Input FastQC files
-        "{input.fastqscreen} "       # Input Fastq-Screen
+        "{input.reports} "           # Input Reports
+        #"{input.fastqc} "            # Input FastQC files
+        #"{input.fastqscreen} "       # Input Fastq-Screen
         "&> {log}"                   # Log redirection
 
 ###############################################################################
