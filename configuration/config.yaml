@@ -65,7 +65,8 @@ fastq-screen:
 
 ### MULTIQC ------------------------------------------------------------------------------------------
 multiqc:
-  config: 'configuration/multiqc.conf' # Path to the multiqc configuration file
+  config: 'configuration/multiqc.yaml' # Path to the multiqc configuration file
+  tag: '' # Use only modules which tagged with this keyword
 
 ### CUTADAPT -----------------------------------------------------------------------------------------
 cutadapt:
@@ -88,7 +89,7 @@ sickle-trim:
 
 ### BAMCLIPPER ---------------------------------------------------------------------------------------
 bamclipper:
-  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers bedpe file (or bed)
+  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers BEDPE file
   # Available options:
     #- 'no'  # Deactivate (default)
     #- 'yes' # Activate
