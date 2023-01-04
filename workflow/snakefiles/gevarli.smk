@@ -467,35 +467,45 @@ rule awk_coverage_statistics:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
+        readstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_reads-stats.txt",
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
         "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
-        "awk "                              # Awk, a program to select particular records in a file and perform operations upon them
-        "'$4 >= {wildcards.mincov} "         # Minimum coverage
-        "{{supMinCov+=$3-$2}} ; "            # Genome size >= mincov @X
-        "{{genomeSize+=$3-$2}} ; "           # Genome size
-        "{{totalBases+=($3-$2)*$4}} ; "      # Total bases @1X 
-        "{{totalBasesSq+=(($3-$2)*$4)**2}} " # Total bases square @1X
-        "END "                                # END
-        "{{print "                             # Print
-        """ "sample_id", "\t", """              # Sample ID header
-        """ "mean_depth", "\t", """             # Mean depth header
-        """ "standard_deviation", "\t", """     # Standard deviation header
-        """ "cov_percent_%" "\t", """           # Coverage percent header
-        """ "@_min_cov_X" "\t", """             # @ mincov X header
-        """ "aligner" """                       # Aligner header
-        "ORS "                                   # \n newline
-        """ "{wildcards.sample}", "\t", """       # Sample ID value
+        """ readsPairsProcessed=$(grep -o -E 'Total read pairs processed:.+' {input.cutadapt} | sed -r 's/Total read pairs processed:\ +//' | sed 's/,//g') ; """ #
+        """ echo "${{readsPairsProcessed}}" >> {output.readstats} ; """ #
+        """ pairsPassingFilters=$(grep -o -E 'Pairs written \(passing filters\):.+' {input.cutadapt} | sed -r 's/Pairs written \(passing filters\):\ +//' | sed 's/,//g') ; """ #
+        """ echo "${{pairsPassingFilters}}" >> {output.readstats} ; """ #
+        """ awk """                                                    # Awk, a program to select particular records in a file and perform operations upon them
+        """ -v readsPairsProcessed="${{readsPairsProcessed}}" """      # Define external variable
+        """ -v pairsPassingFilters="${{pairsPassingFilters}}" """      # Define external variable
+        """ '$4 >= {wildcards.mincov} {{supMinCov+=$3-$2}} ; """        # Genome size (>= mincov @X)
+        """ {{genomeSize+=$3-$2}} ; """                                 # Genome size (total)
+        """ {{totalBases+=($3-$2)*$4}} ; """                            # Total bases @1X
+        """ {{totalBasesSq+=(($3-$2)*$4)**2}} """                       # Total bases square @1X
+        """ END """                                                    # END
+        """ {{print """                                                # Print
+        """ "sample_id", "\t", """                                      # Sample ID header
+        """ "raw_sequences", "\t", """                                  # Raw sequences header
+        """ "passing_filters", "\t", """                                #
+        """ "mean_depth", "\t", """                                     # Mean depth header
+        """ "standard_deviation", "\t", """   # Standard deviation header
+        """ "cov_percent_%" "\t", """         # Coverage percent header
+        """ "@_min_cov_X" "\t", """           # @ mincov X header
+        """ "aligner" """                     # Aligner header
+        """ ORS """                                  # \n newline
+        """ "{wildcards.sample}", "\t", """    # Sample ID value
+        """ readsPairsProcessed, "\t", """     # Raw sequences value
+        """ pairsPassingFilters, "\t", """     #
         """ int(totalBases/genomeSize), "\t", """ # Mean depth value
         """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
-        """ supMinCov/genomeSize*100 "\t", """    # Coverage percent (@ mincov X) value
-        """ "@{wildcards.mincov}X" "\t", """      # @ mincov X value
-        """ "{wildcards.aligner}" """             # Aligner value
-        "}}' "                                   # Close print
-        "{input.genomecov} "                    # BedGraph coverage input
-        "1> {output.covstats} "                # Mean depth output
-        "2> {log}"                            # Log redirection
+        """ supMinCov/genomeSize*100 "\t", """ # Coverage percent (@ mincov X) value
+        """ "@{wildcards.mincov}X" "\t", """   # @ mincov X value
+        """ "{wildcards.aligner}" """          # Aligner value
+        """ }}' """                               # Close print
+        """ {input.genomecov} """                  # BedGraph coverage input
+        """ 1> {output.covstats} """               # Mean depth output
+        """ 2> {log}"""                           # Log redirection
         
 ###############################################################################
 rule bedtools_genome_coverage:
