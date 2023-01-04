@@ -62,14 +62,14 @@ rule multiqc_reports_aggregation:
     conda:
         MULTIQC
     params:
-        config = MQC_CONFIG
+        config = MQC_CONFIG,
         tag = TAG
     input:
-        reports = "results/"
-        #fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
-        #                fastq = FASTQ),
-        #fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}",
-        #                     fastq = FASTQ)
+        #reports = "results/"
+        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
+                        fastq = FASTQ),
+        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}",
+                             fastq = FASTQ)
     output:
         multiqc = directory("results/00_Quality_Control/multiqc/")
     log:
@@ -83,9 +83,9 @@ rule multiqc_reports_aggregation:
         "--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
         "--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
-        "{input.reports} "           # Input Reports
-        #"{input.fastqc} "            # Input FastQC files
-        #"{input.fastqscreen} "       # Input Fastq-Screen
+        #"{input.reports} "           # Input Reports
+        "{input.fastqc} "            # Input FastQC files
+        "{input.fastqscreen} "       # Input Fastq-Screen
         "&> {log}"                   # Log redirection
 
 ###############################################################################
