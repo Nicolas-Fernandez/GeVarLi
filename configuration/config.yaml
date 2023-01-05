@@ -1,12 +1,12 @@
 ---
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
-# Version ________________ v.2022.11
+# Version ________________ v.2023.01
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.12.20
+# Latest modifications ___ 2023.01.05
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -179,7 +179,7 @@ conda:
     gevarli-base: '../environments/osx/gavarli-base_v.2022.11'       # GeVarLi-Base ver. 2022.11
     lofreq:       '../environments/osx/lofreq_v.2.1.5.yaml'          # Lofreq       ver. 2.1.5
     multiqc:      '../environments/osx/multiqc_v.1.13.yaml'          # MultiQC      ver. 1.13
-    nextclade:    '../environments/osx/nextclade_v.2.8.0.yaml'       # Nextclade    ver. 2.5.0
+    nextclade:    '../environments/osx/nextclade_v.2.9.1.yaml'       # Nextclade    ver. 2.9.1
     pangolin:     '../environments/osx/pangolin_v.4.1.3.yaml'        # Pangolin     ver. 4.1.3
     samtools:     '../environments/osx/samtools_v.1.15.1.yaml'       # Samtools     ver. 1.15.1
     sickle-trim:  '../environments/osx/sickle-trim_v.1.33.yaml'      # Sickle-trim  ver. 1.33
@@ -196,7 +196,7 @@ conda:
     gevarli-base: '../environments/linux/gavarli-base_v.2022.11'     # GeVarLi-Base ver. 2022.11
     lofreq:       '../environments/linux/lofreq_v.2.1.5.yaml'        # Lofreq       ver. 2.1.5
     multiqc:      '../environments/linux/multiqc_v.1.13.yaml'        # MultiQC      ver. 1.13
-    nextclade:    '../environments/linux/nextclade_v.2.8.0.yaml'     # Nextclade    ver. 2.5.0
+    nextclade:    '../environments/linux/nextclade_v.2.9.1.yaml'     # Nextclade    ver. 2.9.1
     pangolin:     '../environments/linux/pangolin_v.4.1.3.yaml'      # Pangolin     ver. 4.1.3
     samtools:     '../environments/linux/samtools_v.1.15.1.yaml'     # Samtools     ver. 1.15.1
     sickle-trim:  '../environments/linux/sickle-trim_v.1.33.yaml'    # Sickle-trim  ver. 1.33
