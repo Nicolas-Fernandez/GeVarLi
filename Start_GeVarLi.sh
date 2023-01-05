@@ -1,6 +1,6 @@
-#!/bin/bashA
+#!/bin/bash
 
-gevarli_version="v.2022.11"
+gevarli_version="v.2023.01"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
 # Version ________________ v.2022.11
@@ -8,7 +8,7 @@ gevarli_version="v.2022.11"
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2022.11.16
+# Latest modifications ___ 2023.01.05
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -32,7 +32,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2022.11.16
+${blue}Latest modifications${nc} ___ 2023.01.05
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -525,7 +525,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2022.11.16
+Latest modifications ___ 2023.01.05
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
