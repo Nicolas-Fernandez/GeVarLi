@@ -1,4 +1,4 @@
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I#AAAAA##H#A##M###I####
 # Name ___________________ gevarli.smk
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
@@ -132,6 +132,8 @@ NEXTDATASET = get_nextclade_dataset             # Nextclade dataset
 
 rule all:
     input:
+        flagstat = expand("results/03_Coverage/{sample}_{aligner}_flagstat.{ext}",
+                          sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
         covstats = expand("results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv",
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
         consensus = expand("results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta",
@@ -145,7 +147,7 @@ rule nextclade_lineage:
     # Aim: nextclade lineage assignation
     # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Nextclade lineage assignation for {wildcards.sample} sample consensus ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "Nextclade lineage assignation for [[ {wildcards.sample} ]] sample consensus ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         NEXTCLADE
     resources:
@@ -175,7 +177,7 @@ rule pangolin_lineage:
     # Aim: lineage mapping
     # Use: pangolin [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Pangolin lineage mapping for {wildcards.sample} sample consensus ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "Pangolin lineage mapping for [[ {wildcards.sample} ]] sample consensus ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         PANGOLIN
     resources:
@@ -201,7 +203,7 @@ rule sed_rename_headers:
     # Aim: rename all fasta header with sample name
     # Use: sed 's/[OLD]/[NEW]/' [IN] > [OUT]
     message:
-        "Sed rename header for {wildcards.sample} sample consensus fasta ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "Sed rename header for [[ {wildcards.sample} ]] sample consensus fasta ({wildcards.aligner}, @{wildcards.mincov}X)"
     input:
         constmp = "results/05_Consensus/{sample}_{aligner}_{mincov}X_consensus.fasta.tmp"
     output:
@@ -214,13 +216,13 @@ rule sed_rename_headers:
         "{input.constmp} "       # Input file
         "1> {output.consensus} " # Output file
         "2> {log}"               # Log redirection
-
+        
 ###############################################################################
 rule bcftools_consensus:
     # Aim: create consensus
     # Use: bcftools consensus -f [REFERENCE] [VARIANTS.vcf.gz] -o [CONSENSUS.fasta] 
     message:
-        "BcfTools consensus for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "BcfTools consensus for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         BCFTOOLS
     params:
@@ -247,7 +249,7 @@ rule tabix_tabarch_indexing:
     # Aim: tab archive indexing
     # Use: tabix [OPTIONS] [TAB.bgz]
     message:
-        "Tabix tab archive indexing for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "Tabix tab archive indexing for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         SAMTOOLS
     input:
@@ -267,7 +269,7 @@ rule bgzip_variant_archive:
     # Aim: Variant block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
-        "Bgzip variant block compressing for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "Bgzip variant block compressing for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         SAMTOOLS
     resources:
@@ -292,7 +294,7 @@ rule lofreq_variant_filtering:
     # Use: lofreq filter [OPTIONS] -i [INDEL.vcf] -o [INDELFILT.vcf]
     # Note: without --no-defaults LoFreq's predefined filters are on
     message:
-        "LoFreq filtering SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "LoFreq filtering SNVs and Indels for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         LOFREQ
     params:
@@ -317,7 +319,7 @@ rule lofreq_variant_calling:
     # Aim: SNVs and Indels calling
     # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [MASKEDREF.fasta] -o [INDEL.vcf] [INDEL.bam]
     message:
-        "LoFreq calling SNVs and Indels for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "LoFreq calling SNVs and Indels for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         LOFREQ
     resources:
@@ -345,7 +347,7 @@ rule samtools_indel_indexing:
     # Aim: indexing indel qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDELQUAL.bam] [INDEX.bai]
     message:
-        "SamTools indexing indel qualities BAM file {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "SamTools indexing indel qualities BAM file [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         SAMTOOLS
     resources:
@@ -370,7 +372,7 @@ rule lofreq_indel_qualities:
     # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
     # Note: do not realign your BAM file afterwards!
     message:
-        "LoFreq insert indels qualities for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "LoFreq insert indels qualities for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         LOFREQ
     input:
@@ -395,7 +397,7 @@ rule bedtools_masking:
     # Aim: masking low coverage regions
     # Use: bedtools maskfasta [OPTIONS] -fi [REFERENCE.fasta] -bed [RANGE.bed] -fo [MASKEDREF.fasta]
     message:
-        "BedTools masking low coverage regions for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "BedTools masking low coverage regions for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         BEDTOOLS
     params:
@@ -419,7 +421,7 @@ rule bedtools_merged_mask:
     # Aim: merging overlaps
     # Use: bedtools merge [OPTIONS] -i [FILTERED.bed] -g [GENOME.fasta] 
     message:
-        "BedTools merging overlaps for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "BedTools merging overlaps for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         BEDTOOLS
     input:
@@ -439,7 +441,7 @@ rule awk_mincovfilt:
     # Aim: minimum coverage filtration
     # Use: awk '$4 < [MINCOV]' [BEDGRAPH.bed] 1> [FILTERED.bed]
     message:
-        "Awk minimum coverage filtration for {wildcards.sample} sample ({wildcards.aligner}, @{wildcards.mincov}X)"
+        "Awk minimum coverage filtration for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.mincov}X)"
     conda:
         GAWK
     input:
@@ -460,25 +462,71 @@ rule awk_coverage_statistics:
     # Aim: computing genomme coverage stats
     # Use: awk {FORMULA} END {{print [RESULTS.tsv] [BEDGRAPH.bed]
     message:
-        "Awk compute genome coverage statistics BED {wildcards.sample} sample ({wildcards.aligner})"
+        "Awk compute genome coverage statistics BED [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
     conda:
         GAWK
     input:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
+        sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
+        samtools = "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup.log",
+        flagstat = "results/03_Coverage/{sample}_{aligner}_flagstat.json",
+        histogram = "results/03_Coverage/{sample}_{aligner}_coverage-histogram.txt",
         genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
     output:
-        readstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_reads-stats.txt",
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
         "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_coverage-stats.log"
     shell:
-        """ readsPairsProcessed=$(grep -o -E 'Total read pairs processed:.+' {input.cutadapt} | sed -r 's/Total read pairs processed:\ +//' | sed 's/,//g') ; """ #
-        """ echo "${{readsPairsProcessed}}" >> {output.readstats} ; """ #
-        """ pairsPassingFilters=$(grep -o -E 'Pairs written \(passing filters\):.+' {input.cutadapt} | sed -r 's/Pairs written \(passing filters\):\ +//' | sed 's/,//g') ; """ #
-        """ echo "${{pairsPassingFilters}}" >> {output.readstats} ; """ #
-        """ awk """                                                    # Awk, a program to select particular records in a file and perform operations upon them
-        """ -v readsPairsProcessed="${{readsPairsProcessed}}" """      # Define external variable
-        """ -v pairsPassingFilters="${{pairsPassingFilters}}" """      # Define external variable
+        """ rawReads=$(grep -o -E  """                                  # Get raw reads 
+        """ 'Total read pairs processed:.+' {input.cutadapt}  """       #
+        """ | sed -r 's/Total read pairs processed:\ +//'  """          #
+        """ | sed 's/,//g') ; """                                       #
+        #
+        """ cutadaptPF=$(grep -o -E """                                 # Get cutadapt Passing Filtes reads
+        """ 'Pairs written \(passing filters\):.+' {input.cutadapt} """ #
+        """ | sed -r 's/Pairs written \(passing filters\):\ +//' """    #
+        """ | sed 's/,//g') ; """                                       #
+        #
+        """ sicklePF=$(grep -o -E """                                   # Get sickle Passing Filtes reads
+        """ 'FastQ paired records kept:.+' {input.sickle} """           #
+        """ | sed -r 's/FastQ paired records kept:\ +//') ; """         #
+        #
+        """ totalDuplicate=$(grep -o -E """                             # Get total duplicated reads
+        """ 'DUPLICATE TOTAL:.+' {input.samtools} """                   #
+        """ | sed -r 's/DUPLICATE TOTAL:\ +//') ; """                   #
+        #
+        """ estimatedLibrarySize=$(grep -o -E """                       # Get estimated library size
+        """ 'ESTIMATED_LIBRARY_SIZE:.+' {input.samtools} """            #
+        """ | sed -r 's/ESTIMATED_LIBRARY_SIZE:\ +//') ; """            #
+        #
+        """ samtoolsPF=$(grep -o -E """                                 # Get samtool Passing Filter reads
+        """ 'WRITTEN: .+' {input.samtools} """                          #
+        """ | sed -r 's/WRITTEN:\ +//') ; """                           #
+        #
+        """ mappedReads=$(grep -o -E -m 1 """                           # Get mapped reads
+        """ '"mapped": .+' {input.flagstat} """                         #
+        """ | sed -r 's/"mapped":\ +//' """                             #
+        """ | sed 's/,//g') ; """                                       #
+        #
+        """ mappedPercentReads=$(grep -o -E -m 1 """                    # Get mapped precent reads
+        """ '"mapped %": .+' {input.flagstat} """                       #
+        """ | sed -r 's/"mapped %":\ +//' """                           #
+        """ | sed 's/,//g') ; """                                       #
+        #
+        """ covPercentAt1X=$(grep -o -E """                             # Get coverage percent @1X
+        """ 'Percent covered:.+' {input.histogram} """                  #
+        """ | sed -r 's/Percent covered:\ +//') ; """                   #
+        #
+        """ awk """                                                   # Awk, a program to select particular records in a file and perform operations upon them
+        """ -v rawReads="${{rawReads}}" """                             # Define external variable
+        """ -v cutadaptPF="${{cutadaptPF}}" """                         # Define external variable
+        """ -v sicklePF="${{sicklePF}}" """                             # Define external variable
+        """ -v totalDuplicate="${{totalDuplicate}}" """                 # Define external variable
+        """ -v estimatedLibrarySize="${{estimatedLibrarySize}}" """     # Define external variable
+        """ -v samtoolsPF="${{samtoolsPF}}" """                         # Define external variable
+        """ -v mappedReads="${{mappedReads}}" """                       # Define external variable
+        """ -v mappedPercentReads="${{mappedPercentReads}}" """        # Define external variable
+        """ -v covPercentAt1X="${{covPercentAt1X}}" """                 # Define external variable
         """ '$4 >= {wildcards.mincov} {{supMinCov+=$3-$2}} ; """        # Genome size (>= mincov @X)
         """ {{genomeSize+=$3-$2}} ; """                                 # Genome size (total)
         """ {{totalBases+=($3-$2)*$4}} ; """                            # Total bases @1X
@@ -486,33 +534,49 @@ rule awk_coverage_statistics:
         """ END """                                                    # END
         """ {{print """                                                # Print
         """ "sample_id", "\t", """                                      # Sample ID header
-        """ "raw_sequences", "\t", """                                  # Raw sequences header
-        """ "passing_filters", "\t", """                                #
+        """ "raw_paired_reads", "\t", """                               # Raw paired reads header
+        """ "cutadapt_pairs_PF", "\t", """                                    # Cutadapt Passing Filters header
+        """ "sickle_reads_PF", "\t", """                                      # Sickle-trim Passing Filters header
+        """ "duplicated_reads", "\t", """                               # header
+        """ "duplicated_percent_%","\t", """                            # header
+        """ "estimated_library_size*", "\t", """                        # header
+        """ "samtools_pairs_PF", "\t", """                              # header
+        """ "mapped_reads", "\t", """                                   # header
+        """ "mapped_percent_%", "\t", """                               # header
+        """ "cov_percent_%_@1X", "\t", """                              # header
         """ "mean_depth", "\t", """                                     # Mean depth header
-        """ "standard_deviation", "\t", """   # Standard deviation header
-        """ "cov_percent_%" "\t", """         # Coverage percent header
-        """ "@_min_cov_X" "\t", """           # @ mincov X header
-        """ "aligner" """                     # Aligner header
-        """ ORS """                                  # \n newline
-        """ "{wildcards.sample}", "\t", """    # Sample ID value
-        """ readsPairsProcessed, "\t", """     # Raw sequences value
-        """ pairsPassingFilters, "\t", """     #
-        """ int(totalBases/genomeSize), "\t", """ # Mean depth value
+        """ "standard_deviation", "\t", """                             # Standard deviation header
+        """ "cov_percent_%" "\t", """                                   # Coverage percent header
+        """ "@_min_cov" "\t", """                                       # @ mincov X header
+        """ "with_aligner" """                                          # Aligner header
+        """ ORS """                                                      # \n newline
+        """ "{wildcards.sample}", "\t", """                             # Sample ID value
+        """ rawReads, "\t", """                                         # Raw sequences value
+        """ cutadaptPF, "\t", """                                       # Cutadapt Passing Filter value
+        """ sicklePF, "\t", """                                         # Sickle Passing Filter value
+        """ totalDuplicate, "\t", """                                   # value
+        """ int(((totalDuplicate)/(rawReads*2))*100), "%", "\t", """ # value (divided by 2 to estimated pairs)
+        """ estimatedLibrarySize, "\t", """                             # value
+        """ samtoolsPF, "\t", """                                       # value
+        """ mappedReads, "\t", """                                      # value
+        """ mappedPercentReads, "%", "\t", """                            # value
+        """ covPercentAt1X, "\t", """                                   # value
+        """ int(totalBases/genomeSize), "\t", """                       # Mean depth value
         """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
-        """ supMinCov/genomeSize*100 "\t", """ # Coverage percent (@ mincov X) value
-        """ "@{wildcards.mincov}X" "\t", """   # @ mincov X value
-        """ "{wildcards.aligner}" """          # Aligner value
-        """ }}' """                               # Close print
-        """ {input.genomecov} """                  # BedGraph coverage input
-        """ 1> {output.covstats} """               # Mean depth output
-        """ 2> {log}"""                           # Log redirection
+        """ supMinCov/genomeSize*100, "%", "\t", """                      # Coverage percent (@ mincov X) value
+        """ "@{wildcards.mincov}X", "\t", """                           # @ mincov X value
+        """ "{wildcards.aligner}" """                                   # Aligner value
+        """ }}' """                                                     # Close print
+        """ {input.genomecov} """                                      # BedGraph coverage input
+        """ 1> {output.covstats} """                                   # Mean depth output
+        """ 2> {log}"""                                                 # Log redirection
         
 ###############################################################################
 rule bedtools_genome_coverage:
     # Aim: computing genome coverage sequencing
     # Use: bedtools genomecov [OPTIONS] -ibam [MARKDUP.bam] 1> [BEDGRAPH.bed]
     message:
-        "BedTools computing genome coverage for {wildcards.sample} sample against reference genome sequence ({wildcards.aligner})"
+        "BedTools computing genome coverage for [[ {wildcards.sample} ]] sample against reference genome sequence ({wildcards.aligner})"
     conda:
         BEDTOOLS
     input:
@@ -530,11 +594,69 @@ rule bedtools_genome_coverage:
         "2> {log} "               # Log redirection
 
 ###############################################################################
+rule samtools_coverage_histogram:
+    # Aim: alignment depth and percent coverage histogram
+    # Use: samtools coverage --histogram [INPUT.bam]
+    message:
+        "SamTools calcul alignment depth and percent coverage @1X from BAM file for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+    conda:
+        SAMTOOLS
+    resources:
+       cpus = CPUS
+       #bins = BINS,
+       #depth = DEPTH
+    input:
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+    output:
+        histogram = "results/03_Coverage/{sample}_{aligner}_coverage-histogram.txt"
+    log:
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_coverage-histogram.log"
+    shell:
+        "samtools coverage "          # Samtools coverage, tools for alignments in the SAM format with command to alignment depth and percent coverage
+        "--histogram "                 # -m: show histogram instead of tabular output
+        "--verbosity 4 "               # Set level of verbosity [INT] (default: 3)
+        "--n-bins 149 "                # -w: number of bins in histogram (default: terminal width - 40) (todo: {params.bins}) 
+        "--depth 0 "                   # -d maximum allowed coverage depth [INT] (default: 1000000 ; 0 removing any depth limit) (todo: {params.depth}) 
+        "--output {output.histogram} " # write output to FILE (default: stdout)
+        "{input.markdup} ; "           # Markdup bam input
+        "echo >> {output.histogram} ; " # Newline
+        "samtools coverage "          # Samtools coverage, tools for alignments in the SAM format with command to alignment depth and percent coverage
+        "--verbosity 4 "               # Set level of verbosity [INT] (default: 3)
+        "{input.markdup} "             # Markdup bam input
+        ">> {output.histogram} "       # write output to FILE (default: stdout)
+        "2> {log}"                     # Log redirection
+
+###############################################################################
+rule samtools_flagstat_ext:
+    # Aim: simple stats
+    # Use: samtools flagstat -@ [THREADS] [INPUT.bam]
+    message:
+        "SamTools calcul simple stats from BAM file for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+    conda:
+        SAMTOOLS
+    resources:
+       cpus = CPUS
+    input:
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+    output:
+        flagstat = "results/03_Coverage/{sample}_{aligner}_flagstat.{ext}"
+    log:
+        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_flagstat-{ext}.log"
+    shell:
+        "samtools flagstat "           # Samtools flagstat, tools for alignments in the SAM format with command to simple stat
+        "--threads {resources.cpus} "   # -@: Number of additional threads to use (default: 1)
+        "--verbosity 4 "                # Set level of verbosity [INT] (default: 3)
+        "--output-fmt {wildcards.ext} " # -O Specify output format (none, tsv and json)
+        "{input.markdup} "              # Markdup bam input
+        "1> {output.flagstat} "         # Markdup index output
+        "2> {log}"                      # Log redirection
+
+###############################################################################
 rule bamclipper_amplicon_primers:
     # Aim: soft-clip primer sequences from BAM alignments of PCR amplicons
     # Use: bamclipper.sh -n [THREADS] -b [MARKDUP.bam] -p [PRIMER.bed] -u [UPSTREAM] -d [DOWNSTREAM]
     message:
-        "BAMClipper soft-clipping BAM alignments for {wildcards.sample} sample ({wildcards.aligner})"
+        "BAMClipper soft-clipping BAM alignments for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
     conda:
         BAMCLIPPER
     resources:
@@ -559,17 +681,17 @@ rule bamclipper_amplicon_primers:
         "-n {resources.cpus} "                     # Number of threads (default: 1)
         "-u {params.upstream} "                    # Number of nuc. upstream for assigning alignments to primers (default: 1)
         "-d {params.downstream} "                  # Number of nuc. downstream for assigning alignments to primers (default: 5)
-        #"-o results/02_Mapping/ "                  # Path to write output (BamClipper v.1.1.3)
+        #"-o results/02_Mapping/ "                  # Path to write output (BamClipper v.1.1.3) (todo)
         "&> {log} "                                # Log redirection
-        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam {output.bamclip} "
-        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam.bai {output.baiclip}"
+        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam {output.bamclip} "    # because BamClipper v.1 default output system...
+        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam.bai {output.baiclip}" # because BamClipper v.1 default output system...
 
 ###############################################################################
 rule samtools_index_markdup:
     # Aim: indexing marked as duplicate BAM file
     # Use: samtools index -@ [THREADS] -b [MARKDUP.bam] [INDEX.bai]
     message:
-        "SamTools indexing marked as duplicate BAM file {wildcards.sample} sample ({wildcards.aligner})"
+        "SamTools indexing marked as duplicate BAM file for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
     conda:
         SAMTOOLS
     resources:
@@ -582,7 +704,7 @@ rule samtools_index_markdup:
         "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
-        "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)
+        "-@ {resources.cpus} " #--threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
         "-b "                  # -b: Generate BAI-format index for BAM files (default)
         "{input.markdup} "     # Markdup bam input
         "{output.index} "      # Markdup index output
@@ -593,7 +715,7 @@ rule samtools_markdup:
     # Aim: marking duplicate alignments
     # Use: samtools markdup -@ [THREADS] -r -s -O BAM [SORTED.bam] [MARKDUP.bam] 
     message:
-        "SamTools marking duplicate alignments for {wildcards.sample} sample ({wildcards.aligner})"
+        "SamTools marking duplicate alignments for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
     conda:
         SAMTOOLS
     resources:
@@ -619,7 +741,7 @@ rule samtools_sorting:
     # Aim: sorting
     # Use: samtools sort -@ [THREADS] -m [MEM] -T [TMPDIR] -O BAM -o [SORTED.bam] [FIXMATE.bam] 
     message:
-        "SamTools sorting {wildcards.sample} sample reads ({wildcards.aligner})"
+        "SamTools sorting [[ {wildcards.sample} ]] sample reads ({wildcards.aligner})"
     conda:
         SAMTOOLS
     resources:
@@ -648,7 +770,7 @@ rule samtools_fixmate:
     # Aim: filling in mate coordinates
     # Use: samtools fixmate -@ [THREADS] -m -O BAM [SORTBYNAMES.bam] [FIXMATE.bam] 
     message:
-        "SamTools filling in mate coordinates {wildcards.sample} sample reads ({wildcards.aligner})"
+        "SamTools filling in mate coordinates [[ {wildcards.sample} ]] sample reads ({wildcards.aligner})"
     conda:
         SAMTOOLS
     resources:
@@ -673,7 +795,7 @@ rule samtools_sortbynames:
     # Aim: sorting by names
     # Use: samtools sort -t [THREADS] -n -O BAM -o [SORTBYNAMES.bam] [MAPPED.sam]
     message:
-        "SamTools sorting by names {wildcards.sample} sample reads ({wildcards.aligner})"
+        "SamTools sorting by names [[ {wildcards.sample} ]] sample reads ({wildcards.aligner})"
     conda:
         SAMTOOLS
     resources:
@@ -700,7 +822,7 @@ rule bwa_mapping:
     # Aim: reads mapping against reference sequence
     # Use: bwa mem -t [THREADS] -x [REFERENCE] [FWD_R1.fq] [REV_R2.fq] 1> [MAPPED.sam]
     message:
-        "BWA-MEM mapping {wildcards.sample} sample reads against reference genome sequence"
+        "BWA-MEM mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence"
     conda:
         BWA
     resources:
@@ -730,7 +852,7 @@ rule bowtie2_mapping:
     # Aim: reads mapping against reference sequence
     # Use: bowtie2 -p [THREADS] -x [REFERENCE] -1 [FWD_R1.fq] -2 [REV_R2.fq] -S [MAPPED.sam]
     message:
-        "Bowtie2 mapping {wildcards.sample} sample reads against reference genome sequence"
+        "Bowtie2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence"
     conda:
         BOWTIE2
     resources:
@@ -763,7 +885,7 @@ rule sickle_trim_quality:
     # Aim: windowed adaptive trimming tool for FASTQ files using quality
     # Use: sickle [COMMAND] [OPTIONS]
     message:
-        "Sickle-trim low quality sequences trimming for {wildcards.sample} sample"
+        "Sickle-trim low quality sequences trimming for [[ {wildcards.sample} ]] sample"
     conda:
         SICKLETRIM
     params:
@@ -801,7 +923,7 @@ rule cutadapt_adapters_removing:
     # Use: cutadapt [OPTIONS] -a/-A [ADAPTER] -o [OUT-FWD.fastq.gz] -p [OUT-REV.fastq.gz] [IN-FWD.fastq.gz] [IN-REV.fastq.gz]
     # Rmq: multiple adapter sequences can be given using further -a options, but only the best-matching adapter will be removed
     message:
-        "Cutadapt adapters removing for {wildcards.sample} sample"
+        "Cutadapt adapters removing for [[ {wildcards.sample} ]] sample"
     conda:
         CUTADAPT
     resources:
