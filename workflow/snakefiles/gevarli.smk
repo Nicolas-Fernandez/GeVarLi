@@ -132,7 +132,7 @@ NEXTDATASET = get_nextclade_dataset             # Nextclade dataset
 
 rule all:
     input:
-        flagstat = expand("results/03_Coverage/{sample}_{aligner}_flagstat.{ext}",
+        flagstat = expand("results/03_Coverage/flagstat/{sample}_{aligner}_flagstat.{ext}",
                           sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
         covstats = expand("results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv",
                           sample = SAMPLE, aligner = ALIGNER, mincov = MINCOV),
@@ -404,7 +404,7 @@ rule bedtools_masking:
         path = REFPATH,
         reference = REFERENCE
     input:
-        lowcovmask = "results/03_Coverage/{sample}_{aligner}_{mincov}X_low-cov-mask.bed"
+        lowcovmask = "results/03_Coverage/bed/{sample}_{aligner}_{mincov}X_low-cov-mask.bed"
     output:
         maskedref = "results/04_Variants/{sample}_{aligner}_{mincov}X_masked-ref.fasta"
     log:
@@ -425,9 +425,9 @@ rule bedtools_merged_mask:
     conda:
         BEDTOOLS
     input:
-        mincovfilt = "results/03_Coverage/{sample}_{aligner}_{mincov}X_min-cov-filt.bed"
+        mincovfilt = "results/03_Coverage/bed/{sample}_{aligner}_{mincov}X_min-cov-filt.bed"
     output:
-        lowcovmask = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_low-cov-mask.bed")
+        lowcovmask = temp("results/03_Coverage/bed/{sample}_{aligner}_{mincov}X_low-cov-mask.bed")
     log:
         "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_{mincov}X_merging.log"
     shell:
@@ -445,9 +445,9 @@ rule awk_mincovfilt:
     conda:
         GAWK
     input:
-        genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
+        genomecov = "results/03_Coverage/bed/{sample}_{aligner}_genome-cov.bed"
     output:
-        mincovfilt = temp("results/03_Coverage/{sample}_{aligner}_{mincov}X_min-cov-filt.bed")
+        mincovfilt = temp("results/03_Coverage/bed/{sample}_{aligner}_{mincov}X_min-cov-filt.bed")
     log:
         "results/10_Reports/tools-log/awk/{sample}_{aligner}_{mincov}X_min-cov-filt.log"
     shell:
@@ -469,9 +469,9 @@ rule awk_coverage_statistics:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
         samtools = "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup.log",
-        flagstat = "results/03_Coverage/{sample}_{aligner}_flagstat.json",
-        histogram = "results/03_Coverage/{sample}_{aligner}_coverage-histogram.txt",
-        genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
+        flagstat = "results/03_Coverage/flagstat/{sample}_{aligner}_flagstat.json",
+        histogram = "results/03_Coverage/histogram/{sample}_{aligner}_coverage-histogram.txt",
+        genomecov = "results/03_Coverage/bed/{sample}_{aligner}_genome-cov.bed"
     output:
         covstats = "results/03_Coverage/{sample}_{aligner}_{mincov}X_coverage-stats.tsv"
     log:
@@ -583,7 +583,7 @@ rule bedtools_genome_coverage:
         markdup = get_bam_input,
         index = get_bai_input
     output:
-        genomecov = "results/03_Coverage/{sample}_{aligner}_genome-cov.bed"
+        genomecov = "results/03_Coverage/bed/{sample}_{aligner}_genome-cov.bed"
     log:
         "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_genome-cov.log"
     shell:
@@ -608,7 +608,7 @@ rule samtools_coverage_histogram:
     input:
         markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     output:
-        histogram = "results/03_Coverage/{sample}_{aligner}_coverage-histogram.txt"
+        histogram = "results/03_Coverage/histogram/{sample}_{aligner}_coverage-histogram.txt"
     log:
         "results/10_Reports/tools-log/samtools/{sample}_{aligner}_coverage-histogram.log"
     shell:
@@ -639,7 +639,7 @@ rule samtools_flagstat_ext:
     input:
         markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
     output:
-        flagstat = "results/03_Coverage/{sample}_{aligner}_flagstat.{ext}"
+        flagstat = "results/03_Coverage/flagstat/{sample}_{aligner}_flagstat.{ext}"
     log:
         "results/10_Reports/tools-log/samtools/{sample}_{aligner}_flagstat-{ext}.log"
     shell:
