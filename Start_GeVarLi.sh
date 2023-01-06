@@ -1,9 +1,9 @@
 #!/bin/bash
 
-gevarli_version="v.2023.01"
+gevarli_base_env_version="v.2022.11"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2022.11
+# Version ________________ v.2023.01
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
@@ -192,18 +192,18 @@ ${green}-------------------------------------------------------${nc}
 if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_version}") ]]
 then
     echo -e "
-Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} it's already created
+Conda environment ${ylo}gevarli-base_${gevarli_base_env_version}${nc} it's already created
 "
 else
     echo -e "
-Conda environment ${ylo}gevarli-base_${gevarli_version}${nc} will be now created
+Conda environment ${ylo}gevarli-base_${gevarli_base_env_version}${nc} will be now created
 "
    # Create a 'gevarli-base' environment, with :
     # Mamba     ver. 1.0.0  (to create snakemake-conda's environments faster)
     # Snakemake ver. 7.18.1 (to run GeVarLi)
     # Rename    ver. 1.601  (to rename fastq files)
     # Graphviz  ver. 6.0.1  (to dot snakemake DAG)
-    conda env create -f ${workdir}/workflow/environments/${os}/gevarli-base_${gevarli_version}.yaml
+    conda env create -f ${workdir}/workflow/environments/${os}/gevarli-base_${gevarli_base_env_version}.yaml
 fi
 
 ###############################################################################
@@ -217,7 +217,7 @@ ${green}----------------------------${nc}
 # intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
 source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
-conda activate gevarli-base_${gevarli_version}
+conda activate gevarli-base_${gevarli_base_env_version}
 
 ###############################################################################
 ###### Rename samples ######
@@ -227,8 +227,17 @@ ${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}
 ${green}------------------------------${nc}
 "
 
+# Start GeVarLi with at least 1 sample
+if [[ "${fastq}" == "0" ]]
+then
+    echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}"
+    echo ""
+    echo -e "${red}SARS-CoV-2${nc} sample fastq files from ${ylo}resources/data_test/${nc} will be used."
+    cp ${workdir}/resources/data_test/*.fastq.gz ${workdir}/resources/reads/
+fi
+
 # Rename fastq files to remove "_001" Illumina pattern.
-## De/comment (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
+## De/comment line (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
 rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
