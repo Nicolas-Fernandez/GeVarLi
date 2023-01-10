@@ -61,7 +61,7 @@ aligner: 'bwa' # Select your favorite aligner, bwa (default) or bowtie2
 ### FASTQ-SCREEN -------------------------------------------------------------------------------------
 fastq-screen:
   config: 'configuration/fastq-screen' # Path to the fastq-screen configuration file
-  subset: 10000 # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+  subset: 1000 # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
 ### MULTIQC ------------------------------------------------------------------------------------------
 multiqc:
