@@ -38,7 +38,16 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 
 ### Citation ###
-_(soon)_
+If you use this pipeline, *please* cite this *GeVarLi*, gitlab IRD repository and authors.
+
+GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
+for reference-based Genome assembly and Variants calling and Lineage assignment,
+from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.
+IRDFORGE Gitlab instance : https://forge.ird.fr/transvihmi/GeVarLi
+Nicolas FERNANDEZ NUÑEZ (1, 2, 3)
+1) IRD UMI233
+2) INSERM-U1175
+3) Université de Montpellier
 
 
 ### Rulegraph ###
