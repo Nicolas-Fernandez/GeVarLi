@@ -39,8 +39,8 @@ MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
 MAPPER = config["aligner"]                    # Fastq-Screen --aligner
 SUBSET = config["fastq-screen"]["subset"]     # Fastq-Screen --subset
 FQS_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
-MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
-TAG = config["multiqc"]["tag"]                # MultiQC --tag
+#MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
+#TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
 ###############################################################################
 ###### RULES ######
@@ -62,8 +62,8 @@ rule multiqc_reports_aggregation:
     conda:
         MULTIQC
     params:
-        config = MQC_CONFIG,
-        tag = TAG
+        #config = MQC_CONFIG,
+        #tag = TAG
     input:
         #reports = "results/"
         fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
@@ -113,7 +113,7 @@ rule fastqscreen_contamination_checking:
         "-q "                                          # --quiet: Only show log warning
         "--threads {resources.cpus} "                  # --threads: Specifies across how many threads bowtie will be allowed to run
         "--aligner {params.mapper}  "                  # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
-        "--conf {params.config}_{params.mapper}.conf " # path to configuration file
+        "--conf {params.config}/{params.mapper}.conf " # path to configuration file
         "--subset {params.subset} "                    # Don't use the whole sequence file, but create a subset of specified size
         "--outdir {output.fastqscreen} "               # Output directory
         "{input.fastq} "                               # Input file.fastq
