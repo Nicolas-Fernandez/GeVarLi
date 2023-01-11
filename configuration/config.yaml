@@ -26,27 +26,17 @@ consensus:
   mincov: 30 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   path: 'resources/genomes/'                # Path to genomes references
-  reference: 'SARS-CoV-2_Wuhan_MN-908947-3' # Your reference, in fasta format
-  # Available options:
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (default)
-    #
-    #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (without BamClipper and Pangolin)
-    #- 'Monkeypox-virus_UK_MT-903345-1'     # Monkeypox  (without Pangolin)
-    #- 'Swinepox-virus_India_MW-036632-1'   # Swinepox   (without BamClipper and Pangolin)
-    #
-    #- 'Ebola-virus_Zaire_AF-272001-1'      # Ebola      (without Nextclade and Pangolin)
-    #- 'Ebola-virus_Sudan_MH-121162-1'      # Ebola      (without BamClipper, Nextclade and Pangolin)
-    #- 'Ebola-virus_Bombali_NC-039345-1'    # Ebola      (without BamClipper, Nextclade and Pangolin)
-    #- 'Ebola-virus_Bundibugyo_FJ-217161.1' # Ebola      (without BamClipper, Nextclade and Pangolin)
-    #- 'Ebola-virus_Reston_MF-540571-1'     # Ebola      (without BamClipper, Nextclade and Pangolin)
-    #- 'Ebola-virus_Tai-Forest_KU-182910-1' # Ebola      (without BamClipper, Nextclade and Pangolin)
-    #
-    #- 'Nipah-virus_Malaysia_AJ-564622-1'   # Nipah      (without Nextclade and Pangolin)
-    #
-    #- 'HIV-1_HXB2_K-03455-1'               # HIV-1      (without BamClipper, Nextclade and Pangolin)
-    #
-    #- 'Add_your_favorite_genome_ref'       # Custom     (without BamClipper, Nextclade and Pangolin)
-    #
+  reference: 'SARS-CoV-2_Wuhan_MN-908947-3' # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
+  # Available options (not exhaustive):
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (with Nextclade, Pangolin and BamClipper option)
+    #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (with Nextclade)
+    #- 'Monkeypox-virus_UK_MT-903345-1'     # Monkeypox  (with Nextclade)
+    #- 'Swinepox-virus_India_MW-036632-1'   # Swinepox   (with Nextclade)
+    #- 'Ebola-virus_Zaire_AF-272001-1'      # Ebola      (with BamClipper option)
+    #- 'Ebola-virus_Sudan_MH-121162-1'      # Ebola      (with Nextclade)
+    #- 'Nipah-virus_Malaysia_AJ-564622-1'   # Nipah      (with Nextclade and BamClipper option)
+    #- 'HIV-1_HXB2_K-03455-1'               # HIV-1      ()
+    #- 'Add_your_favorite_genome_ref'       # Custom     ()
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   # Available options:
     #- ''        # Deactivate (default)
@@ -60,13 +50,13 @@ aligner: 'bwa' # Select your favorite aligner, bwa (default) or bowtie2
 
 ### FASTQ-SCREEN -------------------------------------------------------------------------------------
 fastq-screen:
-  config: 'configuration/fastq-screen' # Path to the fastq-screen configuration file
+  config: 'configuration/fastq-screen/' # Path to the fastq-screen configuration file
   subset: 1000 # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
 ### MULTIQC ------------------------------------------------------------------------------------------
-multiqc:
-  config: 'configuration/multiqc.yaml' # Path to the multiqc configuration file
-  tag: '' # Use only modules which tagged with this keyword
+#multiqc:
+#  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
+#  tag: '' # Use only modules which tagged with this keyword
 
 ### CUTADAPT -----------------------------------------------------------------------------------------
 cutadapt:
@@ -122,13 +112,13 @@ bwa:
 
 ### BOWTIE2 ------------------------------------------------------------------------------------------
 bowtie2:
-  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes
   sensitivity: '--very-sensitive'    # Bowtie2 sensitivity preset (default: "--very-sensitive")
   # Available options:
     #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
     #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"
     #- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
     #- '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
+  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes
   algorithm: '' # Algorithm for constructing BT2 index
   # Available options:
     #- ''              # (default)

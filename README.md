@@ -19,8 +19,7 @@
 
 ## ~ ABOUT ~ ##
 
-GeVarLi	is a bioinformatic pipeline used for SARS-CoV-2	genome assembly with Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
-Developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
+GeVarLi	is a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,used for SARS-CoV-2	genome assembly with Illumina Inc. short reads COVIDSeq&trade; libraries sequencing, initialy Developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
 
 ### Genomic sequencing, a public health tool ###
 The establishment of a surveillance and sequencing network is an essential public health tool for detecting and containing pathogens with epidemic potential. Genomic sequencing makes it possible to identify pathogens, monitor the emergence and impact of variants, and adapt public health policies accordingly.
@@ -36,8 +35,20 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ### Version ###
 *V.2023.01*  
 
+### Rulegraph ###
+<img src="./resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
+<img src="./resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
+<img src="./resources/visuals/indexing_genomes_rulegraph.png" width="200" height="100">  
 
-### Citation ###
+
+## ~ SUPPORT ~ ##
+1. Read The Fabulous Manual!
+2. Read de Awsome Wiki! (todo...)
+3. Create a new issue: Issues > New issue > Describe your issue
+4. Send an email to [nicolas.fernandez@ird.fr](url)
+
+
+## ~ CITATION ~ ##
 If you use this pipeline, *please* cite this *GeVarLi*, gitlab IRD repository and authors.
 
 GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
@@ -49,17 +60,50 @@ Nicolas FERNANDEZ NUÑEZ (1, 2, 3)
 2) INSERM-U1175
 3) Université de Montpellier
 
+## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
+- Nicolas Fernandez - IRD _(Owner, Developer and Maintener)_  
+- Christelle Butel - IRD _(Reporter, User-addict, Features inspiration source)_  
+- Eddy Kinganda-Lusamaki - INRB _(First asking for an open source unix and "biologist" friendly pipeline)_  
 
-### Rulegraph ###
-<img src="./resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
-<img src="./resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
-<img src="./resources/visuals/indexing_genomes_rulegraph.png" width="200" height="100">  
+
+## ~ PROJECT STATUS ~ ##
+This project is **regularly update** and **actively maintened**  
+However, you can be volunteer to step in as **developer** or **maintainer**  
+
+
+## ~ ROADMAP ~ ##
+- Add GisAid submision files generation
+
+
+## ~ CONTRIBUTING ~ ##
+Open to contributions!
+- Asking for update
+- Proposing new feature
+- Reporting issue
+- Fixing issue
+-  Sharing code
+
+## ~ LICENSE ~ ##
+Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 
 
 ## ~ INSTALLATIONS ~ ##
 
-# Conda _(mandatory)_ #
-GeVarLi _(with Snakemake)_ use the usefull **Conda** environment manager  
+### GeVarLi ###
+Clone [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
+```shell
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
+cd ~/GeVarLi/
+```
+
+Update GeVarLi: 
+```shell
+git reset --hard HEAD && git pull --verbose
+```
+
+### Conda _(mandatory)_ ###
+GeVarLi use the usefull **Conda** environment manager  
 So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
  
 Download and install your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
@@ -85,24 +129,6 @@ exit
 ```
 
 
-# GeVarLi #
-Clone _(with HTTPS)_ the [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) repository on GitLab _(ID: 399)_:
-```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/ && \
-cd ~/GeVarLi/
-```
-
-Difference between **Download** and **Clone**:  
-- To create a copy of a remote repository’s files on your computer, you can either **Download** or **Clone** the repository  
-- If you download it, you **cannot sync** the repository with the remote repository on GitLab  
-- Cloning a repository is the same as downloading, except it preserves the Git connection with the remote repository  
-- You can then modify the files locally and upload the changes to the remote repository on GitLab  
-- You can then **update** the files locally and download the changes from the remote repository on GitLab  
-```shell
-git reset --hard HEAD && \
-git pull --verbose
-```
-
 ## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
@@ -117,8 +143,8 @@ bash Start_GeVarLi.sh
 ```
 3. Yours analyzes will start, with default configuration settings  
 
-_Option-1: Edit **config.yaml** file in **./config/** directory_  
-_Option-2: Edit **fastq-screen.conf** file in **./config/** directory_  
+_Option-1: Edit **config.yaml** file in **./configuration/** directory_  
+_Option-2: Edit **fastq-screen_.conf** file in **./configuration/** directory_  
 
 First run will auto-created _(only once)_:
 	- Gevarli-Base conda environment _(Snakemake, Mamba, Rename, GraphViz)_
@@ -232,6 +258,15 @@ _Some [temp] tagged files are removed by default, to save disk usage_
                  └── 📝 multiqc.log
 ```
 
+### Files Glossary ###
+- **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
+- **BAI**: BAM Indexes. 
+- **FASTA**: Fast-All, text-based format for representing either nucleotide sequences or amino acid (protein) sequences.
+- **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
+- **FAI**: FASTA Indexes. 
+- **SAM**: Sequence Alignment Map, text-based format consists of a header and an alignment section.
+
+
 ## ~ CONFIGURATION ~ ##
 
 You can edit default settings in **config.yaml** file into **./config/** directory:  
@@ -243,92 +278,66 @@ _**Note**: snakemake (with default Start bash script) will always use all cpus t
 - **ram**: for tools that can _(i.e. samtools)_, limit memory usage to max n Gb _(default config: '16' Gb)_
 - **tmpdir**: for tools that can _(i.e. pangolin)_, specify where you want the temp stuff _(default config: '$TMPDIR')_
 
-### Environments ###
-Edit if you want change some environments _(e.g. test a new version)_ in ./workflow/envs/{tools}_v.{version}.yaml files
+### Consensus ###
+- **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default: '30')_
+- **minaf**: minimum allele frequency allowed for variant calling step _(default: '0.2')_
+- **reference**: reference sequence fasta file format name used for mapping _(default: 'SARS-CoV-2\_Wuhan\_MN-908947-3')_
+- **iupac**: allow output variants in the form of IUPAC ambiguity codes (default: '' -> deactivate)
 
 ### Aligner ###
-Edit to choose align your reads using either **BWA** or **Bowtie2**  
-- **bwa**: faster _(default)_
-- **bowtie2**: slower, 'sensitivity' is requiried and could be set _(see below "Bowtie2" options)_
-
-### Consensus ###
-- **reference**: reference sequence path used for genome assmbling _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
-- **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default config: '10')_
-
-### Variant ###
-- **covmin**: minimum coverage allowed for SNVs and InDels filtering, if < 1 = off _(default config: '10' (INT))_
-- **afmin**: minimum allele frequency allowed for SNVs and InDels filtering, if < 1 = off _(default config: '0.2' (FLOAT))_
-
-### BWA ###
-- **index**: reference index path for bwa _(default config: 'SARS-CoV-2_Wuhan-WIV04_2019')_
-
-### Bowtie2 ###
-- **index**: reference index path for bowtie2 _(default config: 'SARS-CoV-2\_Wuhan-WIV04\_2019')_
-- **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
-
-### Sickle-trim ###
-- **command**: Pipeline wait for paired-end reads _(default config: 'pe')_
-- **encoding**: If your data are from recent Illumina run, let 'sanger' _(default config: 'sanger')_
-- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default config: '30')_
-- **length**: read length limit, after trim _(default config: '25')_
-
-### Cutadapt ###
-- **length**: discard reads shorter than length, after trim _(default config: '25')_
-- **kits**: sequence of an adapter ligated to the 3' end of the first read _(default config: 'truseq', 'nextera' and 'small' Illumina kits)  
+- **aligner**: Map your reads using either **bwa** or **bowtie2**  
 
 ### Fastq-Screen ###
-- **config**: path to the fastq-screen configuration file _(default config: ./config/fastq-screen.conf)_
-- **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default config: '1000')_
-- **aligner**: specify the aligner to use for the mapping. Valid arguments are 'bowtie', bowtie2' or 'bwa' _(default config: 'bwa')_
+- **config**: path to the fastq-screen configuration file _(default: 'configuration/fastq-screen/' [*] )_
+- **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default: '1000')_
 
-#### fastq-screen.conf ####
-- **databases**: enables you to configure multiple genomes databases _(aligner index files)_ to search against
+#### [*] configuration/fastq-screen/{aligner}.conf ####
+- **DATABASE**: (de)comment (#) or add your own 'DATABASE' to configure multiple genomes screaning
 
-### Glossary ###
-- **BAM**: Binary Alignment Map
-- **BAI**: BAM Indexes
-- **FASTA**: Fast-All
-- **FASTQ**: FASTA with Quality
-- **FAI**: FASTA Indexes
-- **SAM**: Sequence Alignment Map
+### Cutadapt ###
+- **length**: discard reads shorter than length, after trimming _(default: '50')_
+- **kits**: sequence of an adapter ligated to the 3' end of the first read _(default: 'truseq', 'nextera' and 'small' Illumina kits)  
 
-## ~ SUPPORT ~ ##
-1. Read The Fabulous Manual!
-2. Read de Awsome Wiki! (todo...)
-3. Create a new issue: Issues > New issue > Describe your issue
-4. Send an email to [nicolas.fernandez@ird.fr](url)
+### Sickle-trim ###
+- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default: '30')_
+- **length**: read length limit, after trimming _(default: '50')_
+- **command**: Pipeline wait for paired-end reads _(default and should be: 'pe')_
+- **encoding**: If your data are from recent Illumina run, let 'sanger' _(default and should be: 'sanger')_
 
-## ~ ROADMAP ~ ##
-- Add GisAid submission files generation
+### BamClipper ###
+- **clipping** do you need to clip amplicon primers ? Need to provide primers BEDPE file (default: 'no')
+- **path**: path to primers BEDPE files (defualt: 'resources/primers/bedpe/')
+- **primers**: amplicon primers position, in BEDPE format
+_**Note**: reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences_
+- **upstream**: bases also clipped in amplicons upstream position (default: '1')
+- **downstream**: bases also clipped in amplicons downstream position (default: '5')
 
-## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
-- Nicolas Fernandez - IRD _(Developer and Maintener)_  
-- Christelle Butel - IRD _(Reporter, User-addict, Features inspiration source)_  
-- Eddy Kinganda-Lusamaki - INRB _(looking for open source unix and biologiist friendly pipeline)_  
+### BWA ###
+- **path**: path to BWA indexes (default: 'resources/indexes/bwa/')
+- **algorithm**:
 
-## ~ CONTRIBUTING ~ ##
-- Open to contributions!
-- Testing code, finding issues, asking for update, proposing new features...
-- Use Git tools to share!
+### Bowtie2 ###
+- **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
+- **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
+- **algorithm**:
 
-## ~ PROJECT STATUS ~ ##
-This project is **regularly update** and **actively maintened**  
-However, you can be volunteer to step in as **developer** or **maintainer**  
+### Nextclade ###
 
-For information about main git roles:  
-- **Guests** are _not active contributors_ in private projects, they can only see, and leave comments and issues  
-- **Reporters** are _read-only contributors_, they can't write to the repository, but can on issues  
-- **Developers** are _direct contributors_, they have access to everything to go from idea to production  
-_Unless something has been explicitly restricted_  
-- **Maintainers** are _super-developers_, they are able to push to master, deploy to production  
-_This role is often held by maintainers and engineering managers_  
-- **Owners** are essentially _group-admins_, they can give access to groups and have destructive capabilities  
+### GisAid (soon) ###
 
+### ###
 
-## ~ LICENSE ~ ##
-Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+### Environments ###
+- **frontend**: Conda frontend (default: 'mamba')
+- **osx**:
+- **linux**:
 
-Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
+Edit if you want change some environments _(e.g. test a new version)_ in ./workflow/envs/{tools}_v.{version}.yaml files
+
+### Operating System ###
+- **osx**: Operating System (default: 'osx', but will set by Start_GeVarLi.sh) 
+_**Note**: Only 'osx' or 'linux' supported_
+
 
 
 ### GeVarLi map ###
@@ -343,24 +352,28 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
  ├── 📂 .snakemake/
  ├── 📂 configuration/
  │    ├── ⚙️  config.yaml
- │    ├── ⚙️  fastq-screen_bwa.conf
- │    └── ⚙️  fastq-screen_bowtie2.conf
+ │    ├── 📂 fastq-screen/
+ │    │    ├── ⚙️  fastq-screen_bwa.conf
+ │    │    └── ⚙️  fastq-screen_bowtie2.conf
+ │    └── 📂 multiqc/
+ │         └── ⚙️  default.yaml
  ├── 📂 resources/
  │    ├── 📂 genomes/
- │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN908947-3.fasta
- │    │    ├── 🧬 Monkeypox-virus_Zaire_AF380138-1.fasta
- │    │    ├── 🧬 Monkeypox-virus_UK_MT903345-1.fasta
- │    │    ├── 🧬 Swinepox-virus_India_MW036632-1.fasta
- │    │    ├── 🧬 Ebola-virus_Zaire_AF272001-1.fasta
- │    │    ├── 🧬 Nipah-virus_Malaysia_AJ564622-1.fasta
- │    │    ├── 🧬 HIV-1_HXB2_K03455-1.fasta.fasta
+ │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
+ │    │    ├── 🧬 Monkeypox-virus_Zaire_AF-380138-1.fasta
+ │    │    ├── 🧬 Monkeypox-virus_UK_MT-903345-1.fasta
+ │    │    ├── 🧬 Swinepox-virus_India_MW-036632-1.fasta
+ │    │    ├── 🧬 Ebola-virus_Zaire_AF-272001-1.fasta
+ │    │    ├── 🧬 Ebola-virus_Sudan_MH-121162-1.fasta
+ │    │    ├── 🧬 Nipah-virus_Malaysia_AJ-564622-1.fasta
+ │    │    ├── 🧬 HIV-1_HXB2_K-03455-1.fasta
  │    │    ├── 🧬 (your_favorite_genome_reference}.fasta
- │    │    ├── 🧬 QC_Echerichia-coli_CP060121-1.fasta
- │    │    ├── 🧬 QC_Kanamycin-Resistance-Gene.fasta
- │    │    ├── 🧬 QC_NGS-adapters.fasta
- │    │    ├── 🧬 QC_phi-X174_Coliphage_NC-001422-1.fasta
- │    │    ├── 🧬 QC_UniVec_wo_phiX_and_kanamycin.fasta
- │    │    └── 🧬 {your_favorite_qc_reference}.fasta
+ │    │    ├── 🧬 Echerichia-coli_CP-060121-1.fasta
+ │    │    ├── 🧬 Kanamycin-Resistance-Gene.fasta
+ │    │    ├── 🧬 NGS-adapters.fasta
+ │    │    ├── 🧬 Phi-X174_Coliphage_NC-001422-1.fasta
+ │    │    ├── 🧬 UniVec_wo_phiX-kanamycin-NGSseq.fasta
+ │    │    └── 🧬 {your_favorite_control_reference}.fasta
  │    ├── 📂 indexes/
  │    │    ├── 📂 bwa/
  │    │    │    ├── 🗂️  {GENOME}.amb
@@ -411,16 +424,16 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
  │    ├── 📂 primers/
  │    │    ├── 📂 bedpe/
  │    │    │    ├── 🛡️  .gitkeep
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V1.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V2.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V3.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN908947-3_artic-primers-V4-1.bedpe
- │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR063671-1_artic-primers-V1.bedpe
- │    │    │    ├── 🛌️  Ebola-virus_Zaire_AF272001-1_artic-primers-V2.bedpe
- │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR063671-1_artic-primers-V3.bedpe
- │    │    │    ├── 🛌️  Nipah-virus_Malaysia_AJ564622-1_artic-primers-V1.bedpe
- │    │    │    └── 🛌️  {your_favorite_kit_primers}.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4.bedpe
+ │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1.bedpe
+ │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR-063671-1_artic-primers-V1.bedpe
+ │    │    │    ├── 🛌️  Ebola-virus_Zaire_AF-272001-1_artic-primers-V2.bedpe
+ │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR-063671-1_artic-primers-V3.bedpe
+ │    │    │    ├── 🛌️  Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1.bedpe
+ │    │    │    └── 🛌️  {your_favorite_amplicon_kit_primers}.bedpe
  │    │    ├── 📂 bed/ (soon)
  │    │    │    ├── 🛡️  .gitkeep
  │    │    │    └── 🛏️  {your_favorite_kit_primers}.bed
@@ -453,9 +466,9 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
       │    │    ├── 🍜 gawk_v.5.1.0.yaml
       │    │    ├── 🍜 gevarli-base_v.2022.11.yaml
       │    │    ├── 🍜 lofreq_v.2.1.5.yaml
-      │    │    ├── 🍜 multiqc_v.1.12.yaml
-      │    │    ├── 🍜 nextclade_v.2.8.0.yaml
-      │    │    ├── 🍜 pangolin_v.4.0.6.yaml
+      │    │    ├── 🍜 multiqc_v.1.13.yaml
+      │    │    ├── 🍜 nextclade_v.2.9.1.yaml
+      │    │    ├── 🍜 pangolin_v.4.1.3.yaml
       │    │    ├── 🍜 samtools_v.1.15.1.yaml
       │    │    └── 🍜 sickle-trim_v.1.33.yaml
       │    └── 📂 osx/
@@ -470,9 +483,9 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
       │    │    ├── 🍜 gawk_v.5.1.0.yaml
       │    │    ├── 🍜 gevarli-base_v.2022.11.yaml
       │    │    ├── 🍜 lofreq_v.2.1.5.yaml
-      │    │    ├── 🍜 multiqc_v.1.12.yaml
-      │    │    ├── 🍜 nextclade_v.2.8.0.yaml
-      │    │    ├── 🍜 pangolin_v.4.0.6.yaml
+      │    │    ├── 🍜 multiqc_v.1.13.yaml
+      │    │    ├── 🍜 nextclade_v.2.9.1.yaml
+      │    │    ├── 🍜 pangolin_v.4.1.3.yaml
       │    │    ├── 🍜 samtools_v.1.15.1.yaml
       │    │    └── 🍜 sickle-trim_v.1.33.yaml
       └── 📂 snakefiles/
@@ -480,7 +493,6 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 	       ├── 📜 indexing_genomes.smk
 	       └── 📜 quality_control.smk
 ```
-
 
 ## ~ REFERENCES ~ ##
 **Sustainable data analysis with Snakemake**  
@@ -638,5 +650,8 @@ _Online (2014)_
 **Publication**: []()  
 **Source code**: [https://github.com/lh3/seqtk](https://github.com/lh3/seqtk)  
 **Documentation**: [https://bioweb.pasteur.fr/packages/pack@seqtk@1.3](https://bioweb.pasteur.fr/packages/pack@seqtk@1.3)  
+
+**GeVarLi git project avatar was created with the assistance of DALL·E 2**  
+
 
 ###############################################################################
