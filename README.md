@@ -282,7 +282,7 @@ _**Note**: snakemake (with default Start bash script) will always use all cpus t
 - **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default: '30')_
 - **minaf**: minimum allele frequency allowed for variant calling step _(default: '0.2')_
 - **reference**: reference sequence fasta file format name used for mapping _(default: 'SARS-CoV-2\_Wuhan\_MN-908947-3')_
-- **iupac**: allow output variants in the form of IUPAC ambiguity codes (default: '' -> deactivate)
+- **iupac**: allow output variants in the form of IUPAC ambiguity codes (default: deactivate -> '' )
 
 ### Aligner ###
 - **aligner**: Map your reads using either **bwa** or **bowtie2**  
@@ -314,28 +314,34 @@ _**Note**: reference sequence names and coordinates of BAM and BED are assumed t
 
 ### BWA ###
 - **path**: path to BWA indexes (default: 'resources/indexes/bwa/')
-- **algorithm**:
+- **algorithm**: algorithm for constructing BWA index (default: deactivate -> '')
 
 ### Bowtie2 ###
 - **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
 - **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
-- **algorithm**:
+- **algorithm**: algorithm for constructing Bowtie2 index (default: deactivate -> '' ) 
 
 ### Nextclade ###
+- **path**: path to nextclade datasets
+- **dataset**: Nextclade dataset (not used, set by Start\_GeVarLi.sh depending your reference genome)
 
 ### GisAid (soon) ###
+- **username**:
+- **threshold**:
+- **name**:
+- **country**:
+- **identifier**:
+- **year**:
 
 ### ###
 
 ### Environments ###
-- **frontend**: Conda frontend (default: 'mamba')
-- **osx**:
-- **linux**:
-
-Edit if you want change some environments _(e.g. test a new version)_ in ./workflow/envs/{tools}_v.{version}.yaml files
+- **frontend**: conda frontend (default: 'mamba')
+- **osx/linux**: conda environments paths/names for osx and linux OS (default: workflow/envs/{tools}\_v.{version}.yaml)
+_**Note**: edit only if you want to change some environments (e.g. test a new version)_
 
 ### Operating System ###
-- **osx**: Operating System (default: 'osx', but will set by Start_GeVarLi.sh) 
+- **osx**: Operating System (default: 'osx', but will set by Start\_GeVarLi.sh) 
 _**Note**: Only 'osx' or 'linux' supported_
 
 
