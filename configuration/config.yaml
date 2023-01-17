@@ -192,7 +192,7 @@ conda:
     sickle-trim:  '../environments/linux/sickle-trim_v.1.33.yaml'    # Sickle-trim  ver. 1.33
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
-os: 'osx' # Operating System (default: "osx", but set by Start_GeVarLi.sh)
+os: 'osx' # Operating System (default: "osx", but will be set by Start_GeVarLi.sh)
 # Available options:
   #- 'osx'     # Mac OSX - Apple (R) [UNIX] (suported)
   #- 'linux'   # GNU Linux - Free [UNIX] (suported)
