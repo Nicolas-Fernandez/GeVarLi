@@ -43,7 +43,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ## ~ SUPPORT ~ ##
 1. Read The Fabulous Manual!
-2. Read de Awsome Wiki! (todo...)
+2. Read de Awsome Wiki!
 3. Create a new issue: Issues > New issue > Describe your issue
 4. Send an email to [nicolas.fernandez@ird.fr](url)
 
@@ -59,9 +59,9 @@ IRDFORGE Gitlab instance : [https://forge.ird.fr/transvihmi/GeVarLi](https://for
 
 Nicolas FERNANDEZ NUÑEZ _(1, 2, 3)_
 
-1) IRD UMI233
-2) INSERM-U1175
-3) Université de Montpellier
+_(1) IRD UMI233_
+_(2) INSERM-U1175_
+_(3) Université de Montpellier_
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
 - Nicolas Fernandez - IRD _(Owner, Developer and Maintener)_  
@@ -76,7 +76,7 @@ However, you can be volunteer to step in as **developer** or **maintainer**
 
 ## ~ ROADMAP ~ ##
 - Add GisAid submision files generation
-
+- Publish GeVarLi paper
 
 ## ~ CONTRIBUTING ~ ##
 Open to contributions!
@@ -84,7 +84,7 @@ Open to contributions!
 - Proposing new feature
 - Reporting issue
 - Fixing issue
--  Sharing code
+- Sharing code
 
 ## ~ LICENSE ~ ##
 Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
@@ -336,8 +336,6 @@ _**Note**: reference sequence names and coordinates of BAM and BED are assumed t
 - **identifier**:
 - **year**:
 
-### ###
-
 ### Environments ###
 - **frontend**: conda frontend (default: 'mamba')
 - **osx/linux**: conda environments paths/names for osx and linux OS (default: workflow/envs/{tools}\_v.{version}.yaml)
@@ -346,7 +344,6 @@ _**Note**: edit only if you want to change some environments (e.g. test a new ve
 ### Operating System ###
 - **osx**: Operating System (default: 'osx', but will set by Start\_GeVarLi.sh) 
 _**Note**: Only 'osx' or 'linux' supported_
-
 
 
 ### GeVarLi map ###
@@ -481,22 +478,22 @@ _**Note**: Only 'osx' or 'linux' supported_
       │    │    ├── 🍜 samtools_v.1.15.1.yaml
       │    │    └── 🍜 sickle-trim_v.1.33.yaml
       │    └── 📂 osx/
-      │    │    ├── 🍜 bamclipper_v.1.0.yaml
-      │    │    ├── 🍜 bcftools_v.1.15.1.yaml
-      │    │    ├── 🍜 bedtools_v.2.30.0.yaml
-      │    │    ├── 🍜 bowtie2_v.2.4.5.yaml
-      │    │    ├── 🍜 bwa_v.0.7.17.yaml
-      │    │    ├── 🍜 cutadapt_v.4.1.yaml
-      │    │    ├── 🍜 fastq-screen_v.0.15.2.yaml
-      │    │    ├── 🍜 fastqc_v.0.11.9.yaml
-      │    │    ├── 🍜 gawk_v.5.1.0.yaml
-      │    │    ├── 🍜 gevarli-base_v.2022.11.yaml
-      │    │    ├── 🍜 lofreq_v.2.1.5.yaml
-      │    │    ├── 🍜 multiqc_v.1.13.yaml
-      │    │    ├── 🍜 nextclade_v.2.9.1.yaml
-      │    │    ├── 🍜 pangolin_v.4.1.3.yaml
-      │    │    ├── 🍜 samtools_v.1.15.1.yaml
-      │    │    └── 🍜 sickle-trim_v.1.33.yaml
+      │         ├── 🍜 bamclipper_v.1.0.yaml
+      │         ├── 🍜 bcftools_v.1.15.1.yaml
+      │         ├── 🍜 bedtools_v.2.30.0.yaml
+      │         ├── 🍜 bowtie2_v.2.4.5.yaml
+      │         ├── 🍜 bwa_v.0.7.17.yaml
+      │         ├── 🍜 cutadapt_v.4.1.yaml
+      │         ├── 🍜 fastq-screen_v.0.15.2.yaml
+      │         ├── 🍜 fastqc_v.0.11.9.yaml
+      │         ├── 🍜 gawk_v.5.1.0.yaml
+      │         ├── 🍜 gevarli-base_v.2022.11.yaml
+      │         ├── 🍜 lofreq_v.2.1.5.yaml
+      │         ├── 🍜 multiqc_v.1.13.yaml
+      │         ├── 🍜 nextclade_v.2.9.1.yaml
+      │         ├── 🍜 pangolin_v.4.1.3.yaml
+      │         ├── 🍜 samtools_v.1.15.1.yaml
+      │         └── 🍜 sickle-trim_v.1.33.yaml
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk
