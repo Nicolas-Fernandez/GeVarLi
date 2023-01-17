@@ -128,6 +128,7 @@ cd ~/GeVarLi/
 
 Update GeVarLi: 
 ```shell
+cd ~/GeVarLi/
 git reset --hard HEAD && git pull --verbose
 ```
 
