@@ -93,18 +93,6 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 
 ## ~ INSTALLATIONS ~ ##
 
-### GeVarLi ###
-Clone [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
-```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
-cd ~/GeVarLi/
-```
-
-Update GeVarLi: 
-```shell
-git reset --hard HEAD && git pull --verbose
-```
-
 ### Conda _(mandatory)_ ###
 GeVarLi use the usefull **Conda** environment manager  
 So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
@@ -129,6 +117,18 @@ rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
 ~/miniconda3/condabin/conda update conda --yes && \
 ~/miniconda3/condabin/conda init && \
 exit
+```
+
+### GeVarLi ###
+Clone [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
+```shell
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
+cd ~/GeVarLi/
+```
+
+Update GeVarLi: 
+```shell
+git reset --hard HEAD && git pull --verbose
 ```
 
 
