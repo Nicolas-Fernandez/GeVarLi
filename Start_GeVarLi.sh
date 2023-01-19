@@ -240,7 +240,7 @@ ${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}
 ${green}------------------------------${nc}
 "
 
-# Rename fastq files to remove "_001" Illumina pattern.
+# Rename fastq files to remove "_001" Illumina pattern (mandatory)
 ## De/comment line (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 echo -e "Removing ${red}'_S'${nc} index tag ID"
 rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
@@ -249,6 +249,9 @@ rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null         
 echo -e "Removing ${red}'_001'${nc} illumina tag ID"
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
+echo -e "
+If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Star_GeVarLi.sh${nc} script (l.243).
+"
 
 ###############################################################################
 ###### Call snakemake pipelines ######
