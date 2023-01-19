@@ -195,10 +195,6 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}GEVARLI-BASE CONDA ENVIRONMENT INSTALLATION${nc} ${green}#####${nc}
 ${green}-------------------------------------------------------${nc}
 "
-
-# Remove old 'gevarli-base' environment
-conda env remove --name gevarli-base_v.2022.11
-
 # Test if latest 'gevarli-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_base_env_version}") ]]
 then
@@ -216,6 +212,10 @@ Conda environment ${red}gevarli-base${nc} ${ylo}${gevarli_base_env_version}${nc}
 "
     conda env create -f ${workdir}/workflow/environments/${os}/gevarli-base_${gevarli_base_env_version}.yaml
 fi
+
+# Remove old 'gevarli-base' environment
+conda env remove --name gevarli-base_v.2022.11
+
 
 ###############################################################################
 ###### Conda Env. Activation ######
