@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2022.12.20
+# Latest modifications ___ 2023.01.18
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
@@ -27,10 +27,11 @@ OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
-###### ENVIRONMENTS ######
+###### ENVIRONMENT(S) ######
 
-BWA = config["conda"][OS]["bwa"]         # Bwa
-BOWTIE2 = config["conda"][OS]["bowtie2"] # Bowtie2
+GEVARLI = config["conda"][OS]["gevarli-tools"] # GeVarLi all tools
+#BWA = config["conda"][OS]["bwa"]              # Bwa
+#BOWTIE2 = config["conda"][OS]["bowtie2"]      # Bowtie2
 
 ###############################################################################
 ###### PARAMETERS ######
@@ -56,7 +57,7 @@ rule bwa_genome_indexing:
     message:
         "BWA-SW indexing {wildcards.refseq} genome (algo: {params.algorithm}"
     conda:
-        BWA
+        GEVARLI
     params:
         algorithm = BWAALGO
     input:
@@ -82,7 +83,7 @@ rule bowtie2_genome_indexing:
     message:
         "Bowtie2-build indexing {wildcards.refseq} genome"
     conda:
-        BOWTIE2
+        GEVARLI
     resources:
         cpus = CPUS
     params:

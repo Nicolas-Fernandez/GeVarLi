@@ -1,4 +1,4 @@
-name: gevarli-base_v.2022.11
+name: gevarli-base_v.2023.01
 channels:
   - bioconda
   - conda-forge
