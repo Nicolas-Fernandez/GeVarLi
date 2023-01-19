@@ -538,7 +538,8 @@ ${green}------------------------${nc}
 "
 
 # Save and Deactive Gevarli environment
-conda env export > ${workdir}/results/10_Reports/gevarli_${gevarli_version}.yaml
+cp ${workdir}/workflow/environments/${os}/gevarli-tools_v.*.yaml ${workdir}/results/10_Reports/
+conda env export > ${workdir}/results/10_Reports/gevarli-base_${gevarli_base_env_version}.yaml
 conda deactivate
 
 # Cleanup
