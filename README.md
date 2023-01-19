@@ -133,10 +133,8 @@ cd ~/GeVarLi/
 
 Update GeVarLi: 
 ```shell
-cd ~/GeVarLi/
-git reset --hard HEAD && git pull --verbose
+git -C ~/GeVarLi/ reset --hard HEAD && git -C ~/GeVarLi/ pull --verbose
 ```
-
 
 ## ~ USAGE ~ ##
 
