@@ -197,7 +197,7 @@ ${green}-------------------------------------------------------${nc}
 "
 
 # Remove old 'gevarli-base' environment
-conda env remove --name gevarli-base_v.2021.11 --all
+conda env remove --name gevarli-base_v.2021.11
 # Test if latest 'gevarli-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_base_env_version}") ]]
 then
