@@ -119,6 +119,11 @@ rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
 exit
 ```
 
+Update Conda:
+```
+conda update -n base -c defaults conda
+```
+
 ### GeVarLi ###
 Clone [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
 ```shell
