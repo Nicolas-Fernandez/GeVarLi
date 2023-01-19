@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2022.12.20
+# Latest modifications ___ 2023.01.18
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -27,11 +27,12 @@ OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
-###### ENVIRONMENTS ######
+###### ENVIRONMENT(S) ######
 
-FASTQC = config["conda"][OS]["fastqc"]            # FastQC
-FASTQSCREEN = config["conda"][OS]["fastq-screen"] # Fastq-Screen
-MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
+GEVARLI = config["conda"][OS]["gevarli-tools"]    # GeVarLi all tools
+#FASTQC = config["conda"][OS]["fastqc"]            # FastQC
+#FASTQSCREEN = config["conda"][OS]["fastq-screen"] # Fastq-Screen
+#MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
 
 ###############################################################################
 ###### PARAMETERS ######
@@ -60,7 +61,7 @@ rule multiqc_reports_aggregation:
     message:
         "MultiQC reports aggregating"
     conda:
-        MULTIQC
+        GEVARLI
     params:
         #config = MQC_CONFIG,
         #tag = TAG
@@ -80,8 +81,8 @@ rule multiqc_reports_aggregation:
         "--no-ansi "                 # Disable coloured log
         #"--config {params.config} "  # Specific config file to load
         #"--tag {params.tag} "        # Use only modules which tagged with this keyword
-        "--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
-        "--export "                  # Export plots as static images in addition to the report
+        #"--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
+        #"--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
         #"{input.reports} "           # Input Reports
         "{input.fastqc} "            # Input FastQC files
@@ -95,7 +96,7 @@ rule fastqscreen_contamination_checking:
     message:
         "Fastq-Screen reads contamination checking"
     conda:
-        FASTQSCREEN
+        GEVARLI
     resources:
         cpus = CPUS
     params:
@@ -126,7 +127,7 @@ rule fastqc_quality_control:
     message:
         "FastQC reads quality controling"
     conda:
-        FASTQC
+        GEVARLI
     resources:
         cpus = CPUS
     input:

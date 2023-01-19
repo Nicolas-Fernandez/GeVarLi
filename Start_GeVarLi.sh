@@ -1,6 +1,6 @@
 #!/bin/bash
 
-gevarli_base_env_version="v.2022.11"
+gevarli_base_env_version="v.2023.01"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
 # Version ________________ v.2023.01
@@ -90,8 +90,7 @@ else
 fi
 
 # Print some hardware specifications
-echo -e "
-                         ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}
+echo -e "                         ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}
 ${blue}Chip Model Name${nc} ________ ${model_name}
 ${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc} cores
 ${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
@@ -106,25 +105,34 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                         # Get working directory
-config_file="${workdir}/configuration/config.yaml"                             # Get configuration file
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz | wc -l))           # Get fastq.gz files count
-samples=$(expr ${fastq} \/ 2)                                                  # {fastq.gz count} / 2 = samples count (paired-end)
-conda_version=$(conda --version | sed "s/conda //")                            # Get conda version
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                           # Get working directory
+config_file="${workdir}/configuration/config.yaml"                               # Get configuration file
+fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
+
+if [[ "${fastq}" == "0" ]]                                                       # Start GeVarLi with at least 1 sample
+then
+    echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}
+${red}SARS-CoV-2${nc} ${ylo}resources/data_test/${nc} fastq will be used as sample example
+"
+    cp ${workdir}/resources/data_test/*.fastq.gz ${workdir}/resources/reads/     # use data_test/*.fastq.gz
+fi
+
+samples=$(expr ${fastq} \/ 2)                                                    # {fastq.gz count} / 2 = samples count (paired-end)
+conda_version=$(conda --version | sed "s/conda //")                              # Get conda version
 snakemake_version=$(grep -o -E "snakemake_version: '.+'" ${config_file} | sed "s/snakemake_version: //" | sed "s/'//g") # Get snakemake version
 conda_frontend=$(grep -o -E "frontend: '.+'"  ${config_file} | sed "s/frontend: //" | sed "s/'//g")                     # Get conda frontend
-max_threads=$(grep -o -E "cpus: [0-9]+" ${config_file} | sed "s/cpus: //")     # Get user config for max threads
-max_memory=$(grep -o -E "ram: [0-9]+" ${config_file} | sed "s/ram: //")        # Get user config for max memory
-memory_per_job=$(expr ${max_memory} \/ ${max_threads})                         # Calcul maximum memory usage per job
+max_threads=$(grep -o -E "cpus: [0-9]+" ${config_file} | sed "s/cpus: //")       # Get user config for max threads
+max_memory=$(grep -o -E "ram: [0-9]+" ${config_file} | sed "s/ram: //")          # Get user config for max memory
+memory_per_job=$(expr ${max_memory} \/ ${max_threads})                           # Calcul maximum memory usage per job
 reference=$(grep -o -E "reference: '.+'" ${config_file} | sed "s/reference: //" | sed "s/'//g") # Get user config genome reference
 aligner=$(grep -o -E "aligner: '.+'" ${config_file} | sed "s/aligner: //" | sed "s/'//g")       # Get user config aligner
-min_cov=$(grep -o -E "mincov: [0-9]+" ${config_file} | sed "s/mincov: //")     # Get user config minimum coverage
-min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${config_file} | sed "s/minaf: //") # Get user config minimum allele frequency
+min_cov=$(grep -o -E "mincov: [0-9]+" ${config_file} | sed "s/mincov: //")       # Get user config minimum coverage
+min_af=$(grep -o -E "minaf: [0-1]\.[0-9]+" ${config_file} | sed "s/minaf: //")   # Get user config minimum allele frequency
 clipping=$(grep -o -E "clipping: '.+'" ${config_file} | sed "s/clipping: //"  | sed "s/'//g") # Get user config bamclipper option
 primers_kit=$(grep -o -E "primers: '.+'" ${config_file} | sed "s/primers: //" | sed "s/'//g") # Get user config bamclipper primers
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                     # Get analyzes starting time
-time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")                                   # Get analyzes time to archive (wo space)
-SECONDS=0                                                                      # Initialize SECONDS counter
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")                                       # Get analyzes starting time
+time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")                                     # Get analyzes time to archive (wo space)
+SECONDS=0                                                                        # Initialize SECONDS counter
 
 if [[ "${reference}" == *"SARS-CoV-2"* ]]
 then
@@ -188,21 +196,23 @@ ${green}#####${nc} ${red}GEVARLI-BASE CONDA ENVIRONMENT INSTALLATION${nc} ${gree
 ${green}-------------------------------------------------------${nc}
 "
 
-# Test if 'gevarli-base' environment exist
-if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_version}") ]]
+# Remove old 'gevarli-base' environment
+conda env remove --name gevarli-base_v.2021.11 --all
+# Test if latest 'gevarli-base' environment exist
+if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_base_env_version}") ]]
 then
     echo -e "
-Conda environment ${ylo}gevarli-base_${gevarli_base_env_version}${nc} it's already created
+Conda environment ${ylo}gevarli-base_${gevarli_base_env_version}${nc} it's already created!
 "
 else
     echo -e "
-Conda environment ${ylo}gevarli-base_${gevarli_base_env_version}${nc} will be now created
+Conda environment ${red}gevarli-base${nc} ${ylo}${gevarli_base_env_version}${nc} will be now created, with:
+
+    # ${red}Mamba${nc}     ver. ${ylo}1.0.0${nc}  (to create snakemake-conda's environments faster)
+    # ${red}Snakemake${nc} ver. ${ylo}7.18.1${nc} (to run GeVarLi)
+    # ${red}Rename${nc}    ver. ${ylo}1.601${nc}  (to rename fastq files)
+    # ${red}Graphviz${nc}  ver. ${ylo}6.0.1${nc}  (to dot snakemake DAG)
 "
-   # Create a 'gevarli-base' environment, with :
-    # Mamba     ver. 1.0.0  (to create snakemake-conda's environments faster)
-    # Snakemake ver. 7.18.1 (to run GeVarLi)
-    # Rename    ver. 1.601  (to rename fastq files)
-    # Graphviz  ver. 6.0.1  (to dot snakemake DAG)
     conda env create -f ${workdir}/workflow/environments/${os}/gevarli-base_${gevarli_base_env_version}.yaml
 fi
 
@@ -213,6 +223,8 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
+
+echo -e "conda activate ${red}gevarli-base${nc} ${ylo}${gevarli_base_env_version}${nc}"
 
 # intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
@@ -227,19 +239,13 @@ ${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}
 ${green}------------------------------${nc}
 "
 
-# Start GeVarLi with at least 1 sample
-if [[ "${fastq}" == "0" ]]
-then
-    echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}"
-    echo ""
-    echo -e "${red}SARS-CoV-2${nc} sample fastq files from ${ylo}resources/data_test/${nc} will be used."
-    cp ${workdir}/resources/data_test/*.fastq.gz ${workdir}/resources/reads/
-fi
-
 # Rename fastq files to remove "_001" Illumina pattern.
 ## De/comment line (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
+echo -e "Removing ${red}'_S'${nc} index tag ID"
 rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+echo -e "Removing ${red}'_L'${nc} line tag ID"
 rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
+echo -e "Removing ${red}'_001'${nc} illumina tag ID"
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 
@@ -251,7 +257,7 @@ ${green}#####${nc} ${red}SNAKEMAKE PIPELINE${nc} ${green}#####${nc}
 ${green}------------------------------${nc}
 "
 
-snakefile_list="indexing_genomes quality_control gevarli"
+snakefiles_list="indexing_genomes quality_control gevarli"
 
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
@@ -263,7 +269,7 @@ ${blue}---------------------------------${nc}
 # Re-run all jobs the output of which is recognized as incomplete.
 # Remove a lock on the working directory.
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
 	--directory ${workdir}/ \
@@ -284,7 +290,7 @@ ${blue}-----------------------------${nc}
 # Re-run all jobs the output of which is recognized as incomplete.
 # List all conda environments and their location on disk.
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
@@ -293,6 +299,28 @@ for snakefile in ${snakefile_list} ; do
         --config os=${os} \
         --rerun-incomplete \
         --list-conda-envs ;
+done
+
+echo -e "
+${blue}## Conda Environments Cleanup ##${nc}
+${blue}-----------------------------${nc}
+"
+# Specify working directory (relative paths in the snakefile will use this as their origin).
+# The workflow definition in form of a snakefile.
+# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
+# Set or overwrite values in the workflow config object.
+# Re-run all jobs the output of which is recognized as incomplete.
+# Cleanup unused conda environments.
+
+for snakefile in ${snakefiles_list} ; do
+    echo -e "${blue}-- ${snakefile} --${nc}" ;
+    snakemake \
+        --directory ${workdir}/ \
+        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
+        --cores ${max_threads} \
+        --config os=${os} \
+        --rerun-incomplete \
+        --conda-cleanup-envs ;
 done
 
 echo -e "
@@ -309,7 +337,7 @@ ${blue}------------------------------${nc}
 ## Default "mamba", recommended because much faster !
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
@@ -338,7 +366,7 @@ ${blue}-------------${nc}
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
 # Do not output any progress or rule information.
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
@@ -369,7 +397,7 @@ ${blue}----------------${nc}
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
@@ -473,7 +501,7 @@ mkdir -p ${workdir}/results/10_Reports/files-summaries/ 2> /dev/null
 graph_list="dag rulegraph filegraph"
 extention_list="pdf png"
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     for graph in ${graph_list} ; do
 	for extention in ${extention_list} ; do
 	    snakemake \
@@ -487,7 +515,7 @@ for snakefile in ${snakefile_list} ; do
     done ;
 done
 
-for snakefile in ${snakefile_list} ; do
+for snakefile in ${snakefiles_list} ; do
     snakemake \
         --directory ${workdir} \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
@@ -579,8 +607,9 @@ cd ${workdir}/results/
 tar -zcf 10_Reports_archive.tar.gz 10_Reports
 
 # Gzip results directory
+mkdir -p ${workdir}/archives/ 2> /dev/null
 cd ${workdir}/
-tar -zcf Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz results
+tar -zcf archives/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz results/
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
