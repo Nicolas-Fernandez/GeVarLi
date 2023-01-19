@@ -168,6 +168,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 
 ```shell
  🧩 GeVarLi/
+  ├── 📂 archives/
+  │    └── 📦 Results_{YYYY-MM-DD_HHhMM}_{REFERENCE}_{ALIGNER}_{MINCOV}_{SAMPLES}_archive.tar.gz
   └── 📂 results/
        ├── 🧬 All_consensus_sequences.fasta
        ├── 📊 All_genome_coverages.tsv
@@ -193,8 +195,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
        │             ├── 📄 multiqc_general_stats.txt
        |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimming/
-       │    ├── 📂 cutadapt/
-       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
+       │    ├── 📂 cutad{SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
+       │    │    └── 📦 {S
        │    └── 📂 sickle/
        │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz         # [temp]
        │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz             # [temp]
@@ -238,7 +240,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
        └── 📂 10_Reports/
             ├── ⚙️  config.log
             ├── 📝 settings.log
-            ├── 🍜 gevarli_v.2022.11.yaml
+            ├── 🍜 gevarli-base_v.{VERSION}.yaml
+            ├── 🍜 gevarli-tools_v.{VERSION}.yaml
             ├── 📂 files-summaries
             │    └── 📄 {PIPELINE}_files-summary.txt
             ├── 📂 graphs/
@@ -272,6 +275,9 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 - **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
 - **FAI**: FASTA Indexes. 
 - **SAM**: Sequence Alignment Map, text-based format consists of a header and an alignment section.
+- **YAML**: Commonly used for configuration filesand in applications where data is being stored or transmitted.
+- **GZ**: format used for file compression and decompression, normally used to compress just single files.
+- **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
 
 
 ## ~ CONFIGURATION ~ ##
