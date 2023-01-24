@@ -35,8 +35,9 @@ consensus:
     #- 'Ebola-virus_Zaire_AF-272001-1'      # Ebola      (with BamClipper option)
     #- 'Ebola-virus_Sudan_MH-121162-1'      # Ebola      (with Nextclade)
     #- 'Nipah-virus_Malaysia_AJ-564622-1'   # Nipah      (with Nextclade and BamClipper option)
-    #- 'HIV-1_HXB2_K-03455-1'               # HIV-1      ()
-    #- 'Add_your_favorite_genome_ref'       # Custom     ()
+    #- 'HIV-1_HXB2_K-03455-1'               # HIV-1      (na)
+    #- 'Human-herpesvirus-5_NC-006273-2'    # Herpes.    (na)
+    #- 'Add_your_favorite_genome_ref'       # Custom     (na)
   iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   # Available options:
     #- ''        # Deactivate (default)
