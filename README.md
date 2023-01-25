@@ -58,8 +58,8 @@ GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeli
 for reference-based Genome assembly and Variants calling and Lineage assignment,
 from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.
 
-Nicolas FERNANDEZ NUÑEZ _(1)_
-_(1) Recherches Translationnelles sur le VIH et les maladies infectieuses endémiques er émergentes  (TransVIHMI), University of Montpellier(UM), French Institute of Health and Medical research (INSERM), Institut de Recherche pour le Développement (IRD)_
+Nicolas FERNANDEZ NUÑEZ _(1)_  
+_(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques et émergentes (TransVIHMI), University of Montpellier (UM), French Institute of Health and Medical research (INSERM), French National Research Institute for Sustainable Development (IRD)_
 
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
