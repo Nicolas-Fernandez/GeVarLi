@@ -1,4 +1,4 @@
-name: gevarli-base_v.2023.01
+name: snakemake-base_v.2023.02
 channels:
   - bioconda
   - conda-forge

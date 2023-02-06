@@ -1,6 +1,7 @@
 #!/bin/bash
 
-gevarli_base_env_version="v.2023.01"
+snakemake_base_version="v.2023.02"
+gevarli_version="v.2023.01"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
 # Version ________________ v.2023.01
@@ -189,32 +190,34 @@ ${blue}Start time${nc} _____________ ${time_stamp_start}
 "
 
 ###############################################################################
-###### GeVarLi Base Conda Environment Installation ######
+###### Snakemake Installation ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}GEVARLI-BASE CONDA ENVIRONMENT INSTALLATION${nc} ${green}#####${nc}
-${green}-------------------------------------------------------${nc}
+${green}#####${nc} ${red}SNAKEMAKE-BASE INSTALLATION${nc} ${green}#####${nc}
+${green}---------------------------------------${nc}
 "
-# Test if latest 'gevarli-base' environment exist
-if [[ $(conda info --envs | grep -o -E "^gevarli-base_${gevarli_base_env_version}") ]]
+# Test if latest 'snakemake-base' environment exist
+if [[ $(conda info --envs | grep -o -E "^snakemake-base_${snakemake_base_version}") ]]
 then
     echo -e "
-Conda environment ${ylo}gevarli-base_${gevarli_base_env_version}${nc} it's already created!
+Conda environment ${ylo}snakemake-base_${snakemake_base_version}${nc} it's already created!
 "
 else
     echo -e "
-Conda environment ${red}gevarli-base${nc} ${ylo}${gevarli_base_env_version}${nc} will be now created, with:
+Conda environment ${red}snakemake-base${nc} ${ylo}${snakemake_base_version}${nc} will be now created, with:
 
     # ${red}Mamba${nc}     ver. ${ylo}1.0.0${nc}  (to create snakemake-conda's environments faster)
     # ${red}Snakemake${nc} ver. ${ylo}7.18.1${nc} (to run GeVarLi)
     # ${red}Rename${nc}    ver. ${ylo}1.601${nc}  (to rename fastq files)
     # ${red}Graphviz${nc}  ver. ${ylo}6.0.1${nc}  (to dot snakemake DAG)
 "
-    conda env create -f ${workdir}/workflow/environments/${os}/gevarli-base_${gevarli_base_env_version}.yaml
+    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_${snakemake_base_version}.yaml
 fi
 
 # Remove old 'gevarli-base' environment
 conda env remove --name gevarli-base_v.2022.11
+conda env remove --name gevarli-base_v.2022.12
+conda env remove --name gevarli-base_v.2023.01
 
 
 ###############################################################################
@@ -225,12 +228,12 @@ ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
-echo -e "conda activate ${red}gevarli-base${nc} ${ylo}${gevarli_base_env_version}${nc}"
+echo -e "conda activate ${red}snakemake-base${nc} ${ylo}${snakemake_base_version}${nc}"
 
 # intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
 source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
-conda activate gevarli-base_${gevarli_base_env_version}
+conda activate snakemake-base_${snakemake_base_version}
 
 ###############################################################################
 ###### Rename samples ######
@@ -250,7 +253,7 @@ echo -e "Removing ${red}'_001'${nc} illumina tag ID"
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 echo -e "
-If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Star_GeVarLi.sh${nc} script (l.243).
+If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Start_GeVarLi.sh${nc} script (l.246).
 "
 
 ###############################################################################
@@ -423,6 +426,7 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CONCATENATE FASTA FILES${nc} ${green}#####${nc}
 ${green}-----------------------------------${nc}
 "
+
 cat ${workdir}/results/05_Consensus/*_consensus.fasta \
     2> /dev/null \
     1> ${workdir}/results/All_consensus_sequences.fasta
@@ -438,6 +442,7 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CONCATENATE COVERAGE STATS${nc} ${green}#####${nc}
 ${green}--------------------------------------${nc}
 "
+
 cat ${workdir}/results/03_Coverage/*coverage-stats.tsv \
     2> /dev/null \
     1> ${workdir}/results/All_genome_coverages.tsv
@@ -537,9 +542,9 @@ ${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
 ${green}------------------------${nc}
 "
 
-# Save and Deactive Gevarli environment
+# Save and Deactive Snakemake-Base environment
 cp ${workdir}/workflow/environments/${os}/gevarli-tools_v.*.yaml ${workdir}/results/10_Reports/
-conda env export > ${workdir}/results/10_Reports/gevarli-base_${gevarli_base_env_version}.yaml
+conda env export > ${workdir}/results/10_Reports/snakemake-base_${snakemake_base_version}.yaml
 conda deactivate
 
 # Cleanup
