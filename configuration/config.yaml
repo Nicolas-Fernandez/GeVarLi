@@ -176,23 +176,23 @@ conda:
     #samtools:       '../environments/osx/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
     #sickle-trim:    '../environments/osx/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
   linux: # Conda Linux environement yaml files
-    snakemake-base: '../environments/linux/snakemake-base_v.2023.02.yaml' # GeVarLi-Base  ver. 2023.02
-    gevarli-tools:  '../environments/linux/gevarli-tools_v.2023.01.yaml'  # GeVarLi-Tools ver. 2023.01
-    #bamclipper:     '../environments/linux/bamclipper_v.1.0.yaml'         # BAMClipper    ver. 1.0
-    #bcftools:       '../environments/linux/bcftools_v.1.15.1.yaml'        # Bcftools      ver. 1.15.1
-    #bedtools:       '../environments/linux/bedtools_v.2.30.0.yaml'        # Bedtools      ver. 2.30.0
-    #bowtie2:        '../environments/linux/bowtie2_v.2.4.5.yaml'          # Bowtie2       ver. 2.4.5
-    #bwa:            '../environments/linux/bwa_v.0.7.17.yaml'             # BWA           ver. 0.7.17
-    #cutadapt:       '../environments/linux/cutadapt_v.4.1.yaml'           # Cutadapt      ver. 4.1
-    #fastq-screen:   '../environments/linux/fastq-screen_v.0.15.2.yaml'    # Fastq-Screen  ver. 0.15.2
-    #fastqc:         '../environments/linux/fastqc_v.0.11.9.yaml'          # FastQC        ver. 0.11.9
-    #gawk:           '../environments/linux/gawk_v.5.1.0.yaml'             # Awk           ver. 5.1.0
-    #lofreq:         '../environments/linux/lofreq_v.2.1.5.yaml'           # Lofreq        ver. 2.1.5
-    #multiqc:        '../environments/linux/multiqc_v.1.13.yaml'           # MultiQC       ver. 1.13
-    #nextclade:      '../environments/linux/nextclade_v.2.9.1.yaml'        # Nextclade     ver. 2.9.1
-    #pangolin:       '../environments/linux/pangolin_v.4.1.3.yaml'         # Pangolin      ver. 4.1.3
-    #samtools:       '../environments/linux/samtools_v.1.15.1.yaml'        # Samtools      ver. 1.15.1
-    #sickle-trim:    '../environments/linux/sickle-trim_v.1.33.yaml'       # Sickle-trim   ver. 1.33
+    snakemake-base: '../environments/linux/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
+    gevarli-tools:  '../environments/linux/gevarli-tools_v.2023.01.yaml'  # GeVarLi-Tools  ver. 2023.01
+    #bamclipper:     '../environments/linux/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
+    #bcftools:       '../environments/linux/bcftools_v.1.15.1.yaml'        # Bcftools       ver. 1.15.1
+    #bedtools:       '../environments/linux/bedtools_v.2.30.0.yaml'        # Bedtools       ver. 2.30.0
+    #bowtie2:        '../environments/linux/bowtie2_v.2.4.5.yaml'          # Bowtie2        ver. 2.4.5
+    #bwa:            '../environments/linux/bwa_v.0.7.17.yaml'             # BWA            ver. 0.7.17
+    #cutadapt:       '../environments/linux/cutadapt_v.4.1.yaml'           # Cutadapt       ver. 4.1
+    #fastq-screen:   '../environments/linux/fastq-screen_v.0.15.2.yaml'    # Fastq-Screen   ver. 0.15.2
+    #fastqc:         '../environments/linux/fastqc_v.0.11.9.yaml'          # FastQC         ver. 0.11.9
+    #gawk:           '../environments/linux/gawk_v.5.1.0.yaml'             # Awk            ver. 5.1.0
+    #lofreq:         '../environments/linux/lofreq_v.2.1.5.yaml'           # Lofreq         ver. 2.1.5
+    #multiqc:        '../environments/linux/multiqc_v.1.13.yaml'           # MultiQC        ver. 1.13
+    #nextclade:      '../environments/linux/nextclade_v.2.9.1.yaml'        # Nextclade      ver. 2.9.1
+    #pangolin:       '../environments/linux/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
+    #samtools:       '../environments/linux/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
+    #sickle-trim:    '../environments/linux/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
 os: 'osx' # Operating System (default: "osx", but will be set by Start_GeVarLi.sh)
