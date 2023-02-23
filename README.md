@@ -126,13 +126,15 @@ conda update -n base -c defaults conda
 ### GeVarLi ###
 Clone [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
 ```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/ && \
 cd ~/GeVarLi/
 ```
 
 Update GeVarLi: 
 ```shell
-git -C ~/GeVarLi/ reset --hard HEAD && git -C ~/GeVarLi/ pull --verbose
+cd ~/GeVarLi/ && \
+git reset --hard HEAD && \
+git pull --verbose
 ```
 
 ## ~ USAGE ~ ##
