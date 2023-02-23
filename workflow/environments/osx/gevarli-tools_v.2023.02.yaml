@@ -1,4 +1,4 @@
-name: gevarli-tools_v.2023.01
+name: gevarli-tools_v.2023.02
 channels:
   - bioconda
   - conda-forge
@@ -136,7 +136,7 @@ dependencies:
   - nbformat=5.7.3=pyhd8ed1ab_0
   - ncurses=6.3=h96cf925_1
   - networkx=3.0=pyhd8ed1ab_0
-  - nextclade=2.9.1=h527b516_0
+  - nextclade=2.11.0=h527b516_0
   - numpy=1.24.1=py38hc2f29e8_0
   - openjdk=17.0.3=hbc0c0cd_5
   - openjpeg=2.5.0=h5d0d7b0_1

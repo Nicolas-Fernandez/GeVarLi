@@ -26,7 +26,7 @@ consensus:
   mincov: 30 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   path: 'resources/genomes/'                # Path to genomes references
-  reference: 'SARS-CoV-2_Wuhan_MN-908947-3' # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
+  reference: 'Monkeypox-virus_Zaire_AF-380138-1' # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
   # Available options (not exhaustive):
     #- 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (with Nextclade, Pangolin and BamClipper option)
     #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (with Nextclade)
@@ -159,7 +159,7 @@ conda:
     #- 'conda' # conda
   osx: # Conda OSX environement yaml files
     snakemake-base: '../environments/osx/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
-    gevarli-tools:  '../environments/osx/gevarli-tools_v.2023.01.yaml'  # GeVarLi-Tools  ver. 2023.01
+    gevarli-tools:  '../environments/osx/gevarli-tools_v.2023.02.yaml'  # GeVarLi-Tools  ver. 2023.01
     #bamclipper:     '../environments/osx/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
     #bcftools:       '../environments/osx/bcftools_v.1.15.1.yaml'        # Bcftools       ver. 1.15.1
     #bedtools:       '../environments/osx/bedtools_v.2.30.0.yaml'        # Bedtools       ver. 2.30.0
@@ -171,13 +171,13 @@ conda:
     #gawk:           '../environments/osx/gawk_v.5.1.0.yaml'             # Awk            ver. 5.1.0
     #lofreq:         '../environments/osx/lofreq_v.2.1.5.yaml'           # Lofreq         ver. 2.1.5
     #multiqc:        '../environments/osx/multiqc_v.1.13.yaml'           # MultiQC        ver. 1.13
-    #nextclade:      '../environments/osx/nextclade_v.2.9.1.yaml'        # Nextclade      ver. 2.9.1
+    #nextclade:      '../environments/osx/nextclade_v.2.11.0.yaml'        # Nextclade      ver. 2.9.1
     #pangolin:       '../environments/osx/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
     #samtools:       '../environments/osx/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
     #sickle-trim:    '../environments/osx/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
   linux: # Conda Linux environement yaml files
     snakemake-base: '../environments/linux/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
-    gevarli-tools:  '../environments/linux/gevarli-tools_v.2023.01.yaml'  # GeVarLi-Tools  ver. 2023.01
+    gevarli-tools:  '../environments/linux/gevarli-tools_v.2023.02.yaml'  # GeVarLi-Tools  ver. 2023.01
     #bamclipper:     '../environments/linux/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
     #bcftools:       '../environments/linux/bcftools_v.1.15.1.yaml'        # Bcftools       ver. 1.15.1
     #bedtools:       '../environments/linux/bedtools_v.2.30.0.yaml'        # Bedtools       ver. 2.30.0
@@ -189,7 +189,7 @@ conda:
     #gawk:           '../environments/linux/gawk_v.5.1.0.yaml'             # Awk            ver. 5.1.0
     #lofreq:         '../environments/linux/lofreq_v.2.1.5.yaml'           # Lofreq         ver. 2.1.5
     #multiqc:        '../environments/linux/multiqc_v.1.13.yaml'           # MultiQC        ver. 1.13
-    #nextclade:      '../environments/linux/nextclade_v.2.9.1.yaml'        # Nextclade      ver. 2.9.1
+    #nextclade:      '../environments/linux/nextclade_v.2.12.0.yaml'        # Nextclade      ver. 2.9.1
     #pangolin:       '../environments/linux/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
     #samtools:       '../environments/linux/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
     #sickle-trim:    '../environments/linux/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
