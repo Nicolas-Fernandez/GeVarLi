@@ -1,4 +1,4 @@
----
+AAA---
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
 # Version ________________ v.2023.01
@@ -26,7 +26,7 @@ consensus:
   mincov: 30 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   minaf: 0.2 # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   path: 'resources/genomes/'                # Path to genomes references
-  reference: 'Monkeypox-virus_Zaire_AF-380138-1' # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
+  reference: 'SARS-CoV-2_Wuhan_MN-908947-3' # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
   # Available options (not exhaustive):
     #- 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (with Nextclade, Pangolin and BamClipper option)
     #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (with Nextclade)
