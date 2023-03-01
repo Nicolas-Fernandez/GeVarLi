@@ -106,16 +106,16 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                           # Get working directory
-config_file="${workdir}/configuration/config.yaml"                               # Get configuration file
+workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)                            # Get working directory
+config_file="${workdir}/configuration/config.yaml"                                # Get configuration file
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
 
-if [[ "${fastq}" == "0" ]]                                                       # Start GeVarLi with at least 1 sample
+if [[ "${fastq}" == "0" ]]                                                        # Start GeVarLi with at least 1 sample
 then
     echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}
 ${red}SARS-CoV-2${nc} ${ylo}resources/data_test/${nc} fastq will be used as sample example
 "
-    cp ${workdir}/resources/data_test/*.fastq.gz ${workdir}/resources/reads/     # use data_test/*.fastq.gz
+    cp ${workdir}/resources/data_test/*.fastq.gz ${workdir}/resources/reads/      # use data_test/*.fastq.gz
 fi
 
 samples=$(expr ${fastq} \/ 2)                                                    # {fastq.gz count} / 2 = samples count (paired-end)
@@ -196,6 +196,7 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}SNAKEMAKE-BASE INSTALLATION${nc} ${green}#####${nc}
 ${green}---------------------------------------${nc}
 "
+
 # Test if latest 'snakemake-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^snakemake-base_${snakemake_base_version}") ]]
 then
@@ -253,7 +254,7 @@ echo -e "Removing ${red}'_001'${nc} illumina tag ID"
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 echo -e "
-If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Start_GeVarLi.sh${nc} script (l.246).
+If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Start_GeVarLi.sh${nc} script (l.247).
 "
 
 ###############################################################################
