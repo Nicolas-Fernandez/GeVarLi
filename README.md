@@ -1,7 +1,7 @@
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
-![Maintener](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.0.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
+![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.2.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU-Linux Ubuntu](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![WSL/WSL2](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
@@ -12,9 +12,9 @@
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Gitlab](<https://badgen.net/badge/icon/Gitlab/orange?icon=gitlab&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.9.5/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
-![Snakemake](<https://badgen.net/badge/icon/Snakemake 6.12.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
-![Conda](<https://badgen.net/badge/icon/Conda 4.10.3/black?icon=codacy&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.10.6/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 7.18.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Conda](<https://badgen.net/badge/icon/Conda 23.1.0/black?icon=codacy&label&scale=0.9>)
 
 
 ## ~ ABOUT ~ ##
@@ -152,11 +152,11 @@ bash Start_GeVarLi.sh
 3. Yours analyzes will start, with default configuration settings  
 
 _Option-1: Edit **config.yaml** file in **./configuration/** directory_  
-_Option-2: Edit **fastq-screen_.conf** file in **./configuration/** directory_  
+_Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_  
 
 First run will auto-created _(only once)_:
-	- Gevarli-Base conda environment _(Snakemake, Mamba, Rename, GraphViz)_
-	- Snakemake-conda environments _(for each tools used by GeVarLi)_
+	- Snakemake-Base conda environment _(Snakemake, Mamba, Rename, GraphViz)_
+	- GeVarLi-conda environments _(tools used by GeVarLi)_
 	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources)_
 	
 _This may take some time, depending on your internet connection and your computer_
