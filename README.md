@@ -63,9 +63,9 @@ _(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieu
 
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
-- Nicolas Fernandez - IRD _(Owner, Developer and Maintener)_  
-- Christelle Butel - IRD _(Reporter, User-addict, Features inspiration source)_  
-- Eddy Kinganda-Lusamaki - INRB _(First asking for an open source unix and "biologist" friendly pipeline)_  
+- Nicolas Fernandez - IRD _(Developer and Maintener)_  
+- Christelle Butel - IRD _(Reporter)_  
+- Eddy Kinganda-Lusamaki - INRB _(Source)_  
 
 
 ## ~ PROJECT STATUS ~ ##
