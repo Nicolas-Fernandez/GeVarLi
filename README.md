@@ -66,6 +66,7 @@ _(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieu
 - Nicolas Fernandez - IRD _(Developer and Maintener)_  
 - Christelle Butel - IRD _(Reporter)_  
 - Eddy Kinganda-Lusamaki - INRB _(Source)_  
+- DALL•E mini - OpenAI [Git](https://github.com/borisdayma/dalle-mini) _(Repo. avatar)_  
 
 
 ## ~ PROJECT STATUS ~ ##
@@ -667,8 +668,5 @@ _Online (2014)_
 **Publication**: []()  
 **Source code**: [https://github.com/lh3/seqtk](https://github.com/lh3/seqtk)  
 **Documentation**: [https://bioweb.pasteur.fr/packages/pack@seqtk@1.3](https://bioweb.pasteur.fr/packages/pack@seqtk@1.3)  
-
-**GeVarLi git project avatar was created with the assistance of DALL·E 2**  
-
 
 ###############################################################################
