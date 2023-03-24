@@ -125,7 +125,7 @@ conda update -n base -c defaults conda
 ```
 
 ### GeVarLi ###
-Clone [GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
+Clone [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
 ```shell
 git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/ && \
 cd ~/GeVarLi/
@@ -196,7 +196,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
        │             ├── 📄 multiqc_fastqc.txt
        │             ├── 📄 multiqc_general_stats.txt
        |             └── 📄 multiqc_sources.txt
-       ├── 📂 01_Trimming/
+       ├── 📂 01_Trimmidapt
        │    ├── 📂 cutad{SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
        │    │    └── 📦 {S
        │    └── 📂 sickle/
