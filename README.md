@@ -19,29 +19,52 @@
 
 ## ~ ABOUT ~ ##
 
-GeVarLi	is a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,used for SARS-CoV-2	genome assembly with Illumina Inc. short reads COVIDSeq&trade; libraries sequencing, initialy Developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
+### GeVarLi ###
+
+GeVarLi	is a FAIR, open-source, scalable, modulable and traceable snakemake pipeline, used for SARS-CoV-2 (and others viruses) genome assembly and variants monitoring, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
+GeVarLi was initialy developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
 
 ### Genomic sequencing, a public health tool ###
+
 The establishment of a surveillance and sequencing network is an essential public health tool for detecting and containing pathogens with epidemic potential. Genomic sequencing makes it possible to identify pathogens, monitor the emergence and impact of variants, and adapt public health policies accordingly.
 
 The Covid-19 epidemic has highlighted the disparities that remain between continents in terms of surveillance and sequencing systems. At the end of October 2021, of the 4,600,000 sequences shared on the public and free GISAID tool worldwide, only 49,000 came from the African continent, i.e. less than 1% of the cases of Covid-19 diagnosed on this continent.
 
 ### Features ###
-- Control reads quality (_multiQC html report_) and clean it  
-- Align reads (_bam files_), variants calling (_vcf files_) and genome coverage statistics  
-- Consensus sequences (_fasta file_)  
-- Nextclade and Pangolin classifications  
+
+- Reads quality control
+  - Fastq-Screen (_contamination check_)
+  - FastQC (_quality metrics_)
+  - MultiQC (_html reports_)
+- Reads cleaning
+  - Cutadapt (_adapters trimming_)
+  - Sickle-trim (_quality trimming_)
+- Reads mapping
+  - (_bam files_)
+  - 
+  - 
+- Variants calling 
+  - (_vcf files_)
+- Genome coverage (_statistics reports_)
+- Consensus sequences (_fasta file_)
+- Genomes classification
+  - Nextclade
+  - Pangolin
+
 
 ### Version ###
-*V.2023.01*  
+
+*V.2023.03*  
 
 ### Rulegraph ###
+
 <img src="./resources/visuals/gevarli_rulegraph.png" width="300" height="1200">  
 <img src="./resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
 <img src="./resources/visuals/indexing_genomes_rulegraph.png" width="200" height="100">  
 
 
 ## ~ SUPPORT ~ ##
+
 1. Read The Fabulous Manual!
 2. Read de Awsome Wiki!
 3. Create a new issue: Issues > New issue > Describe your issue
@@ -49,10 +72,10 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 
 ## ~ CITATION ~ ##
-If you use this pipeline, *please* cite this *GeVarLi*, gitlab IRD repository and authors:
 
+If you use this pipeline, *please* cite this *GeVarLi*, GitLab IRDForge repository and authors:
 
-IRDFORGE Gitlab instance : [https://forge.ird.fr/transvihmi/GeVarLi](https://forge.ird.fr/transvihmi/GeVarLi)
+GitLab IRDForge repository: [https://forge.ird.fr/transvihmi/nfernandez/GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi)
 
 GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
 for reference-based Genome assembly and Variants calling and Lineage assignment,
@@ -63,37 +86,48 @@ _(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieu
 
 
 ## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
+
 - Nicolas Fernandez - IRD _(Developer and Maintener)_  
 - Christelle Butel - IRD _(Reporter)_  
 - Eddy Kinganda-Lusamaki - INRB _(Source)_  
 - DALL•E mini - OpenAI [Git](https://github.com/borisdayma/dalle-mini) _(Repo. avatar)_  
 
 
+## ~ LICENSE ~ ##
+
+Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
+
+
+## ~ ROADMAP ~ ##
+
+- Publish GeVarLi paper !
+- Add GisAid submision files generation
+- Add MultiQC config template
+
+
 ## ~ PROJECT STATUS ~ ##
+
 This project is **regularly update** and **actively maintened**  
 However, you can be volunteer to step in as **developer** or **maintainer**  
 
 
-## ~ ROADMAP ~ ##
-- Add GisAid submision files generation
-- Publish GeVarLi paper
-
 ## ~ CONTRIBUTING ~ ##
+
 Open to contributions!
+
 - Asking for update
 - Proposing new feature
 - Reporting issue
 - Fixing issue
 - Sharing code
-
-## ~ LICENSE ~ ##
-Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
-Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
+- Citing tool
 
 
 ## ~ INSTALLATIONS ~ ##
 
 ### Conda _(mandatory)_ ###
+
 GeVarLi use the usefull **Conda** environment manager  
 So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
  
@@ -125,17 +159,15 @@ conda update -n base -c defaults conda
 ```
 
 ### GeVarLi ###
-Clone [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
+
+Clone to your home/ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
 ```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/ && \
-cd ~/GeVarLi/
+git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
 ```
 
 Update GeVarLi: 
 ```shell
-cd ~/GeVarLi/ && \
-git reset --hard HEAD && \
-git pull --verbose
+cd ~/GeVarLi/ && git reset --hard HEAD && git pull --verbose
 ```
 
 ## ~ USAGE ~ ##
@@ -271,6 +303,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 ```
 
 ### Files Glossary ###
+
 - **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
 - **BAI**: BAM Indexes. 
 - **FASTA**: Fast-All, text-based format for representing either nucleotide sequences or amino acid (protein) sequences.
@@ -286,61 +319,75 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 
 You can edit default settings in **config.yaml** file into **./config/** directory:  
 
+
 ### Resources ###
+
 Edit to match your hardware configuration  
 - **cpus**: for tools that can _(i.e. bwa)_, could be use at most n cpus to run in parallel _(default config: '8')_  
 _**Note**: snakemake (with default Start bash script) will always use all cpus to parallelize jobs_
 - **ram**: for tools that can _(i.e. samtools)_, limit memory usage to max n Gb _(default config: '16' Gb)_
 - **tmpdir**: for tools that can _(i.e. pangolin)_, specify where you want the temp stuff _(default config: '$TMPDIR')_
 
+
 ### Consensus ###
+
 - **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default: '30')_
 - **minaf**: minimum allele frequency allowed for variant calling step _(default: '0.2')_
 - **reference**: reference sequence fasta file format name used for mapping _(default: 'SARS-CoV-2\_Wuhan\_MN-908947-3')_
 - **iupac**: allow output variants in the form of IUPAC ambiguity codes (default: deactivate -> '' )
 
+
 ### Aligner ###
+
 - **aligner**: Map your reads using either **bwa** or **bowtie2**  
 
+
 ### Fastq-Screen ###
+
 - **config**: path to the fastq-screen configuration file _(default: 'configuration/fastq-screen/' [*] )_
 - **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default: '1000')_
 
+
 #### [*] configuration/fastq-screen/{aligner}.conf ####
+
 - **DATABASE**: (de)comment (#) or add your own 'DATABASE' to configure multiple genomes screaning
 
+
 ### Cutadapt ###
+
 - **length**: discard reads shorter than length, after trimming _(default: '50')_
 - **kits**: sequence of an adapter ligated to the 3' end of the first read _(default: 'truseq', 'nextera' and 'small' Illumina kits)  
 
+
 ### Sickle-trim ###
+
 - **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default: '30')_
 - **length**: read length limit, after trimming _(default: '50')_
 - **command**: Pipeline wait for paired-end reads _(default and should be: 'pe')_
 - **encoding**: If your data are from recent Illumina run, let 'sanger' _(default and should be: 'sanger')_
 
-### BamClipper ###
-- **clipping** do you need to clip amplicon primers ? Need to provide primers BEDPE file (default: 'no')
-- **path**: path to primers BEDPE files (defualt: 'resources/primers/bedpe/')
-- **primers**: amplicon primers position, in BEDPE format
-_**Note**: reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences_
-- **upstream**: bases also clipped in amplicons upstream position (default: '1')
-- **downstream**: bases also clipped in amplicons downstream position (default: '5')
 
 ### BWA ###
+
 - **path**: path to BWA indexes (default: 'resources/indexes/bwa/')
 - **algorithm**: algorithm for constructing BWA index (default: deactivate -> '')
 
+
 ### Bowtie2 ###
+
 - **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
 - **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
 - **algorithm**: algorithm for constructing Bowtie2 index (default: deactivate -> '' ) 
 
+
 ### Nextclade ###
+
 - **path**: path to nextclade datasets
 - **dataset**: Nextclade dataset (not used, set by Start\_GeVarLi.sh depending your reference genome)
 
+
 ### GisAid (soon) ###
+
 - **username**:
 - **threshold**:
 - **name**:
@@ -348,12 +395,16 @@ _**Note**: reference sequence names and coordinates of BAM and BED are assumed t
 - **identifier**:
 - **year**:
 
+
 ### Environments ###
+
 - **frontend**: conda frontend (default: 'mamba')
 - **osx/linux**: conda environments paths/names for osx and linux OS (default: workflow/envs/{tools}\_v.{version}.yaml)
 _**Note**: edit only if you want to change some environments (e.g. test a new version)_
 
+
 ### Operating System ###
+
 - **osx**: Operating System (default: 'osx', but will set by Start\_GeVarLi.sh) 
 _**Note**: Only 'osx' or 'linux' supported_
 
@@ -513,6 +564,7 @@ _**Note**: Only 'osx' or 'linux' supported_
 ```
 
 ## ~ REFERENCES ~ ##
+
 **Sustainable data analysis with Snakemake**  
 Felix Mölder, Kim Philipp Jablonski, Brice Letcher, Michael B. Hall, Christopher H. Tomkins-Tinch, Vanessa Sochat, Jan Forster, Soohyun Lee, Sven O. Twardziok, Alexander Kanitz, Andreas Wilm, Manuel Holtgrewe, Sven Rahmann, Sven Nahnsen, Johannes Köster  
 _F1000Research (2021)_  
@@ -668,5 +720,6 @@ _Online (2014)_
 **Publication**: []()  
 **Source code**: [https://github.com/lh3/seqtk](https://github.com/lh3/seqtk)  
 **Documentation**: [https://bioweb.pasteur.fr/packages/pack@seqtk@1.3](https://bioweb.pasteur.fr/packages/pack@seqtk@1.3)  
+
 
 ###############################################################################
