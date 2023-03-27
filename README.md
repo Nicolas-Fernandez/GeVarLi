@@ -37,7 +37,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
   - FastQC (_quality metrics_)
   - MultiQC (_html reports_)
 - Reads cleaning
-  - Cutadapt (_adapters trimming_)
+  - Cutadapt (_adapters trimming & amplicon primers hard-clipping_)
   - Sickle-trim (_quality trimming_)
 - Reads mapping
   - (_bam files_)
@@ -126,7 +126,7 @@ Open to contributions!
 
 ## ~ INSTALLATIONS ~ ##
 
-### Conda _(mandatory)_ ###
+### Conda _(dependencies)_ ###
 
 GeVarLi use the usefull **Conda** environment manager  
 So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
@@ -490,25 +490,6 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │         ├── 🧬 sequences.fasta
  │    │         ├── 🏷️  tag.json
  │    │         └── 🌳 tree.json
- │    ├── 📂 primers/
- │    │    ├── 📂 bedpe/
- │    │    │    ├── 🛡️  .gitkeep
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4.bedpe
- │    │    │    ├── 🛌️  SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1.bedpe
- │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR-063671-1_artic-primers-V1.bedpe
- │    │    │    ├── 🛌️  Ebola-virus_Zaire_AF-272001-1_artic-primers-V2.bedpe
- │    │    │    ├── 🛌️  Ebola-virus_Zaire_KR-063671-1_artic-primers-V3.bedpe
- │    │    │    ├── 🛌️  Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1.bedpe
- │    │    │    └── 🛌️  {your_favorite_amplicon_kit_primers}.bedpe
- │    │    ├── 📂 bed/ (soon)
- │    │    │    ├── 🛡️  .gitkeep
- │    │    │    └── 🛏️  {your_favorite_kit_primers}.bed
- │    │    └── 📂 fasta/ (soon)
- │    │         ├── 🛡️  .gitkeep
- │    │         └── 🧬 {your_favorite_kit_primers}.fasta
  │    ├── 📂 reads/
  │    │    ├── 🛡️  .gitkeep
  │    │    ├── 📦 {SAMPLE}_R1.fastq.gz
@@ -524,7 +505,6 @@ _**Note**: Only 'osx' or 'linux' supported_
  └── 📂 workflow/
       ├── 📂 environments/
       │    ├── 📂 linux/
-      │    │    ├── 🍜 bamclipper_v.1.0.yaml
       │    │    ├── 🍜 bcftools_v.1.15.1.yaml
       │    │    ├── 🍜 bedtools_v.2.30.0.yaml
       │    │    ├── 🍜 bowtie2_v.2.4.5.yaml
@@ -533,15 +513,15 @@ _**Note**: Only 'osx' or 'linux' supported_
       │    │    ├── 🍜 fastq-screen_v.0.15.2.yaml
       │    │    ├── 🍜 fastqc_v.0.11.9.yaml
       │    │    ├── 🍜 gawk_v.5.1.0.yaml
-      │    │    ├── 🍜 gevarli-base_v.2022.11.yaml
+      │    │    ├── 🍜 gevarli-tools_v.2023.02.yaml
       │    │    ├── 🍜 lofreq_v.2.1.5.yaml
       │    │    ├── 🍜 multiqc_v.1.13.yaml
       │    │    ├── 🍜 nextclade_v.2.9.1.yaml
       │    │    ├── 🍜 pangolin_v.4.1.3.yaml
       │    │    ├── 🍜 samtools_v.1.15.1.yaml
-      │    │    └── 🍜 sickle-trim_v.1.33.yaml
+      │    │    ├── 🍜 sickle-trim_v.1.33.yaml
+      │    │    └── 🍜 snakemake-base_v.2023.02.yaml
       │    └── 📂 osx/
-      │         ├── 🍜 bamclipper_v.1.0.yaml
       │         ├── 🍜 bcftools_v.1.15.1.yaml
       │         ├── 🍜 bedtools_v.2.30.0.yaml
       │         ├── 🍜 bowtie2_v.2.4.5.yaml
@@ -550,13 +530,14 @@ _**Note**: Only 'osx' or 'linux' supported_
       │         ├── 🍜 fastq-screen_v.0.15.2.yaml
       │         ├── 🍜 fastqc_v.0.11.9.yaml
       │         ├── 🍜 gawk_v.5.1.0.yaml
-      │         ├── 🍜 gevarli-base_v.2022.11.yaml
+      │         ├── 🍜 gevarli-tools_v.2023.02.yaml
       │         ├── 🍜 lofreq_v.2.1.5.yaml
       │         ├── 🍜 multiqc_v.1.13.yaml
       │         ├── 🍜 nextclade_v.2.9.1.yaml
       │         ├── 🍜 pangolin_v.4.1.3.yaml
-      │         ├── 🍜 samtools_v.1.15.1.yaml
-      │         └── 🍜 sickle-trim_v.1.33.yaml
+      │         ├── 🍜 samtools_v.1.15.1.yaml 
+      │         ├── 🍜 sickle-trim_v.1.33.yaml
+      │         └── 🍜 snakemake-base_v.2023.02.yaml
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk
@@ -647,14 +628,6 @@ Journal (year)
 **DOI**: []()  
 **Publication**: []()  
 **Source code**: [https://github.com/artic-network/primer-schemes](https://github.com/artic-network/primer-schemes)
-**Documentation**:
-
-**BAMClipper: removing primers from alignments to minimize false-negative mutations in amplicon next-generation sequencing**  
-Chun Hang Au, Dona N. Ho, Ava Kwong, Tsun Leung Chan and Edmond S. K. Ma 
-Scientific Reports 7:1567 (2017)  
-**DOI**: [https://doi.org/10.1038/s41598-017-01703-6](https://doi.org/10.1038/s41598-017-01703-6)
-**Publication**: [https://www.nature.com/articles/s41598-017-01703-6](https://www.nature.com/articles/s41598-017-01703-6)
-**Source code**: [https://github.com/tommyau/bamclipper](https://github.com/tommyau/bamclipper)
 **Documentation**:
 
 **Twelve years of SAMtools and BCFtools**  

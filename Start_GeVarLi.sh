@@ -1,15 +1,15 @@
 #!/bin/bash
 
 snakemake_base_version="v.2023.02"
-gevarli_version="v.2023.01"
+gevarli_version="v.2023.03"
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2023.01
+# Version ________________ v.2023.03
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.01.05
+# Latest modifications ___ 2023.03.24
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -33,7 +33,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2023.01.05
+${blue}Latest modifications${nc} ___ 2023.03.24
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -163,30 +163,30 @@ fi
 
 # Print some analyzes settings
 echo -e "
-${blue}Working Directory${nc} ______ ${workdir}/
-${blue}Samples processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
+${blue}Working Directory${nc} _______ ${workdir}/
+${blue}Samples processed${nc} _______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
-${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
-${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
-${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
+${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
+${blue}Snakemake version${nc} _______ ${ylo}${snakemake_version}${nc}
+${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 
-${blue}max Threads${nc} ____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
-${blue}max Memory${nc} _____________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
-${blue}job Memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
+${blue}max Threads${nc} _____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
+${blue}max Memory${nc} ______________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
+${blue}job Memory${nc} ______________ ${red}${memory_per_job}${nc} Gb per job
 
-${blue}genome Reference${nc} _______ ${ylo}${reference}${nc}
-${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
+${blue}genome Reference${nc} ________ ${ylo}${reference}${nc}
+${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
 
-${blue}min Coverage${nc} ___________ ${red}${min_cov}${nc}x
-${blue}min Allele Frequency${nc} ___ ${red}${min_af}${nc}
+${blue}min Coverage${nc} ____________ ${red}${min_cov}${nc}x
+${blue}min Allele Frequency${nc} ____ ${red}${min_af}${nc}
 
-${blue}run Nextclade${nc} __________ ${red}${nextclade}${nc}
-${blue}run Pangolin ${nc} __________ ${red}${pangolin}${nc}
+${blue}run Nextclade${nc} ___________ ${red}${nextclade}${nc}
+${blue}run Pangolin ${nc} ___________ ${red}${pangolin}${nc}
 
-${blue}run BamClipper${nc} _________ ${red}${bamclipper}${nc}
-${blue}Primers kit${nc} ____________ ${ylo}${amplicons_kit}${nc}
+${blue}Hard-clipping primers${nc} ___ ${red}${hard_clipping}${nc}
+${blue}Hard-clipping length{nc} _____ ${ylo}${clipping_length}${nc}
 
-${blue}Start time${nc} _____________ ${time_stamp_start}
+${blue}Start time${nc} ______________ ${time_stamp_start}
 "
 
 ###############################################################################
@@ -605,8 +605,8 @@ min Allele Frequency ___ ${min_af}
 run Nextclade __________ ${nextclade}
 run Pangolin ___________ ${pangolin}
 
-run BamClipper _________ ${bamclipper}
-Primers kit ____________ ${amplicons_kit}
+Hard-clipping primers$ _ ${hard_clipping}
+Hard-clipping length ___ ${clipping_length}
 
 Start time _____________ ${time_stamp_start}
 End time _______________ ${time_stamp_end}
