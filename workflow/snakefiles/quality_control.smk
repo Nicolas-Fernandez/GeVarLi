@@ -1,10 +1,10 @@
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###I###RAA###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ quality_control.smk
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2023.01.18
+# Latest modifications ___ 2023.03.27
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -14,6 +14,7 @@ configfile: "configuration/config.yaml"
 
 ###############################################################################
 ###### FUNCTIONS ######
+
 
 ###############################################################################
 ###### WILDCARDS ######
@@ -27,19 +28,15 @@ OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
-###### ENVIRONMENT(S) ######
+###### ENVIRONMENTS ######
 
-GEVARLI = config["conda"][OS]["gevarli-tools"]    # GeVarLi all tools
-#FASTQC = config["conda"][OS]["fastqc"]            # FastQC
-#FASTQSCREEN = config["conda"][OS]["fastq-screen"] # Fastq-Screen
-#MULTIQC = config["conda"][OS]["multiqc"]          # MultiQC
+GEVARLI = config["conda"][OS]["gevarli-tools"] # GeVarLi all tools
 
 ###############################################################################
 ###### PARAMETERS ######
 
-MAPPER = config["aligner"]                    # Fastq-Screen --aligner
 SUBSET = config["fastq-screen"]["subset"]     # Fastq-Screen --subset
-FQS_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
+FQC_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
 #MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
 #TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
@@ -66,10 +63,9 @@ rule multiqc_reports_aggregation:
         #config = MQC_CONFIG,
         #tag = TAG
     input:
-        #reports = "results/"
-        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}",
+        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
                         fastq = FASTQ),
-        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}",
+        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
                              fastq = FASTQ)
     output:
         multiqc = directory("results/00_Quality_Control/multiqc/")
@@ -84,7 +80,6 @@ rule multiqc_reports_aggregation:
         #"--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
         #"--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
-        #"{input.reports} "           # Input Reports
         "{input.fastqc} "            # Input FastQC files
         "{input.fastqscreen} "       # Input Fastq-Screen
         "&> {log}"                   # Log redirection
@@ -92,16 +87,15 @@ rule multiqc_reports_aggregation:
 ###############################################################################
 rule fastqscreen_contamination_checking:
     # Aim: screen if the composition of the library matches with  what you expect
-    # Use fastq_screen [OPTIONS] --outdir [DIR/] [SAMPLE_1.fastq] ... [SAMPLE_n.fastq]
+    # Use fastq_screen [OPTIONS] --outdir [DIR/] [FASTQ.GZ]
     message:
-        "Fastq-Screen reads contamination checking"
+        "Fastq-Screen contamination check for [ {wildcards.fastq} ] reads"
     conda:
         GEVARLI
     resources:
         cpus = CPUS
     params:
-        mapper = MAPPER,
-        config = FQS_CONFIG,
+        config = FQC_CONFIG,
         subset = SUBSET
     input:
         fastq = "resources/reads/{fastq}.fastq.gz"
@@ -110,22 +104,22 @@ rule fastqscreen_contamination_checking:
     log:
         "results/10_Reports/tools-log/fastq-screen/{fastq}.log"
     shell:
-        "fastq_screen "                               # FastqScreen, what did you expect ?
-        "-q "                                          # --quiet: Only show log warning
-        "--threads {resources.cpus} "                  # --threads: Specifies across how many threads bowtie will be allowed to run
-        "--aligner {params.mapper}  "                  # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
-        "--conf {params.config}/{params.mapper}.conf " # path to configuration file
-        "--subset {params.subset} "                    # Don't use the whole sequence file, but create a subset of specified size
-        "--outdir {output.fastqscreen} "               # Output directory
-        "{input.fastq} "                               # Input file.fastq
-        "&> {log}"                                     # Log redirection
+        "fastq_screen "                 # FastqScreen, what did you expect ?
+        "-q "                            # --quiet: Only show log warning
+        "--threads {resources.cpus} "    # --threads: Specifies across how many threads bowtie will be allowed to run
+        "--aligner 'bwa' "               # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
+        "--conf {params.config} "        # path to configuration file
+        "--subset {params.subset} "      # Don't use the whole sequence file, but create a subset of specified size
+        "--outdir {output.fastqscreen} " # Output directory
+        "{input.fastq} "                 # Input file.fastq
+        "&> {log}"                       # Log redirection
 
 ###############################################################################
 rule fastqc_quality_control:
     # Aim: reads sequence files and produces a quality control report
-    # Use: fastqc [OPTIONS] --output [DIR/] [SAMPLE_1.fastq] ... [SAMPLE_n.fastq]
+    # Use: fastqc [OPTIONS] --output [DIR/] [FASTQ.GZ]
     message:
-        "FastQC reads quality controling"
+        "FastQC quality control for [ {wildcards.fastq} ] reads"
     conda:
         GEVARLI
     resources:
@@ -133,7 +127,7 @@ rule fastqc_quality_control:
     input:
         fastq = "resources/reads/{fastq}.fastq.gz"
     output:
-        fastqc = directory("results/00_Quality_Control/fastqc/{fastq}")
+        fastqc = directory("results/00_Quality_Control/fastqc/{fastq}/")
     log:
         "results/10_Reports/tools-log/fastqc/{fastq}.log"
     shell:

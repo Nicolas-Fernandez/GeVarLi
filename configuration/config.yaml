@@ -1,12 +1,12 @@
 ---
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
-# Version ________________ v.2023.01
+# Version ________________ v.2023.03
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.01.18
+# Latest modifications ___ 2023.03.24
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -46,15 +46,15 @@ consensus:
 ### ALIGNER ------------------------------------------------------------------------------------------
 aligner: 'bwa' # Select your favorite aligner, bwa (default) or bowtie2
 # Available options:
-  #- 'bwa'     # Faster (default)
-  #- 'bowtie2' # Slower, "sensitivity" requiried (see below "Bowtie2" options)
+  #- 'bwa'     # Better, Faster, (Stronger, Harder...) (default)
+  #- 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
 
 ### FASTQ-SCREEN -------------------------------------------------------------------------------------
 fastq-screen:
-  config: 'configuration/fastq-screen/' # Path to the fastq-screen configuration file
+  config: 'configuration/fastq-screen.conf' # Path to the fastq-screen configuration file
   subset: 10000 # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
-### MULTIQC ------------------------------------------------------------------------------------------
+### MULTIQC (soon) -----------------------------------------------------------------------------------
 #multiqc:
 #  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
 #  tag: '' # Use only modules which tagged with this keyword
@@ -62,10 +62,11 @@ fastq-screen:
 ### CUTADAPT -----------------------------------------------------------------------------------------
 cutadapt:
   length: '50' # Discard reads shorter than 'length' after trim (default: "50")
-  kits:        # Sequence of an adapter ligated to the 3' end of the first read
+  kits: # Sequence of an adapter ligated to the 3' end of the first read
     truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
     nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
     small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
+  cut: '0' # Cut 'n' first nucleotides reads, used for amplicon primers hard-clipping (default: 0)
 
 ### SICKLE-TRIM --------------------------------------------------------------------------------------
 sickle-trim:
@@ -77,30 +78,6 @@ sickle-trim:
     #- 'sanger'   # for CASAVA >= 1.8 for "recent" Illumina reads (default)
     #- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
     #- 'solexa'   # for CASAVA < 1.3 for Solexa
-
-### BAMCLIPPER ---------------------------------------------------------------------------------------
-bamclipper:
-  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers BEDPE file
-  # Available options:
-    #- 'no'  # Deactivate (default)
-    #- 'yes' # Activate
-  path: 'resources/primers/bedpe/' # Path to primers bedpe files
-  primers: 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3'
-  # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
-  # Available options:
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1'           # SARS-CoV-2 Artic V1
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2'           # SARS-CoV-2 Artic V2
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3'           # SARS-CoV-2 Artic V3
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4'           # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3_arctiv-primers-V4-1'        # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
-    #- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V1'          # EBOV Artic V1
-    #- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2'          # EBOV Artic V2 (based on AF272001.1)
-    #- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V3'          # EBOV Artic V3
-    #- 'Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1'       # NIV Artic V1
-    #- 'Monkeypox-virus_UK_MT-903345-1_custom-VGCARE-primers-V1' # MPXV VGCARE V1
-    #- 'Add_your_favorite_amplicon_kit'                          # Custom
-  upstream: '1'   # (default: 1)
-  downstream: '5' # (default: 5)
 
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
@@ -135,6 +112,8 @@ nextclade:
     #- 'hMPXV'      # human Monkeypox
     #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
 
+# update nextclade datasets : for DATASET in * ; do echo ${DATASET} ; nextclade dataset get --name ${DATASET} --output-dir ${DATASET}/ ; done
+
 ### GISAID (soon) ------------------------------------------------------------------------------------
 gisaid:
   username: 'username'
@@ -145,21 +124,12 @@ gisaid:
   year: '2022'
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
-
-# conda_version:     '22.9.0' # Conda version (upgrade from "4.12.0")
-# mamba_version:     '1.0.0'  # Mamba version (faster than conda)
-# snakemake_version: '7.18.1' # Snakemake version (upgrade from  "6.12.3")
-# rename_version:    '1.601'  # Rename version (to rename fastq files)
-# graphviz_version:  '6.0.1'  # GraphViz version (to do dot snakemake DAG)
-
-# update nextclade datasets : for DATASET in * ; do echo ${DATASET} ; nextclade dataset get --name ${DATASET} --output-dir ${DATASET}/ ; done
-
 conda:
   frontend: 'mamba' # Conda frontend (mamba or conda)
   # Available options:
     #- 'mamba' # mamba (default)
     #- 'conda' # conda
-  osx: # Conda OSX environement yaml files
+  osx: # Conda OSX environement yaml files:
     snakemake-base: '../environments/osx/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
     gevarli-tools:  '../environments/osx/gevarli-tools_v.2023.02.yaml'  # GeVarLi-Tools  ver. 2023.01
     #bamclipper:     '../environments/osx/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
@@ -177,7 +147,7 @@ conda:
     #pangolin:       '../environments/osx/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
     #samtools:       '../environments/osx/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
     #sickle-trim:    '../environments/osx/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
-  linux: # Conda Linux environement yaml files
+  linux: # Conda Linux environement yaml files:
     snakemake-base: '../environments/linux/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
     gevarli-tools:  '../environments/linux/gevarli-tools_v.2023.02.yaml'  # GeVarLi-Tools  ver. 2023.01
     #bamclipper:     '../environments/linux/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
@@ -195,6 +165,12 @@ conda:
     #pangolin:       '../environments/linux/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
     #samtools:       '../environments/linux/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
     #sickle-trim:    '../environments/linux/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
+
+# conda_version:     '22.9.0' # Conda version (upgrade from "4.12.0")
+# mamba_version:     '1.0.0'  # Mamba version (faster than conda)
+# snakemake_version: '7.18.1' # Snakemake version (upgrade from  "6.12.3")
+# rename_version:    '1.601'  # Rename version (to rename fastq files)
+# graphviz_version:  '6.0.1'  # GraphViz version (to do dot snakemake DAG)
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
 os: 'osx' # Operating System (default: "osx", but will be set by Start_GeVarLi.sh)

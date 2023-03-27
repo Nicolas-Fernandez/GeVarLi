@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2023.01.18
+# Latest modifications ___ 2023.03.24
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
@@ -30,13 +30,10 @@ CPUS = config["resources"]["cpus"] # Threads (maximum)
 ###### ENVIRONMENT(S) ######
 
 GEVARLI = config["conda"][OS]["gevarli-tools"] # GeVarLi all tools
-#BWA = config["conda"][OS]["bwa"]              # Bwa
-#BOWTIE2 = config["conda"][OS]["bowtie2"]      # Bowtie2
 
 ###############################################################################
 ###### PARAMETERS ######
 
-ALIGNER = config["aligner"]              # Aligners ('bwa' or 'bowtie2') 
 BWAALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
 BT2ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
@@ -45,11 +42,14 @@ BT2ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
 rule all:
     input:
-        indexes = expand("resources/indexes/{aligner}/{refseq}.{ext}",
-                         aligner = ALIGNER,
-                         refseq = REFSEQ,
-                         ext = ["amb", "ann", "bwt", "pac", "sa"])
-
+        bwaindexes = expand("resources/indexes/bwa/{refseq}.{ext}",
+                            refseq = REFSEQ,
+                            ext = ["amb", "ann", "bwt", "pac", "sa"]),
+        bt2indexes = expand("resources/indexes/bowtie2/{refseq}.{ext}",
+                            refseq = REFSEQ,
+                            ext = ["1.bt2", "2.bt2", "3.bt2", "4.bt2",
+                                   "rev.1.bt2", "rev.2.bt2"])
+        
 ###############################################################################
 rule bwa_genome_indexing:
     # Aim: index sequences in the FASTA format
@@ -67,7 +67,7 @@ rule bwa_genome_indexing:
         indexes = multiext("resources/indexes/bwa/{refseq}",
                           ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
-        "results/10_Reports/tools-log/bwa-sw/{refseq}.log"
+        "results/10_Reports/tools-log/bwa-indexes/{refseq}.log"
     shell:
         "bwa index "              # BWA-SW algorithm, index sequences
         "{params.algorithm} "      # -a: Algorithm for constructing BWT index (default: auto)                                  
@@ -93,10 +93,10 @@ rule bowtie2_genome_indexing:
     output:
         prefix = temp("resources/indexes/bowtie2/{refseq}"),
         indexes = multiext("resources/indexes/bowtie2/{refseq}",
-                          ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2",
+                           ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2",
                            ".rev.1.bt2", ".rev.2.bt2")
     log:
-        "results/10_Reports/tools-log/bowtie2-build/{refseq}.log"
+        "results/10_Reports/tools-log/bowtie2-indexes/{refseq}.log"
     shell:
         "bowtie2-build "             # Bowtie2-build, index sequences
         "--quiet "                    # -q: quiet
