@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2023.03.27
+# Latest modifications ___ 2023.04.04
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -30,13 +30,13 @@ CPUS = config["resources"]["cpus"] # Threads (maximum)
 ###############################################################################
 ###### ENVIRONMENTS ######
 
-GEVARLI = config["conda"][OS]["gevarli-tools"] # GeVarLi all tools
+GEVARLI = config["conda"][OS]["gevarli_tools"] # GeVarLi all tools
 
 ###############################################################################
 ###### PARAMETERS ######
 
-SUBSET = config["fastq-screen"]["subset"]     # Fastq-Screen --subset
-FQC_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
+SUBSET = config["fastq_screen"]["subset"]     # Fastq-Screen --subset
+FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
 #MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
 #TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
@@ -46,7 +46,7 @@ FQC_CONFIG = config["fastq-screen"]["config"] # Fastq-Screen --conf
 rule all:
     input:
         multiqc = "results/00_Quality_Control/multiqc/",
-        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
+        fastq_screen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
                              fastq = FASTQ),
         fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
                         fastq = FASTQ)
@@ -65,7 +65,7 @@ rule multiqc_reports_aggregation:
     input:
         fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
                         fastq = FASTQ),
-        fastqscreen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
+        fastq_screen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
                              fastq = FASTQ)
     output:
         multiqc = directory("results/00_Quality_Control/multiqc/")
@@ -81,7 +81,7 @@ rule multiqc_reports_aggregation:
         #"--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
         "{input.fastqc} "            # Input FastQC files
-        "{input.fastqscreen} "       # Input Fastq-Screen
+        "{input.fastq_screen} "      # Input Fastq-Screen
         "&> {log}"                   # Log redirection
 
 ###############################################################################
@@ -100,19 +100,19 @@ rule fastqscreen_contamination_checking:
     input:
         fastq = "resources/reads/{fastq}.fastq.gz"
     output:
-        fastqscreen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
+        fastq_screen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
     log:
         "results/10_Reports/tools-log/fastq-screen/{fastq}.log"
     shell:
-        "fastq_screen "                 # FastqScreen, what did you expect ?
-        "-q "                            # --quiet: Only show log warning
-        "--threads {resources.cpus} "    # --threads: Specifies across how many threads bowtie will be allowed to run
-        "--aligner 'bwa' "               # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
-        "--conf {params.config} "        # path to configuration file
-        "--subset {params.subset} "      # Don't use the whole sequence file, but create a subset of specified size
-        "--outdir {output.fastqscreen} " # Output directory
-        "{input.fastq} "                 # Input file.fastq
-        "&> {log}"                       # Log redirection
+        "fastq_screen "                  # FastqScreen, what did you expect ?
+        "-q "                             # --quiet: Only show log warning
+        "--threads {resources.cpus} "     # --threads: Specifies across how many threads bowtie will be allowed to run
+        "--aligner 'bwa' "                # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
+        "--conf {params.config} "         # path to configuration file
+        "--subset {params.subset} "       # Don't use the whole sequence file, but create a subset of specified size
+        "--outdir {output.fastq_screen} " # Output directory
+        "{input.fastq} "                  # Input file.fastq
+        "&> {log}"                        # Log redirection
 
 ###############################################################################
 rule fastqc_quality_control:
@@ -131,8 +131,8 @@ rule fastqc_quality_control:
     log:
         "results/10_Reports/tools-log/fastqc/{fastq}.log"
     shell:
-        "mkdir -p {output.fastqc} " # (*) this directory must exist as the program will not create it
-        "2> /dev/null && "          # in silence and then... 
+        "mkdir -p {output.fastqc} "    # (*) this directory must exist as the program will not create it
+        "2> /dev/null && "             # in silence and then... 
         "fastqc "                    # FastQC, a high throughput sequence QC analysis tool
         "--quiet "                    # -q: Supress all progress messages on stdout and only report errors
         "--threads {resources.cpus} " # -t: Specifies files number which can be processed simultaneously

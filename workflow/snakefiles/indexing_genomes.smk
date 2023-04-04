@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2023.03.27
+# Latest modifications ___ 2023.04.04
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
@@ -19,7 +19,7 @@ configfile: "configuration/config.yaml"
 ###############################################################################
 ###### WILDCARDS ######
 
-REFSEQ, = glob_wildcards("resources/genomes/{refseq}.fasta")
+REF_SEQ, = glob_wildcards("resources/genomes/{ref_seq}.fasta")
 
 ###############################################################################
 ###### RESOURCES ######
@@ -30,24 +30,24 @@ CPUS = config["resources"]["cpus"] # Threads (maximum)
 ###############################################################################
 ###### ENVIRONMENT(S) ######
 
-GEVARLI = config["conda"][OS]["gevarli-tools"] # GeVarLi all tools
+GEVARLI = config["conda"][OS]["gevarli_tools"] # GeVarLi all tools
 
 ###############################################################################
 ###### PARAMETERS ######
 
-BWAALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
-BT2ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
+BWA_ALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
+BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
 ###############################################################################
 ###### RULES ######
 
 rule all:
     input:
-        bwaindexes = expand("resources/indexes/bwa/{refseq}.{ext}",
-                            refseq = REFSEQ,
+        bwa_indexes = expand("resources/indexes/bwa/{ref_seq}.{ext}",
+                            ref_seq = REF_SEQ,
                             ext = ["amb", "ann", "bwt", "pac", "sa"]),
-        bt2indexes = expand("resources/indexes/bowtie2/{refseq}.{ext}",
-                            refseq = REFSEQ,
+        bt2_indexes = expand("resources/indexes/bowtie2/{ref_seq}.{ext}",
+                            ref_seq = REF_SEQ,
                             ext = ["1.bt2", "2.bt2", "3.bt2", "4.bt2",
                                    "rev.1.bt2", "rev.2.bt2"])
         
@@ -56,19 +56,19 @@ rule bwa_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: bwa index -a [ALGO] -p [PREFIX] [GENOME.fasta]
     message:
-        "BWA-SW indexing {wildcards.refseq} genome (algo: {params.algorithm}"
+        "BWA-SW indexing {wildcards.ref_seq} genome (algo: {params.algorithm}"
     conda:
         GEVARLI
     params:
-        algorithm = BWAALGO
+        algorithm = BWA_ALGO
     input:
-        fasta = "resources/genomes/{refseq}.fasta"
+        fasta = "resources/genomes/{ref_seq}.fasta"
     output:
-        prefix = temp("resources/indexes/bwa/{refseq}"),
-        indexes = multiext("resources/indexes/bwa/{refseq}",
+        prefix = temp("resources/indexes/bwa/{ref_seq}"),
+        indexes = multiext("resources/indexes/bwa/{ref_seq}",
                           ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
-        "results/10_Reports/tools-log/bwa-indexes/{refseq}.log"
+        "results/10_Reports/tools-log/bwa-indexes/{ref_seq}.log"
     shell:
         "bwa index "              # BWA-SW algorithm, index sequences
         "{params.algorithm} "      # -a: Algorithm for constructing BWT index (default: auto)                                  
@@ -82,22 +82,22 @@ rule bowtie2_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: bowtie2-build [options]* <reference_in> <bt2_index_base>
     message:
-        "Bowtie2-build indexing {wildcards.refseq} genome"
+        "Bowtie2-build indexing {wildcards.ref_seq} genome"
     conda:
         GEVARLI
     resources:
         cpus = CPUS
     params:
-        algorithm = BT2ALGO
+        algorithm = BT2_ALGO
     input:
-        fasta = "resources/genomes/{refseq}.fasta"
+        fasta = "resources/genomes/{ref_seq}.fasta"
     output:
-        prefix = temp("resources/indexes/bowtie2/{refseq}"),
-        indexes = multiext("resources/indexes/bowtie2/{refseq}",
+        prefix = temp("resources/indexes/bowtie2/{ref_seq}"),
+        indexes = multiext("resources/indexes/bowtie2/{ref_seq}",
                            ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2",
                            ".rev.1.bt2", ".rev.2.bt2")
     log:
-        "results/10_Reports/tools-log/bowtie2-indexes/{refseq}.log"
+        "results/10_Reports/tools-log/bowtie2-indexes/{ref_seq}.log"
     shell:
         "bowtie2-build "             # Bowtie2-build, index sequences
         "--quiet "                    # -q: quiet
