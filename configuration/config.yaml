@@ -1,4 +1,3 @@
----
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
 # Version ________________ v.2023.03
@@ -6,29 +5,31 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.03.24
+# Latest modifications ___ 2023.04.04
 # Use ____________________ Edit default settings
 
 ###############################################################################
 
 ### RESOURCES ----------------------------------------------------------------------------------------
 resources:
-  cpus: 8           # Set maximum cpus usage (for multithreading, default: "8") [INT]
-  ram: 16           # Set maximum memory usage (in Gb, default: "16") [INT]
-  tmpdir: '$TMPDIR' # Temporary directory (default: "$TMPDIR")
-  ## Examples:
-    ## '$TMPDIR'  # System variable $TMPDIR (default)
-    ## '.'        # Local (i.e. GeVarLi root directory)
-    ## '/scratch' # HPC (set it to match your HPC usage)
+  cpus: '8'          # Set maximum cpus usage (for multithreading, default: "8") [INT]
+  ram: '16'          # Set maximum memory usage (in Gb, default: "16") [INT]
+  tmp_dir: '$TMPDIR' # Temporary directory (default: "$TMPDIR")
+  ### Examples:
+    ### '$TMPDIR'  # System variable $TMPDIR (default)
+    ### '.'        # Local (i.e. GeVarLi root directory)
+    ### '/scratch' # HPC (set it to match your HPC usage)
 
 ### CONSENSUS ----------------------------------------------------------------------------------------
 consensus:
-  mincov: 30 # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
-  minaf: 0.2 # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  path: 'resources/genomes/'                # Path to genomes references
-  reference: 'SARS-CoV-2_Wuhan_MN-908947-3' # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
-  # Available options (not exhaustive):
-    #- 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (with Nextclade, Pangolin and BamClipper option)
+  min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
+  # Available options (not exhaustive), choose one:
+    - '30'                         # AFROSCREEN SARS-CoV-2 Illumina amplicons sequencing (default) 
+    #- 'Add_your_minimum_coverage' # Custom
+  min_af: '0.2'               # Minimum allele frequency allowed (default: "0.2") [FLOAT]
+  reference:                 # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
+  # Available options (not exhaustive), choose one:
+    - 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (with Nextclade, Pangolin and BamClipper option)
     #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (with Nextclade)
     #- 'Monkeypox-virus_UK_MT-903345-1'     # Monkeypox  (with Nextclade)
     #- 'Swinepox-virus_India_MW-036632-1'   # Swinepox   (with Nextclade)
@@ -36,23 +37,48 @@ consensus:
     #- 'Ebola-virus_Sudan_MH-121162-1'      # Ebola      (with Nextclade)
     #- 'Nipah-virus_Malaysia_AJ-564622-1'   # Nipah      (with Nextclade and BamClipper option)
     #- 'HIV-1_HXB2_K-03455-1'               # HIV-1      (na)
-    #- 'Human-herpesvirus-5_NC-006273-2'    # Herpes.    (na)
+    #- 'Human-herpesvirus-5_NC-006273-2'    # Herpes     (na)
+    #- 'Human-herpesvirus-3_NC_001348-1'    # Varicella  (na)
     #- 'Add_your_favorite_genome_ref'       # Custom     (na)
-  iupac: ''  # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
-  # Available options:
-    #- ''        # Deactivate (default)
+  path: 'resources/genomes/' # Path to genomes references (default)
+  iupac: # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
+  # Available options, choose one:
+    - ''        # Deactivate (default)
     #- '--iupac' # Activate
+  aligner: # Select your favorite aligner (default: 'bwa')
+  # Available options, choose one:
+    - 'bwa'     # Better, Faster, (Stronger, Harder...) (default)
+    #- 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
 
-### ALIGNER ------------------------------------------------------------------------------------------
-aligner: 'bwa' # Select your favorite aligner, bwa (default) or bowtie2
-# Available options:
-  #- 'bwa'     # Better, Faster, (Stronger, Harder...) (default)
-  #- 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+### NEXTCLADE ----------------------------------------------------------------------------------------
+nextclade:
+  run: # Run Nextclade analyzes (default: yes)
+    - 'yes' # Yes (default)
+    #- 'no' # No
+  dataset: # Nextclade dataset
+  # Available options (not exhaustive), choose one:
+    - 'sars-cov-2' # SARS-CoV-2 (default)
+    #- 'MPXV'       # MPox - all clades 
+    #- 'hMPXV'      # human MPox
+    #- 'hMPXV_B1'   # human MPox - only lineage B1*
+  path: 'resources/nextclade/' # Path to nextclade datasets (default path)
+  
+# Update nextclade datasets:
+# > conda activate gevarli-tools_v.2023.04
+# > cd resources/nextclade/
+# > for DATASET in * ; do echo ${DATASET} ; nextclade dataset get --name ${DATASET} --output-dir ${DATASET}/ ; done
+# > conda deactivate
+
+### PANGOLIN -----------------------------------------------------------------------------------------
+pangolin:
+  run: # Run Pangolin analyzes (default: yes)
+  - 'yes' # Yes (default)
+  #- 'no' # No
 
 ### FASTQ-SCREEN -------------------------------------------------------------------------------------
-fastq-screen:
+fastq_screen:
   config: 'configuration/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: 10000 # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+  subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
 ### MULTIQC (soon) -----------------------------------------------------------------------------------
 #multiqc:
@@ -66,10 +92,10 @@ cutadapt:
     truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
     nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
     small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
-  cut: '0' # Cut 'n' first nucleotides reads, used for amplicon primers hard-clipping (default: 0)
+  clipping: '0' # Cut 'n' first nucleotides reads, used for amplicon primers hard-clipping (default: 0)
 
 ### SICKLE-TRIM --------------------------------------------------------------------------------------
-sickle-trim:
+sickle_trim:
   quality: '30'      # Phred score limit (default: "30")
   length: '50'       # Read length limit after trim (default: "50")
   command: 'pe'      # Reading (default and should be "pe" for paired-end sequences)
@@ -82,37 +108,25 @@ sickle-trim:
 ### BWA ----------------------------------------------------------------------------------------------
 bwa:
   path: 'resources/indexes/bwa/' # Path to BWA indexes
-  algorithm: '' # Algorithm for constructing BWA index (default: auto)
-  # Available options:
-    #- ''         # Auto-select (default)
+  algorithm: # Algorithm for constructing BWA index (default: auto)
+  # Available options, choose one:
+    - ''         # Auto-select (default)
     #- '-a is'    # Moderately fast, but does not work with database larger than 2GB
     #- '-a bwtsw' # This method works with the whole human genome
 
 ### BOWTIE2 ------------------------------------------------------------------------------------------
 bowtie2:
-  sensitivity: '--very-sensitive'    # Bowtie2 sensitivity preset (default: "--very-sensitive")
-  # Available options:
-    #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
-    #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"
+  sensitivity: # Bowtie2 'sensitivity' preset (default: "--very-sensitive")
+  # Available preset options, choose one:
+    - '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
     #- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
-    #- '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
-  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes
-  algorithm: '' # Algorithm for constructing BT2 index
-  # Available options:
-    #- ''              # (default)
+    #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"    
+    #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
+  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes (default path)
+  algorithm: # Algorithm for constructing BT2 index
+  # Available options, choose one:
+    - ''              # (default)
     #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
-
-### NEXTCLADE ----------------------------------------------------------------------------------------
-nextclade:
-  path: 'resources/nextclade/' # Path to nextclade datasets
-  #dataset: 'sars-cov-2' # Nextclade dataset (depreciated, set by Start_GeVarLi.sh)
-  # Available options:
-    #- 'sars-cov-2' # SARS-CoV-2 (now default with SARS-CoV-2_Wuhan-WIV04_2019)
-    #- 'MPXV'       # Monkeypox all clades (now default with Monkeypox-virus_Zaire)
-    #- 'hMPXV'      # human Monkeypox
-    #- 'hMPXV_B1'   # human Monkeypox Lineage B1*
-
-# update nextclade datasets : for DATASET in * ; do echo ${DATASET} ; nextclade dataset get --name ${DATASET} --output-dir ${DATASET}/ ; done
 
 ### GISAID (soon) ------------------------------------------------------------------------------------
 gisaid:
@@ -125,58 +139,50 @@ gisaid:
 
 ### ENVIRONNEMENTS -----------------------------------------------------------------------------------
 conda:
-  frontend: 'mamba' # Conda frontend (mamba or conda)
-  # Available options:
-    #- 'mamba' # mamba (default)
+  frontend: # Conda frontend (default: mamba)
+  # Available options, choose one:
+    - 'mamba' # mamba (faster)
     #- 'conda' # conda
   osx: # Conda OSX environement yaml files:
-    snakemake-base: '../environments/osx/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
-    gevarli-tools:  '../environments/osx/gevarli-tools_v.2023.02.yaml'  # GeVarLi-Tools  ver. 2023.01
-    #bamclipper:     '../environments/osx/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
-    #bcftools:       '../environments/osx/bcftools_v.1.15.1.yaml'        # Bcftools       ver. 1.15.1
-    #bedtools:       '../environments/osx/bedtools_v.2.30.0.yaml'        # Bedtools       ver. 2.30.0
-    #bowtie2:        '../environments/osx/bowtie2_v.2.4.5.yaml'          # Bowtie2        ver. 2.4.5
-    #bwa:            '../environments/osx/bwa_v.0.7.17.yaml'             # BWA            ver. 0.7.17
-    #cutadapt:       '../environments/osx/cutadapt_v.4.1.yaml'           # Cutadapt       ver. 4.1
-    #fastq-screen:   '../environments/osx/fastq-screen_v.0.15.2.yaml'    # Fastq-Screen   ver. 0.15.2
-    #fastqc:         '../environments/osx/fastqc_v.0.11.9.yaml'          # FastQC         ver. 0.11.9
-    #gawk:           '../environments/osx/gawk_v.5.1.0.yaml'             # Awk            ver. 5.1.0
-    #lofreq:         '../environments/osx/lofreq_v.2.1.5.yaml'           # Lofreq         ver. 2.1.5
-    #multiqc:        '../environments/osx/multiqc_v.1.13.yaml'           # MultiQC        ver. 1.13
-    #nextclade:      '../environments/osx/nextclade_v.2.11.0.yaml'        # Nextclade      ver. 2.9.1
-    #pangolin:       '../environments/osx/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
-    #samtools:       '../environments/osx/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
-    #sickle-trim:    '../environments/osx/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
+    snakemake_base: '../environments/osx/snakemake-base_v.2023.04.yaml'   # Snakemake-Base ver. 2023.04
+    gevarli_tools:  '../environments/osx/gevarli-tools_v.2023.04.yaml'    # GeVarLi-Tools  ver. 2023.04
+    #bcftools:       '../environments/osx/bcftools_v.1.16.yaml'            # Bcftools       ver. 1.16
+    #bedtools:       '../environments/osx/bedtools_v.2.30.0.yaml'          # Bedtools       ver. 2.30.0
+    #bowtie2:        '../environments/osx/bowtie2_v.2.5.1.yaml'            # Bowtie2        ver. 2.5.1
+    #bwa:            '../environments/osx/bwa_v.0.7.17.yaml'               # BWA            ver. 0.7.17
+    #cutadapt:       '../environments/osx/cutadapt_v.4.3.yaml'             # Cutadapt       ver. 4.3
+    #fastq_screen:   '../environments/osx/fastq-screen_v.0.15.2.yaml'      # Fastq-Screen   ver. 0.15.2
+    #fastqc:         '../environments/osx/fastqc_v.0.12.1.yaml'            # FastQC         ver. 0.12.1
+    #gawk:           '../environments/osx/gawk_v.5.1.0.yaml'               # Awk            ver. 5.1.0
+    #lofreq:         '../environments/osx/lofreq_v.2.1.5.yaml'             # Lofreq         ver. 2.1.5
+    #multiqc:        '../environments/osx/multiqc_v.1.14.yaml'             # MultiQC        ver. 1.14
+    #nextclade:      '../environments/osx/nextclade_v.2.13.1.yaml'         # Nextclade      ver. 2.13.1
+    #pangolin:       '../environments/osx/pangolin_v.1.1.14.yaml'          # Pangolin       ver. 1.1.14
+    #samtools:       '../environments/osx/samtools_v.1.16.1.yaml'          # Samtools       ver. 1.16.1
+    #sickle_trim:    '../environments/osx/sickle-trim_v.1.33.yaml'         # Sickle-trim    ver. 1.33
   linux: # Conda Linux environement yaml files:
-    snakemake-base: '../environments/linux/snakemake-base_v.2023.02.yaml' # Snakemake-Base ver. 2023.02
-    gevarli-tools:  '../environments/linux/gevarli-tools_v.2023.02.yaml'  # GeVarLi-Tools  ver. 2023.01
-    #bamclipper:     '../environments/linux/bamclipper_v.1.0.yaml'         # BAMClipper     ver. 1.0
-    #bcftools:       '../environments/linux/bcftools_v.1.15.1.yaml'        # Bcftools       ver. 1.15.1
+    snakemake_base: '../environments/linux/snakemake-base_v.2023.04.yaml' # Snakemake-Base ver. 2023.04
+    gevarli_tools:  '../environments/linux/gevarli-tools_v.2023.04.yaml'  # GeVarLi-Tools  ver. 2023.04
+    #bcftools:       '../environments/linux/bcftools_v.1.16.yaml'          # Bcftools       ver. 1.16
     #bedtools:       '../environments/linux/bedtools_v.2.30.0.yaml'        # Bedtools       ver. 2.30.0
-    #bowtie2:        '../environments/linux/bowtie2_v.2.4.5.yaml'          # Bowtie2        ver. 2.4.5
+    #bowtie2:        '../environments/linux/bowtie2_v.2.5.1.yaml'          # Bowtie2        ver. 2.5.1
     #bwa:            '../environments/linux/bwa_v.0.7.17.yaml'             # BWA            ver. 0.7.17
-    #cutadapt:       '../environments/linux/cutadapt_v.4.1.yaml'           # Cutadapt       ver. 4.1
-    #fastq-screen:   '../environments/linux/fastq-screen_v.0.15.2.yaml'    # Fastq-Screen   ver. 0.15.2
-    #fastqc:         '../environments/linux/fastqc_v.0.11.9.yaml'          # FastQC         ver. 0.11.9
+    #cutadapt:       '../environments/linux/cutadapt_v.4.3.yaml'           # Cutadapt       ver. 4.3
+    #fastq_screen:   '../environments/linux/fastq-screen_v.0.15.2.yaml'    # Fastq-Screen   ver. 0.15.2
+    #fastqc:         '../environments/linux/fastqc_v.0.12.1.yaml'          # FastQC         ver. 0.12.1
     #gawk:           '../environments/linux/gawk_v.5.1.0.yaml'             # Awk            ver. 5.1.0
     #lofreq:         '../environments/linux/lofreq_v.2.1.5.yaml'           # Lofreq         ver. 2.1.5
-    #multiqc:        '../environments/linux/multiqc_v.1.13.yaml'           # MultiQC        ver. 1.13
-    #nextclade:      '../environments/linux/nextclade_v.2.12.0.yaml'        # Nextclade      ver. 2.9.1
-    #pangolin:       '../environments/linux/pangolin_v.4.1.3.yaml'         # Pangolin       ver. 4.1.3
-    #samtools:       '../environments/linux/samtools_v.1.15.1.yaml'        # Samtools       ver. 1.15.1
-    #sickle-trim:    '../environments/linux/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
-
-# conda_version:     '22.9.0' # Conda version (upgrade from "4.12.0")
-# mamba_version:     '1.0.0'  # Mamba version (faster than conda)
-# snakemake_version: '7.18.1' # Snakemake version (upgrade from  "6.12.3")
-# rename_version:    '1.601'  # Rename version (to rename fastq files)
-# graphviz_version:  '6.0.1'  # GraphViz version (to do dot snakemake DAG)
+    #multiqc:        '../environments/linux/multiqc_v.1.14.yaml'           # MultiQC        ver. 1.14
+    #nextclade:      '../environments/linux/nextclade_v.2.13.1.yaml'       # Nextclade      ver. 2.13.1
+    #pangolin:       '../environments/linux/pangolin_v.1.1.14.yaml'        # Pangolin       ver. 1.1.14
+    #samtools:       '../environments/linux/samtools_v.1.16.1.yaml'        # Samtools       ver. 1.16.1
+    #sickle_trim:    '../environments/linux/sickle-trim_v.1.33.yaml'       # Sickle-trim    ver. 1.33
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
-os: 'osx' # Operating System (default: "osx", but will be set by Start_GeVarLi.sh)
-# Available options:
-  #- 'osx'     # Mac OSX - Apple (R) [UNIX] (suported)
+os: # Operating System (default: "osx", but will be set by Start_GeVarLi.sh)
+# Available options, choose one::
+  - 'osx'     # Mac OSX - Apple (R) [UNIX] (suported)
   #- 'linux'   # GNU Linux - Free [UNIX] (suported)
-  #- 'bsd'     # Free BSD - Free [UNIX] (not tested. Need specific conda env. ?)
-  #- 'solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
-  #- 'windows' # Windows - Microsoft Corporation (R) (not suported, not [UNIX])
+  ##- 'bsd'     # Free BSD - Free [UNIX] (not tested. Need specific conda env. ?)
+  ##- 'solaris' # Oracle Solaris - Sun Microsystems (R) [UNIX] (not tested. Need specific conda env. ?)
+  ###- 'windows' # Windows - Microsoft Corporation (R) (not suported, not [UNIX])
