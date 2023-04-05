@@ -41,7 +41,7 @@ Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be 
 
     # ${red}Snakemake${nc}: Run GeVarLi workflow
     # ${red}Mamba${nc}:     Create snakemake-conda's environments faster
-    # ${red}Yq{nc}:         Parse config.yaml file
+    # ${red}Yq${nc}:        Parse config.yaml file
     # ${red}Rename${nc}:    Rename fastq files
     # ${red}Graphviz${nc}:  Dot snakemake DAG
 "
@@ -179,7 +179,7 @@ conda_frontend=$(yq -c '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed '
 max_threads=$(yq -r '.resources.cpus' ${config_file})    # Get user config: max threads
 max_memory=$(yq -r '.resources.ram' ${config_file})      # Get user config: max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})   # Calcul maximum memory usage per job
-reference=$(yq -c '.consensus.reference' ${config_file}) # Get user config:  genome reference
+reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/') # Get user config:  genome reference
 aligner=$(yq -c '.consensus.aligner' ${config_file})     # Get user config: aligner 
 min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: minimum coverage
 min_af=$(yq -r '.consensus.min_af' ${config_file})       # Get user config: minimum allele frequency
@@ -235,7 +235,7 @@ ${green}------------------------------${nc}
 # Rename fastq files to remove "_001" Illumina pattern (mandatory)
 ## De/comment line (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 echo -e "Removing ${red}'_S'${nc} index tag ID"
-rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+#rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
 echo -e "Removing ${red}'_L'${nc} line tag ID"
 rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
 echo -e "Removing ${red}'_001'${nc} illumina tag ID"
@@ -507,7 +507,7 @@ for snakefile in ${snakefiles_list} ; do
                 --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
                 --${graph} \
 	    | dot -T${extention} \
-            2> /dev/null \
+            #2> /dev/null \
 	    1> ${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} ;
 	done ;
     done ;
@@ -573,12 +573,13 @@ Physical CPUs __________ ${physical_cpu} cores
 Logical CPUs ___________ ${logical_cpu} threads
 System Memory __________ ${ram_size} Gb of RAM
 
+Working directory ______ ${workdir}/
+Samples processed ______ ${samples} samples (${fastq} fastq files)
+
 Conda version __________ ${conda_version}
 Snakemake version ______ ${snakemake_version}
 Conda frontend _________ ${conda_frontend}
-
-Working directory ______ ${workdir}/
-Samples processed ______ ${samples} samples (${fastq} fastq files)
+Mamba version __________ ${mamba_version}
 
 Max threads ____________ ${max_threads} of ${logical_cpu} threads available
 Max memory _____________ ${max_memory} of ${ram_size} Gb available
@@ -592,9 +593,9 @@ Min allele frequency ___ ${min_af}
 
 Hard-clipping primers __ ${clipping}
 
+Pangolin run ___________ ${pangolin}
 Nextclade run __________ ${nextclade}
 Nextclade dataset ______ ${dataset}
-Pangolin run ___________ ${pangolin}
 
 Fastq-Screen subset _____ ${subset} reads per sample
 
@@ -616,3 +617,4 @@ echo -e "
 ${green}------------------------------------------------------------------------${nc}
 "
 ###############################################################################
+B
