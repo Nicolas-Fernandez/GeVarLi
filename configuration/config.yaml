@@ -43,8 +43,8 @@ consensus:
   path: 'resources/genomes/' # Path to genomes references (default)
   iupac: # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   # Available options, choose one:
-    #- ''        # Deactivate (default)
-    - '--iupac' # Activate
+    - ''        # Deactivate (default)
+    #- '--iupac' # Activate
   aligner: # Select your favorite aligner (default: 'bwa')
   # Available options, choose one:
     - 'bwa'     # Better, Faster, (Stronger, Harder...) (default)

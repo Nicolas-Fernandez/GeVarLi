@@ -1,4 +1,4 @@
-###I###R###D######U###2###3###3######A#T###R###A###N###S###V###I#AAAAA##H#A##M###I####
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
@@ -22,15 +22,15 @@ def get_memory_per_thread(wildcards):
 def get_pangolin_input(wildcards):
     pangolin_list = []
     if "yes" in PANGO_RUN:
-        pangolin_list = expand("results/06_Lineages/{sample}_{aligner}_{min_cov}X_pangolin-report.csv",
-                               sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV)
+        pangolin_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_pangolin-report.csv",
+                               reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV)
     return pangolin_list
 
 def get_nextclade_input(wildcards):
     nextclade_list = []
     if "yes" in NEXT_RUN:
-        nextclade_list = expand("results/06_Lineages/{sample}_{aligner}_{min_cov}X_nextclade-report.tsv",
-                                sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV)
+        nextclade_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_nextclade-report.tsv",
+                                reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV)
     return nextclade_list
 
 ###############################################################################
@@ -91,12 +91,12 @@ PANGO_RUN = config["pangolin"]["run"]           # Pangolin run option
 
 rule all:
     input:
-        flagstat = expand("results/03_Coverage/flagstat/{sample}_{aligner}_flagstat.{ext}",
-                          sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
-        covstats = expand("results/03_Coverage/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv",
-                          sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
-        consensus = expand("results/05_Consensus/{sample}_{aligner}_{min_cov}X_consensus.fasta",
-                           sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
+        flagstat = expand("results/03_Coverage/flagstat/{reference}/{sample}_{aligner}_flagstat.{ext}",
+                          reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
+        covstats = expand("results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv",
+                          reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
+        consensus = expand("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta",
+                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
         pangolin = get_pangolin_input,
         nextclade = get_nextclade_input
         #gisaid = get_gisaid_input # soon
@@ -106,7 +106,7 @@ rule nextclade_lineage:
     # Aim: nextclade lineage assignation
     # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Nextclade lineage assignation for [[ {wildcards.sample} ]] sample consensus ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "Nextclade lineage assignation for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     resources:
@@ -115,12 +115,12 @@ rule nextclade_lineage:
         path = NEXT_PATH,
         dataset = NEXT_DATASET
     input:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{min_cov}X_consensus.fasta"
+        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{aligner}_{min_cov}X_nextclade-report.tsv",
-        alignment = directory("results/06_Lineages/{sample}_{aligner}_{min_cov}X_nextclade-all/")
+        lineage = "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_nextclade-report.tsv",
+        alignment = directory("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_nextclade-all/")
     log:
-        "results/10_Reports/tools-log/nextclade/{sample}_{aligner}_{min_cov}X_lineage.log"
+        "results/10_Reports/tools-log/nextclade/{reference}/{sample}_{aligner}_{min_cov}X_lineage.log"
     shell:
         "nextclade "                                    # Nextclade, assign queries sequences to clades and reports potential quality issues
         "run "                                           # Run analyzis
@@ -136,18 +136,18 @@ rule pangolin_lineage:
     # Aim: lineage mapping
     # Use: pangolin [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Pangolin lineage mapping for [[ {wildcards.sample} ]] sample consensus ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "Pangolin lineage mapping for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     resources:
         cpus = CPUS,
         tmp_dir = TMP_DIR
     input:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{min_cov}X_consensus.fasta"
+        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{aligner}_{min_cov}X_pangolin-report.csv"
+        lineage = "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_pangolin-report.csv"
     log:
-        "results/10_Reports/tools-log/pangolin/{sample}_{aligner}_{min_cov}X_lineage.log"
+        "results/10_Reports/tools-log/pangolin/{reference}/{sample}_{aligner}_{min_cov}X_lineage.log"
     shell:
         "pangolin "                     # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "             # Query fasta file of sequences to analyse
@@ -161,15 +161,15 @@ rule sed_rename_headers:
     # Aim: rename all fasta header with sample name
     # Use: sed 's/[OLD]/[NEW]/' [IN] > [OUT]
     message:
-        "Sed rename header for [[ {wildcards.sample} ]] sample consensus fasta ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "Sed rename fasta header for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     input:
-        cons_tmp = "results/05_Consensus/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp"
+        cons_tmp = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp"
     output:
-        consensus = "results/05_Consensus/{sample}_{aligner}_{min_cov}X_consensus.fasta"
+        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta"
     log:
-        "results/10_Reports/tools-log/sed/{sample}_{aligner}_{min_cov}X_fasta-header.log"
+        "results/10_Reports/tools-log/sed/{reference}/{sample}_{aligner}_{min_cov}X_fasta-header.log"
     shell:
         "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
         "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.min_cov}X/' "
@@ -182,19 +182,19 @@ rule bcftools_consensus:
     # Aim: create consensus
     # Use: bcftools consensus -f [REFERENCE] [VARIANTS.vcf.gz] -o [CONSENSUS.fasta] 
     message:
-        "BcfTools consensus for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "BcfTools consensus for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     params:
         iupac = IUPAC
     input:
-        masked_ref = "results/04_Variants/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        archive = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz",
-        index = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.bgz.tbi"
+        masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
+        archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz",
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.bgz.tbi"
     output:
-        cons_tmp = temp("results/05_Consensus/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp")
+        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp")
     log:
-        "results/10_Reports/tools-log/bcftools/{sample}_{aligner}_{min_cov}X_consensus.log"
+        "results/10_Reports/tools-log/bcftools/{reference}/{sample}_{aligner}_{min_cov}X_consensus.log"
     shell:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
@@ -209,15 +209,15 @@ rule tabix_tabarch_indexing:
     # Aim: tab archive indexing
     # Use: tabix [OPTIONS] [TAB.bgz]
     message:
-        "Tabix tab archive indexing for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "Tabix tab archive indexing for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     input:
-        archive = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz"
+        archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz"
     output:
-        index = temp("results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.bgz.tbi")
+        index = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.bgz.tbi")
     log:
-        "results/10_Reports/tools-log/tabix/{sample}_{aligner}_{min_cov}X_variant-archive-index.log"
+        "results/10_Reports/tools-log/tabix/{reference}/{sample}_{aligner}_{min_cov}X_variant-archive-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.archive} "   # The input data file must be position sorted and compressed by bgzip
@@ -229,17 +229,17 @@ rule bgzip_variant_archive:
     # Aim: Variant block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
-        "Bgzip variant block compressing for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "Bgzip variant block compressing for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     resources:
         cpus = CPUS
     input:
-        variant_filt = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.vcf"
+        variant_filt = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf"
     output:
-        archive = temp("results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz")
+        archive = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz")
     log:
-        "results/10_Reports/tools-log/bgzip/{sample}_{aligner}_{min_cov}X_variant-archive.log"
+        "results/10_Reports/tools-log/bgzip/{reference}/{sample}_{aligner}_{min_cov}X_variant-archive.log"
     shell:
         "bgzip "                     # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
@@ -254,17 +254,17 @@ rule lofreq_variant_filtering:
     # Use: lofreq filter [OPTIONS] -i [INDEL.vcf] -o [INDEL-FILT.vcf]
     # Note: without --no-defaults LoFreq's predefined filters are on
     message:
-        "LoFreq filtering SNVs and Indels for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "LoFreq filtering SNVs and Indels for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     params:
         min_af = MIN_AF
     input:
-        variant_call = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-call.vcf"
+        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-call.vcf"
     output:
-        variant_filt = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-filt.vcf"
+        variant_filt = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf"
     log:
-        "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{min_cov}X_variant-filt.log"
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                        # Filter SNVs and Indels parsed from vcf file
@@ -279,23 +279,24 @@ rule lofreq_variant_calling:
     # Aim: SNVs and Indels calling
     # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [MASKED-REF.fasta] -o [INDEL.vcf] [INDEL.bam]
     message:
-        "LoFreq calling SNVs and Indels for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "LoFreq calling SNVs and Indels for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     resources:
         cpus = CPUS
     input:
-        masked_ref = "results/04_Variants/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        indel_qual = "results/04_Variants/{sample}_{aligner}_{min_cov}X_indel-qual.bam",
-        index = "results/04_Variants/{sample}_{aligner}_{min_cov}X_indel-qual.bai"
+        masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
+        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam",
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bai"
     output:
-        variant_call = "results/04_Variants/{sample}_{aligner}_{min_cov}X_variant-call.vcf"
+        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-call.vcf"
     log:
-        "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{min_cov}X_variant-call.log"
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_variant-call.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
-        "call-parallel "                 # Call variants from BAM file
-        "--pp-threads {resources.cpus} " # Number of threads (required)
+        #"call-parallel "                 # Call variants with parallel wrapper, requires --pp-threads
+        #"--pp-threads {resources.cpus} " # Number of threads (required) [INT] (default, dactivate because issue).
+        "call "                          # Call variants (no parallel)
         "--call-indels "                 # Enable indel calls (note: preprocess your file to include indel alignment qualities!)
         "--ref {input.masked_ref} "      # -f: Indexed reference fasta file (gzip supported)
         "--out {output.variant_call} "   # -o: SNVs and Indels VCF file output (default: standard output)
@@ -307,17 +308,17 @@ rule samtools_indel_indexing:
     # Aim: indexing indel qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDEL-QUAL.bam] [INDEX.bai]
     message:
-        "SamTools indexing indel qualities BAM file [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "SamTools indexing indel qualities BAM file [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     resources:
        cpus = CPUS
     input:
-        indel_qual = "results/04_Variants/{sample}_{aligner}_{min_cov}X_indel-qual.bam"
+        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam"
     output:
-        index = "results/04_Variants/{sample}_{aligner}_{min_cov}X_indel-qual.bai"
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_{min_cov}X_indel-qual-index.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # Number of additional threads to use (default: 0)
@@ -332,17 +333,17 @@ rule lofreq_indel_qualities:
     # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
     # Note: do not realign your BAM file afterwards!
     message:
-        "LoFreq insert indels qualities for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "LoFreq insert indels qualities for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     input:
-        masked_ref = "results/04_Variants/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        mark_dup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+        masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     output:
-        indel_qual = "results/04_Variants/{sample}_{aligner}_{min_cov}X_indel-qual.bam"
+        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam"
     log:
-        "results/10_Reports/tools-log/lofreq/{sample}_{aligner}_{min_cov}X_indel-qual.log"
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.log"
     shell:
         "lofreq "                   # LoFreq, fast and sensitive inference of SNVs and Indels 
         "indelqual "                 # Insert indel qualities into BAM file (required for indel predictions)
@@ -357,21 +358,20 @@ rule bedtools_masking:
     # Aim: masking low coverage regions
     # Use: bedtools maskfasta [OPTIONS] -fi [REFERENCE.fasta] -bed [RANGE.bed] -fo [MASKEDREF.fasta]
     message:
-        "BedTools masking low coverage regions for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "BedTools masking low coverage regions for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     params:
-        path = REF_PATH,
-        reference = REFERENCE
+        path = REF_PATH
     input:
-        low_cov_mask = "results/03_Coverage/bed/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed"
+        low_cov_mask = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed"
     output:
-        masked_ref = "results/04_Variants/{sample}_{aligner}_{min_cov}X_masked-ref.fasta"
+        masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta"
     log:
-        "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_{min_cov}X_masking.log"
+        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_{min_cov}X_masking.log"
     shell:
         "bedtools maskfasta "                       # Bedtools maskfasta, mask a fasta file based on feature coordinates
-        "-fi {params.path}{params.reference}.fasta " # Input FASTA file 
+        "-fi {params.path}{wildcards.reference}.fasta " # Input FASTA file 
         "-bed {input.low_cov_mask} "                 # BED/GFF/VCF file of ranges to mask in -fi
         "-fo {output.masked_ref} "                   # Output masked FASTA file
         "&> {log}"                                   # Log redirection 
@@ -381,15 +381,15 @@ rule bedtools_merged_mask:
     # Aim: merging overlaps
     # Use: bedtools merge [OPTIONS] -i [FILTERED.bed] -g [GENOME.fasta] 
     message:
-        "BedTools merging overlaps for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "BedTools merging overlaps for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     input:
-        min_cov_filt = "results/03_Coverage/bed/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed"
+        min_cov_filt = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed"
     output:
-        low_cov_mask = temp("results/03_Coverage/bed/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed")
+        low_cov_mask = temp("results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed")
     log:
-        "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_{min_cov}X_merging.log"
+        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_{min_cov}X_merging.log"
     shell:
         "bedtools merge "          # Bedtools merge, merges overlapping BED/GFF/VCF entries into a single interval
         "-i {input.min_cov_filt} "  # -i: BED/GFF/VCF input to merge 
@@ -401,15 +401,15 @@ rule awk_min_covfilt:
     # Aim: minimum coverage filtration
     # Use: awk '$4 < [MIN_COV]' [BEDGRAPH.bed] 1> [FILTERED.bed]
     message:
-        "Awk minimum coverage filtration for [[ {wildcards.sample} ]] sample ({wildcards.aligner}, @{wildcards.min_cov}X)"
+        "Awk minimum coverage filtration for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
         GEVARLI
     input:
-        genome_cov = "results/03_Coverage/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_genome-cov.bed"
     output:
-        min_cov_filt = temp("results/03_Coverage/bed/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed")
+        min_cov_filt = temp("results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed")
     log:
-        "results/10_Reports/tools-log/awk/{sample}_{aligner}_{min_cov}X_min-cov-filt.log"
+        "results/10_Reports/tools-log/awk/{reference}/{sample}_{aligner}_{min_cov}X_min-cov-filt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
         "'$4 < {wildcards.min_cov}' " # Minimum coverage for masking regions in consensus sequence
@@ -422,20 +422,20 @@ rule awk_coverage_statistics:
     # Aim: computing genomme coverage stats
     # Use: awk {FORMULA} END {{print [RESULTS.tsv] [BEDGRAPH.bed]
     message:
-        "Awk compute genome coverage statistics BED [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+        "Awk compute genome coverage statistics BED [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     input:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
-        samtools = "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup.log",
-        flagstat = "results/03_Coverage/flagstat/{sample}_{aligner}_flagstat.json",
-        histogram = "results/03_Coverage/histogram/{sample}_{aligner}_coverage-histogram.txt",
-        genome_cov = "results/03_Coverage/bed/{sample}_{aligner}_genome-cov.bed"
+        samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup.log",
+        flagstat = "results/03_Coverage/flagstat/{reference}/{sample}_{aligner}_flagstat.json",
+        histogram = "results/03_Coverage/histogram/{reference}/{sample}_{aligner}_coverage-histogram.txt",
+        genome_cov = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_genome-cov.bed"
     output:
-        cov_stats = "results/03_Coverage/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv"
+        cov_stats = "results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv"
     log:
-        "results/10_Reports/tools-log/awk/{sample}_{aligner}_{min_cov}X_coverage-stats.log"
+        "results/10_Reports/tools-log/awk/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.log"
     shell:
         """ rawReads=$(grep -o -E  """                                  # Get raw reads 
         """ 'Total read pairs processed:.+' {input.cutadapt}  """       #
@@ -464,12 +464,12 @@ rule awk_coverage_statistics:
         """ | sed -r 's/WRITTEN:\ +//') ; """                           #
         #
         """ mappedReads=$(grep -o -E -m 1 """                           # Get mapped reads
-        """ '"mapped": .+' {input.flagstat} """                        #
+        """ '"mapped": .+' {input.flagstat} """                         #
         """ | sed -r 's/"mapped":\ +//' """                             #
         """ | sed 's/,//g') ; """                                       #
         #
         """ mappedPercentReads=$(grep -o -E -m 1 """                    # Get mapped precent reads
-        """ '"mapped %": .+' {input.flagstat} """                      #
+        """ '"mapped %": .+' {input.flagstat} """                       #
         """ | sed -r 's/"mapped %":\ +//' """                           #
         """ | sed 's/,//g') ; """                                       #
         #
@@ -485,47 +485,49 @@ rule awk_coverage_statistics:
         """ -v estimatedLibrarySize="${{estimatedLibrarySize}}" """     # Define external variable
         """ -v samtoolsPF="${{samtoolsPF}}" """                         # Define external variable
         """ -v mappedReads="${{mappedReads}}" """                       # Define external variable
-        """ -v mappedPercentReads="${{mappedPercentReads}}" """        # Define external variable
+        """ -v mappedPercentReads="${{mappedPercentReads}}" """         # Define external variable
         """ -v covPercentAt1X="${{covPercentAt1X}}" """                 # Define external variable
-        """ '$4 >= {wildcards.min_cov} {{supMin_Cov+=$3-$2}} ; """       # Genome size (>= min_cov @X)
+        """ '$4 >= {wildcards.min_cov} {{supMin_Cov+=$3-$2}} ; """      # Genome size (>= min_cov @X)
         """ {{genomeSize+=$3-$2}} ; """                                 # Genome size (total)
         """ {{totalBases+=($3-$2)*$4}} ; """                            # Total bases @1X
         """ {{totalBasesSq+=(($3-$2)*$4)**2}} """                       # Total bases square @1X
         """ END """                                                    # END
         """ {{print """                                                # Print
-        """ "sample_id", "\t", """                                      # Sample ID header
-        """ "raw_paired_reads", "\t", """                               # Raw paired reads header
-        """ "cutadapt_pairs_PF", "\t", """                                    # Cutadapt Passing Filters header
-        """ "sickle_reads_PF", "\t", """                                      # Sickle-trim Passing Filters header
-        """ "duplicated_reads", "\t", """                               # header
-        """ "duplicated_percent_%","\t", """                            # header
-        """ "estimated_library_size*", "\t", """                        # header
-        """ "samtools_pairs_PF", "\t", """                              # header
-        """ "mapped_reads", "\t", """                                   # header
-        """ "mapped_percent_%", "\t", """                               # header
-        """ "cov_percent_%_@1X", "\t", """                              # header
-        """ "mean_depth", "\t", """                                     # Mean depth header
-        """ "standard_deviation", "\t", """                             # Standard deviation header
-        """ "cov_percent_%" "\t", """                                   # Coverage percent header
-        """ "@_min_cov" "\t", """                                       # @ min_cov X header
-        """ "with_aligner" """                                          # Aligner header
+        """ "sample_id", "\t", """                                      # header: Sample ID
+        """ "raw_paired_reads", "\t", """                               # header: Raw paired reads
+        """ "cutadapt_pairs_PF", "\t", """                              # header: Cutadapt Passing Filters
+        """ "sickle_reads_PF", "\t", """                                # header: Sickle-trim Passing Filters
+        """ "duplicated_reads", "\t", """                               # header:
+        """ "duplicated_percent_%","\t", """                            # header:
+        """ "estimated_library_size*", "\t", """                        # header:
+        """ "samtools_pairs_PF", "\t", """                              # header:
+        """ "mapped_with", "\t",  """                                   # header: aligner
+        """ "mapped_on", "\t",  """                                     # header: reference
+        """ "mapped_reads", "\t", """                                   # header:
+        """ "mapped_percent_%", "\t", """                               # header:
+        """ "mean_depth", "\t", """                                     # header: mean depth
+        """ "standard_deviation", "\t", """                             # header: standard deviation
+        """ "cov_percent_%_@1X", "\t", """                              # header: coverage percentage @1X
+        """ "cov_percent_%" "\t", """                                   # header: coverage percentage
+        """ "@_min_cov" """                                             # header: @_[min_cov]_X
         """ ORS """                                                      # \n newline
-        """ "{wildcards.sample}", "\t", """                             # Sample ID value
-        """ rawReads, "\t", """                                         # Raw sequences value
-        """ cutadaptPF, "\t", """                                       # Cutadapt Passing Filter value
-        """ sicklePF, "\t", """                                         # Sickle Passing Filter value
-        """ totalDuplicate, "\t", """                                   # value
-        """ int(((totalDuplicate)/(rawReads*2))*100), "%", "\t", """ # value (divided by 2 to estimated pairs)
-        """ estimatedLibrarySize, "\t", """                             # value
-        """ samtoolsPF, "\t", """                                       # value
-        """ mappedReads, "\t", """                                      # value
-        """ mappedPercentReads, "%", "\t", """                            # value
-        """ covPercentAt1X, "\t", """                                   # value
-        """ int(totalBases/genomeSize), "\t", """                       # Mean depth value
+        """ "{wildcards.sample}", "\t", """                             # value: Sample ID
+        """ rawReads, "\t", """                                         # value: Raw sequences
+        """ cutadaptPF, "\t", """                                       # value: Cutadapt Passing Filter
+        """ sicklePF, "\t", """                                         # value: Sickle Passing Filter
+        """ totalDuplicate, "\t", """                                   # value:
+        """ int(((totalDuplicate)/(rawReads*2))*100), "%", "\t", """    # value: (divided by 2 to estimated pairs)
+        """ estimatedLibrarySize, "\t", """                             # value:
+        """ samtoolsPF, "\t", """                                       # value:
+        """ "{wildcards.aligner}", "\t",  """                           # value: aligner
+        """ "{wildcards.reference}", "\t",  """                         # value: reference
+        """ mappedReads, "\t", """                                      # value:
+        """ mappedPercentReads, "%", "\t", """                          # value:
+        """ int(totalBases/genomeSize), "\t", """                       # value: mean depth
         """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
+        """ covPercentAt1X, "\t", """                                   # value
         """ supMin_Cov/genomeSize*100, "%", "\t", """                   # Coverage percent (@ min_cov X) value
-        """ "@{wildcards.min_cov}X", "\t", """                          # @ min_cov X value
-        """ "{wildcards.aligner}" """                                   # Aligner value
+        """ "@{wildcards.min_cov}X" """                                 # @ min_cov X value
         """ }}' """                                                     # Close print
         """ {input.genome_cov} """                                      # BedGraph coverage input
         """ 1> {output.cov_stats} """                                   # Mean depth output
@@ -536,16 +538,16 @@ rule bedtools_genome_coverage:
     # Aim: computing genome coverage sequencing
     # Use: bedtools genomecov [OPTIONS] -ibam [MARK-DUP.bam] 1> [BEDGRAPH.bed]
     message:
-        "BedTools computing genome coverage for [[ {wildcards.sample} ]] sample against reference genome sequence ({wildcards.aligner})"
+        "BedTools computing genome coverage for [[ {wildcards.sample} ]] sample against reference genome sequence (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     input:
-        mark_dup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     output:
-        genome_cov = "results/03_Coverage/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     log:
-        "results/10_Reports/tools-log/bedtools/{sample}_{aligner}_genome-cov.log"
+        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_genome-cov.log"
     shell:
         "bedtools genomecov "    # Bedtools genomecov, compute the coverage of a feature file among a genome
         "-bga "                   # Report depth in BedGraph format, regions with zero coverage are also reported
@@ -558,7 +560,7 @@ rule samtools_coverage_histogram:
     # Aim: alignment depth and percent coverage histogram
     # Use: samtools coverage --histogram [INPUT.bam]
     message:
-        "SamTools calcul alignment depth and percent coverage @1X from BAM file for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+        "SamTools calcul alignment depth and percent coverage @1X from BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
@@ -566,11 +568,11 @@ rule samtools_coverage_histogram:
        #bins = BINS,
        #depth = DEPTH
     input:
-        mark_dup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
     output:
-        histogram = "results/03_Coverage/histogram/{sample}_{aligner}_coverage-histogram.txt"
+        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_coverage-histogram.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_coverage-histogram.log"
     shell:
         "samtools coverage "          # Samtools coverage, tools for alignments in the SAM format with command to alignment depth and percent coverage
         "--histogram "                 # -m: show histogram instead of tabular output
@@ -591,17 +593,17 @@ rule samtools_flagstat_ext:
     # Aim: simple stats
     # Use: samtools flagstat -@ [THREADS] [INPUT.bam]
     message:
-        "SamTools calcul simple stats from BAM file for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+        "SamTools calcul simple stats from BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
        cpus = CPUS
     input:
-        mark_dup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
     output:
-        flagstat = "results/03_Coverage/flagstat/{sample}_{aligner}_flagstat.{ext}"
+        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_flagstat-{ext}.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_flagstat-{ext}.log"
     shell:
         "samtools flagstat "           # Samtools flagstat, tools for alignments in the SAM format with command to simple stat
         "--threads {resources.cpus} "   # -@: Number of additional threads to use (default: 1)
@@ -616,17 +618,17 @@ rule samtools_index_markdup:
     # Aim: indexing marked as duplicate BAM file
     # Use: samtools index -@ [THREADS] -b [MARK-DUP.bam] [INDEX.bai]
     message:
-        "SamTools indexing marked as duplicate BAM file for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+        "SamTools indexing marked as duplicate BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
        cpus = CPUS
     input:
-        mark_dup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
     output:
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup-index.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " #--threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
@@ -640,17 +642,17 @@ rule samtools_markdup:
     # Aim: marking duplicate alignments
     # Use: samtools markdup -@ [THREADS] -r -s -O BAM [SORTED.bam] [MARK-DUP.bam] 
     message:
-        "SamTools marking duplicate alignments for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+        "SamTools marking duplicate alignments for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
        cpus = CPUS
     input:
-        sorted = "results/02_Mapping/{sample}_{aligner}_sorted.bam"
+        sorted = "results/02_Mapping/{reference}/{sample}_{aligner}_sorted.bam"
     output:
-        mark_dup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_mark-dup.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup.log"
     shell:
         "samtools markdup "          # Samtools markdup, tools for alignments in the SAM format with command mark duplicates
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -666,7 +668,7 @@ rule samtools_sorting:
     # Aim: sorting
     # Use: samtools sort -@ [THREADS] -m [MEM_GB] -T [TMP_DIR] -O BAM -o [SORTED.bam] [FIX-MATE.bam] 
     message:
-        "SamTools sorting [[ {wildcards.sample} ]] sample reads ({wildcards.aligner})"
+        "SamTools sorting [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
@@ -674,11 +676,11 @@ rule samtools_sorting:
        mem_gb = MEM_GB,
        tmp_dir = TMP_DIR
     input:
-        fix_mate = "results/02_Mapping/{sample}_{aligner}_fix-mate.bam"
+        fix_mate = "results/02_Mapping/{reference}/{sample}_{aligner}_fix-mate.bam"
     output:
-        sorted = temp("results/02_Mapping/{sample}_{aligner}_sorted.bam")
+        sorted = temp("results/02_Mapping/{reference}/{sample}_{aligner}_sorted.bam")
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_sorted.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_sorted.log"
     shell:
         "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -694,17 +696,17 @@ rule samtools_fixmate:
     # Aim: filling in mate coordinates
     # Use: samtools fixmate -@ [THREADS] -m -O BAM [SORT-BY-NAMES.bam] [FIX-MATE.bam] 
     message:
-        "SamTools filling in mate coordinates [[ {wildcards.sample} ]] sample reads ({wildcards.aligner})"
+        "SamTools filling in mate coordinates [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
        cpus = CPUS
     input:
-        sort_by_names = "results/02_Mapping/{sample}_{aligner}_sort-by-names.bam"
+        sort_by_names = "results/02_Mapping/{reference}/{sample}_{aligner}_sort-by-names.bam"
     output:
-        fix_mate = temp("results/02_Mapping/{sample}_{aligner}_fix-mate.bam")
+        fix_mate = temp("results/02_Mapping/{reference}/{sample}_{aligner}_fix-mate.bam")
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_fix-mate.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_fix-mate.log"
     shell:
         "samtools fixmate "          # Samtools fixmate, tools for alignments in the SAM format with command to fix mate information
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -719,18 +721,18 @@ rule samtools_sortbynames:
     # Aim: sorting by names
     # Use: samtools sort -t [THREADS] -m [MEM_GB] -n -O BAM -o [SORT-BY-NAMES.bam] [MAPPED.sam]
     message:
-        "SamTools sorting by names [[ {wildcards.sample} ]] sample reads ({wildcards.aligner})"
+        "SamTools sorting by names [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
     conda:
         GEVARLI
     resources:
        cpus = CPUS,
        mem_gb = MEM_GB
     input:
-        mapped = "results/02_Mapping/{sample}_{aligner}-mapped.sam"
+        mapped = "results/02_Mapping/{reference}/{sample}_{aligner}-mapped.sam"
     output:
-        sort_by_names = temp("results/02_Mapping/{sample}_{aligner}_sort-by-names.bam")
+        sort_by_names = temp("results/02_Mapping/{reference}/{sample}_{aligner}_sort-by-names.bam")
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{aligner}_sort-by-names.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_sort-by-names.log"
     shell:
         "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -746,26 +748,25 @@ rule bwa_mapping:
     # Aim: reads mapping against reference sequence
     # Use: bwa mem -t [THREADS] -x [REFERENCE] [FWD_R1.fq] [REV_R2.fq] 1> [MAPPED.sam]
     message:
-        "BWA-MEM mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence"
+        "BWA-MEM mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
     conda:
         GEVARLI
     resources:
         cpus = CPUS
     params:
-        bwa_path = BWA_PATH,
-        reference = REFERENCE
+        bwa_path = BWA_PATH
     input:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{sample}_bwa-mapped.sam")
+        mapped = temp("results/02_Mapping/{reference}/{sample}_bwa-mapped.sam")
     log:
-        "results/10_Reports/tools-log/bwa/{sample}.log"
+        "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
     shell:
         "bwa mem "                            # BWA-MEM algorithm, performs local alignment
         "-t {resources.cpus} "                 # -t: Number of threads (default: 12)
         "-v 1 "                                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
-        "{params.bwa_path}{params.reference} " # Reference index filename prefix
+        "{params.bwa_path}{wildcards.reference} " # Reference index filename prefix
         "{input.fwd_reads} "                   # Forward input reads
         "{input.rev_reads} "                   # Reverse input reads
         "1> {output.mapped} "                  # SAM output
@@ -776,27 +777,26 @@ rule bowtie2_mapping:
     # Aim: reads mapping against reference sequence
     # Use: bowtie2 -p [THREADS] -x [REFERENCE] -1 [FWD_R1.fq] -2 [REV_R2.fq] -S [MAPPED.sam]
     message:
-        "Bowtie2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence"
+        "Bowtie2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
     conda:
         GEVARLI
     resources:
         cpus = CPUS
     params:
         bt2_path = BT2_PATH,
-        sensitivity = SENSITIVITY,
-        reference = REFERENCE
+        sensitivity = SENSITIVITY
     input:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{sample}_bowtie2-mapped.sam")
+        mapped = temp("results/02_Mapping/{reference}/{sample}_bowtie2-mapped.sam")
     log:
-        "results/10_Reports/tools-log/bowtie2/{sample}.log"
+        "results/10_Reports/tools-log/bowtie2/{sample}_{reference}.log"
     shell:
         "bowtie2 "                   # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences
         "--threads {resources.cpus} " # -p: Number of alignment threads to launch (default: 1)
         "--reorder "                  # Keep the original read order (if multi-processor option -p is used)
-        "-x {params.bt2_path}{params.reference} " # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
+        "-x {params.bt2_path}{wildcards.reference} " # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
         "{params.sensitivity} "       # Preset (default: "--sensitive", same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]) 
         "-q "                         # -q: Query input files are FASTQ .fq/.fastq (default)
         "-1 {input.fwd_reads} "       # Forward input reads
