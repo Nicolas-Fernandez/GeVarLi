@@ -180,13 +180,13 @@ max_threads=$(yq -r '.resources.cpus' ${config_file})    # Get user config: max 
 max_memory=$(yq -r '.resources.ram' ${config_file})      # Get user config: max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})   # Calcul maximum memory usage per job
 reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/') # Get user config:  genome reference
-aligner=$(yq -c '.consensus.aligner' ${config_file})     # Get user config: aligner 
-min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: minimum coverage
+aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/')     # Get user config: aligner 
+min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/')    # Get user config: minimum coverage
 min_af=$(yq -r '.consensus.min_af' ${config_file})       # Get user config: minimum allele frequency
 clipping=$(yq -r '.cutadapt.clipping' ${config_file})    # Get user config: hard clipping option
-nextclade=$(yq -c '.nextclade.run' ${config_file})       # Get user config: run nextclade
-dataset=$(yq -c '.nextclade.dataset' ${config_file})     # Get user config: dataset for nextclade
-pangolin=$(yq -c '.pangolin.run' ${config_file})         # Get user config: run pangolin
+nextclade=$(yq -c '.nextclade.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run nextclade
+dataset=$(yq -c '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')  # Get user config: dataset for nextclade
+pangolin=$(yq -c '.pangolin.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')      # Get user config: run pangolin
 subset=$(yq -r '.fastq_screen.subset' ${config_file})    # Get user config: fastq_screen subsetption
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")               # Get system: analyzes starting time
 time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")             # Convert time for archive (wo space)
@@ -235,7 +235,7 @@ ${green}------------------------------${nc}
 # Rename fastq files to remove "_001" Illumina pattern (mandatory)
 ## De/comment line (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
 echo -e "Removing ${red}'_S'${nc} index tag ID"
-#rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
+rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
 echo -e "Removing ${red}'_L'${nc} line tag ID"
 rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
 echo -e "Removing ${red}'_001'${nc} illumina tag ID"
@@ -409,81 +409,52 @@ for snakefile in ${snakefiles_list} ; do
 done
 
 ###############################################################################
-###### Concatenate all consensus fasta ######
+###### Concatenate all reults ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONCATENATE FASTA FILES${nc} ${green}#####${nc}
-${green}-----------------------------------${nc}
+${green}#####${nc} ${red}CONCATENATE RESULTS${nc} ${green}#####${nc}
+${green}-------------------------------${nc}
 "
-
-cat ${workdir}/results/05_Consensus/*_consensus.fasta \
-    2> /dev/null \
-    1> ${workdir}/results/All_consensus_sequences.fasta
 
 cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html \
    2> /dev/null \
    ${workdir}/results/All_readsQC_reports.html
 
-###############################################################################
-###### Concatenate all coverage stats ######
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONCATENATE COVERAGE STATS${nc} ${green}#####${nc}
-${green}--------------------------------------${nc}
-"
-
-cat ${workdir}/results/03_Coverage/*coverage-stats.tsv \
-    2> /dev/null \
-    1> ${workdir}/results/All_genome_coverages.tsv
-
-awk "NR==1 || NR%2==0" ${workdir}/results/All_genome_coverages.tsv \
-    2> /dev/null \
-    1> ${workdir}/results/GENCOV.tmp \
-    && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv \
-    2> /dev/null
-
-###############################################################################
-###### Concatenate all Pangolin lineage reports ######
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONCATENATE PANGOLIN REPORTS${nc} ${green}#####${nc}
-${green}----------------------------------------${nc}
-"
-
-cat ${workdir}/results/06_Lineages/*_pangolin-report.csv \
-    2> /dev/null \
-    1> ${workdir}/results/All_pangolin_lineages.csv
-
-awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv \
-    2> /dev/null \
-    1> ${workdir}/results/PANGO.tmp \
-    && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv \
-    2> /dev/null
-
-sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv \
-    2> /dev/null \
-    1> ${workdir}/results/All_pangolin_lineages.tsv
-
-rm -f ${workdir}/results/All_pangolin_lineages.csv 2> /dev/null
-
-###############################################################################
-###### Concatenate all Nextclade lineage reports ######
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONCATENATE NEXTCLADE REPORTS${nc} ${green}#####${nc}
-${green}-----------------------------------------${nc}
-"
-
-cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv \
-    2> /dev/null \
-    1> ${workdir}/results/All_nextclade_lineages.tsv
-
-awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv \
-    2> /dev/null \
-    1> ${workdir}/results/NEXT.tmp \
-    && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv \
-    2> /dev/null
-
+for directory in ${workdir}/results/02_Mapping/*/ ; do
+    reference=$(basename ${directory}) ;
+    cat ${workdir}/results/05_Consensus/${reference}/*_consensus.fasta \
+        2> /dev/null \
+        1> ${workdir}/results/All_${reference}_consensus_sequences.fasta ;
+    cat ${workdir}/results/03_Coverage/${reference}/*coverage-stats.tsv \
+        2> /dev/null \
+        1> ${workdir}/results/All_${reference}_genome_coverages.tsv ;
+    awk "NR==1 || NR%2==0" ${workdir}/results/All_${reference}_genome_coverages.tsv \
+        2> /dev/null \
+        1> ${workdir}/results/GENCOV.tmp \
+        && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv \
+        2> /dev/null ;
+    cat ${workdir}/results/06_Lineages/*_pangolin-report.csv \
+        2> /dev/null \
+        1> ${workdir}/results/All_pangolin_lineages.csv ;
+    awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv \
+        2> /dev/null \
+        1> ${workdir}/results/PANGO.tmp \
+        && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv \
+        2> /dev/null ;
+    sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv \
+        2> /dev/null \
+        1> ${workdir}/results/All_pangolin_lineages.tsv ;
+    rm -f ${workdir}/results/All_pangolin_lineages.csv 2> /dev/null ;
+    cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv \
+        2> /dev/null \
+        1> ${workdir}/results/All_nextclade_lineages.tsv ;
+    awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv \
+        2> /dev/null \
+        1> ${workdir}/results/NEXT.tmp \
+        && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv \
+        2> /dev/null ;
+done
+		
 ###############################################################################
 ###### Create usefull graphs, summary and logs ######
 echo -e "
@@ -507,7 +478,7 @@ for snakefile in ${snakefiles_list} ; do
                 --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
                 --${graph} \
 	    | dot -T${extention} \
-            #2> /dev/null \
+            2> /dev/null \
 	    1> ${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} ;
 	done ;
     done ;
@@ -617,4 +588,3 @@ echo -e "
 ${green}------------------------------------------------------------------------${nc}
 "
 ###############################################################################
-B
