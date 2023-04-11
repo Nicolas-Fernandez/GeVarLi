@@ -118,11 +118,11 @@ else
     echo -e "
 Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow
-    # ${red}Mamba${nc}:     Create snakemake-conda's environments faster
-    # ${red}Yq${nc}:        Parse config.yaml file
-    # ${red}Rename${nc}:    Rename fastq files
-    # ${red}Graphviz${nc}:  Dot snakemake DAG
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.25.0)
+    # ${red}Mamba${nc}:     Create snakemake-conda's environments faster (ver. 1.4.2)
+    # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.1)
+    # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
+    # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 7.1.0)
 "
     conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
 fi
@@ -160,11 +160,12 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-conda_version=$(conda --version | sed 's/conda //')                   # Conda version
-snakemake_version=$(snakemake --version)                              # Snakemake version
-mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1)       # Mamba version
-yq_version=$(yq --version | sed 's/yq //')                            # Yq version
-rename_version="1.601"                                                # Rename version
+conda_version=$(conda --version | sed 's/conda //')                   # Conda version (ver. >= 23.3.1)
+snakemake_version=$(snakemake --version)                              # Snakemake version (ver. 7.25.0)
+mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1)       # Mamba version (ver. 1.4.2)
+yq_version=$(yq --version | sed 's/yq //')                            # Yq version (ver. 3.2.1)
+rename_version="1.601"                                                # Rename version (ver. 1.601)
+graphviz_version="7.1.0"                                              # GraphViz version (ver. 7.1.0)
 #graphviz_version=$(dot --version | sed 's/dot - graphviz version //') # GraphViz version
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
@@ -199,7 +200,7 @@ echo -e "
 ${blue}Working directory${nc} _______ ${workdir}/
 ${blue}Samples processed${nc} _______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
-${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
+${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc} (>= 23.3.1)
 ${blue}Snakemake version${nc} _______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
