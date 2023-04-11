@@ -81,11 +81,11 @@ then
     ram_gb=$(expr ${mem_size} \/ $((1024**3)) )      # mem_size / 1024**3 = Gb
 elif [[ ${os} == "linux" ]]
 then
-    model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -r "s/Model name: +//")                           # Get chip model name
-    physical_cpu=$(lscpu | grep -o -E "^CPU\(s\): +[0-9]+" | sed -r "s/CPU\(s\): +//")                        # Get physical cpu
-    threads_cpu=$(lscpu | grep -o -E "^Thread\(s\) per core: +[0-9]+" | sed -r "s/Thread\(s\) per core: +//") # Get thread(s) per core
+    model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -E "s/Model name: +//")                           # Get chip model name
+    physical_cpu=$(lscpu | grep -o -E "^CPU\(s\): +[0-9]+" | sed -E "s/CPU\(s\): +//")                        # Get physical cpu
+    threads_cpu=$(lscpu | grep -o -E "^Thread\(s\) per core: +[0-9]+" | sed -E "s/Thread\(s\) per core: +//") # Get thread(s) per core
     logical_cpu=$(expr ${physical_cpu} \* ${threads_cpu})                                                     # Calcul logical cpu
-    mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -r "s/MemTotal: +//")                       # Get memory size (Kb)
+    mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -E "s/MemTotal: +//")                       # Get memory size (Kb)
     ram_gb=$(expr ${mem_size} \/ $((1024**2)) )                                                               # mem_size / 1024**2 = Gb
 else
     echo -e "Please, use '${red}osx${nc}' or '${red}linux${nc}' operating systems"
