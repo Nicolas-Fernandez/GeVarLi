@@ -7,7 +7,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.04.03
+# Latest modifications ___ 2023.04.11
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -19,62 +19,12 @@ blue="\033[1;34m"  # blue
 nc="\033[0m"       # no color
 
 ###############################################################################
-###### Snakemake-base Installation ######
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SNAKEMAKE-BASE INSTALLATION${nc} ${green}#####${nc}
-${green}---------------------------------------${nc}
-"
+###### About ######
+
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 gevarli_version="2023.04"                              # GeVarLi version
 snakemake_base_version="2023.04"                       # Snakemake base version
 
-# Test if latest 'snakemake-base' environment exist
-if [[ $(conda info --envs | grep -o -E "^snakemake-base_v.${snakemake_base_version}") ]]
-then
-    echo -e "
-Conda environment ${ylo}snakemake-base_v.${snakemake_base_version}${nc} it's already created!
-"
-else
-    echo -e "
-Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be now created, with:
-
-    # ${red}Snakemake${nc}: Run GeVarLi workflow
-    # ${red}Mamba${nc}:     Create snakemake-conda's environments faster
-    # ${red}Yq${nc}:        Parse config.yaml file
-    # ${red}Rename${nc}:    Rename fastq files
-    # ${red}Graphviz${nc}:  Dot snakemake DAG
-"
-    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
-fi
-
-# Remove old 'gevarli' and 'snakemake' environments
-conda env remove --name gevarli-base_v.2022.11
-conda env remove --name gevarli-base_v.2022.12
-conda env remove --name gevarli-base_v.2023.01
-conda env remove --name gevarli-tools_v.2023.02
-conda env remove --name gevarli-tools_v.2023.03
-conda env remove --name snakemake-base_v.2023.01
-conda env remove --name snakemake-base_v.2023.02
-conda env remove --name snakemake-base_v.2023.03
-
-###############################################################################
-###### Conda Env. Activation ######
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
-${green}----------------------------${nc}
-"
-
-echo -e "conda activate ${ylo}snakemake-base_v.${snakemake_base_version}${nc}"
-
-# intern shell source conda
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
-source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
-conda activate snakemake-base_v.${snakemake_base_version}        # conda activate
-
-###############################################################################
-###### About ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
@@ -86,7 +36,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2023.04.03
+${blue}Latest modifications${nc} ___ 2023.04.11
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -149,6 +99,58 @@ ${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc}
 ${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
 ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 "
+
+###############################################################################
+###### Snakemake-base Installation ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}SNAKEMAKE-BASE INSTALLATION${nc} ${green}#####${nc}
+${green}---------------------------------------${nc}
+"
+
+# Test if latest 'snakemake-base' environment exist
+if [[ $(conda info --envs | grep -o -E "^snakemake-base_v.${snakemake_base_version}") ]]
+then
+    echo -e "
+Conda environment ${ylo}snakemake-base_v.${snakemake_base_version}${nc} it's already created!
+"
+else
+    echo -e "
+Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be now created, with:
+
+    # ${red}Snakemake${nc}: Run GeVarLi workflow
+    # ${red}Mamba${nc}:     Create snakemake-conda's environments faster
+    # ${red}Yq${nc}:        Parse config.yaml file
+    # ${red}Rename${nc}:    Rename fastq files
+    # ${red}Graphviz${nc}:  Dot snakemake DAG
+"
+    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
+fi
+
+# Remove old 'gevarli' and 'snakemake' environments
+conda env remove --name gevarli-base_v.2022.11
+conda env remove --name gevarli-base_v.2022.12
+conda env remove --name gevarli-base_v.2023.01
+conda env remove --name gevarli-tools_v.2023.02
+conda env remove --name gevarli-tools_v.2023.03
+conda env remove --name snakemake-base_v.2023.01
+conda env remove --name snakemake-base_v.2023.02
+conda env remove --name snakemake-base_v.2023.03
+
+###############################################################################
+###### Conda Env. Activation ######
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
+${green}----------------------------${nc}
+"
+
+echo -e "conda activate ${ylo}snakemake-base_v.${snakemake_base_version}${nc}"
+
+# intern shell source conda
+source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
+source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
+conda activate snakemake-base_v.${snakemake_base_version}        # conda activate
 
 ###############################################################################
 ###### Settings ######
