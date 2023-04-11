@@ -423,11 +423,14 @@ cp ${workdir}/results/00_Quality_Control/multiqc/multiqc_report.html \
    2> /dev/null \
    ${workdir}/results/All_readsQC_reports.html
 
+# for each references used
 for directory in ${workdir}/results/02_Mapping/*/ ; do
     reference=$(basename ${directory}) ;
+    # Concatenate CONSENSUS
     cat ${workdir}/results/05_Consensus/${reference}/*_consensus.fasta \
         2> /dev/null \
         1> ${workdir}/results/All_${reference}_consensus_sequences.fasta ;
+    # Concatenate COVERAGE
     cat ${workdir}/results/03_Coverage/${reference}/*coverage-stats.tsv \
         2> /dev/null \
         1> ${workdir}/results/All_${reference}_genome_coverages.tsv ;
@@ -435,26 +438,28 @@ for directory in ${workdir}/results/02_Mapping/*/ ; do
         2> /dev/null \
         1> ${workdir}/results/GENCOV.tmp \
         && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv \
-        2> /dev/null ;
-    cat ${workdir}/results/06_Lineages/*_pangolin-report.csv \
+              2> /dev/null ;
+    # Concatenate PANGOLIN
+    cat ${workdir}/results/06_Lineages/${reference}/*_pangolin-report.csv \
         2> /dev/null \
-        1> ${workdir}/results/All_pangolin_lineages.csv ;
-    awk "NR==1 || NR%2==0" ${workdir}/results/All_pangolin_lineages.csv \
+        1> ${workdir}/results/All_${reference}_pangolin_lineages.csv ;
+    awk "NR==1 || NR%2==0" ${workdir}/results/All_${reference}_pangolin_lineages.csv \
         2> /dev/null \
         1> ${workdir}/results/PANGO.tmp \
-        && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_pangolin_lineages.csv \
+        && mv ${workdir}/results/PANGO.tmp ${workdir}/results/All_${reference}_pangolin_lineages.csv \
         2> /dev/null ;
-    sed "s/,/\t/g" ${workdir}/results/All_pangolin_lineages.csv \
+    sed "s/,/\t/g" ${workdir}/results/All_${reference}_pangolin_lineages.csv \
         2> /dev/null \
-        1> ${workdir}/results/All_pangolin_lineages.tsv ;
-    rm -f ${workdir}/results/All_pangolin_lineages.csv 2> /dev/null ;
-    cat ${workdir}/results/06_Lineages/*_nextclade-report.tsv \
+        1> ${workdir}/results/All_${reference}_pangolin_lineages.tsv ;
+    rm -f ${workdir}/results/All_${reference}_pangolin_lineages.csv 2> /dev/null ;
+    # Concatenate NEXTCLADE
+    cat ${workdir}/results/06_Lineages/${reference}/*_nextclade-report.tsv \
         2> /dev/null \
-        1> ${workdir}/results/All_nextclade_lineages.tsv ;
-    awk "NR==1 || NR%2==0" ${workdir}/results/All_nextclade_lineages.tsv \
+        1> ${workdir}/results/All_${reference}_nextclade_lineages.tsv ;
+    awk "NR==1 || NR%2==0" ${workdir}/results/All_${reference}_nextclade_lineages.tsv \
         2> /dev/null \
         1> ${workdir}/results/NEXT.tmp \
-        && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_nextclade_lineages.tsv \
+        && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_${reference}_nextclade_lineages.tsv \
         2> /dev/null ;
 done
 		
