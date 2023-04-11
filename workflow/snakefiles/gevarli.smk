@@ -91,7 +91,7 @@ PANGO_RUN = config["pangolin"]["run"]           # Pangolin run option
 
 rule all:
     input:
-        flagstat = expand("results/03_Coverage/flagstat/{reference}/{sample}_{aligner}_flagstat.{ext}",
+        flagstat = expand("results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}",
                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
         covstats = expand("results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv",
                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
