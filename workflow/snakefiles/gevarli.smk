@@ -387,7 +387,7 @@ rule bedtools_merged_mask:
     input:
         min_cov_filt = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed"
     output:
-        low_cov_mask = temp("results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed")
+        low_cov_mask = temp("results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed")
     log:
         "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_{min_cov}X_merging.log"
     shell:
