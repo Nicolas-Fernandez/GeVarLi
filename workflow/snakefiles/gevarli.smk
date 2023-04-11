@@ -364,7 +364,7 @@ rule bedtools_masking:
     params:
         path = REF_PATH
     input:
-        low_cov_mask = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed"
+        low_cov_mask = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed"
     output:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta"
     log:
@@ -405,9 +405,9 @@ rule awk_min_covfilt:
     conda:
         GEVARLI
     input:
-        genome_cov = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     output:
-        min_cov_filt = temp("results/03_Coverage/bed/{reference}/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed")
+        min_cov_filt = temp("results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed")
     log:
         "results/10_Reports/tools-log/awk/{reference}/{sample}_{aligner}_{min_cov}X_min-cov-filt.log"
     shell:
@@ -429,9 +429,9 @@ rule awk_coverage_statistics:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
         samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup.log",
-        flagstat = "results/03_Coverage/flagstat/{reference}/{sample}_{aligner}_flagstat.json",
-        histogram = "results/03_Coverage/histogram/{reference}/{sample}_{aligner}_coverage-histogram.txt",
-        genome_cov = "results/03_Coverage/bed/{reference}/{sample}_{aligner}_genome-cov.bed"
+        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.json",
+        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt",
+        genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     output:
         cov_stats = "results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv"
     log:
