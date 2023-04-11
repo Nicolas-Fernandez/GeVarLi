@@ -439,43 +439,43 @@ rule awk_coverage_statistics:
     shell:
         """ rawReads=$(grep -o -E  """                                  # Get raw reads 
         """ 'Total read pairs processed:.+' {input.cutadapt}  """       #
-        """ | sed -r 's/Total read pairs processed:\ +//'  """          #
+        """ | sed -E 's/Total read pairs processed:\ +//'  """          #
         """ | sed 's/,//g') ; """                                       #
         #
         """ cutadaptPF=$(grep -o -E """                                 # Get cutadapt Passing Filtes reads
         """ 'Pairs written \(passing filters\):.+' {input.cutadapt} """ #
-        """ | sed -r 's/Pairs written \(passing filters\):\ +//' """    #
+        """ | sed -E 's/Pairs written \(passing filters\):\ +//' """    #
         """ | sed 's/,//g') ; """                                       #
         #
         """ sicklePF=$(grep -o -E """                                   # Get sickle Passing Filtes reads
         """ 'FastQ paired records kept:.+' {input.sickle} """           #
-        """ | sed -r 's/FastQ paired records kept:\ +//') ; """         #
+        """ | sed -E 's/FastQ paired records kept:\ +//') ; """         #
         #
         """ totalDuplicate=$(grep -o -E """                             # Get total duplicated reads
         """ 'DUPLICATE TOTAL:.+' {input.samtools} """                   #
-        """ | sed -r 's/DUPLICATE TOTAL:\ +//') ; """                   #
+        """ | sed -E 's/DUPLICATE TOTAL:\ +//') ; """                   #
         #
         """ estimatedLibrarySize=$(grep -o -E """                       # Get estimated library size
         """ 'ESTIMATED_LIBRARY_SIZE:.+' {input.samtools} """            #
-        """ | sed -r 's/ESTIMATED_LIBRARY_SIZE:\ +//') ; """            #
+        """ | sed -E 's/ESTIMATED_LIBRARY_SIZE:\ +//') ; """            #
         #
         """ samtoolsPF=$(grep -o -E """                                 # Get samtool Passing Filter reads
         """ 'WRITTEN: .+' {input.samtools} """                          #
-        """ | sed -r 's/WRITTEN:\ +//') ; """                           #
+        """ | sed -E 's/WRITTEN:\ +//') ; """                           #
         #
         """ mappedReads=$(grep -o -E -m 1 """                           # Get mapped reads
         """ '"mapped": .+' {input.flagstat} """                         #
-        """ | sed -r 's/"mapped":\ +//' """                             #
+        """ | sed -E 's/"mapped":\ +//' """                             #
         """ | sed 's/,//g') ; """                                       #
         #
         """ mappedPercentReads=$(grep -o -E -m 1 """                    # Get mapped precent reads
         """ '"mapped %": .+' {input.flagstat} """                       #
-        """ | sed -r 's/"mapped %":\ +//' """                           #
+        """ | sed -E 's/"mapped %":\ +//' """                           #
         """ | sed 's/,//g') ; """                                       #
         #
         """ covPercentAt1X=$(grep -o -E """                             # Get coverage percent @1X
         """ 'Percent covered:.+' {input.histogram} """                  #
-        """ | sed -r 's/Percent covered:\ +//') ; """                   #
+        """ | sed -E 's/Percent covered:\ +//') ; """                   #
         #
         """ awk """                                                   # Awk, a program to select particular records in a file and perform operations upon them
         """ -v rawReads="${{rawReads}}" """                             # Define external variable
