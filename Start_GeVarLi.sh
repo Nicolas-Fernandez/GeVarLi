@@ -124,7 +124,7 @@ Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be 
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
     # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 7.1.0)
 "
-    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
+q    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
 fi
 
 # Remove old 'gevarli' and 'snakemake' environments
@@ -437,7 +437,7 @@ for directory in ${workdir}/results/02_Mapping/*/ ; do
     awk "NR==1 || NR%2==0" ${workdir}/results/All_${reference}_genome_coverages.tsv \
         2> /dev/null \
         1> ${workdir}/results/GENCOV.tmp \
-        && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_genome_coverages.tsv \
+        && mv ${workdir}/results/GENCOV.tmp ${workdir}/results/All_${reference}_genome_coverages.tsv \
               2> /dev/null ;
     # Concatenate PANGOLIN
     cat ${workdir}/results/06_Lineages/${reference}/*_pangolin-report.csv \
