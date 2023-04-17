@@ -1,7 +1,7 @@
 # GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.2.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.3.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU-Linux Ubuntu](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![WSL/WSL2](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
@@ -12,9 +12,9 @@
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Gitlab](<https://badgen.net/badge/icon/Gitlab/orange?icon=gitlab&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.10.6/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
-![Snakemake](<https://badgen.net/badge/icon/Snakemake 7.18.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
-![Conda](<https://badgen.net/badge/icon/Conda 23.1.0/black?icon=codacy&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.9.16/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 7.25.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Conda](<https://badgen.net/badge/icon/Conda >= 23.3.1/black?icon=codacy&label&scale=0.9>)
 
 
 ## ~ ABOUT ~ ##
@@ -41,20 +41,19 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
   - Sickle-trim (_quality trimming_)
 - Reads mapping
   - (_bam files_)
-  - 
-  - 
-- Variants calling 
-  - (_vcf files_)
+  - (_bed files_)
+  - Visualization (IGV)
+- Variants calling and filtering (_vcf files_)
 - Genome coverage (_statistics reports_)
 - Consensus sequences (_fasta file_)
 - Genomes classification
-  - Nextclade
-  - Pangolin
+  - Nextclade (_consensus quality and lineages reports_)
+  - Pangolin (_lineages reports_)
 
 
 ### Version ###
 
-*V.2023.03*  
+*V.2023.04*  
 
 ### Rulegraph ###
 
@@ -189,8 +188,8 @@ _Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_
 
 First run will auto-created _(only once)_:
 	- Snakemake-Base conda environment _(Snakemake, Mamba, Rename, GraphViz)_
-	- GeVarLi-conda environments _(tools used by GeVarLi)_
-	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources)_
+	- GeVarLi-Tools conda environments _(tools used by GeVarLi)_
+	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources/ directory)_
 	
 _This may take some time, depending on your internet connection and your computer_
 
@@ -205,10 +204,10 @@ _Some [temp] tagged files are removed by default, to save disk usage_
   ├── 📂 archives/
   │    └── 📦 Results_{YYYY-MM-DD_HHhMM}_{REFERENCE}_{ALIGNER}_{MINCOV}_{SAMPLES}_archive.tar.gz
   └── 📂 results/
-       ├── 🧬 All_consensus_sequences.fasta
-       ├── 📊 All_genome_coverages.tsv
-       ├── 📊 All_nextclade_lineages.tsv
-       ├── 📊 All_pangolin_lineages.tsv
+       ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
+       ├── 📊 All_{REFERENCE}_genome_coverages.tsv
+       ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv
+       ├── 📊 All_{REFERENCE}_pangolin_lineages.tsv
        ├── 🌐 All_readsQC_reports.html
        ├── 📂 00_Quality_Control/
        │    ├── 📂 fastq-screen/
@@ -229,40 +228,40 @@ _Some [temp] tagged files are removed by default, to save disk usage_
        │             ├── 📄 multiqc_general_stats.txt
        |             └── 📄 multiqc_sources.txt
        ├── 📂 01_Trimmidapt
-       │    ├── 📂 cutad{SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
-       │    │    └── 📦 {S
+       │    ├── 📂 cutadapt/
+       │    │    └── 📦 {SAMPLE}_cutadapt-removed_R{1/2}.fastq.gz       # [temp]
        │    └── 📂 sickle/
        │         ├── 📦 {SAMPLE}_sickle-trimmed_R{1/2}.fastq.gz         # [temp]
        │         └── 📦 {SAMPLE}_sickle-trimmed_SE.fastq.gz             # [temp]
        ├── 📂 02_Mapping/
-       │    ├── 🧭 {SAMPLE}_{ALIGNER}_mark-dup.bam
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.bam.bai
-       │    ├── 🧭 {SAMPLE}_{ALIGNER}_mark-dup.primerclipped.bam
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_mark-dup.primerclipped.bam.bai
+       │    ├── 🧭 {SAMPLE}_{REFERENCE}_{ALIGNER}_mark-dup.bam
+       │    ├── 🗂️  {SAMPLE}_{REFERENCE}_{ALIGNER}_mark-dup.bam.bai
+       │    ├── 🧭 {SAMPLE}_{REFERENCE}_{ALIGNER}_mark-dup.primerclipped.bam
+       │    ├── 🗂️  {SAMPLE}_{REFERENCE}_{ALIGNER}_mark-dup.primerclipped.bam.bai
        │    ├── 🧭 {SAMPLE}_{ALIGNER}-mapped.sam                        # [temp]
-       │    ├── 🧭 {SAMPLE}_{ALIGNER}_sorted-by-names.bam               # [temp]
-       │    ├── 🧭 {SAMPLE}_{ALIGNER}_fixed-mate.bam                    # [temp]
-       │    └── 🧭 {SAMPLE}_{ALIGNER}_sorted.bam                        # [temp]
+       │    ├── 🧭 {SAMPLE}_{REFERENCE}_{ALIGNER}_sorted-by-names.bam               # [temp]
+       │    ├── 🧭 {SAMPLE}_{REFERENCE}_{ALIGNER}_fixed-mate.bam                    # [temp]
+       │    └── 🧭 {SAMPLE}_{REFERENCE}_{ALIGNER}_sorted.bam                        # [temp]
        ├── 📂 03_Coverage/
-       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
-       │    ├── 🛏️  {SAMPLE}_{ALIGNER}_genome-cov.bed                    # [temp]
-       │    ├── 🛏️  {SAMPLE}_{ALIGNER}_{MINCOV}_min-cov-filt.bed         # [temp]
-       │    └── 🛏️  {SAMPLE}_{ALIGNER}_{MINCOV}_low-cov-mask.bed         # [temp]
+       │    ├── 📊 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_coverage-stats.tsv
+       │    ├── 🛏️  {SAMPLE}_{REFERENCE}_{ALIGNER}_genome-cov.bed                    # [temp]
+       │    ├── 🛏️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_min-cov-filt.bed         # [temp]
+       │    └── 🛏️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_low-cov-mask.bed         # [temp]
        ├── 📂 04_Variants/
-       │    ├── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai
-       │    ├── 🧭 {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bam
-       │    ├── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_indel-qual.bai
-       │    ├── 🧮️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-call.vcf
-       │    ├── 🧮️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf
-       │    ├── 📦 {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz     # [temp]
-       │    └── 🗂️  {SAMPLE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi # [temp]
+       │    ├── 🧬 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_masked-ref.fasta
+       │    ├── 🗂️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_masked-ref.fasta.fai
+       │    ├── 🧭 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_indel-qual.bam
+       │    ├── 🗂️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_indel-qual.bai
+       │    ├── 🧮️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_variant-call.vcf
+       │    ├── 🧮️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_variant-filt.vcf
+       │    ├── 📦 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz     # [temp]
+       │    └── 🗂️  {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_variant-filt.vcf.bgz.tbi # [temp]
        ├── 📂 05_Consensus/
-       │    └── 🧬 {SAMPLE}_{ALIGNER}_{MINCOV}_consensus.fasta
+       │    └── 🧬 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_consensus.fasta
        ├── 📂 06_Lineages/
-       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-report.tsv
-       │    ├── 📊 {SAMPLE}_{ALIGNER}_{MINCOV}_pangolin-report.csv
-       │    └── 📂 {SAMPLE}_{ALIGNER}_{MINCOV}_nextclade-all/
+       │    ├── 📊 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_nextclade-report.tsv
+       │    ├── 📊 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_pangolin-report.csv
+       │    └── 📂 {SAMPLE}_{REFERENCE}_{ALIGNER}_{MINCOV}_nextclade-all/
        │         ├── 🧬 nextclade.aligned.fasta
        │         ├── 📊 nextclade.csv
        │         ├── 📊 nextclade.errors.csv

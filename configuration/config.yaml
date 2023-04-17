@@ -30,8 +30,8 @@ consensus:
   reference:                 # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
   # Available options (not exhaustive), choose one:
     - 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (Nextclade and Pangolin)
-    #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (Nextclade)
-    #- 'Monkeypox-virus_UK_MT-903345-1'     # Monkeypox  (Nextclade)
+    #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (Nextclade and Pangolin)
+    #- 'Monkeypox-virus_UK_MT-903345-1'     # Monkeypox  (Nextclade and Pangolin)
     #- 'Swinepox-virus_India_MW-036632-1'   # Swinepox   (Nextclade)
     #- 'Ebola-virus_Zaire_AF-272001-1'      # Ebola      (na)
     #- 'Ebola-virus_Sudan_MH-121162-1'      # Ebola      (Nextclade)
@@ -142,7 +142,7 @@ conda:
   frontend: # Conda frontend (default: mamba)
   # Available options, choose one:
     - 'mamba' # mamba (faster)
-    #- 'conda' # conda
+    #- 'conda' # conda (iTrop)
   osx: # Conda OSX environement yaml files:
     snakemake_base: '../environments/osx/snakemake-base_v.2023.04.yaml'   # Snakemake-Base ver. 2023.04
     gevarli_tools:  '../environments/osx/gevarli-tools_v.2023.04.yaml'    # GeVarLi-Tools  ver. 2023.04
