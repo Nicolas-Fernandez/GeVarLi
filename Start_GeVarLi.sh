@@ -124,7 +124,7 @@ Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be 
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
     # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 7.1.0)
 "
-q    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
+    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
 fi
 
 # Remove old 'gevarli' and 'snakemake' environments
