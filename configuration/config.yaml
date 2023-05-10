@@ -25,9 +25,9 @@ consensus:
   min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   # Available options (not exhaustive), choose one:
     - '30'                         # AFROSCREEN SARS-CoV-2 Illumina amplicons sequencing (default)
-    #- 'Add_your_minimum_coverage' # Custom
+    #- 'Add_your_minimum_coverage' # Custom 
   min_af: '0.2'               # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  reference:                 # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
+  reference: # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
   # Available options (not exhaustive), choose one:
     - 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (Nextclade and Pangolin)
     #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (Nextclade and Pangolin)

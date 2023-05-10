@@ -36,6 +36,8 @@ def get_nextclade_input(wildcards):
 ###############################################################################
 ###### WILDCARDS ######
 
+#SAMPLE, = glob_wildcards("/users/illumina/local/data/run_1/FATSQ/{sample}_R1.fastq.gz")
+
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
@@ -861,6 +863,8 @@ rule cutadapt_adapters_removing:
     input:
         fwd_reads = "resources/reads/{sample}_R1.fastq.gz",
         rev_reads = "resources/reads/{sample}_R2.fastq.gz"
+        #fwd_reads = "/users/illumina/local/data/run_1/FATSQ/{sample}_R1.fastq.gz",
+        #rev_reads = "/users/illumina/local/data/run_1/FATSQ/{sample}_R2.fastq.gz"
     output:
         fwd_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz"),
         rev_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz")
