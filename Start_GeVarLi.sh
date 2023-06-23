@@ -2,12 +2,12 @@
 
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2023.04
+# Version ________________ v.2023.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.04.11
+# Latest modifications ___ 2023.06.21
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -22,8 +22,8 @@ nc="\033[0m"       # no color
 ###### About ######
 
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2023.04"                              # GeVarLi version
-snakemake_base_version="2023.04"                       # Snakemake base version
+gevarli_version="2023.06"                              # GeVarLi version
+workflow_base_version="2023.06"                        # Workflow base version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -36,7 +36,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2023.04.11
+${blue}Latest modifications${nc} ___ 2023.06.21
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -104,38 +104,45 @@ ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 ###### Snakemake-base Installation ######
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SNAKEMAKE-BASE INSTALLATION${nc} ${green}#####${nc}
+${green}#####${nc} ${red}WORKFLOW-BASE INSTALLATION${nc} ${green}#####${nc}
 ${green}---------------------------------------${nc}
 "
 
-# Test if latest 'snakemake-base' environment exist
-if [[ $(conda info --envs | grep -o -E "^snakemake-base_v.${snakemake_base_version}") ]]
+# Test if latest 'workflow-base' environment exist
+if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
 then
     echo -e "
-Conda environment ${ylo}snakemake-base_v.${snakemake_base_version}${nc} it's already created!
+Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} it's already created!
 "
 else
     echo -e "
-Conda environment ${red}snakemake-base_v.${snakemake_base_version}${nc} will be now created, with:
+Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.25.0)
-    # ${red}Mamba${nc}:     Create snakemake-conda's environments faster (ver. 1.4.2)
-    # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.1)
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.28.2)
+    # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.4.4)
+    # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.2)
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
-    # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 7.1.0)
+    # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 8.0.5)
 "
-    conda env create -f ${workdir}/workflow/environments/${os}/snakemake-base_v.${snakemake_base_version}.yaml
+    conda env create -f ${workdir}/workflow/environments/${os}/workflow-base_v.${workflow_base_version}.yaml
 fi
 
-# Remove old 'gevarli' and 'snakemake' environments
-conda env remove --name gevarli-base_v.2022.11
-conda env remove --name gevarli-base_v.2022.12
-conda env remove --name gevarli-base_v.2023.01
-conda env remove --name gevarli-tools_v.2023.02
-conda env remove --name gevarli-tools_v.2023.03
-conda env remove --name snakemake-base_v.2023.01
-conda env remove --name snakemake-base_v.2023.02
-conda env remove --name snakemake-base_v.2023.03
+# Remove depreciated 'gevarli' or 'snakemake' old environments
+
+old_envs="gevarli-base_v.2022.11 \
+          gevarli-base_v.2022.12 \
+          gevarli-base_v.2023.01 \
+          gevarli-base_v.2023.02 \
+          gevarli-base_v.2023.03 \
+          gevarli-base_v.2023.04 \
+          snakemake-base_v.2023.01 \
+          snakemake-base_v.2023.02 \
+          snakemake-base_v.2023.03 \
+          snakemake-base_v.2023.04"
+
+for env in ${old_envs} ; do
+    conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
+done
 
 ###############################################################################
 ###### Conda Env. Activation ######
@@ -145,12 +152,12 @@ ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
-echo -e "conda activate ${ylo}snakemake-base_v.${snakemake_base_version}${nc}"
+echo -e "conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
 
 # intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
 source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
-conda activate snakemake-base_v.${snakemake_base_version}        # conda activate
+conda activate workflow-base_v.${workflow_base_version}           # conda activate workflow-base
 
 ###############################################################################
 ###### Settings ######
@@ -540,7 +547,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2023.04.03
+Latest modifications ___ 2023.06.03
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}

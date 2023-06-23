@@ -1,0 +1,36 @@
+name: lofreq_v.2.1.5
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - bzip2=1.0.8
+  - c-ares=1.19.1
+  - ca-certificates=2023.5.7
+  - htslib=1.17
+  - krb5=1.20.1
+  - libcurl=8.1.2
+  - libcxx=16.0.6
+  - libdeflate=1.18
+  - libedit=3.1.20191231
+  - libev=4.33
+  - libffi=3.4.2
+  - libnghttp2=1.52.0
+  - libsqlite=3.42.0
+  - libssh2=1.11.0
+  - libzlib=1.2.13
+  - lofreq=2.1.5
+  - ncurses=6.4
+  - openssl=3.1.1
+  - pip=23.1.2
+  - python=3.10.11
+  - python_abi=3.10
+  - readline=8.2
+  - samtools=1.17
+  - setuptools=67.7.2
+  - tk=8.6.12
+  - tzdata=2023c
+  - wheel=0.40.0
+  - xz=5.2.6
+  - zlib=1.2.13
+  - zstd=1.5.2
