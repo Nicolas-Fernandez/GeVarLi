@@ -1,10 +1,10 @@
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+#A##I###R###D######U###2###3###3#######T###R##A#A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.04.04
+# Latest modifications ___ 2023.06.21
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -52,7 +52,17 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 ###############################################################################
 ###### ENVIRONMENTS ######
 
-GEVARLI = config["conda"][OS]["gevarli_tools"] # GeVarLi all tools
+CUTADAPT = config["conda"][OS]["cutadapt"]       # Cutadapt conda environment
+SICKLE_TRIM = config["conda"][OS]["sickle_trim"] # Sickle-Trim conda environment
+BWA = config["conda"][OS]["bwa"]                 # BWA conda environment
+BOWTIE2 = config["conda"][OS]["bowtie2"]         # Bowtie2 conda environment
+SAMTOOLS = config["conda"][OS]["samtools"]       # SamTools conda environment
+BEDTOOLS = config["conda"][OS]["bedtools"]       # BedTools conda environment
+GAWK = config["conda"][OS]["gawk"]               # Awk (GNU) conda environment
+LOFREQ = config["conda"][OS]["lofreq"]           # LoFreq conda environment
+BCFTOOLS = config["conda"][OS]["bcftools"]       # BcfTools conda environment
+PANGOLIN = config["conda"][OS]["pangolin"]       # Pangolin conda environment
+NEXTCLADE = config["conda"][OS]["nextclade"]     # Nextclade conda environment
 
 ###############################################################################
 ###### PARAMETERS ######
@@ -110,7 +120,7 @@ rule nextclade_lineage:
     message:
         "Nextclade lineage assignation for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        NEXTCLADE
     resources:
         cpus = CPUS
     params:
@@ -140,7 +150,7 @@ rule pangolin_lineage:
     message:
         "Pangolin lineage mapping for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        PANGOLIN
     resources:
         cpus = CPUS,
         tmp_dir = TMP_DIR
@@ -165,7 +175,7 @@ rule sed_rename_headers:
     message:
         "Sed rename fasta header for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        GAWK
     input:
         cons_tmp = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp"
     output:
@@ -186,7 +196,7 @@ rule bcftools_consensus:
     message:
         "BcfTools consensus for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        BCFTOOLS
     params:
         iupac = IUPAC
     input:
@@ -213,7 +223,7 @@ rule tabix_tabarch_indexing:
     message:
         "Tabix tab archive indexing for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        LOFREQ
     input:
         archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz"
     output:
@@ -233,7 +243,7 @@ rule bgzip_variant_archive:
     message:
         "Bgzip variant block compressing for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        LOFREQ
     resources:
         cpus = CPUS
     input:
@@ -258,7 +268,7 @@ rule lofreq_variant_filtering:
     message:
         "LoFreq filtering SNVs and Indels for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        LOFREQ
     params:
         min_af = MIN_AF
     input:
@@ -283,7 +293,7 @@ rule lofreq_variant_calling:
     message:
         "LoFreq calling SNVs and Indels for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        LOFREQ
     resources:
         cpus = CPUS
     input:
@@ -312,7 +322,7 @@ rule samtools_indel_indexing:
     message:
         "SamTools indexing indel qualities BAM file [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS
     input:
@@ -337,7 +347,7 @@ rule lofreq_indel_qualities:
     message:
         "LoFreq insert indels qualities for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        LOFREQ
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
         mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
@@ -362,7 +372,7 @@ rule bedtools_masking:
     message:
         "BedTools masking low coverage regions for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        BEDTOOLS
     params:
         path = REF_PATH
     input:
@@ -385,7 +395,7 @@ rule bedtools_merged_mask:
     message:
         "BedTools merging overlaps for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        BEDTOOLS
     input:
         min_cov_filt = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed"
     output:
@@ -405,7 +415,7 @@ rule awk_min_covfilt:
     message:
         "Awk minimum coverage filtration for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
     conda:
-        GEVARLI
+        GAWK
     input:
         genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     output:
@@ -426,7 +436,7 @@ rule awk_coverage_statistics:
     message:
         "Awk compute genome coverage statistics BED [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        GAWK
     input:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
@@ -542,7 +552,7 @@ rule bedtools_genome_coverage:
     message:
         "BedTools computing genome coverage for [[ {wildcards.sample} ]] sample against reference genome sequence (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        BEDTOOLS
     input:
         mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
         index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
@@ -564,7 +574,7 @@ rule samtools_coverage_histogram:
     message:
         "SamTools calcul alignment depth and percent coverage @1X from BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS
        #bins = BINS,
@@ -597,7 +607,7 @@ rule samtools_flagstat_ext:
     message:
         "SamTools calcul simple stats from BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS
     input:
@@ -622,7 +632,7 @@ rule samtools_index_markdup:
     message:
         "SamTools indexing marked as duplicate BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS
     input:
@@ -646,7 +656,7 @@ rule samtools_markdup:
     message:
         "SamTools marking duplicate alignments for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS
     input:
@@ -672,7 +682,7 @@ rule samtools_sorting:
     message:
         "SamTools sorting [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS,
        mem_gb = MEM_GB,
@@ -700,7 +710,7 @@ rule samtools_fixmate:
     message:
         "SamTools filling in mate coordinates [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS
     input:
@@ -725,7 +735,7 @@ rule samtools_sortbynames:
     message:
         "SamTools sorting by names [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
     conda:
-        GEVARLI
+        SAMTOOLS
     resources:
        cpus = CPUS,
        mem_gb = MEM_GB
@@ -752,7 +762,7 @@ rule bwa_mapping:
     message:
         "BWA-MEM mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
     conda:
-        GEVARLI
+        BWA
     resources:
         cpus = CPUS
     params:
@@ -781,7 +791,7 @@ rule bowtie2_mapping:
     message:
         "Bowtie2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
     conda:
-        GEVARLI
+        BOWTIE2
     resources:
         cpus = CPUS
     params:
@@ -813,7 +823,7 @@ rule sickle_trim_quality:
     message:
         "Sickle-trim low quality sequences trimming for [[ {wildcards.sample} ]] sample"
     conda:
-        GEVARLI
+        SICKLE_TRIM
     params:
         command = COMMAND,
         encoding = ENCODING,
@@ -851,7 +861,7 @@ rule cutadapt_adapters_removing:
     message:
         "Cutadapt adapters removing for [[ {wildcards.sample} ]] sample"
     conda:
-        GEVARLI
+        CUTADAPT
     resources:
         cpus = CPUS
     params:

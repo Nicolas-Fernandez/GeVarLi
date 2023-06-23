@@ -4,7 +4,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2023.04.04
+# Latest modifications ___ 2023.06.21
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -30,7 +30,9 @@ CPUS = config["resources"]["cpus"] # Threads (maximum)
 ###############################################################################
 ###### ENVIRONMENTS ######
 
-GEVARLI = config["conda"][OS]["gevarli_tools"] # GeVarLi all tools
+MULTIQC = config["conda"][OS]["multiqc"]           # Multi-QC conda env
+FASTQ_SCREEN = config["conda"][OS]["fastq_screen"] # Fastq-Screen conda env
+FASTQC= config["conda"][OS]["fastqc"]              # FastQC conda env
 
 ###############################################################################
 ###### PARAMETERS ######
@@ -58,7 +60,7 @@ rule multiqc_reports_aggregation:
     message:
         "MultiQC reports aggregating"
     conda:
-        GEVARLI
+        MULTIQC
     params:
         #config = MQC_CONFIG,
         #tag = TAG
@@ -91,7 +93,7 @@ rule fastqscreen_contamination_checking:
     message:
         "Fastq-Screen contamination check for [ {wildcards.fastq} ] reads"
     conda:
-        GEVARLI
+        FASTQ_SCREEN
     resources:
         cpus = CPUS
     params:
@@ -121,7 +123,7 @@ rule fastqc_quality_control:
     message:
         "FastQC quality control for [ {wildcards.fastq} ] reads"
     conda:
-        GEVARLI
+        FASTQC
     resources:
         cpus = CPUS
     input:

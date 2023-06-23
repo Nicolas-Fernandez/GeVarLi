@@ -1,0 +1,35 @@
+name: cutadapt_v.4.4
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - bzip2=1.0.8
+  - ca-certificates=2023.5.7
+  - cffi=1.15.1
+  - cutadapt=4.4
+  - dnaio=0.10.0
+  - isa-l=2.30.0
+  - libcxx=16.0.6
+  - libffi=3.4.2
+  - libsqlite=3.42.0
+  - libzlib=1.2.13
+  - ncurses=6.4
+  - openssl=3.1.1
+  - pbzip2=1.1.13
+  - pigz=2.6
+  - pip=23.1.2
+  - pycparser=2.21
+  - python=3.10.11
+  - python-isal=1.1.0
+  - python_abi=3.10
+  - readline=8.2
+  - setuptools=67.7.2
+  - tk=8.6.12
+  - tzdata=2023c
+  - wheel=0.40.0
+  - xopen=1.7.0
+  - xz=5.2.6
+  - zlib=1.2.13
+  - zstandard=0.19.0
+  - zstd=1.5.2

@@ -1,0 +1,17 @@
+name: fastqc_v.0.12.1
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - expat=2.5.0
+  - fastqc=0.12.1
+  - font-ttf-dejavu-sans-mono=2.37
+  - fontconfig=2.14.2
+  - freetype=2.12.1
+  - libcxx=16.0.6
+  - libexpat=2.5.0
+  - libpng=1.6.39
+  - libzlib=1.2.13
+  - openjdk=20.0.0
+  - perl=5.32.1

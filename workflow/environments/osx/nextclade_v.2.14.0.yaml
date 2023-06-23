@@ -1,0 +1,6 @@
+name: nextclade_v.2.14.0
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - nextclade=2.14.0

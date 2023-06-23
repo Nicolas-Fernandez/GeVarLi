@@ -1,0 +1,30 @@
+name: bamclipper_v.1.0
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=main
+  - _openmp_mutex=5.1=1_gnu
+  - bamclipper=1.0.0=hdfd78af_2
+  - bzip2=1.0.8=h7b6447c_0
+  - c-ares=1.18.1=h7f8727e_0
+  - ca-certificates=2022.07.19=h06a4308_0
+  - curl=7.82.0=h7f8727e_0
+  - krb5=1.19.2=hac12032_0
+  - libcurl=7.82.0=h0b77cf5_0
+  - libedit=3.1.20210910=h7f8727e_0
+  - libev=4.33=h7f8727e_1
+  - libgcc=7.2.0=h69d50b8_2
+  - libgcc-ng=11.2.0=h1234567_1
+  - libgomp=11.2.0=h1234567_1
+  - libnghttp2=1.46.0=hce63b2e_0
+  - libssh2=1.10.0=h8f2d780_0
+  - libstdcxx-ng=11.2.0=h1234567_1
+  - ncurses=6.3=h5eee18b_3
+  - openssl=1.1.1q=h7f8727e_0
+  - parallel=20160622=1
+  - perl=5.26.2=h14c3975_0
+  - perl-threaded=5.32.1=hdfd78af_1
+  - samtools=1.7=1
+  - xz=5.2.5=h7f8727e_1
+  - zlib=1.2.11=h7f8727e_4

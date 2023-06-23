@@ -53,7 +53,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Version ###
 
-*V.2023.04*  
+*V.2023.06*  
 
 ### Rulegraph ###
 
@@ -159,19 +159,28 @@ conda update -n base -c defaults conda
 
 ### GeVarLi ###
 
-Clone to your home/ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
-```shell
-git clone https://forge.ird.fr/transvihmi/GeVarLi.git ~/GeVarLi/
+**Clone** _to your home/_ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_ _(128Mo)_:
+_(128 Mo required)_```shell
+git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
 ```
 
-Update GeVarLi: 
+And you can **update** GeVarLi with: 
 ```shell
 cd ~/GeVarLi/ && git reset --hard HEAD && git pull --verbose
 ```
 
+Otherwise, you can**download** GeVarLi (no update through "git pull"):
+_(75 Mo required)_
+```shell
+curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz && \
+tar -xzvf ~/GeVarLi-main.tar.gz && \
+mv ~/GeVarLi-main/ ~/GeVarLi/ && \
+rm -f ~/GeVarLi-main.tar.gz
+```
+
 ## ~ USAGE ~ ##
 
-1. Copy your **paired-end** reads in **.fastq.gz** format files into: **./resources/reads/** directory
+1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
 _SARS-CoV-2 sample reads are available for test into ./resources/test\_data/ directory_
 
 2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline _(according to your choice)_:
