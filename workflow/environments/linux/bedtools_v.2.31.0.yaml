@@ -1,4 +1,4 @@
-name: bwa_v.0.7.17
+name: bedtools_v.2.31.0
 channels:
   - bioconda
   - conda-forge
@@ -6,10 +6,10 @@ channels:
 dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
-  - bwa=0.7.17
+  - bedtools=2.31.0
+  - bzip2=1.0.8
   - libgcc-ng=13.1.0
   - libgomp=13.1.0
-  - libnsl=2.0.0
+  - libstdcxx-ng=13.1.0
   - libzlib=1.2.13
-  - perl=5.32.1
-  - zlib=1.2.13
+  - xz=5.2.6

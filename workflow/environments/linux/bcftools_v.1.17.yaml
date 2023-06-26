@@ -1,0 +1,24 @@
+name: bcftools_v.1.17
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=4.5
+  - bzip2=1.0.8
+  - c-ares=1.19.1
+  - ca-certificates=2023.5.7
+  - keyutils=1.6.1
+  - libdeflate=1.18
+  - libev=4.33
+  - libgcc-ng=13.1.0
+  - libgfortran-ng=13.1.0
+  - libgfortran5=13.1.0
+  - libgomp=13.1.0
+  - libnsl=2.0.0
+  - libopenblas=0.3.23
+  - libstdcxx-ng=13.1.0
+  - libzlib=1.2.13
+  - ncurses=6.4
+  - openssl=3.1.1
+  - xz=5.2.6

@@ -310,6 +310,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
                  └── 📝 multiqc.log
 ```
 
+<img src="./resources/visuals/gevarli_filegraph.png" width="300" height="1200">  
+
 ### Files Glossary ###
 
 - **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
@@ -429,11 +431,8 @@ _**Note**: Only 'osx' or 'linux' supported_
  ├── 📂 .snakemake/
  ├── 📂 configuration/
  │    ├── ⚙️  config.yaml
- │    ├── 📂 fastq-screen/
- │    │    ├── ⚙️  fastq-screen_bwa.conf
- │    │    └── ⚙️  fastq-screen_bowtie2.conf
- │    └── 📂 multiqc/
- │         └── ⚙️  default.yaml
+ │    ├── ⚙️  fastq-screen.conf
+ │    └── ⚙️  multiqc.yaml
  ├── 📂 resources/
  │    ├── 📂 genomes/
  │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
@@ -507,45 +506,46 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │    ├── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
  │    │    └── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
  │    └── 📂 visuals/
+ │         ├── 📈 gevarli_filegraph.png
  │         ├── 📈 gevarli_rulegraph.png
  │         ├── 📈 indexing_genomes_rulegraph.png
  │         └── 📈 quality_control_rulegraph.png
  └── 📂 workflow/
       ├── 📂 environments/
       │    ├── 📂 linux/
-      │    │    ├── 🍜 bcftools_v.1.15.1.yaml
-      │    │    ├── 🍜 bedtools_v.2.30.0.yaml
-      │    │    ├── 🍜 bowtie2_v.2.4.5.yaml
+      │         ├── 🍜 bamclipper_v.1.0.0.yaml
+      │    │    ├── 🍜 bcftools_v.1.17.yaml
+      │    │    ├── 🍜 bedtools_v.2.31.0.yaml
+      │    │    ├── 🍜 bowtie2_v.2.5.1.yaml
       │    │    ├── 🍜 bwa_v.0.7.17.yaml
-      │    │    ├── 🍜 cutadapt_v.4.1.yaml
-      │    │    ├── 🍜 fastq-screen_v.0.15.2.yaml
-      │    │    ├── 🍜 fastqc_v.0.11.9.yaml
+      │    │    ├── 🍜 cutadapt_v.4.4.yaml
+      │    │    ├── 🍜 fastq-screen_v.0.15.3.yaml
+      │    │    ├── 🍜 fastqc_v.0.12.1.yaml
       │    │    ├── 🍜 gawk_v.5.1.0.yaml
-      │    │    ├── 🍜 gevarli-tools_v.2023.02.yaml
       │    │    ├── 🍜 lofreq_v.2.1.5.yaml
-      │    │    ├── 🍜 multiqc_v.1.13.yaml
-      │    │    ├── 🍜 nextclade_v.2.9.1.yaml
-      │    │    ├── 🍜 pangolin_v.4.1.3.yaml
-      │    │    ├── 🍜 samtools_v.1.15.1.yaml
+      │    │    ├── 🍜 multiqc_v.1.14.yaml
+      │    │    ├── 🍜 nextclade_v.2.14.0.yaml
+      │    │    ├── 🍜 pangolin_v.4.3.yaml
+      │    │    ├── 🍜 samtools_v.1.17.yaml
       │    │    ├── 🍜 sickle-trim_v.1.33.yaml
-      │    │    └── 🍜 snakemake-base_v.2023.02.yaml
+      │    │    └── 🍜 workflow-base_v.2023.06.yaml
       │    └── 📂 osx/
-      │         ├── 🍜 bcftools_v.1.15.1.yaml
-      │         ├── 🍜 bedtools_v.2.30.0.yaml
-      │         ├── 🍜 bowtie2_v.2.4.5.yaml
+      │         ├── 🍜 bamclipper_v.1.0.0.yaml
+      │         ├── 🍜 bcftools_v.1.17.yaml
+      │         ├── 🍜 bedtools_v.2.31.0.yaml
+      │         ├── 🍜 bowtie2_v.2.5.1.yaml
       │         ├── 🍜 bwa_v.0.7.17.yaml
-      │         ├── 🍜 cutadapt_v.4.1.yaml
-      │         ├── 🍜 fastq-screen_v.0.15.2.yaml
-      │         ├── 🍜 fastqc_v.0.11.9.yaml
+      │         ├── 🍜 cutadapt_v.4.4.yaml
+      │         ├── 🍜 fastq-screen_v.0.15.3.yaml
+      │         ├── 🍜 fastqc_v.0.12.1.yaml
       │         ├── 🍜 gawk_v.5.1.0.yaml
-      │         ├── 🍜 gevarli-tools_v.2023.02.yaml
       │         ├── 🍜 lofreq_v.2.1.5.yaml
-      │         ├── 🍜 multiqc_v.1.13.yaml
-      │         ├── 🍜 nextclade_v.2.9.1.yaml
-      │         ├── 🍜 pangolin_v.4.1.3.yaml
-      │         ├── 🍜 samtools_v.1.15.1.yaml 
+      │         ├── 🍜 multiqc_v.1.14.yaml
+      │         ├── 🍜 nextclade_v.2.14.0.yaml
+      │         ├── 🍜 pangolin_v.4.3.yaml
+      │         ├── 🍜 samtools_v.1.17.yaml 
       │         ├── 🍜 sickle-trim_v.1.33.yaml
-      │         └── 🍜 snakemake-base_v.2023.02.yaml
+      │         └── 🍜 workflow-base_v.2023.06.yaml
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk

@@ -1,0 +1,20 @@
+name: fastqc_v.0.12.1
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=4.5
+  - alsa-lib=1.2.8
+  - bzip2=1.0.8
+  - ca-certificates=2023.5.7
+  - font-ttf-dejavu-sans-mono=2.37
+  - font-ttf-inconsolata=3.000
+  - font-ttf-source-code-pro=2.038
+  - font-ttf-ubuntu=0.83
+  - fonts-conda-ecosystem=1
+  - fonts-conda-forge=1
+  - gettext=0.21.1
+  - libgcc-ng=13.1.0
+  - libgomp=13.1.0
+  - libstdcxx-ng=13.1.0
