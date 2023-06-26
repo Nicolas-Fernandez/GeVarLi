@@ -48,7 +48,7 @@ consensus:
   aligner: # Select your favorite aligner (default: 'bwa')
   # Available options, choose one:
     - 'bwa'     # Better, Faster, (Stronger, Harder...) (default)
-    #- 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    - 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
 
 ### NEXTCLADE ----------------------------------------------------------------------------------------
 nextclade:
@@ -144,15 +144,14 @@ conda:
     - 'mamba' # mamba (faster)
     #- 'conda' # conda (iTrop)
   osx: # Conda OSX environement yaml files:
-    workflow_base: '../environments/osx/workflow-base_v.2023.06.yaml'   # Workflow-Base ver. 2023.06
     bamclipper:    '../environments/osx/bamclipper_v.1.0.0.yaml'        # Bamclipper    ver. 1.0.0
     bcftools:      '../environments/osx/bcftools_v.1.17.yaml'           # Bcftools      ver. 1.17
     bedtools:      '../environments/osx/bedtools_v.2.31.0.yaml'         # Bedtools      ver. 2.31.0
     bowtie2:       '../environments/osx/bowtie2_v.2.5.1.yaml'           # Bowtie2       ver. 2.5.1
     bwa:           '../environments/osx/bwa_v.0.7.17.yaml'              # BWA           ver. 0.7.17
     cutadapt:      '../environments/osx/cutadapt_v.4.4.yaml'            # Cutadapt      ver. 4.4
-    fastq_screen:  '../environments/osx/fastq-screen_v.0.15.3.yaml'     # Fastq-Screen  ver. 0.15.3
     fastqc:        '../environments/osx/fastqc_v.0.12.1.yaml'           # FastQC        ver. 0.12.1
+    fastq_screen:  '../environments/osx/fastq-screen_v.0.15.3.yaml'     # Fastq-Screen  ver. 0.15.3
     gawk:          '../environments/osx/gawk_v.5.1.0.yaml'              # Awk (GNU)     ver. 5.1.0
     lofreq:        '../environments/osx/lofreq_v.2.1.5.yaml'            # Lofreq        ver. 2.1.5
     multiqc:       '../environments/osx/multiqc_v.1.14.yaml'            # MultiQC       ver. 1.14
@@ -160,16 +159,16 @@ conda:
     pangolin:      '../environments/osx/pangolin_v.4.3.yaml'            # Pangolin      ver. 4.3
     samtools:      '../environments/osx/samtools_v.1.17.yaml'           # Samtools      ver. 1.17
     sickle_trim:   '../environments/osx/sickle-trim_v.1.33.yaml'        # Sickle-trim   ver. 1.33
+    workflow_base: '../environments/osx/workflow-base_v.2023.06.yaml'   # Workflow-Base ver. 2023.06
   linux: # Conda Linux environement yaml files:
-    workflow_base: '../environments/linux/workflow-base_v.2023.06.yaml' # Workflow-Base ver. 2023.06
     bamclipper:    '../environments/linux/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
     bcftools:      '../environments/linux/bcftools_v.1.17.yaml'         # Bcftools      ver. 1.17
     bedtools:      '../environments/linux/bedtools_v.2.31.0.yaml'       # Bedtools      ver. 2.31.0
     bowtie2:       '../environments/linux/bowtie2_v.2.5.1.yaml'         # Bowtie2       ver. 2.5.1
     bwa:           '../environments/linux/bwa_v.0.7.17.yaml'            # BWA           ver. 0.7.17
     cutadapt:      '../environments/linux/cutadapt_v.4.4.yaml'          # Cutadapt      ver. 4.4
-    fastq_screen:  '../environments/linux/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3
     fastqc:        '../environments/linux/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
+    fastq_screen:  '../environments/linux/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3
     gawk:          '../environments/linux/gawk_v.5.1.0.yaml'            # Awk (GNU)     ver. 5.1.0
     lofreq:        '../environments/linux/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5
     multiqc:       '../environments/linux/multiqc_v.1.14.yaml'          # MultiQC       ver. 1.14
@@ -177,6 +176,7 @@ conda:
     pangolin:      '../environments/linux/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
     samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
     sickle_trim:   '../environments/linux/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
+    workflow_base: '../environments/linux/workflow-base_v.2023.06.yaml' # Workflow-Base ver. 2023.06
 
 ### OPERATING-SYSTEM ---------------------------------------------------------------------------------
 os: 'osx' # Operating System (default: "osx", but will be set by Start_GeVarLi.sh)

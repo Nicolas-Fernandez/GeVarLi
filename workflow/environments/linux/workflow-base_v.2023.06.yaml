@@ -4,10 +4,12 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=4.5
   - aioeasywebdav=2.4.0
   - aiohttp=3.8.4
   - aiosignal=1.3.1
-  - amply=0.1.6
+  - amply=0.1.5
   - appdirs=1.4.4
   - argcomplete=3.1.1
   - async-timeout=4.0.2
@@ -15,11 +17,11 @@ dependencies:
   - attmap=0.13.2
   - attrs=23.1.0
   - backports=1.0
-  - backports.functools_lru_cache=1.6.5
+  - backports.functools_lru_cache=1.6.4
   - bcrypt=3.2.2
   - boltons=23.0.0
-  - boto3=1.26.160
-  - botocore=1.29.160
+  - boto3=1.26.158
+  - botocore=1.29.158
   - brotlipy=0.7.0
   - bzip2=1.0.8
   - c-ares=1.19.1
@@ -69,7 +71,7 @@ dependencies:
   - gitdb=4.0.10
   - gitpython=3.1.31
   - google-api-core=2.11.1
-  - google-api-python-client=2.90.0
+  - google-api-python-client=2.89.0
   - google-auth=2.20.0
   - google-auth-httplib2=0.1.0
   - google-cloud-core=2.3.2
@@ -97,7 +99,9 @@ dependencies:
   - jsonpointer=2.0
   - jsonschema=4.17.3
   - jupyter_core=5.3.1
+  - keyutils=1.6.1
   - krb5=1.20.1
+  - ld_impl_linux-64=2.40
   - lerc=4.0.0
   - libabseil=20230125.2
   - libarchive=3.6.2
@@ -105,17 +109,18 @@ dependencies:
   - libcblas=3.9.0
   - libcrc32c=1.1.2
   - libcurl=8.1.2
-  - libcxx=16.0.6
   - libdeflate=1.18
   - libedit=3.1.20191231
   - libev=4.33
   - libexpat=2.5.0
   - libffi=3.4.2
-  - libgcc=4.8.5
+  - libgcc=7.2.0
+  - libgcc-ng=13.1.0
   - libgd=2.3.3
-  - libgfortran=5.0.0
-  - libgfortran5=12.2.0
+  - libgfortran-ng=13.1.0
+  - libgfortran5=13.1.0
   - libglib=2.76.3
+  - libgomp=13.1.0
   - libgrpc=1.55.1
   - libiconv=1.17
   - libjpeg-turbo=2.1.5.1
@@ -124,6 +129,7 @@ dependencies:
   - libmamba=1.4.4
   - libmambapy=1.4.4
   - libnghttp2=1.52.0
+  - libnsl=2.0.0
   - libopenblas=0.3.23
   - libpng=1.6.39
   - libprotobuf=4.23.2
@@ -132,13 +138,15 @@ dependencies:
   - libsolv=0.7.24
   - libsqlite=3.42.0
   - libssh2=1.11.0
+  - libstdcxx-ng=13.1.0
   - libtiff=4.5.1
   - libtool=2.4.7
+  - libuuid=2.38.1
   - libwebp=1.3.0
   - libwebp-base=1.3.0
+  - libxcb=1.15
   - libxml2=2.11.4
   - libzlib=1.2.13
-  - llvm-openmp=16.0.6
   - logmuse=0.2.6
   - lz4-c=1.9.4
   - lzo=2.10
@@ -163,12 +171,13 @@ dependencies:
   - pixman=0.40.0
   - pkgutil-resolve-name=1.3.10
   - plac=1.3.5
-  - platformdirs=3.8.0
-  - pluggy=1.2.0
+  - platformdirs=3.6.0
+  - pluggy=1.0.0
   - ply=3.11
   - prettytable=3.7.0
   - protobuf=4.23.2
   - psutil=5.9.5
+  - pthread-stubs=0.4
   - pulp=2.7.0
   - pyasn1=0.4.8
   - pyasn1-modules=0.2.7
@@ -182,7 +191,7 @@ dependencies:
   - pyrsistent=0.19.3
   - pysftp=0.2.9
   - pysocks=1.7.1
-  - pytest=7.4.0
+  - pytest=7.3.2
   - python=3.11.4
   - python-dateutil=2.8.2
   - python-fastjsonschema=2.17.1
@@ -204,7 +213,7 @@ dependencies:
   - ruamel.yaml=0.17.32
   - ruamel.yaml.clib=0.2.7
   - s3transfer=0.6.1
-  - setuptools=68.0.0
+  - setuptools=67.7.2
   - setuptools-scm=7.1.0
   - six=1.16.0
   - slacker=0.14.0
@@ -235,6 +244,17 @@ dependencies:
   - wheel=0.40.0
   - wrapt=1.15.0
   - xmltodict=0.13.0
+  - xorg-kbproto=1.0.7
+  - xorg-libice=1.1.1
+  - xorg-libsm=1.2.4
+  - xorg-libx11=1.8.6
+  - xorg-libxau=1.0.11
+  - xorg-libxdmcp=1.1.3
+  - xorg-libxext=1.3.4
+  - xorg-libxrender=0.9.10
+  - xorg-renderproto=0.11.1
+  - xorg-xextproto=7.3.0
+  - xorg-xproto=7.0.31
   - xz=5.2.6
   - yaml=0.2.5
   - yaml-cpp=0.7.0

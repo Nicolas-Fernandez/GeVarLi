@@ -53,4 +53,3 @@ dependencies:
   - xz=5.2.6=h775f41a_0
   - zlib=1.2.13=h8a1eda9_5
   - zstd=1.5.2=hbc0c0cd_6
-prefix: /Users/2021nf001/miniconda3/envs/fastq-screen_v.0.15.3

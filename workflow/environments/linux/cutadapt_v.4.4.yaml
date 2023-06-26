@@ -1,4 +1,4 @@
-name: lofreq_v.2.1.5
+name: cutadapt_v.4.4
 channels:
   - bioconda
   - conda-forge
@@ -7,38 +7,36 @@ dependencies:
   - _libgcc_mutex=0.1
   - _openmp_mutex=4.5
   - bzip2=1.0.8
-  - c-ares=1.19.1
   - ca-certificates=2023.5.7
-  - htslib=1.17
-  - keyutils=1.6.1
-  - krb5=1.20.1
+  - cffi=1.15.1
+  - cutadapt=4.4
+  - dnaio=0.10.0
+  - isa-l=2.30.0
   - ld_impl_linux-64=2.40
-  - libcurl=8.1.2
-  - libdeflate=1.18
-  - libedit=3.1.20191231
-  - libev=4.33
   - libffi=3.4.2
   - libgcc-ng=13.1.0
   - libgomp=13.1.0
-  - libnghttp2=1.52.0
   - libnsl=2.0.0
   - libsqlite=3.42.0
-  - libssh2=1.11.0
   - libstdcxx-ng=13.1.0
   - libuuid=2.38.1
   - libzlib=1.2.13
-  - lofreq=2.1.5
   - ncurses=6.4
   - openssl=3.1.1
+  - pbzip2=1.1.13
+  - pigz=2.6
   - pip=23.1.2
-  - python=3.10.12
+  - pycparser=2.21
+  - python=3.10.11
+  - python-isal=1.1.0
   - python_abi=3.10
   - readline=8.2
-  - samtools=1.17
-  - setuptools=68.0.0
+  - setuptools=67.7.2
   - tk=8.6.12
   - tzdata=2023c
   - wheel=0.40.0
+  - xopen=1.7.0
   - xz=5.2.6
   - zlib=1.2.13
+  - zstandard=0.19.0
   - zstd=1.5.2

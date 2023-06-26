@@ -118,7 +118,7 @@ else
     echo -e "
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.28.2)
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.28.3)
     # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.4.4)
     # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.2)
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
