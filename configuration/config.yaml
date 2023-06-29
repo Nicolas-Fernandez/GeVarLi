@@ -102,11 +102,11 @@ fastq_screen:
   subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
 ###############################################################################
-### MULTIQC ###
+### MULTIQC ### (soon)
 ###############
-multiqc:
-  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
-  tag: '' # Use only modules which tagged with this keyword
+#multiqc:
+#  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
+#  tag: '' # Use only modules which tagged with this keyword
 
 ###############################################################################
 ### CUTADAPT ###
@@ -160,15 +160,15 @@ bowtie2:
     #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
 
 ###############################################################################
-### GISAID ###
+### GISAID ### (soon)
 ##############
-gisaid:
-  username: 'username'
-  threshold: '30'
-  name: 'hCoV-19'
-  country: 'France'
-  identifier: ''
-  year: '2022'
+#gisaid:
+#  username: 'username'
+#  threshold: '30'
+#  name: 'hCoV-19'
+#  country: 'France'
+#  identifier: ''
+#  year: '2022'
 
 ###############################################################################
 ### ENVIRONNEMENTS ###
