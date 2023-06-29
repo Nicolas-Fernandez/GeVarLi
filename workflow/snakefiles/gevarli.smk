@@ -1,4 +1,12 @@
-#A##I###R###D######U###2###3###3#######T###R##A#A###N###S###V###I###H###M###I####
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__|_)\_|____|____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
@@ -8,12 +16,14 @@
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
-###### CONFIGURATION ######
+### CONFIGURATION ###
+#####################
 
 configfile: "configuration/config.yaml"
 
 ###############################################################################
-###### FUNCTIONS ######
+### FUNCTIONS ###
+#################
 
 def get_memory_per_thread(wildcards):
     memory_per_thread = int(RAM) // int(CPUS)
@@ -34,14 +44,16 @@ def get_nextclade_input(wildcards):
     return nextclade_list
 
 ###############################################################################
-###### WILDCARDS ######
+### WILDCARDS ###
+#################
 
 #SAMPLE, = glob_wildcards("/users/illumina/local/data/run_1/FATSQ/{sample}_R1.fastq.gz")
 
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
-###### RESOURCES ######
+### RESOURCES ###
+#################
 
 OS = config["os"]                        # Operating system
 CPUS = config["resources"]["cpus"]       # Threads (maximum)
@@ -50,7 +62,8 @@ MEM_GB = get_memory_per_thread           # Memory per thread in GB (maximum)
 TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 
 ###############################################################################
-###### ENVIRONMENTS ######
+### ENVIRONMENTS ###
+####################
 
 CUTADAPT = config["conda"][OS]["cutadapt"]       # Cutadapt conda environment
 SICKLE_TRIM = config["conda"][OS]["sickle_trim"] # Sickle-Trim conda environment
@@ -65,7 +78,8 @@ PANGOLIN = config["conda"][OS]["pangolin"]       # Pangolin conda environment
 NEXTCLADE = config["conda"][OS]["nextclade"]     # Nextclade conda environment
 
 ###############################################################################
-###### PARAMETERS ######
+### PARAMETERS ###
+##################
 
 C_LENGTH = config["cutadapt"]["length"]         # Cutadapt --minimum-length
 TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
@@ -99,7 +113,8 @@ NEXT_DATASET = config["nextclade"]["dataset"]   # Nextclade dataset
 PANGO_RUN = config["pangolin"]["run"]           # Pangolin run option
 
 ###############################################################################
-###### RULES ######
+### RULES ###
+#############
 
 rule all:
     input:
