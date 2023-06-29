@@ -1,7 +1,26 @@
 ---
-#################################################################
-# MultiQC Defaults
-#################################################################
+
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__|_)\_|____|____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name ___________________ multiqc.yaml
+# Version ________________ v.2023.06
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Configuration file for MultiQC
+# Date ___________________ 2023.06.21
+# Latest modifications ___ 2023.06.21
+# Use ____________________ Edit default settings
+
+###############################################################################
+### MULTIQC DEFAULTS ###
+########################
 # This file contains the default configuration options
 # for MultiQC. IT SHOULD NOT BE EDITED. If you want to
 # change any of these config options, create a new file
@@ -9,8 +28,8 @@
 #  1. <installation_dir>/multiqc_config.yaml (not pip or conda)
 #  2. ~/.multiqc_config.yaml
 #  3. <working directory>/multiqc_config.yaml
-#################################################################
 
+###############################################################################
 title: null
 subtitle: null
 intro_text: null

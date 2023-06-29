@@ -1,4 +1,12 @@
 ###I###RAA###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__|_)\_|____|____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ quality_control.smk
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
@@ -8,34 +16,39 @@
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
-###### CONFIGURATION ######
+### CONFIGURATION ###
+#####################
 
 configfile: "configuration/config.yaml"
 
 ###############################################################################
-###### FUNCTIONS ######
-
+### FUNCTIONS ###
+#################
 
 ###############################################################################
-###### WILDCARDS ######
+### WILDCARDS ###
+#################
 
 FASTQ, = glob_wildcards("resources/reads/{fastq}.fastq.gz")
 
 ###############################################################################
-###### RESOURCES ######
+### RESOURCES ###
+#################
 
 OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
-###### ENVIRONMENTS ######
+### ENVIRONMENTS ###
+####################
 
 MULTIQC = config["conda"][OS]["multiqc"]           # Multi-QC conda env
 FASTQ_SCREEN = config["conda"][OS]["fastq_screen"] # Fastq-Screen conda env
 FASTQC= config["conda"][OS]["fastqc"]              # FastQC conda env
 
 ###############################################################################
-###### PARAMETERS ######
+### PARAMETERS ###
+##################
 
 SUBSET = config["fastq_screen"]["subset"]     # Fastq-Screen --subset
 FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
@@ -43,7 +56,8 @@ FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
 #TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
 ###############################################################################
-###### RULES ######
+### RULES ###
+#############
 
 rule all:
     input:

@@ -130,7 +130,7 @@ Open to contributions!
 GeVarLi use the usefull **Conda** environment manager  
 So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
  
-Download and install your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+**Download** and **install** your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
 
 e.g. for **MacOSX-64-bit** systems:  
 ```shell
@@ -152,7 +152,7 @@ rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
 exit
 ```
 
-Update Conda:
+**Update** Conda:
 ```
 conda update -n base -c defaults conda
 ```
@@ -166,7 +166,7 @@ _(128 Mo required)_
 git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
 ```
 
-And you can **update** GeVarLi with: 
+**Update** GeVarLi: 
 ```shell
 cd ~/GeVarLi/ && git reset --hard HEAD && git pull --verbose
 ```
@@ -183,7 +183,7 @@ rm -f ~/GeVarLi-main.tar.gz
 ## ~ USAGE ~ ##
 
 1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
-_SARS-CoV-2 sample reads are available for test into ./resources/test\_data/ directory_
+_Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
 
 2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline _(according to your choice)_:
     - or with a **Double-click** on it _(if you make .sh files executable files with Terminal.app)_
@@ -198,8 +198,8 @@ _Option-1: Edit **config.yaml** file in **./configuration/** directory_
 _Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_  
 
 First run will auto-created _(only once)_:
-	- Snakemake-Base conda environment _(Snakemake, Mamba, Rename, GraphViz)_
-	- GeVarLi-Tools conda environments _(tools used by GeVarLi)_
+	- Workflow-Base conda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
+	- GeVarLi all tTools conda environments _(tools used by GeVarLi rules)_
 	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources/ directory)_
 	
 _This may take some time, depending on your internet connection and your computer_

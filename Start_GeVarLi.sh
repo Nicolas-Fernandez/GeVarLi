@@ -1,6 +1,14 @@
 #!/bin/bash
 
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__|_)\_|____|____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
 # Version ________________ v.2023.06
 # Author _________________ Nicolas Fernandez
@@ -11,7 +19,8 @@
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
-##### Colors ######
+### COLORS ###
+##############
 red="\033[1;31m"   # red
 green="\033[1;32m" # green
 ylo="\033[1;33m"   # yellow
@@ -19,8 +28,8 @@ blue="\033[1;34m"  # blue
 nc="\033[0m"       # no color
 
 ###############################################################################
-###### About ######
-
+### ABOUT ###
+#############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 gevarli_version="2023.06"                              # GeVarLi version
 workflow_base_version="2023.06"                        # Workflow base version
@@ -41,7 +50,8 @@ ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
 ###############################################################################
-###### Operating System ######
+### OPERATING SYSTEM ###
+########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}
@@ -65,7 +75,8 @@ shell=$SHELL
 echo -e "${blue}Shell${nc} __________________ ${ylo}${shell}${nc}"
 
 ###############################################################################
-###### Hardware ######
+### HARDWARE ###
+################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}
@@ -101,7 +112,8 @@ ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 "
 
 ###############################################################################
-###### Snakemake-base Installation ######
+### WORKFLOW-BASE INSTALLATION ###
+##################################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}WORKFLOW-BASE INSTALLATION${nc} ${green}#####${nc}
@@ -128,7 +140,6 @@ Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} will be no
 fi
 
 # Remove depreciated 'gevarli' or 'snakemake' old environments
-
 old_envs="gevarli-base_v.2022.11 \
           gevarli-base_v.2022.12 \
           gevarli-base_v.2023.01 \
@@ -145,7 +156,8 @@ for env in ${old_envs} ; do
 done
 
 ###############################################################################
-###### Conda Env. Activation ######
+### CONDA ACTIVATION ###
+########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
@@ -157,10 +169,11 @@ echo -e "conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
 # intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
 source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
-conda activate workflow-base_v.${workflow_base_version}           # conda activate workflow-base
+conda activate workflow-base_v.${workflow_base_version}          # conda activate workflow-base
 
 ###############################################################################
-###### Settings ######
+### SETTINGS ###
+################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
@@ -235,7 +248,8 @@ ${blue}Starting time${nc} ___________ ${time_stamp_start}
 
 
 ###############################################################################
-###### Rename samples ######
+### RENAME SAMPLES ###
+######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}
@@ -256,11 +270,12 @@ If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-
 "
 
 ###############################################################################
-###### Call snakemake pipelines ######
+### SNAKEMAKE PIPELINES ###
+###########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SNAKEMAKE PIPELINE${nc} ${green}#####${nc}
-${green}------------------------------${nc}
+${green}#####${nc} ${red}SNAKEMAKE PIPELINES${nc} ${green}#####${nc}
+${green}-------------------------------${nc}
 "
 
 snakefiles_list="indexing_genomes quality_control gevarli"
@@ -419,7 +434,8 @@ for snakefile in ${snakefiles_list} ; do
 done
 
 ###############################################################################
-###### Concatenate all reults ######
+### CONCATENATE RESULTS ###
+###########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}CONCATENATE RESULTS${nc} ${green}#####${nc}
@@ -471,11 +487,12 @@ for directory in ${workdir}/results/02_Mapping/*/ ; do
 done
 		
 ###############################################################################
-###### Create usefull graphs, summary and logs ######
+### GRAPHS, SUMMARY and LOGS ###
+#############################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SNAKEMAKE PIPELINE LOGS${nc} ${green}#####${nc}
-${green}-----------------------------------${nc}
+${green}#####${nc} ${red}GRAPHS, SUMMARY and LOGS${nc} ${green}#####${nc}
+${green}------------------------------------${nc}
 "
 
 # Make directories
@@ -510,7 +527,8 @@ done
 cp ${config_file} ${workdir}/results/10_Reports/config.log 2> /dev/null
 
 ###############################################################################
-###### Clean and save ######
+### CLEAN and SAVE ###
+######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
