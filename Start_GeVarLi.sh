@@ -322,27 +322,27 @@ for snakefile in ${snakefiles_list} ; do
         --list-conda-envs ;
 done
 
-echo -e "
-${blue}## Conda Environments Cleanup ##${nc}
-${blue}-----------------------------${nc}
-"
+#echo -e "
+#${blue}## Conda Environments Cleanup ##${nc}
+#${blue}-----------------------------${nc}
+#"
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
 # Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # Cleanup unused conda environments.
-
-for snakefile in ${snakefiles_list} ; do
-    echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
-        --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --cores ${max_threads} \
-        --config os=${os} \
-        --rerun-incomplete \
-        --conda-cleanup-envs ;
-done
+#
+#for snakefile in ${snakefiles_list} ; do
+#    echo -e "${blue}-- ${snakefile} --${nc}" ;
+#    snakemake \
+#        --directory ${workdir}/ \
+#        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
+#        --cores ${max_threads} \
+#        --config os=${os} \
+#        --rerun-incomplete \
+#        --conda-cleanup-envs ;
+#done
 
 echo -e "
 ${blue}## Conda Environments Setup ##${nc}
