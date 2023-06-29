@@ -535,9 +535,9 @@ ${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
 ${green}------------------------${nc}
 "
 
-# Save and Deactive Snakemake-Base environment
-cp ${workdir}/workflow/environments/${os}/gevarli-tools_v.*.yaml ${workdir}/results/10_Reports/
-cp ${workdir}/workflow/environments/${os}/snakemake-base_v.*.yaml ${workdir}/results/10_Reports/
+# Save and deactive environments
+mkdir -p ${workdir}/results/10_Reports/conda_env/ 2> /dev/null
+cp ${workdir}/workflow/environments/${os}/*.yaml ${workdir}/results/10_Reports/conda_env/
 conda deactivate
 
 # Cleanup
