@@ -1,4 +1,4 @@
-# GeVarLi: GEnome assembly, VARiant calling and LIneage assignation #
+# GeVarLi: GEnome assemblyA, VARiant calling and LIneage assignation #
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
 ![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.3.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
@@ -159,7 +159,7 @@ conda update -n base -c defaults conda
 
 ### GeVarLi ###
 
-**Clone** _to your home/_ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_ _(128Mo)_:
+**Clone** _to your home/_ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
 _(128 Mo required)_
 
 ```shell
@@ -168,11 +168,17 @@ git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeV
 
 **Update** GeVarLi: 
 ```shell
-cd ~/GeVarLi/ && git reset --hard HEAD && git pull --verbose
+cd ~/GeVarLi/ && git reset --hard HEAD && git pull --depth 1 --verbose
 ```
 
-Otherwise, you can**download** GeVarLi (no update through "git pull"):
+Otherwise, you can just **download** GeVarLi (no update through "git pull"):
 _(75 Mo required)_
+
+![Image of download button](./resources/visuals/download_button.png)
+<img src="./resources/visuals/download_button.png" width="400" height="100">  
+
+or
+
 ```shell
 curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz && \
 tar -xzvf ~/GeVarLi-main.tar.gz && \
@@ -185,7 +191,7 @@ rm -f ~/GeVarLi-main.tar.gz
 1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
 _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
 
-2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline _(according to your choice)_:
+2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline:
     - or with a **Double-click** on it _(if you make .sh files executable files with Terminal.app)_
 	- or with a **Right-click** > **Open with** > **Terminal.app**
 	- or with **CLI** from a terminal:
@@ -198,7 +204,7 @@ _Option-1: Edit **config.yaml** file in **./configuration/** directory_
 _Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_  
 
 First run will auto-created _(only once)_:
-	- Workflow-Base conda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
+	- Workflow-Baseconda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
 	- GeVarLi all tTools conda environments _(tools used by GeVarLi rules)_
 	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources/ directory)_
 	
@@ -285,9 +291,9 @@ _Some [temp] tagged files are removed by default, to save disk usage_
             ├── ⚙️  config.log
             ├── 📝 settings.log
             ├── 🍜 gevarli-base_v.{VERSION}.yaml
-            ├── 🍜 gevarli-tools_v.{VERSION}.yaml
+            ├── 📂 conda_env/
+            │    └── 📄 {TOOLS}_v.{version}.yaml
             ├── 📂 files-summaries
-            │    └── 📄 {PIPELINE}_files-summary.txt
             ├── 📂 graphs/
             │    ├── 📈 {PIPELINE}_dag.{PNG/PDF}
             │    ├── 📈 {PIPELINE}_filegraph.{PNG/PDF}
@@ -565,8 +571,7 @@ _F1000Research (2021)_
 **Documentation**: [https://snakemake.readthedocs.io/en/stable/index.html](https://snakemake.readthedocs.io/en/stable/index.html)  
 
 **Anaconda Software Distribution**  
-Team  
-_Computer software (2016)_  
+_Team-Computer software (2016)_  
 **DOI**: []()  
 **Publication**: [https://www.anaconda.com](https://www.anaconda.com)  
 **Source code**: [https://github.com/snakemake/snakemake](https://github.com/snakemake/snakemake) (conda)  
