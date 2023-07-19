@@ -174,8 +174,7 @@ cd ~/GeVarLi/ && git reset --hard HEAD && git pull --depth 1 --verbose
 Otherwise, you can just **download** GeVarLi (no update through "git pull"):
 _(75 Mo required)_
 
-![Image of download button](./resources/visuals/download_button.png)
-<img src="./resources/visuals/download_button.png" width="400" height="100">  
+<img src="./resources/visuals/download_button.png" width="500" height="75">  
 
 or
 
