@@ -37,10 +37,10 @@ consensus:
   min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   # Available options (not exhaustive), choose one:
     - '30'                         # 30 X : AFROSCREEN SARS-CoV-2 Illumina amplicons sequencing (default)
-    - '40'
-    - '50'
-    - '60'
-    #- 'Add_your_minimum_coverage' # Custom 
+    #- '60'                         # 60 x : for great coverage
+    #- '10'                         # 10 X : for some applications
+    #- '3'                          # 3 X : for exploration
+    #- 'Add_your_minimum_coverage'  # Custom minimum coverage 
   min_af: '0.2'               # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   reference: # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
   # Available options (not exhaustive), choose one:
