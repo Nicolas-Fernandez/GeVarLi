@@ -63,7 +63,7 @@ consensus:
   aligner: # Select your favorite aligner (default: 'bwa')
   # Available options, choose one:
     - 'bwa'     # Better, Faster, (Stronger, Harder...) (default)
-    - 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    #- 'bowtie2' # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
 
 ###############################################################################
 ### NEXTCLADE ###

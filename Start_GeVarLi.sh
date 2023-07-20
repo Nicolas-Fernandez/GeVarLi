@@ -43,7 +43,7 @@ ${blue}Name${nc} ___________________ Start_GeVarLi.sh
 ${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}ome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
+${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
 ${blue}Latest modifications${nc} ___ 2023.06.21
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
