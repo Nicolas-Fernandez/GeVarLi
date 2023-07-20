@@ -130,7 +130,7 @@ Open to contributions!
 GeVarLi use the usefull **Conda** environment manager  
 So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
  
-**Download** and **install** your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links)  
+**Download** and **install** your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links) (23.5.2+)  
 
 e.g. for **MacOSX-64-bit** systems:  
 ```shell
