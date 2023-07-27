@@ -26,7 +26,7 @@ dependencies:
   - libdeflate=1.18
   - libexpat=2.5.0
   - libffi=3.4.2
-  - libgd=2.3.3=
+  - libgd=2.3.3
   - libiconv=1.17
   - libjpeg-turbo=2.1.5.1
   - libpng=1.6.39
