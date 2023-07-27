@@ -132,7 +132,17 @@ So, if and only if, it's required _(Conda not already installed)_, please, first
  
 **Download** and **install** your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links) (23.5.2+)  
 
-e.g. for **MacOSX-64-bit** systems:  
+e.g. for **Linux_x86_64-bit** systems:  
+```shell
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh && \
+bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda3/ && \
+rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
+~/miniconda3/condabin/conda update conda --yes && \
+~/miniconda3/condabin/conda init && \
+exit
+```
+
+e.g. for **MacOSX_INTEL-chips_x86_64-bit** systems:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda3/ && \
@@ -142,15 +152,16 @@ rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 exit
 ```
 
-e.g. for **Linux-64-bit** systems:  
+e.g. for **MacOSX_M1/M2-chips_arm_64-bit** systems:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh && \
-bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda3/ && \
-rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/Miniconda3-latest-MacOSX-arm64.sh && \
+bash ~/Miniconda3-latest-MacOSX-arm64.sh -b -p ~/miniconda3/ && \
+rm -f ~/Miniconda3-latest-MacOSX-arm64.sh && \
 ~/miniconda3/condabin/conda update conda --yes && \
 ~/miniconda3/condabin/conda init && \
 exit
 ```
+
 
 **Update** Conda:
 ```
