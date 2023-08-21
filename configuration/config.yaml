@@ -22,7 +22,7 @@
 ### RESOURCES ###
 #################
 resources:
-  cpus: '1'          # Set maximum cpus usage (for multithreading, default: "8") [INT]
+  cpus: '8'          # Set maximum cpus usage (for multithreading, default: "8") [INT]
   ram: '16'          # Set maximum memory usage (in Gb, default: "16") [INT]
   tmp_dir: '$TMPDIR' # Temporary directory (default: "$TMPDIR")
   ### Examples:
@@ -44,17 +44,18 @@ consensus:
   min_af: '0.2'               # Minimum allele frequency allowed (default: "0.2") [FLOAT]
   reference: # Your reference, in fasta format (default: SARS-CoV-2_Wuhan_MN-908947-3)
   # Available options (not exhaustive), choose one:
-    - 'SARS-CoV-2_Wuhan_MN-908947-3'       # SARS-CoV-2 (Nextclade and Pangolin)
-    #- 'Monkeypox-virus_Zaire_AF-380138-1'  # Monkeypox  (Nextclade and Pangolin)
-    #- 'Monkeypox-virus_UK_MT-903345-1'     # Monkeypox  (Nextclade and Pangolin)
-    #- 'Swinepox-virus_India_MW-036632-1'   # Swinepox   (Nextclade)
-    #- 'Ebola-virus_Zaire_AF-272001-1'      # Ebola      (na)
-    #- 'Ebola-virus_Sudan_MH-121162-1'      # Ebola      (na)
-    #- 'Nipah-virus_Malaysia_AJ-564622-1'   # Nipah      (na)
-    #- 'HIV-1_HXB2_K-03455-1'               # HIV-1      (na)
-    #- 'Human-herpesvirus-5_NC-006273-2'    # Herpes     (na)
-    #- 'Human-herpesvirus-3_NC-001348-1'    # Varicella  (na)
-    #- 'Add_your_favorite_genome_ref'       # Custom     (na)
+    - 'SARS-CoV-2_Wuhan_MN-908947-3'        # SARS-CoV-2 (Nextclade and Pangolin)
+    #- 'Monkeypox-virus_Zaire_AF-380138-1'   # Monkeypox  (Nextclade and Pangolin)
+    #- 'Monkeypox-virus_UK_MT-903345-1'      # Monkeypox  (Nextclade and Pangolin)
+    #- 'Swinepox-virus_India_MW-036632-1'    # Swinepox   (Nextclade)
+    #- 'Ebola-virus_Zaire_AF-272001-1'       # Ebola      (na)
+    #- 'Ebola-virus_Sudan_MH-121162-1'       # Ebola      (na)
+    #- 'Nipah-virus_Malaysia_AJ-564622-1'    # Nipah      (na)
+    #- 'HIV-1_HXB2_K-03455-1'                # HIV-1      (na)
+    #- 'Human-herpesvirus-5_NC-006273-2'     # Herpes     (na)
+    #- 'Human-herpesvirus-3_NC-001348-1'     # Varicella  (na)
+    #- 'Loa-loa_JH-712066-1_GCA_000183805-3' # Loa loa V3 (na)
+    #- 'Add_your_favorite_genome_ref'        # Custom     (na)
   path: 'resources/genomes/' # Path to genomes references (default)
   iupac: # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
   # Available options, choose one:
@@ -185,8 +186,8 @@ conda:
     bowtie2:       '../environments/osx/bowtie2_v.2.5.1.yaml'           # Bowtie2       ver. 2.5.1
     bwa:           '../environments/osx/bwa_v.0.7.17.yaml'              # BWA           ver. 0.7.17
     cutadapt:      '../environments/osx/cutadapt_v.4.4.yaml'            # Cutadapt      ver. 4.4
-    fastqc:        '../environments/osx/fastqc_v.0.12.1.yaml'           # FastQC        ver. 0.12.1
     fastq_screen:  '../environments/osx/fastq-screen_v.0.15.3.yaml'     # Fastq-Screen  ver. 0.15.3
+    fastqc:        '../environments/osx/fastqc_v.0.12.1.yaml'           # FastQC        ver. 0.12.1
     gawk:          '../environments/osx/gawk_v.5.1.0.yaml'              # Awk (GNU)     ver. 5.1.0
     lofreq:        '../environments/osx/lofreq_v.2.1.5.yaml'            # Lofreq        ver. 2.1.5
     multiqc:       '../environments/osx/multiqc_v.1.14.yaml'            # MultiQC       ver. 1.14
@@ -202,8 +203,8 @@ conda:
     bowtie2:       '../environments/linux/bowtie2_v.2.5.1.yaml'         # Bowtie2       ver. 2.5.1
     bwa:           '../environments/linux/bwa_v.0.7.17.yaml'            # BWA           ver. 0.7.17
     cutadapt:      '../environments/linux/cutadapt_v.4.4.yaml'          # Cutadapt      ver. 4.4
-    fastqc:        '../environments/linux/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
     fastq_screen:  '../environments/linux/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3
+    fastqc:        '../environments/linux/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
     gawk:          '../environments/linux/gawk_v.5.1.0.yaml'            # Awk (GNU)     ver. 5.1.0
     lofreq:        '../environments/linux/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5
     multiqc:       '../environments/linux/multiqc_v.1.14.yaml'          # MultiQC       ver. 1.14
