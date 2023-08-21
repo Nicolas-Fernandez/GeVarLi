@@ -453,21 +453,20 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    └── ⚙️  multiqc.yaml
  ├── 📂 resources/
  │    ├── 📂 genomes/
- │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
- │    │    ├── 🧬 Monkeypox-virus_Zaire_AF-380138-1.fasta
- │    │    ├── 🧬 Monkeypox-virus_UK_MT-903345-1.fasta
- │    │    ├── 🧬 Swinepox-virus_India_MW-036632-1.fasta
- │    │    ├── 🧬 Ebola-virus_Zaire_AF-272001-1.fasta
- │    │    ├── 🧬 Ebola-virus_Sudan_MH-121162-1.fasta
- │    │    ├── 🧬 Nipah-virus_Malaysia_AJ-564622-1.fasta
- │    │    ├── 🧬 HIV-1_HXB2_K-03455-1.fasta
- │    │    ├── 🧬 (your_favorite_genome_reference}.fasta
- │    │    ├── 🧬 Echerichia-coli_CP-060121-1.fasta
- │    │    ├── 🧬 Kanamycin-Resistance-Gene.fasta
- │    │    ├── 🧬 NGS-adapters.fasta
- │    │    ├── 🧬 Phi-X174_Coliphage_NC-001422-1.fasta
- │    │    ├── 🧬 UniVec_wo_phiX-kanamycin-NGSseq.fasta
- │    │    └── 🧬 {your_favorite_control_reference}.fasta
+ │    │    ├── 🧬 Ebola-virus_{REFERENCES}.fasta
+ │    │    ├── 🧬 HIV-1_{REFERENCES}.fasta
+ │    │    ├── 🧬 Human-herpes-virus_{REFERENCES}.fasta
+ │    │    ├── 🧬 Monkeypox-virus_{REFERENCES}.fasta
+ │    │    ├── 🧬 Nipah-virus_{REFERENCES}.fasta
+ │    │    ├── 🧬 SARS-CoV-2_{REFERENCES}.fasta
+ │    │    ├── 🧬 Swinepox-virus_{REFERENCES}.fasta
+ │    │    ├── 🧬 (YOUR_FAVORITE_GENOME_REFERENCE}.fasta
+ │    │    ├── 🧬 QC_Echerichia-coli_CP-060121-1.fasta
+ │    │    ├── 🧬 QC_Kanamycin-Resistance-Gene.fasta
+ │    │    ├── 🧬 QC_NGS-adapters.fasta
+ │    │    ├── 🧬 QC_Phi-X174_Coliphage_NC-001422-1.fasta
+ │    │    ├── 🧬 QC_UniVec_wo_phiX-kanamycin-NGSseq.fasta
+ │    │    └── 🧬 {YOUR_FAVORITE_QC_REFERENCE}.fasta
  │    ├── 📂 indexes/
  │    │    ├── 📂 bwa/
  │    │    │    ├── 🗂️  {GENOME}.amb
@@ -521,8 +520,8 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │    └── 📦 {SAMPLE}_R2.fastq.gz
  │    ├── 📂 test_data/
  │    │    ├── 🛡️  .gitkeep
- │    │    ├── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
- │    │    └── 📦 SARS-CoV-2_Omicron-BA.1.1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
+ │    │    ├── 📦 SARS-CoV-2_19A_B_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
+ │    │    └── 📦 SARS-CoV-2_19A_B_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
  │    └── 📂 visuals/
  │         ├── 📈 gevarli_filegraph.png
  │         ├── 📈 gevarli_rulegraph.png
