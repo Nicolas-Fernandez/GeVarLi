@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.06.21
+# Latest modifications ___ 2023.08.24
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -28,6 +28,8 @@ configfile: "configuration/config.yaml"
 
 def get_memory_per_thread(wildcards):
     memory_per_thread = int(RAM) // int(CPUS)
+    if memory_per_thread < 1:
+        memory_per_thread = 1
     return memory_per_thread
 
 def get_pangolin_input(wildcards):

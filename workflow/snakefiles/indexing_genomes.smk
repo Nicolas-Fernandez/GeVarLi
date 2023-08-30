@@ -73,7 +73,7 @@ rule bwa_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: bwa index -a [ALGO] -p [PREFIX] [GENOME.fasta]
     message:
-        "BWA-SW indexing {wildcards.ref_seq} genome (algo: {params.algorithm}"
+        "BWA-SW indexing {wildcards.ref_seq} genome"
     conda:
         BWA
     params:
