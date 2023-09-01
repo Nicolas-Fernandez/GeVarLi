@@ -170,8 +170,9 @@ conda update -n base -c defaults conda
 
 ### GeVarLi ###
 
-**Clone** _to your home/_ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) GitLab IRDForge repository _(ID: 399)_:
-_(128 Mo required)_
+NB: If you are using a HPC,	please,	refer to your System Administrator for cluster usage policy !
+
+**Clone** _(i.e. to your home/)_ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) _(128 Mo)_ GitLab IRDForge repository _(ID: 399)_:
 
 ```shell
 git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
