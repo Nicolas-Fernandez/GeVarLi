@@ -228,10 +228,11 @@ rule bcftools_consensus:
     shell:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
+        "--samples - "                    # Since 1.17, and issues #1948, to ignore samples and use REF,ALT
+        "--output {output.cons_tmp} "     # -o: write output to a file (default: standard output)
         "--fasta-ref {input.masked_ref} " # -f: reference sequence in fasta format
         "{params.iupac} "                 # -I, --iupac-codes: output variants in the form of IUPAC ambiguity codes
         "{input.archive} "                # SNVs and Indels filtered VCF archive file
-        "--output {output.cons_tmp} "     # -o: write output to a file (default: standard output)
         "2> {log}"                        # Log redirection
 
 ###############################################################################
