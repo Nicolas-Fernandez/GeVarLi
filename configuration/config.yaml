@@ -84,7 +84,7 @@ nextclade:
 ### Note, update nextclade datasets:
 # > conda activate nextclade_v.2.14.0
 # > cd GeVarLi/resources/nextclade/
-# > for dataset in * ; do echo "Updating: ${dataset}" ; nextclade dataset get --name ${DATASET} --output-dir ${DATASET}/ ; done
+# > for dataset in * ; do echo "Updating: ${dataset}" ; nextclade dataset get --name ${dataset} --output-dir ${dataset}/ ; done
 # > conda deactivate
 
 ###############################################################################
