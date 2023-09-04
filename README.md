@@ -521,8 +521,8 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │    └── 📦 {SAMPLE}_R2.fastq.gz
  │    ├── 📂 test_data/
  │    │    ├── 🛡️  .gitkeep
- │    │    ├── 📦 SARS-CoV-2_19A_B_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
- │    │    └── 📦 SARS-CoV-2_19A_B_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
+ │    │    ├── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
+ │    │    └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
  │    └── 📂 visuals/
  │         ├── 📈 gevarli_filegraph.png
  │         ├── 📈 gevarli_rulegraph.png
