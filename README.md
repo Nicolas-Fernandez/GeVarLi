@@ -53,7 +53,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Version ###
 
-*V.2023.06*  
+*V.2023.09*  
 
 ### Rulegraph ###
 

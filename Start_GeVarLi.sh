@@ -31,7 +31,7 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2023.06"                              # GeVarLi version
+gevarli_version="2023.09"                              # GeVarLi version
 workflow_base_version="2023.06"                        # Workflow base version
 
 echo -e "
@@ -45,7 +45,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2023.06.21
+${blue}Latest modifications${nc} ___ 2023.09.19
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -565,7 +565,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2023.06.03
+Latest modifications ___ 2023.09.19
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
