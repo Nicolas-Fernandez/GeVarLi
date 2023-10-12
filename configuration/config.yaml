@@ -50,6 +50,8 @@ consensus:
     #- 'Swinepox-virus_India_MW-036632-1'    # Swinepox   (Nextclade)
     #- 'Ebola-virus_Zaire_AF-272001-1'       # Ebola      (na)
     #- 'Ebola-virus_Sudan_MH-121162-1'       # Ebola      (na)
+    #- 'Lassa-virus_Seg-L_NC-004297-1'       # Lassa-L    (na)
+    #- 'Lassa-virus_Seg-S_NC-004297-1'       # Lassa-S    (na)
     #- 'Nipah-virus_Malaysia_AJ-564622-1'    # Nipah      (na)
     #- 'HIV-1_HXB2_K-03455-1'                # HIV-1      (na)
     #- 'Human-herpesvirus-5_NC-006273-2'     # Herpes     (na)
