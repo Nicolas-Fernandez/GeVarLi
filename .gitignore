@@ -24,9 +24,8 @@ Thumbs.db
 /resources/reads/*.fastq.gz
 !/resources/data_test/
 
-# Ignore (raw) reads (.gz commented because test_data fastq files)
-*.fastq
-#*.fastq.gz
+# Ignore HOST genomes (too larges)
+resources/genomes/HOST_*
 
 # Ignore bt2 indexes
 *.bt2
