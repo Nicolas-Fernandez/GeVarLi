@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.10.13
+# Latest modifications ___ 2023.10.26
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -27,12 +27,14 @@ ylo="\033[1;33m"   # yellow
 blue="\033[1;34m"  # blue
 nc="\033[0m"       # no color
 
+
 ###############################################################################
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 gevarli_version="2023.10"                              # GeVarLi version
 workflow_base_version="2023.06"                        # Workflow base version
+nextclade_version="2.14.0"                             # Nextclade version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -45,9 +47,10 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2023.10.13
+${blue}Latest modifications${nc} ___ 2023.10.26
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
+
 
 ###############################################################################
 ### OPERATING SYSTEM ###
@@ -73,6 +76,7 @@ echo -e "${blue}Operating system${nc} _______ ${red}${os}${nc}"
 # Get and print shell
 shell=$SHELL
 echo -e "${blue}Shell${nc} __________________ ${ylo}${shell}${nc}"
+
 
 ###############################################################################
 ### HARDWARE ###
@@ -111,6 +115,28 @@ ${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
 ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 "
 
+
+###############################################################################
+### NETWORK ###
+###############
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}NETWORK${nc} ${green}#####${nc}
+${green}-------------------${nc}
+"
+
+if : >/dev/tcp/8.8.8.8/53
+then
+    network="Online"
+else
+    network="Offline"
+fi
+
+echo -e "
+${blue}Network${nc} ________________ ${red}${network}${nc}
+"
+
+
 ###############################################################################
 ### WORKFLOW-BASE INSTALLATION ###
 ##################################
@@ -120,15 +146,22 @@ ${green}#####${nc} ${red}WORKFLOW-BASE INSTALLATION${nc} ${green}#####${nc}
 ${green}---------------------------------------${nc}
 "
 
+# Intern shell source conda
+source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
+source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
+
 # Test if latest 'workflow-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
 then
     echo -e "
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} it's already created!
 "
-else
-    echo -e "
-Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
+else # Test network conection
+    if [[ ${network} = "Online" ]]
+    then
+        echo -e "
+Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
+Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
     # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.28.3)
     # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.4.4)
@@ -136,7 +169,14 @@ Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} will be no
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
     # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 8.0.5)
 "
-    conda env create -f ${workdir}/workflow/environments/${os}/workflow-base_v.${workflow_base_version}.yaml
+        conda env create -f ${workdir}/workflow/environments/${os}/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
+    else
+	echo -e "
+Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+Please, check your network conection!
+"
+    fi
 fi
 
 # Remove depreciated 'gevarli' or 'snakemake' old environments
@@ -155,6 +195,55 @@ for env in ${old_envs} ; do
     conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
 done
 
+
+###############################################################################
+### NEXTCLADE DATASETS UPDATES ###
+##################################
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
+${green}--------------------------------------${nc}
+"
+
+# Test if a 'nextclade' environment exist
+if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
+then
+    echo -e "
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} already created!
+"
+else
+    if [[ ${network} = "Online" ]]
+    then
+        conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
+    else
+	echo -e "
+Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+Please, check your network conection!
+"
+    fi
+fi
+
+# Test network conection                                                                                                                                                        
+if [[ ${network} = "Online" ]]
+then
+    echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}"
+    conda activate nextclade_v.${nextclade_version}
+    cd ${workdir}/resources/nextclade/
+    for dataset in * ; do
+	echo "Updating: ${dataset}"
+	nextclade dataset get --name ${dataset} --output-dir ${dataset}/
+    done
+    cd ${workdir}/
+    conda deactivate
+else
+    echo -e "
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+${blue}Nextclade${nc} datasets updatdes ${red}not available${nc}!
+"
+fi
+
+
 ###############################################################################
 ### CONDA ACTIVATION ###
 ########################
@@ -166,10 +255,7 @@ ${green}----------------------------${nc}
 
 echo -e "conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
 
-# intern shell source conda
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
-source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
-conda activate workflow-base_v.${workflow_base_version}          # conda activate workflow-base
+conda activate workflow-base_v.${workflow_base_version}
 
 ###############################################################################
 ### SETTINGS ###
@@ -202,9 +288,9 @@ conda_frontend=$(yq -c '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed '
 max_threads=$(yq -r '.resources.cpus' ${config_file})    # Get user config: max threads
 max_memory=$(yq -r '.resources.ram' ${config_file})      # Get user config: max memory
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})   # Calcul maximum memory usage per job
-reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/') # Get user config:  genome reference
-aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/')     # Get user config: aligner 
-min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/')    # Get user config: minimum coverage
+reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g') # Get user config:  genome reference
+aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g')     # Get user config: aligner 
+min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g')    # Get user config: minimum coverage
 min_af=$(yq -r '.consensus.min_af' ${config_file})       # Get user config: minimum allele frequency
 clipping=$(yq -r '.cutadapt.clipping' ${config_file})    # Get user config: hard clipping option
 nextclade=$(yq -c '.nextclade.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run nextclade
@@ -232,7 +318,7 @@ ${blue}Jobs memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
 ${blue}Reference genome${nc} ________ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
 
-${blue}Min coverage${nc} ____________ ${red}${min_cov}${nc}x
+${blue}Min coverage${nc} ____________ ${red}${min_cov}${nc} X
 ${blue}Min allele frequency${nc} ____ ${red}${min_af}${nc}
 
 ${blue}Hard-clipping primers${nc} ___ ${red}${clipping}${nc}
@@ -268,6 +354,7 @@ rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /de
 echo -e "
 If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Start_GeVarLi.sh${nc} script (l.235).
 "
+
 
 ###############################################################################
 ### SNAKEMAKE PIPELINES ###
@@ -433,6 +520,7 @@ for snakefile in ${snakefiles_list} ; do
         --printshellcmds ;
 done
 
+
 ###############################################################################
 ### CONCATENATE RESULTS ###
 ###########################
@@ -485,7 +573,8 @@ for directory in ${workdir}/results/02_Mapping/*/ ; do
         && mv ${workdir}/results/NEXT.tmp ${workdir}/results/All_${reference}_nextclade_lineages.tsv \
         2> /dev/null ;
 done
-		
+
+
 ###############################################################################
 ### GRAPHS, SUMMARY and LOGS ###
 #############################
@@ -526,6 +615,7 @@ done
 
 cp ${config_file} ${workdir}/results/10_Reports/config.log 2> /dev/null
 
+
 ###############################################################################
 ### CLEAN and SAVE ###
 ######################
@@ -565,7 +655,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2023.10.13
+Latest modifications ___ 2023.10.26
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
@@ -620,4 +710,6 @@ tar -zcf archives/Results_${time_stamp_archive}_${reference}_${aligner}-${min_co
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 "
+
+
 ###############################################################################
