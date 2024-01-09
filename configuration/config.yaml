@@ -54,6 +54,7 @@ consensus:
     #- 'Lassa-virus_NC-004297-1_Seg-S'       # Lassa-S NC  (na)
     #- 'Lassa-virus_MT-193282-1_BEN-16131_Seg-L' # Lassa-L MT (na)
     #- 'Lassa-virus_MT-193282-1_BEN-16131_Seg-S' # Lassa-S MT (na)
+    #- 'Marburg-virus_NC_001608-3'           # Marburg     (na)
     #- 'Nipah-virus_Malaysia_AJ-564622-1'    # Nipah       (na)
     #- 'HIV-1_HXB2_K-03455-1'                # HIV-1       (na)
     #- 'Human-herpesvirus-5_NC-006273-2'     # Herpes      (na)
