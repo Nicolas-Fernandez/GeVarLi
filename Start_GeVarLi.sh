@@ -10,12 +10,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2023.10
+# Version ________________ v.2024.01
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.10.26
+# Latest modifications ___ 2024.01.17 (update Nextclade to v_3.0.0)
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -32,9 +32,9 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2023.10"                              # GeVarLi version
-workflow_base_version="2023.06"                        # Workflow base version
-nextclade_version="2.14.0"                             # Nextclade version
+gevarli_version="2024.01"                              # GeVarLi version
+workflow_base_version="2024.01"                        # Workflow base version
+nextclade_version="3.0.0"                              # Nextclade version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -47,7 +47,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2023.10.26
+${blue}Latest modifications${nc} ___ 2024.01.17 (update Nextclade to v_3.0.0)
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -163,11 +163,11 @@ else # Test network conection
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.28.3)
-    # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.4.4)
-    # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.2)
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.29.0)
+    # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.5.6)
+    # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.3)
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
-    # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 8.0.5)
+    # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 9.0.0)
 "
         conda env create -f ${workdir}/workflow/environments/${os}/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
     else
@@ -179,7 +179,7 @@ Please, check your network conection!
     fi
 fi
 
-# Remove depreciated 'gevarli' or 'snakemake' old environments
+# Remove depreciated 'gevarli', 'snakemake' or 'workflow' old environments
 old_envs="gevarli-base_v.2022.11 \
           gevarli-base_v.2022.12 \
           gevarli-base_v.2023.01 \
@@ -189,7 +189,8 @@ old_envs="gevarli-base_v.2022.11 \
           snakemake-base_v.2023.01 \
           snakemake-base_v.2023.02 \
           snakemake-base_v.2023.03 \
-          snakemake-base_v.2023.04"
+          snakemake-base_v.2023.04 \
+          workflow-base_v.2023.06"
 
 for env in ${old_envs} ; do
     conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
@@ -229,12 +230,11 @@ if [[ ${network} = "Online" ]]
 then
     echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}"
     conda activate nextclade_v.${nextclade_version}
-    cd ${workdir}/resources/nextclade/
-    for dataset in * ; do
-	echo "Updating: ${dataset}"
-	nextclade dataset get --name ${dataset} --output-dir ${dataset}/
+    for dataset in resources/nextclade/* ; do
+	name=$(basename ${dataset})
+	echo "Updating: ${name}"
+	nextclade dataset get --name ${name} --output-dir ${dataset}/
     done
-    cd ${workdir}/
     conda deactivate
 else
     echo -e "
@@ -266,12 +266,12 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-conda_version=$(conda --version | sed 's/conda //')                   # Conda version (ver. >= 23.3.1)
-snakemake_version=$(snakemake --version)                              # Snakemake version (ver. 7.25.0)
-mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1)       # Mamba version (ver. 1.4.2)
-yq_version=$(yq --version | sed 's/yq //')                            # Yq version (ver. 3.2.1)
+conda_version=$(conda --version | sed 's/conda //')                   # Conda version (ver. 23.11.0)
+snakemake_version=$(snakemake --version)                              # Snakemake version (ver. 8.2.0)
+mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1)       # Mamba version (ver. 1.5.6)
+yq_version=$(yq --version | sed 's/yq //')                            # Yq version (ver. 3.2.3)
 rename_version="1.601"                                                # Rename version (ver. 1.601)
-graphviz_version="7.1.0"                                              # GraphViz version (ver. 7.1.0)
+graphviz_version="9.0.0"                                              # GraphViz version (ver. 9.0.0)
 #graphviz_version=$(dot --version | sed 's/dot - graphviz version //') # GraphViz version
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
@@ -306,7 +306,7 @@ echo -e "
 ${blue}Working directory${nc} _______ ${workdir}/
 ${blue}Samples processed${nc} _______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
-${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc} (>= 23.3.1)
+${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
 ${blue}Snakemake version${nc} _______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
@@ -323,9 +323,11 @@ ${blue}Min allele frequency${nc} ____ ${red}${min_af}${nc}
 
 ${blue}Hard-clipping primers${nc} ___ ${red}${clipping}${nc}
 
-${blue}Pangolin run${nc} ____________ ${red}${pangolin}${nc}
 ${blue}Nextclade run${nc} ___________ ${red}${nextclade}${nc}
 ${blue}Nextclade dataset${nc} _______ ${red}${dataset}${nc}
+${blue}Nextclade version${nc} _______ ${red}v.${nextclade_version}${nc}
+
+${blue}Pangolin run${nc} ____________ ${red}${pangolin}${nc}
 
 ${blue}Fastq-Screen subset${nc} _____ ${red}${subset}${nc} reads per sample
 
@@ -406,7 +408,8 @@ for snakefile in ${snakefiles_list} ; do
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
-        --list-conda-envs ;
+        --list-conda-envs \
+        2> /dev/null ;
 done
 
 #echo -e "
@@ -485,7 +488,7 @@ for snakefile in ${snakefiles_list} ; do
         --use-conda \
         --conda-frontend ${conda_frontend} \
         --dry-run \
-        --quiet ;
+        --quiet all ;
 done
 
 echo -e "
@@ -655,7 +658,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2023.10.26
+Latest modifications ___ 2024.01.17 (update Nextclade to v_3.0.0)
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
@@ -687,9 +690,11 @@ Min allele frequency ___ ${min_af}
 
 Hard-clipping primers __ ${clipping}
 
-Pangolin run ___________ ${pangolin}
 Nextclade run __________ ${nextclade}
 Nextclade dataset ______ ${dataset}
+Nextclade version _______ v.${nextclade_version}
+
+Pangolin run ___________ ${pangolin}
 
 Fastq-Screen subset _____ ${subset} reads per sample
 
@@ -703,9 +708,9 @@ cd ${workdir}/results/
 tar -zcf 10_Reports_archive.tar.gz 10_Reports
 
 # Gzip results directory
-mkdir -p ${workdir}/archives/ 2> /dev/null
-cd ${workdir}/
-tar -zcf archives/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz results/
+#mkdir -p ${workdir}/archives/ 2> /dev/null
+#cd ${workdir}/
+#tar -zcf archives/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz results/
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}

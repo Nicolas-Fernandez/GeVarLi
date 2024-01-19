@@ -794,14 +794,14 @@ rule bwa_mapping:
     log:
         "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
     shell:
-        "bwa mem "                            # BWA-MEM algorithm, performs local alignment
-        "-t {resources.cpus} "                 # -t: Number of threads (default: 12)
-        "-v 1 "                                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
+        "bwa mem "                               # BWA-MEM algorithm, performs local alignment
+        "-t {resources.cpus} "                    # -t: Number of threads (default: 12)
+        "-v 1 "                                   # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
         "{params.bwa_path}{wildcards.reference} " # Reference index filename prefix
-        "{input.fwd_reads} "                   # Forward input reads
-        "{input.rev_reads} "                   # Reverse input reads
-        "1> {output.mapped} "                  # SAM output
-        "2> {log}"                             # Log redirection 
+        "{input.fwd_reads} "                      # Forward input reads
+        "{input.rev_reads} "                      # Reverse input reads
+        "1> {output.mapped} "                     # SAM output
+        "2> {log}"                                # Log redirection 
 
 ###############################################################################
 rule bowtie2_mapping:
@@ -858,7 +858,7 @@ rule sickle_trim_quality:
     log:
         "results/10_Reports/tools-log/sickle-trim/{sample}.log"
     shell:
-       "sickle "                # Sickle, a windowed adaptive trimming tool for FASTQ files using quality
+        "sickle "               # Sickle, a windowed adaptive trimming tool for FASTQ files using quality
         "{params.command} "      # Paired-end or single-end sequence trimming
         "-t {params.encoding} "  # --qual-type: Type of quality values, solexa ; illumina ; sanger ; CASAVA, < 1.3 ; 1.3 to 1.7 ; >= 1.8
         "-q {params.quality} "   # --qual-threshold: Threshold for trimming based on average quality in a window (default: 20)
@@ -900,7 +900,7 @@ rule cutadapt_adapters_removing:
     log:
         "results/10_Reports/tools-log/cutadapt/{sample}.log"
     shell:
-       "cutadapt "                           # Cutadapt, finds and removes unwanted sequence from your HT-seq reads
+        "cutadapt "                          # Cutadapt, finds and removes unwanted sequence from your HT-seq reads
         "--cores {resources.cpus} "           # -j: Number of CPU cores to use. Use 0 to auto-detect (default: 1)
         "--cut {params.cut} "                 # -u: Remove 'n' first bases (5') from forward R1 (hard-clipping, default: 0)
         "-U {params.cut} "                    # -U: Remove 'n' first bases (5') from reverse R2 (hard-clipping, default: 0)
