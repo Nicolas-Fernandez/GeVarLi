@@ -1,0 +1,8 @@
+name: minimap_v.0.2_r124
+channels:
+  - bioconda
+  - defaults
+dependencies:
+  - minimap=0.2_r124=h188c3c3_4
+  - zlib=1.2.13=h4dc903c_0
+prefix: /Users/2021nf001/miniconda3/envs/minimap_v.0.2_r124

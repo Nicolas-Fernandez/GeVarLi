@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.06.21
+# Latest modifications ___ 2024.01.17 (update Nextclade to v_3.0.0)
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -85,20 +85,15 @@ nextclade:
     #- 'hMPXV'      # human MPox
     #- 'hMPXV_B1'   # human MPox - only lineage B1*
   path: 'resources/nextclade/' # Path to nextclade datasets (default path)
-  
-### Note, update nextclade datasets:
-# > conda activate nextclade_v.2.14.0
-# > cd GeVarLi/resources/nextclade/
-# > for dataset in * ; do echo "Updating: ${dataset}" ; nextclade dataset get --name ${dataset} --output-dir ${dataset}/ ; done
-# > conda deactivate
+
 
 ###############################################################################
 ### PANGOLIN ###
 ################
 pangolin:
   run: # Run Pangolin analyzes (default: yes)
-  - 'yes' # Yes (default)
-  #- 'no' # No
+  #- 'yes' # Yes (default)
+  - 'no' # No
 
 ###############################################################################
 ### FASTQ-SCREEN ###
@@ -196,11 +191,11 @@ conda:
     gawk:          '../environments/osx/gawk_v.5.1.0.yaml'              # Awk (GNU)     ver. 5.1.0
     lofreq:        '../environments/osx/lofreq_v.2.1.5.yaml'            # Lofreq        ver. 2.1.5
     multiqc:       '../environments/osx/multiqc_v.1.14.yaml'            # MultiQC       ver. 1.14
-    nextclade:     '../environments/osx/nextclade_v.2.14.0.yaml'        # Nextclade     ver. 2.14.0
+    nextclade:     '../environments/osx/nextclade_v.3.0.0.yaml'         # Nextclade     ver. 3.0.0
     pangolin:      '../environments/osx/pangolin_v.4.3.yaml'            # Pangolin      ver. 4.3
     samtools:      '../environments/osx/samtools_v.1.17.yaml'           # Samtools      ver. 1.17
     sickle_trim:   '../environments/osx/sickle-trim_v.1.33.yaml'        # Sickle-trim   ver. 1.33
-    workflow_base: '../environments/osx/workflow-base_v.2023.06.yaml'   # Workflow-Base ver. 2023.06
+    workflow_base: '../environments/osx/workflow-base_v.2024.01.yaml'   # Workflow-Base ver. 2024.01
   linux: # Conda Linux environement yaml files:
     bamclipper:    '../environments/linux/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
     bcftools:      '../environments/linux/bcftools_v.1.17.yaml'         # Bcftools      ver. 1.17
@@ -213,11 +208,11 @@ conda:
     gawk:          '../environments/linux/gawk_v.5.1.0.yaml'            # Awk (GNU)     ver. 5.1.0
     lofreq:        '../environments/linux/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5
     multiqc:       '../environments/linux/multiqc_v.1.14.yaml'          # MultiQC       ver. 1.14
-    nextclade:     '../environments/linux/nextclade_v.2.14.0.yaml'      # Nextclade     ver. 2.14.0
+    nextclade:     '../environments/linux/nextclade_v.3.0.0.yaml'       # Nextclade     ver. 3.0.0
     pangolin:      '../environments/linux/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
     samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
     sickle_trim:   '../environments/linux/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-    workflow_base: '../environments/linux/workflow-base_v.2023.06.yaml' # Workflow-Base ver. 2023.06
+    workflow_base: '../environments/linux/workflow-base_v.2024.01.yaml' # Workflow-Base ver. 2024.01
 
 ###############################################################################
 ### OPERATING SYSTEM ###
