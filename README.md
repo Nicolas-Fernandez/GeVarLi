@@ -39,7 +39,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Reads cleaning
   - Cutadapt (_adapters trimming & amplicon primers hard-clipping_)
   - Sickle-trim (_quality trimming_)
-- Reads mapping
+- Reads mapping (_using minimap2, bwa or bowtie2_)
   - (_bam files_)
   - (_bed files_)
   - Visualization (IGV)
@@ -53,7 +53,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Version ###
 
-*v.2024.01_001*  
+*v.2024.01_002*  
 
 ### Rulegraph ###
 

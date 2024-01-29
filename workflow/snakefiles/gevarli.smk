@@ -1,4 +1,4 @@
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M#A##I####
 ###                                                                         ###
 ###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
 ###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2023.08.24
+# Latest modifications ___ 2024.01.26 (add minimap2 aligner)
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -70,6 +70,7 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 
 CUTADAPT = config["conda"][OS]["cutadapt"]       # Cutadapt conda environment
 SICKLE_TRIM = config["conda"][OS]["sickle_trim"] # Sickle-Trim conda environment
+MINIMAP2 = config["conda"][OS]["minimap2"]       # BWA conda environment
 BWA = config["conda"][OS]["bwa"]                 # BWA conda environment
 BOWTIE2 = config["conda"][OS]["bowtie2"]         # Bowtie2 conda environment
 SAMTOOLS = config["conda"][OS]["samtools"]       # SamTools conda environment
@@ -95,6 +96,15 @@ ENCODING = config["sickle_trim"]["encoding"]    # Sickle-trim --qual-type
 QUALITY = config["sickle_trim"]["quality"]      # Sickle-trim --qual-threshold
 S_LENGTH = config["sickle_trim"]["length"]      # Sickle-trim --length-treshold
 
+MM2_PATH = config["minimap2"]["path"]  # Minimpa2 path to indexes
+PRESET =  config["minimap2"]["preset"] # Minimap2 preset
+
+#LENGTH = config["minimap2"]["length"]                              #
+#KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # MM2 k-mer size
+#MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # MM2 minimizer window size  
+#SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # MM2 split index
+#HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # MM2 if PacBio
+
 BWA_PATH = config["bwa"]["path"]                # BWA path to indexes
 BWA_ALGO = config["bwa"]["algorithm"]           # BWA indexing algorithm
 
@@ -105,9 +115,11 @@ BT2_ALGO = config["bowtie2"]["algorithm"]       # BT2 indexing algorithm
 ALIGNER = config["consensus"]["aligner"]        # Aligners ('bwa' or 'bowtie2')
 REF_PATH = config["consensus"]["path"]          # Path to genomes references
 REFERENCE = config["consensus"]["reference"]    # Genome reference sequence, in fasta format
-MIN_COV = config["consensus"]["min_cov"]        # Minimum coverage, mask lower regions with 'N' 
-MIN_AF = config["consensus"]["min_af"]          # Minimum allele frequency allowed
-IUPAC = config["consensus"]["iupac"]            # Output variants in the form of IUPAC ambiguity codes
+MIN_COV = config["consensus"]["min_cov"]        # Minimum coverage, mask lower regions with 'N'
+
+MIN_AF = config["lofreq"]["min_af"]     # Minimum allele frequency allowed
+IUPAC = config["lofreq"]["iupac"]       # Output variants in the form of IUPAC ambiguity codes
+MAP_QUAL = config["lofreq"]["map_qual"] # LoFreq mapping quality
 
 NEXT_RUN = config["nextclade"]["run"]           # Nextclade run option
 NEXT_PATH = config["nextclade"]["path"]         # Path to nextclade dataset
@@ -315,6 +327,8 @@ rule lofreq_variant_calling:
         LOFREQ
     resources:
         cpus = CPUS
+    params:
+        map_qual = MAP_QUAL
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
         indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam",
@@ -328,6 +342,7 @@ rule lofreq_variant_calling:
         #"call-parallel "                 # Call variants with parallel wrapper, requires --pp-threads
         #"--pp-threads {resources.cpus} " # Number of threads (required) [INT] (default, dactivate because issue).
         "call "                          # Call variants (no parallel)
+        "{params.map_qual} "              # -N: Don't merge mapping quality in LoFreq's model
         "--call-indels "                 # Enable indel calls (note: preprocess your file to include indel alignment qualities!)
         "--ref {input.masked_ref} "      # -f: Indexed reference fasta file (gzip supported)
         "--out {output.variant_call} "   # -o: SNVs and Indels VCF file output (default: standard output)
@@ -773,6 +788,44 @@ rule samtools_sortbynames:
         "-o {output.sort_by_names} "  # -o: Write final output to FILE rather than standard output
         "{input.mapped} "             # Mapped reads input
         "&> {log}"                    # Log redirection 
+
+###############################################################################
+rule minimap2_mapping:
+    # Aim: reads mapping against reference sequence
+    # Use: minimap2
+    message:
+        "Minimap2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
+    conda:
+        MINIMAP2
+    resources:
+        cpus = CPUS
+    params:
+        mm2_path = MM2_PATH,
+        preset = PRESET
+        #length = LENGTH
+    input:
+        fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
+    output:
+        mapped = temp("results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam")
+    log:
+        "results/10_Reports/tools-log/minimap2/{sample}_{reference}.log"
+    shell:
+        "minimap2 "                                  # Minimap2, a versatile sequence alignment program
+        "-x {params.preset} "                         # -x: presets (always applied before other options)
+        "-t {resources.cpus} "                        # -t: Number of threads (default: 3)
+        "-a "                                         # -a: output in the SAM format (PAF by default)
+        #"-F {params.length} "                         # -F: max fragment length, effective with -x sr mode (default: 800)
+        "{params.mm2_path}{wildcards.reference}.mmi " # Reference index filename prefix.mmi (-k, -w, -I and -H can't be changed during mapping)
+        #"resources/genomes/{wildcards.reference}.fasta " # Reference genome fasta format (for custom -kwIH)
+        #"-k {params.kmer_size} "                          # -k: k-mer size (default: "21", no larger than "28") [INT]
+        #"-w {params.minimizer_size} "                     # -w: minimizer window size (default: "11") [INT]
+        #"-I {params.split_size} "                         # -I: split index for every {NUM} input bases (default: "8G") [INT]
+        #"{params.homopolymer} "                           # -H: use homopolymer-compressed k-mer (preferrable for PacBio)
+        "{input.fwd_reads} "                          # Forward input reads
+        "{input.rev_reads} "                          # Reverse input reads
+        "1> {output.mapped} "                         # SAM output
+        "2> {log}"                                    # Log redirection 
 
 ###############################################################################
 rule bwa_mapping:

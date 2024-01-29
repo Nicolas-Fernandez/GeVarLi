@@ -1,0 +1,12 @@
+name: minimap2_v.2.26
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - k8=0.2.5=hdf58011_4
+  - libcxx=16.0.6=hd57cbcb_0
+  - libzlib=1.2.13=h8a1eda9_5
+  - minimap2=2.26=h45fc8d7_2
+  - zlib=1.2.13=h8a1eda9_5
+prefix: /Users/2021nf001/miniconda3/envs/minimap2_v.2.26
