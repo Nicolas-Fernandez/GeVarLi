@@ -13,4 +13,3 @@ dependencies:
   - libzlib=1.2.13=hd590300_5
   - minimap2=2.26=he4a0461_2
   - zlib=1.2.13=hd590300_5
-prefix: /home/fernandez/.conda/envs/minimap_v.2.26
