@@ -319,6 +319,9 @@ _Some [temp] tagged files are removed by default, to save disk usage_
                  ├── 📂 bwa/
                  ├── 📂 cutadapt/
                  ├── 📂 lofreq/
+                 ├── 📂 ivar/
+                 ├── 📂 lofreq/
+                 ├── 📂 minimap2/
                  ├── 📂 nextclade/
                  ├── 📂 pangolin/
                  ├── 📂 samtools/
@@ -396,6 +399,9 @@ _**Note**: snakemake (with default Start bash script) will always use all cpus t
 - **command**: Pipeline wait for paired-end reads _(default and should be: 'pe')_
 - **encoding**: If your data are from recent Illumina run, let 'sanger' _(default and should be: 'sanger')_
 
+### MINIMAP2 ###
+
+
 
 ### BWA ###
 
@@ -409,6 +415,11 @@ _**Note**: snakemake (with default Start bash script) will always use all cpus t
 - **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
 - **algorithm**: algorithm for constructing Bowtie2 index (default: deactivate -> '' ) 
 
+
+### LoFreq ###
+
+
+### iVar ###
 
 ### Nextclade ###
 
@@ -455,21 +466,18 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    └── ⚙️  multiqc.yaml
  ├── 📂 resources/
  │    ├── 📂 genomes/
- │    │    ├── 🧬 Ebola-virus_{REFERENCES}.fasta
- │    │    ├── 🧬 HIV-1_{REFERENCES}.fasta
- │    │    ├── 🧬 Human-herpes-virus_{REFERENCES}.fasta
- │    │    ├── 🧬 Monkeypox-virus_{REFERENCES}.fasta
- │    │    ├── 🧬 Nipah-virus_{REFERENCES}.fasta
- │    │    ├── 🧬 SARS-CoV-2_{REFERENCES}.fasta
- │    │    ├── 🧬 Swinepox-virus_{REFERENCES}.fasta
- │    │    ├── 🧬 (YOUR_FAVORITE_GENOME_REFERENCE}.fasta
+ │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
+ │    │    ├── 🧬 Monkeypox-virus_Zaire_AF-380138-1.fasta
+ │    │    ├── 🧬 {REFERENCE}.fasta
  │    │    ├── 🧬 QC_Echerichia-coli_CP-060121-1.fasta
  │    │    ├── 🧬 QC_Kanamycin-Resistance-Gene.fasta
  │    │    ├── 🧬 QC_NGS-adapters.fasta
  │    │    ├── 🧬 QC_Phi-X174_Coliphage_NC-001422-1.fasta
  │    │    ├── 🧬 QC_UniVec_wo_phiX-kanamycin-NGSseq.fasta
- │    │    └── 🧬 {YOUR_FAVORITE_QC_REFERENCE}.fasta
+ │    │    └── 🧬 QC_{REFERENCE}.fasta
  │    ├── 📂 indexes/
+ │    │    ├── 📂 minimap2/
+ │    │    │    └── 🗂️  {GENOME}.mmi
  │    │    ├── 📂 bwa/
  │    │    │    ├── 🗂️  {GENOME}.amb
  │    │    │    ├── 🗂️  {GENOME}.ann
@@ -484,31 +492,7 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │         ├── 🗂️  {GENOME}.rev.1.bt2
  │    │         └── 🗂️  {GENOME}.rev.2.bt2
  │    ├── 📂 nextclade/
- │    │    ├── 📂 sars-cov-2/
- │    │    │    ├── 🌍 genemap.gff
- │    │    │    ├── 🧪 primers.csv
- │    │    │    ├── ✅ qc.json
- │    │    │    ├── 🦠 reference.fasta
- │    │    │    ├── 🧬 sequences.fasta
- │    │    │    ├── 🏷️  tag.json
- │    │    │    └── 🌳 tree.json
- │    │    ├── 📂 MPXV/
- │    │    │    ├── 🌍 genemap.gff
- │    │    │    ├── 🧪 primers.csv
- │    │    │    ├── ✅ qc.json
- │    │    │    ├── 🦠 reference.fasta
- │    │    │    ├── 🧬 sequences.fasta
- │    │    │    ├── 🏷️  tag.json
- │    │    │    └── 🌳 tree.json
- │    │    ├── 📂 hMPWV/
- │    │    │    ├── 🌍 genemap.gff
- │    │    │    ├── 🧪 primers.csv
- │    │    │    ├── ✅ qc.json
- │    │    │    ├── 🦠 reference.fasta
- │    │    │    ├── 🧬 sequences.fasta
- │    │    │    ├── 🏷️  tag.json
- │    │    │    └── 🌳 tree.json
- │    │    └── 📂 hMPXV_B1/
+ │    │    └── 📂 {DATABASE}/
  │    │         ├── 🌍 genemap.gff
  │    │         ├── 🧪 primers.csv
  │    │         ├── ✅ qc.json
@@ -531,40 +515,24 @@ _**Note**: Only 'osx' or 'linux' supported_
  │         └── 📈 quality_control_rulegraph.png
  └── 📂 workflow/
       ├── 📂 environments/
-      │    ├── 📂 linux/
-      │         ├── 🍜 bamclipper_v.1.0.0.yaml
-      │    │    ├── 🍜 bcftools_v.1.17.yaml
-      │    │    ├── 🍜 bedtools_v.2.31.0.yaml
-      │    │    ├── 🍜 bowtie2_v.2.5.1.yaml
-      │    │    ├── 🍜 bwa_v.0.7.17.yaml
-      │    │    ├── 🍜 cutadapt_v.4.4.yaml
-      │    │    ├── 🍜 fastq-screen_v.0.15.3.yaml
-      │    │    ├── 🍜 fastqc_v.0.12.1.yaml
-      │    │    ├── 🍜 gawk_v.5.1.0.yaml
-      │    │    ├── 🍜 lofreq_v.2.1.5.yaml
-      │    │    ├── 🍜 multiqc_v.1.14.yaml
-      │    │    ├── 🍜 nextclade_v.2.14.0.yaml
-      │    │    ├── 🍜 pangolin_v.4.3.yaml
-      │    │    ├── 🍜 samtools_v.1.17.yaml
-      │    │    ├── 🍜 sickle-trim_v.1.33.yaml
-      │    │    └── 🍜 workflow-base_v.2023.06.yaml
-      │    └── 📂 osx/
-      │         ├── 🍜 bamclipper_v.1.0.0.yaml
-      │         ├── 🍜 bcftools_v.1.17.yaml
-      │         ├── 🍜 bedtools_v.2.31.0.yaml
-      │         ├── 🍜 bowtie2_v.2.5.1.yaml
-      │         ├── 🍜 bwa_v.0.7.17.yaml
-      │         ├── 🍜 cutadapt_v.4.4.yaml
-      │         ├── 🍜 fastq-screen_v.0.15.3.yaml
-      │         ├── 🍜 fastqc_v.0.12.1.yaml
-      │         ├── 🍜 gawk_v.5.1.0.yaml
-      │         ├── 🍜 lofreq_v.2.1.5.yaml
-      │         ├── 🍜 multiqc_v.1.14.yaml
-      │         ├── 🍜 nextclade_v.2.14.0.yaml
-      │         ├── 🍜 pangolin_v.4.3.yaml
-      │         ├── 🍜 samtools_v.1.17.yaml 
-      │         ├── 🍜 sickle-trim_v.1.33.yaml
-      │         └── 🍜 workflow-base_v.2023.06.yaml
+      │    └── 📂 {OS}/
+      │         ├── 🍜 bamclipper_v.{VERSION}.yaml
+      │         ├── 🍜 bcftools_v.{VERSION}.yaml
+      │         ├── 🍜 bedtools_v.{VERSION}.yaml
+      │         ├── 🍜 bowtie2_v.{VERSION}.yaml
+      │         ├── 🍜 bwa_v.{VERSION}.yaml
+      │         ├── 🍜 cutadapt_v.{VERSION}.yaml
+      │         ├── 🍜 fastq-screen_v.{VERSION}.yaml
+      │         ├── 🍜 fastqc_v.{VERSION}.yaml
+      │         ├── 🍜 gawk_v.{VERSION}.yaml
+      │         ├── 🍜 ivar_v.{VERSION}.yaml
+      │         ├── 🍜 lofreq_v.{VERSION}.yaml
+      │         ├── 🍜 multiqc_v.{VERSION}.yaml
+      │         ├── 🍜 nextclade_v.{VERSION}.yaml
+      │         ├── 🍜 pangolin_v.{VERSION}.yaml
+      │         ├── 🍜 samtools_v.{VERSION}.yaml 
+      │         ├── 🍜 sickle-trim_v.{VERSION}.yaml
+      │         └── 🍜 workflow-base_v.{VERSION}.yaml
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
 	       ├── 📜 indexing_genomes.smk
@@ -621,7 +589,7 @@ _Bioinformatics, Volume 27, Issue 5 (2011)_
 **DOI**: [https://doi.org/10.1093/bioinformatics/btq671](https://doi.org/10.1093/bioinformatics/btq671)  
 **Publication**: [https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3042176/](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3042176/)  
 **Source code**: [https://github.com/samtools/samtools](https://github.com/samtools/samtools)  
-**Documentation**: [http://samtools.sourceforge.net](http://samtools.sourceforge.net)  
+**Documentation**: [http://samtools.sourceforge.net](http://samtools.sourceforge.net) 
 
 **LoFreq: a sequence-quality aware, ultra-sensitive variant caller for uncovering cell-population heterogeneity from high-throughput sequencing datasets**  
 Andreas Wilm, Pauline Poh Kim Aw, Denis Bertrand, Grace Hui Ting Yeo, Swee Hoe Ong, Chang Hua Wong, Chiea Chuen Khor, Rosemary Petric, Martin Lloyd Hibberd and Niranjan Nagarajan  
@@ -631,6 +599,14 @@ _Nucleic Acids Research, Volume 40, Issue 22 (2012)_
 **Source code**: [https://gitlab.com/treangenlab/lofreq](https://gitlab.com/treangenlab/lofreq) _(v2 used)_  
 **Source code**: [https://github.com/andreas-wilm/lofreq3](https://github.com/andreas-wilm/lofreq3) _(see also v3 in Nim)_  
 **Documentation**: [https://csb5.github.io/lofreq](https://csb5.github.io/lofreq)  
+
+**iVar, an Interpretation-Oriented Tool to Manage the Update and Revision of Variant Annotation and Classification**
+Sara Castellano, Federica Cestari, Giovanni Faglioni, Elena Tenedini, Marco Marino, Lucia Artuso, Rossella Manfredini, Mario Luppi, Tommaso Trenti and Enrico Tagliafico
+_Genes, Volume 12(3), Issue 384 (2021)_
+**DOI**: [https://doi.org/10.3390/genes12030384](https://doi.org/10.3390/genes12030384)
+**Publication**: [https://pubmed.ncbi.nlm.nih.gov/33800487/](https://pubmed.ncbi.nlm.nih.gov/33800487/)
+**Source code**: [https://github.com/andersen-lab/ivar](https://github.com/andersen-lab/ivar)
+**Documentation**: [https://andersen-lab.github.io/ivar/html/manualpage.html](https://andersen-lab.github.io/ivar/html/manualpage.html)
 
 **The AWK Programming Language**  
 Al Aho, Brian Kernighan and Peter Weinberger  
@@ -663,6 +639,14 @@ _GigaScience, Volume 10, Issue 2 (2021)_
 **Publication**: [https://academic.oup.com/gigascience/article/10/2/giab008/6137722](https://academic.oup.com/gigascience/article/10/2/giab008/6137722)  
 **Source code**: [https://github.com/samtools/samtools](https://github.com/samtools/samtools)  
 **Documentation**: [http://samtools.sourceforge.net](http://samtools.sourceforge.net)  
+
+**Minimap2: pairwise alignment for nucleotide sequences**
+Heng Li
+_Bioinformatics, Volume 34, Issue 18 (2018)_
+**DOI**: [https://doi.org/10.1093/bioinformatics/bty191](https://doi.org/10.1093/bioinformatics/bty191)
+**Publication**: [https://academic.oup.com/bioinformatics/article/34/18/3094/4994778](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778)
+**Source code**: [https://github.com/lh3/minimap2](https://github.com/lh3/minimap2)
+**Documentation**: [https://lh3.github.io/minimap2/minimap2.html](https://lh3.github.io/minimap2/minimap2.html)
 
 **Fast and accurate short read alignment with Burrows-Wheeler Transform**  
 Heng Li and Richard Durbin  
