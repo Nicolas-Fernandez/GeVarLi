@@ -64,10 +64,10 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ## ~ SUPPORT ~ ##
 
-1. Read The Fabulous Manual!
-2. Read de Awsome Wiki!
-3. Create a new issue: Issues > New issue > Describe your issue
-4. Send an email to [nicolas.fernandez@ird.fr](url)
+1. Please, read [The Fabulous Manual](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/blob/main/README.md?ref_type=heads)!
+2. Please, read [The Awsome Wiki](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/wikis/home)!
+3. Please, raise issues and bug reports at [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/issues)! 
+4. Please, contact me to [nicolas.fernandez@ird.fr](url)
 
 
 ## ~ CITATION ~ ##
@@ -101,6 +101,7 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 ## ~ ROADMAP ~ ##
 
 - Publish GeVarLi paper !
+- Add iVar option (after minimap2)
 - Add GisAid submision files generation
 - Add MultiQC config template
 
@@ -115,12 +116,12 @@ However, you can be volunteer to step in as **developer** or **maintainer**
 
 Open to contributions!
 
-- Asking for update
-- Proposing new feature
-- Reporting issue
-- Fixing issue
-- Sharing code
-- Citing tool
+- Ask for updates
+- Propose new features
+- Report issues
+- Fix issues
+- Share code
+- Cite tool
 
 
 ## ~ INSTALLATIONS ~ ##
