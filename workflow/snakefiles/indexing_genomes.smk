@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2023.06.21
+# Latest modifications ___ 2024.01.23 (add Minimap indexing)
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
@@ -44,12 +44,18 @@ CPUS = config["resources"]["cpus"] # Threads (maximum)
 ### ENVIRONMENTS ###
 ####################
 
-BWA = config["conda"][OS]["bwa"]         # BWA conda env
-BOWTIE2 = config["conda"][OS]["bowtie2"] # BT2 conda env
+MINIMAP2 = config["conda"][OS]["minimap2"] # MM2 conda env
+BWA = config["conda"][OS]["bwa"]           # BWA conda env
+BOWTIE2 = config["conda"][OS]["bowtie2"]   # BT2 conda env
 
 ###############################################################################
 ### PARAMETERS ###
 ##################
+
+KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # MM2 k-mer size
+MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # MM2 minimizer window size
+SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # MM2 split index
+#HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # MM2 if PacBio
 
 BWA_ALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
 BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
@@ -60,6 +66,9 @@ BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
 rule all:
     input:
+        mm2_indexes = expand("resources/indexes/minimap2/{ref_seq}.{ext}",
+                            ref_seq = REF_SEQ,
+                            ext = ["mmi"]),
         bwa_indexes = expand("resources/indexes/bwa/{ref_seq}.{ext}",
                             ref_seq = REF_SEQ,
                             ext = ["amb", "ann", "bwt", "pac", "sa"]),
@@ -69,9 +78,39 @@ rule all:
                                    "rev.1.bt2", "rev.2.bt2"])
         
 ###############################################################################
+rule minimap2_genome_indexing:
+    # Aim: index sequences in the FASTA format
+    # Use: minimap2 [OPTIONS] -d [INDEX.mmi] <query.fasta>
+    message:
+        "Minimap2 indexing {wildcards.ref_seq} genome"
+    conda:
+        MINIMAP2
+    params:
+        kmer_size = KMER_SIZE,
+        minimizer_size = MINIMIZER_SIZE,
+        split_size = SPLIT_SIZE,
+        #homopolymer = HOMOPOLYMER
+    input:
+        fasta = "resources/genomes/{ref_seq}.fasta"
+    output:
+        indexes = multiext("resources/indexes/minimap2/{ref_seq}",
+                           ".mmi")
+    log:
+        "results/10_Reports/tools-log/minimap2-indexes/{ref_seq}.log"
+    shell:
+        "minimap2 "                  # Minimap2, index sequences
+        "-k {params.kmer_size} "      # -k: k-mer size (default: "21", no larger than "28") [INT]
+        "-w {params.minimizer_size} " # -w: minimizer window size (default: "11") [INT]
+        "-I {params.split_size} "     # -I: split index for every {NUM} input bases (default: "8G") [INT]
+        #"{params.homopolymer} "       # use homopolymer-compressed k-mer (preferrable for PacBio)
+        "-d {output.indexes} "        # -d: dump index to FILE []
+        "{input.fasta} "              # Reference sequences in the FASTA format
+        "&> {log}"                    # Log redirection
+
+###############################################################################
 rule bwa_genome_indexing:
     # Aim: index sequences in the FASTA format
-    # Use: bwa index -a [ALGO] -p [PREFIX] [GENOME.fasta]
+    # Use: bwa index -a [ALGO] -p [PREFIX] <genome.fasta>
     message:
         "BWA-SW indexing {wildcards.ref_seq} genome"
     conda:
@@ -83,7 +122,7 @@ rule bwa_genome_indexing:
     output:
         prefix = temp("resources/indexes/bwa/{ref_seq}"),
         indexes = multiext("resources/indexes/bwa/{ref_seq}",
-                          ".amb", ".ann", ".bwt", ".pac", ".sa")
+                           ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
         "results/10_Reports/tools-log/bwa-indexes/{ref_seq}.log"
     shell:
@@ -97,7 +136,7 @@ rule bwa_genome_indexing:
 ###############################################################################
 rule bowtie2_genome_indexing:
     # Aim: index sequences in the FASTA format
-    # Use: bowtie2-build [options]* <reference_in> <bt2_index_base>
+    # Use: bowtie2-build [OPTIONS] <reference_in> <bt2_index_base>
     message:
         "Bowtie2-build indexing {wildcards.ref_seq} genome"
     conda:

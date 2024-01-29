@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2023.06.21
+# Latest modifications ___ 2024.01.24
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -123,7 +123,7 @@ rule fastqscreen_contamination_checking:
     shell:
         "fastq_screen "                  # FastqScreen, what did you expect ?
         "-q "                             # --quiet: Only show log warning
-        "--threads {resources.cpus} "     # --threads: Specifies across how many threads bowtie will be allowed to run
+        "--threads {resources.cpus} "     # --threads: Specifies across how many aligner  will be allowed to run
         "--aligner 'bwa' "                # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
         "--conf {params.config} "         # path to configuration file
         "--subset {params.subset} "       # Don't use the whole sequence file, but create a subset of specified size

@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.17 (update Nextclade to v_3.0.0)
+# Latest modifications ___ 2024.01.26 (add minimap2 aligner)
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -47,7 +47,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.01.17 (update Nextclade to v_3.0.0)
+${blue}Latest modifications${nc} ___ 2024.01.26 (update Nextclade to v_3.0.0)
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -163,7 +163,7 @@ else # Test network conection
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 7.29.0)
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 8.2.1)
     # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.5.6)
     # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.3)
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
@@ -275,28 +275,35 @@ graphviz_version="9.0.0"                                              # GraphViz
 #graphviz_version=$(dot --version | sed 's/dot - graphviz version //') # GraphViz version
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
-if [[ "${fastq}" == "0" ]]                                                        # If no sample,
-then                                                                               # start GeVarLi with at least 1 sample
+if [[ "${fastq}" == "0" ]]                                                         # If no sample,
+then                                                                                # start GeVarLi with at least 1 sample
     echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}
 ${red}SARS-CoV-2${nc} ${ylo}resources/data_test/${nc} fastq will be used as sample example"
-    cp ${workdir}/resources/data_test/*.fastq.gz ${workdir}/resources/reads/       # using data_test/*.fastq.gz
+    cp ${workdir}/resources/data_test/SARS-CoV-2_Omicron-BA1*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
+    fastq="data_test > SARS-CoV-2_Omicron-BA1 < fastq files"
 fi
 samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end)
 
 config_file="${workdir}/configuration/config.yaml"       # Get configuration file
 conda_frontend=$(yq -c '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
 max_threads=$(yq -r '.resources.cpus' ${config_file})    # Get user config: max threads
-max_memory=$(yq -r '.resources.ram' ${config_file})      # Get user config: max memory
+max_memory=$(yq -r '.resources.ram' ${config_file})      # Get user config: max memory (Gb)
 memory_per_job=$(expr ${max_memory} \/ ${max_threads})   # Calcul maximum memory usage per job
-reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g') # Get user config:  genome reference
+
+consensus=$(yq -c '.consensus.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run consensus
+reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g') # Get user config: genome reference
 aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g')     # Get user config: aligner 
 min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g')    # Get user config: minimum coverage
-min_af=$(yq -r '.consensus.min_af' ${config_file})       # Get user config: minimum allele frequency
-clipping=$(yq -r '.cutadapt.clipping' ${config_file})    # Get user config: hard clipping option
+min_af=$(yq -r '.lofreq.min_af' ${config_file})       # Get user config: minimum allele frequency
+clipping=$(yq -r '.cutadapt.clipping' ${config_file}) # Get user config: hard clipping option
+
 nextclade=$(yq -c '.nextclade.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run nextclade
 dataset=$(yq -c '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')  # Get user config: dataset for nextclade
 pangolin=$(yq -c '.pangolin.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')      # Get user config: run pangolin
-subset=$(yq -r '.fastq_screen.subset' ${config_file})    # Get user config: fastq_screen subsetption
+
+multiqc=$(yq -c '.multiqc.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run multiqc
+subset=$(yq -r '.fastq_screen.subset' ${config_file})                               # Get user config: fastq_screen subsetption
+
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")               # Get system: analyzes starting time
 time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")             # Convert time for archive (wo space)
 SECONDS=0                                                # Initialize SECONDS counter
@@ -315,6 +322,7 @@ ${blue}Max threads${nc} _____________ ${red}${max_threads}${nc} of ${ylo}${logic
 ${blue}Max memory${nc} ______________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
 ${blue}Jobs memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
 
+${blue}Consensus run${nc} ___________ ${red}${consensus}${nc}  
 ${blue}Reference genome${nc} ________ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
 
@@ -329,6 +337,7 @@ ${blue}Nextclade version${nc} _______ ${red}v.${nextclade_version}${nc}
 
 ${blue}Pangolin run${nc} ____________ ${red}${pangolin}${nc}
 
+${blue}MultiQC run${nc} _____________ ${red}${multiqc}${nc}
 ${blue}Fastq-Screen subset${nc} _____ ${red}${subset}${nc} reads per sample
 
 ${blue}Starting time${nc} ___________ ${time_stamp_start}
@@ -368,6 +377,13 @@ ${green}-------------------------------${nc}
 "
 
 snakefiles_list="indexing_genomes quality_control gevarli"
+if [[ "${multiqc}" == "no" ]]                         # Run only CONSENSUS, no quality output
+then
+    snakefiles_list="indexing_genomes gevarli"
+elif [[ "${consensus}" == "no" ]]                     # Run only QUALITY, no consensus output
+then
+    snakefiles_list="indexing_genomes quality_control"
+fi
 
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
@@ -405,6 +421,7 @@ for snakefile in ${snakefiles_list} ; do
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
+	--resources mem_gb=${max_memory} \
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
@@ -428,6 +445,7 @@ done
 #    snakemake \
 #        --directory ${workdir}/ \
 #        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
+#	 --resources mem_gb=${max_memory} \
 #        --cores ${max_threads} \
 #        --config os=${os} \
 #        --rerun-incomplete \
@@ -453,6 +471,7 @@ for snakefile in ${snakefiles_list} ; do
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
+	--resources mem_gb=${max_memory} \
         --cores ${max_threads} \
         --config os=${os} \
         --rerun-incomplete \
@@ -482,6 +501,7 @@ for snakefile in ${snakefiles_list} ; do
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
+	--resources mem_gb=${max_memory} \
         --cores ${max_threads}\
         --config os=${os} \
         --rerun-incomplete \
@@ -515,6 +535,7 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --cores ${max_threads} \
         --max-threads ${max_threads} \
+	--resources mem_gb=${max_memory} \
         --config os=${os} \
         --rerun-incomplete \
         --keep-going \
@@ -636,6 +657,7 @@ conda deactivate
 # Cleanup
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 find ${workdir}/results/ -type d -empty -delete # Remove empty directory
+rm -f ${workdir}/resources/reads/SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R*.fastq.gz 2> /dev/null
 
 # Timer
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
@@ -658,7 +680,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.01.17 (update Nextclade to v_3.0.0)
+Latest modifications ___ 2024.01.26 (update Nextclade to v_3.0.0)
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
@@ -682,6 +704,7 @@ Max threads ____________ ${max_threads} of ${logical_cpu} threads available
 Max memory _____________ ${max_memory} of ${ram_size} Gb available
 Jobs memory ____________ ${memory_per_job} Gb per job maximum
 
+Consensus run __________ ${consensus}
 Reference genome _______ ${reference}
 Aligner ________________ ${aligner}
 
@@ -692,11 +715,12 @@ Hard-clipping primers __ ${clipping}
 
 Nextclade run __________ ${nextclade}
 Nextclade dataset ______ ${dataset}
-Nextclade version _______ v.${nextclade_version}
+Nextclade version ______ v.${nextclade_version}
 
 Pangolin run ___________ ${pangolin}
 
-Fastq-Screen subset _____ ${subset} reads per sample
+MultiQC run ____________ ${multiqc}
+Fastq-Screen subset ____ ${subset} reads per sample
 
 Start time _____________ ${time_stamp_start}
 End time _______________ ${time_stamp_end}

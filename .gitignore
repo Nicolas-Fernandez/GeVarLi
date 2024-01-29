@@ -27,16 +27,19 @@ Thumbs.db
 # Ignore HOST genomes (too larges)
 resources/genomes/HOST_*
 
-# Ignore bt2 indexes
-*.bt2
-*.bt2l
+# Ignore minimap2 indexes
+*.mmi
 
-# Ignore baw indexes
+# Ignore bwa indexes
 *.amb
 *.ann
 *.bwt
 *.pac
 *.sa
+
+# Ignore bowtie2 indexes
+*.bt2
+*.bt2l
 
 # Ignore results
 /results
