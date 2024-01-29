@@ -230,8 +230,6 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 
 ```shell
  🧩 GeVarLi/
-  ├── 📂 archives/
-  │    └── 📦 Results_{YYYY-MM-DD_HHhMM}_{REFERENCE}_{ALIGNER}_{MINCOV}_{SAMPLES}_archive.tar.gz
   └── 📂 results/
        ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
        ├── 📊 All_{REFERENCE}_genome_coverages.tsv
@@ -312,25 +310,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
             │    └── 📈 {PIPELINE}_rulegraph.{PNG/PDF}
             └── 📂 tools-log/
                  ├── 📂 awk/
-                 ├── 📂 bcftools/
-                 ├── 📂 bedtools/
-                 ├── 📂 bgzip/
-                 ├── 📂 bowtie2/
-                 ├── 📂 bwa/
-                 ├── 📂 cutadapt/
-                 ├── 📂 lofreq/
-                 ├── 📂 ivar/
-                 ├── 📂 lofreq/
-                 ├── 📂 minimap2/
-                 ├── 📂 nextclade/
-                 ├── 📂 pangolin/
-                 ├── 📂 samtools/
-                 ├── 📂 sed/
-                 ├── 📂 sickle-trim/
-                 ├── 📂 tabix/
-                 ├── 📝 fastq-screen.log
-                 ├── 📝 fastqc.log
-                 └── 📝 multiqc.log
+                 ├── 📂 {TOOL}/
+                 └── 📝 {QC_TOOL}.log
 ```
 
 <img src="./resources/visuals/gevarli_filegraph.png" width="300" height="1200">  
@@ -510,28 +491,12 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │    └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
  │    └── 📂 visuals/
  │         ├── 📈 gevarli_filegraph.png
- │         ├── 📈 gevarli_rulegraph.png
- │         ├── 📈 indexing_genomes_rulegraph.png
- │         └── 📈 quality_control_rulegraph.png
+ │         └── 📈 {PIPELINE}_rulegraph.png
  └── 📂 workflow/
       ├── 📂 environments/
       │    └── 📂 {OS}/
-      │         ├── 🍜 bamclipper_v.{VERSION}.yaml
-      │         ├── 🍜 bcftools_v.{VERSION}.yaml
-      │         ├── 🍜 bedtools_v.{VERSION}.yaml
-      │         ├── 🍜 bowtie2_v.{VERSION}.yaml
-      │         ├── 🍜 bwa_v.{VERSION}.yaml
-      │         ├── 🍜 cutadapt_v.{VERSION}.yaml
-      │         ├── 🍜 fastq-screen_v.{VERSION}.yaml
-      │         ├── 🍜 fastqc_v.{VERSION}.yaml
-      │         ├── 🍜 gawk_v.{VERSION}.yaml
-      │         ├── 🍜 ivar_v.{VERSION}.yaml
-      │         ├── 🍜 lofreq_v.{VERSION}.yaml
-      │         ├── 🍜 multiqc_v.{VERSION}.yaml
-      │         ├── 🍜 nextclade_v.{VERSION}.yaml
-      │         ├── 🍜 pangolin_v.{VERSION}.yaml
       │         ├── 🍜 samtools_v.{VERSION}.yaml 
-      │         ├── 🍜 sickle-trim_v.{VERSION}.yaml
+      │         ├── 🍜 {TOOL}_v.{VERSION}.yaml
       │         └── 🍜 workflow-base_v.{VERSION}.yaml
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
