@@ -101,7 +101,7 @@ then
     threads_cpu=$(lscpu | grep -o -E "^Thread\(s\) per core: +[0-9]+" | sed -E "s/Thread\(s\) per core: +//") # Get thread(s) per core
     logical_cpu=$(expr ${physical_cpu} \* ${threads_cpu})                                                     # Calcul logical cpu
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -E "s/MemTotal: +//")                       # Get memory size (Kb)
-    ram_gb=$(expr ${mem_size} \/ $((1024**2)) )                                                               # mem_size / 1024**2 = Gb
+    ram_gb=$( expr ${mem_size} \/ $((1024**2)) )                                                              # mem_size / 1024**2 = Gb
 else
     echo -e "Please, use '${red}osx${nc}' or '${red}linux${nc}' operating systems"
     exit 1
@@ -147,8 +147,9 @@ ${green}---------------------------------------${nc}
 "
 
 # Intern shell source conda
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null          # local user
-source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null # HPC server
+source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user
+source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # HPC server (new iTROP)
+#source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null                   # HPC server (old iTROP)
 
 # Test if latest 'workflow-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
