@@ -9,4 +9,3 @@ dependencies:
   - libzlib=1.2.13=h8a1eda9_5
   - minimap2=2.26=h45fc8d7_2
   - zlib=1.2.13=h8a1eda9_5
-prefix: /Users/2021nf001/miniconda3/envs/minimap2_v.2.26

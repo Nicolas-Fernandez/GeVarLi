@@ -193,4 +193,3 @@ dependencies:
   - zlib=1.2.13=h8a1eda9_5
   - zstandard=0.22.0=py312h7a629f7_0
   - zstd=1.5.5=h829000d_0
-prefix: /Users/2021nf001/miniconda3/envs/workflow-base_v.2024.01

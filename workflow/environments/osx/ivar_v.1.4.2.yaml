@@ -23,4 +23,3 @@ dependencies:
   - samtools=1.19.2=hd510865_0
   - xz=5.2.6=h775f41a_0
   - zstd=1.5.5=h829000d_0
-prefix: /Users/2021nf001/miniconda3/envs/ivar_v.1.4.2
