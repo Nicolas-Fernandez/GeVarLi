@@ -314,8 +314,8 @@ echo -e "
 ${blue}Working directory${nc} _______ ${workdir}/
 ${blue}Samples processed${nc} _______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
-${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
 ${blue}Snakemake version${nc} _______ ${ylo}${snakemake_version}${nc}
+${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
 ${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
 
@@ -696,8 +696,8 @@ System Memory __________ ${ram_size} Gb of RAM
 Working directory ______ ${workdir}/
 Samples processed ______ ${samples} samples (${fastq} fastq files)
 
-Conda version __________ ${conda_version}
 Snakemake version ______ ${snakemake_version}
+Conda version __________ ${conda_version}
 Conda frontend _________ ${conda_frontend}
 Mamba version __________ ${mamba_version}
 
