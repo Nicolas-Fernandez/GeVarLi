@@ -148,7 +148,8 @@ ${green}---------------------------------------${nc}
 
 # Intern shell source conda
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user
-source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # HPC server (new iTROP)
+source /usr/local/bioinfo/miniconda3-4.10.3/etc/profile.d/conda.sh 2> /dev/null    # HPC server (new iTROP)
+#source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # HPC server (new iTROP)
 #source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null                   # HPC server (old iTROP)
 
 # Test if latest 'workflow-base' environment exist
@@ -164,7 +165,7 @@ else # Test network conection
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 8.2.1)
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 8.4.0)
     # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.5.6)
     # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.3)
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
@@ -281,7 +282,7 @@ then                                                                            
     echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}
 ${red}SARS-CoV-2${nc} ${ylo}resources/data_test/${nc} fastq will be used as sample example"
     cp ${workdir}/resources/data_test/SARS-CoV-2_Omicron-BA1*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
-    fastq="data_test > SARS-CoV-2_Omicron-BA1 < fastq files"
+    fastq="2"
 fi
 samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end)
 

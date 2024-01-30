@@ -9,7 +9,7 @@ dependencies:
   - amply=0.1.6=pyhd8ed1ab_0
   - appdirs=1.4.4=pyh9f0ad1d_0
   - archspec=0.2.2=pyhd8ed1ab_0
-  - argcomplete=3.2.1=pyhd8ed1ab_0
+  - argcomplete=3.2.2=pyhd8ed1ab_0
   - argparse-dataclass=2.0.0=pyhd8ed1ab_0
   - atk-1.0=2.38.0=hd4edc92_1
   - attmap=0.13.2=pyhd8ed1ab_0
@@ -17,7 +17,7 @@ dependencies:
   - boltons=23.1.1=pyhd8ed1ab_0
   - brotli-python=1.1.0=py312h30efb56_1
   - bzip2=1.0.8=hd590300_5
-  - c-ares=1.25.0=hd590300_0
+  - c-ares=1.26.0=hd590300_0
   - ca-certificates=2023.11.17=hbcca054_0
   - cairo=1.18.0=h3faef2a_0
   - certifi=2023.11.17=pyhd8ed1ab_0
@@ -32,7 +32,7 @@ dependencies:
   - colorama=0.4.6=pyhd8ed1ab_0
   - conda=23.11.0=py312h7900ff3_1
   - conda-inject=1.3.1=pyhd8ed1ab_0
-  - conda-libmamba-solver=23.12.0=pyhd8ed1ab_0
+  - conda-libmamba-solver=24.1.0=pyhd8ed1ab_0
   - conda-package-handling=2.2.0=pyh38be061_0
   - conda-package-streaming=0.9.0=pyhd8ed1ab_0
   - configargparse=1.7=pyhd8ed1ab_0
@@ -44,7 +44,7 @@ dependencies:
   - eido=0.2.2=pyhd8ed1ab_0
   - exceptiongroup=1.2.0=pyhd8ed1ab_2
   - expat=2.5.0=hcb278e6_1
-  - fmt=10.1.1=h00ab1b0_1
+  - fmt=10.2.1=h00ab1b0_0
   - font-ttf-dejavu-sans-mono=2.37=hab24e00_0
   - font-ttf-inconsolata=3.000=h77eed37_0
   - font-ttf-source-code-pro=2.038=h77eed37_0
@@ -74,7 +74,7 @@ dependencies:
   - jq=1.5=0
   - jsonpatch=1.33=pyhd8ed1ab_0
   - jsonpointer=2.4=py312h7900ff3_3
-  - jsonschema=4.21.0=pyhd8ed1ab_0
+  - jsonschema=4.21.1=pyhd8ed1ab_0
   - jsonschema-specifications=2023.12.1=pyhd8ed1ab_0
   - jupyter_core=5.7.1=py312h7900ff3_0
   - keyutils=1.6.1=h166bdaf_0
@@ -82,8 +82,8 @@ dependencies:
   - ld_impl_linux-64=2.40=h41732ed_0
   - lerc=4.0.0=h27087fc_0
   - libarchive=3.7.2=h2aa1ff5_1
-  - libblas=3.9.0=20_linux64_openblas
-  - libcblas=3.9.0=20_linux64_openblas
+  - libblas=3.9.0=21_linux64_openblas
+  - libcblas=3.9.0=21_linux64_openblas
   - libcurl=8.5.0=hca28451_0
   - libdeflate=1.19=hd590300_0
   - libedit=3.1.20191231=he28a2e2_2
@@ -91,27 +91,27 @@ dependencies:
   - libexpat=2.5.0=hcb278e6_1
   - libffi=3.4.2=h7f98852_5
   - libgcc=7.2.0=h69d50b8_2
-  - libgcc-ng=13.2.0=h807b86a_3
+  - libgcc-ng=13.2.0=h807b86a_4
   - libgd=2.3.3=h119a65a_9
-  - libgfortran-ng=13.2.0=h69a702a_3
-  - libgfortran5=13.2.0=ha4646dd_3
+  - libgfortran-ng=13.2.0=h69a702a_4
+  - libgfortran5=13.2.0=ha4646dd_4
   - libglib=2.78.3=h783c2da_0
-  - libgomp=13.2.0=h807b86a_3
+  - libgomp=13.2.0=h807b86a_4
   - libiconv=1.17=hd590300_2
   - libjpeg-turbo=3.0.0=hd590300_1
-  - liblapack=3.9.0=20_linux64_openblas
-  - liblapacke=3.9.0=20_linux64_openblas
+  - liblapack=3.9.0=21_linux64_openblas
+  - liblapacke=3.9.0=21_linux64_openblas
   - libmamba=1.5.6=had39da4_0
   - libmambapy=1.5.6=py312hd9e9ff6_0
   - libnghttp2=1.58.0=h47da74e_1
   - libnsl=2.0.1=hd590300_0
-  - libopenblas=0.3.25=pthreads_h413a1c8_0
+  - libopenblas=0.3.26=pthreads_h413a1c8_0
   - libpng=1.6.39=h753d276_0
   - librsvg=2.56.3=he3f83f7_1
   - libsolv=0.7.27=hfc55251_0
   - libsqlite=3.44.2=h2797004_0
   - libssh2=1.11.0=h0841786_0
-  - libstdcxx-ng=13.2.0=h7e041cc_3
+  - libstdcxx-ng=13.2.0=h7e041cc_4
   - libtiff=4.6.0=ha9c0a0a_2
   - libuuid=2.38.1=h0b41bf4_0
   - libwebp=1.3.2=h658648e_1
@@ -125,7 +125,7 @@ dependencies:
   - lzo=2.10=h516909a_1000
   - mamba=1.5.6=py312h9460a1c_0
   - markdown-it-py=3.0.0=pyhd8ed1ab_0
-  - markupsafe=2.1.3=py312h98912ed_1
+  - markupsafe=2.1.4=py312h98912ed_0
   - mdurl=0.1.2=pyhd8ed1ab_0
   - menuinst=2.0.2=py312h7900ff3_0
   - nbformat=5.9.2=pyhd8ed1ab_0
@@ -133,18 +133,18 @@ dependencies:
   - numpy=1.26.3=py312heda63a1_0
   - openssl=3.2.0=hd590300_1
   - packaging=23.2=pyhd8ed1ab_0
-  - pandas=2.1.4=py312hfb8ada1_0
+  - pandas=2.2.0=py312hfb8ada1_0
   - pango=1.50.14=ha41ecd1_2
   - pcre2=10.42=hcad00b1_0
   - peppy=0.40.1=pyhd8ed1ab_0
   - perl=5.32.1=7_hd590300_perl5
   - pip=23.3.2=pyhd8ed1ab_0
-  - pixman=0.43.0=h59595ed_0
+  - pixman=0.43.2=h59595ed_0
   - pkgutil-resolve-name=1.3.10=pyhd8ed1ab_1
   - plac=1.4.2=pyhd8ed1ab_0
   - platformdirs=4.1.0=pyhd8ed1ab_0
-  - pluggy=1.3.0=pyhd8ed1ab_0
-  - psutil=5.9.7=py312h98912ed_0
+  - pluggy=1.4.0=pyhd8ed1ab_0
+  - psutil=5.9.8=py312h98912ed_0
   - pthread-stubs=0.4=h36c2ea0_1001
   - pulp=2.8.0=py312h7900ff3_0
   - pybind11-abi=4=hd8ed1ab_3
@@ -153,13 +153,13 @@ dependencies:
   - pygments=2.17.2=pyhd8ed1ab_0
   - pyparsing=3.1.1=pyhd8ed1ab_0
   - pysocks=1.7.1=pyha2e5f31_6
-  - pytest=7.4.4=pyhd8ed1ab_0
+  - pytest=8.0.0=pyhd8ed1ab_0
   - python=3.12.1=hab00c5b_1_cpython
   - python-dateutil=2.8.2=pyhd8ed1ab_0
   - python-fastjsonschema=2.19.1=pyhd8ed1ab_0
   - python-tzdata=2023.4=pyhd8ed1ab_0
   - python_abi=3.12=4_cp312
-  - pytz=2023.3.post1=pyhd8ed1ab_0
+  - pytz=2023.4=pyhd8ed1ab_0
   - pyyaml=6.0.1=py312h98912ed_1
   - readline=8.2=h8228510_1
   - referencing=0.32.1=pyhd8ed1ab_0
@@ -178,11 +178,11 @@ dependencies:
   - slack_sdk=3.26.2=hd8ed1ab_0
   - smart_open=6.4.0=pyhd8ed1ab_0
   - smmap=5.0.0=pyhd8ed1ab_0
-  - snakemake=8.2.1=hdfd78af_0
-  - snakemake-interface-common=1.15.1=pyhdfd78af_0
+  - snakemake=8.4.0=hdfd78af_0
+  - snakemake-interface-common=1.15.2=pyhdfd78af_0
   - snakemake-interface-executor-plugins=8.2.0=pyhdfd78af_0
   - snakemake-interface-storage-plugins=3.0.0=pyhdfd78af_0
-  - snakemake-minimal=8.2.1=pyhdfd78af_0
+  - snakemake-minimal=8.4.0=pyhdfd78af_0
   - stopit=1.1.2=py_0
   - tabulate=0.9.0=pyhd8ed1ab_1
   - throttler=1.2.2=pyhd8ed1ab_0
@@ -222,3 +222,4 @@ dependencies:
   - zlib=1.2.13=hd590300_5
   - zstandard=0.22.0=py312hd58854c_0
   - zstd=1.5.5=hfc55251_0
+prefix: /home/fernandez/.conda/envs/workflow-base_v.2024.01
