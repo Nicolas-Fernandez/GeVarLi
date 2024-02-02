@@ -1,4 +1,4 @@
-#!/bin/bash
+A#!/bin/bash
 
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 ###                                                                         ###
@@ -268,13 +268,12 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-conda_version=$(conda --version | sed 's/conda //')                   # Conda version (ver. 23.11.0)
-snakemake_version=$(snakemake --version)                              # Snakemake version (ver. 8.2.0)
-mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1)       # Mamba version (ver. 1.5.6)
-yq_version=$(yq --version | sed 's/yq //')                            # Yq version (ver. 3.2.3)
-rename_version="1.601"                                                # Rename version (ver. 1.601)
-graphviz_version="9.0.0"                                              # GraphViz version (ver. 9.0.0)
-#graphviz_version=$(dot --version | sed 's/dot - graphviz version //') # GraphViz version
+snakemake_version=$(snakemake --version)                        # Snakemake version (ver. 8.2.0)
+conda_version=$(conda --version | sed 's/conda //')             # Conda version (ver. 23.11.0)
+mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1) # Mamba version (ver. 1.5.6)
+yq_version=$(yq --version | sed 's/yq //')                      # Yq version (ver. 3.2.3)
+rename_version="1.601"                                          # Rename version (ver. 1.601)
+graphviz_version="9.0.0"                                        # GraphViz version (ver. 9.0.0)
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
 if [[ "${fastq}" == "0" ]]                                                         # If no sample,
@@ -286,29 +285,30 @@ ${red}SARS-CoV-2${nc} ${ylo}resources/data_test/${nc} fastq will be used as samp
 fi
 samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end)
 
-config_file="${workdir}/configuration/config.yaml"       # Get configuration file
+config_file="${workdir}/configuration/config.yaml" # Get configuration file
+
 conda_frontend=$(yq -c '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
-max_threads=$(yq -r '.resources.cpus' ${config_file})    # Get user config: max threads
-max_memory=$(yq -r '.resources.ram' ${config_file})      # Get user config: max memory (Gb)
-memory_per_job=$(expr ${max_memory} \/ ${max_threads})   # Calcul maximum memory usage per job
+max_threads=$(yq -r '.resources.cpus' ${config_file})  # Get user config: max threads
+max_memory=$(yq -r '.resources.ram' ${config_file})    # Get user config: max memory (Gb)
+memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
 
-consensus=$(yq -c '.consensus.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run consensus
-reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g') # Get user config: genome reference
-aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g')     # Get user config: aligner 
-min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/_\&_/g')    # Get user config: minimum coverage
-min_af=$(yq -r '.lofreq.min_af' ${config_file})       # Get user config: minimum allele frequency
-clipping=$(yq -r '.cutadapt.clipping' ${config_file}) # Get user config: hard clipping option
+consensus=$(yq -c '.consensus.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: run consensus
+reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g') # Get user config: genome reference
+aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')     # Get user config: aligner 
+min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')    # Get user config: minimum coverage
+min_freq=$(yq -r '.consensus.min_freq' ${config_file}) # Get user config: minimum allele frequency
+clipping=$(yq -r '.cutadapt.clipping' ${config_file})  # Get user config: hard clipping option
 
-nextclade=$(yq -c '.nextclade.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run nextclade
-dataset=$(yq -c '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')  # Get user config: dataset for nextclade
-pangolin=$(yq -c '.pangolin.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')      # Get user config: run pangolin
+nextclade=$(yq -c '.nextclade.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')   # Get user config: run nextclade
+dataset=$(yq -c '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: dataset for nextclade
+pangolin=$(yq -c '.pangolin.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')     # Get user config: run pangolin
 
-multiqc=$(yq -c '.multiqc.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')    # Get user config: run multiqc
-subset=$(yq -r '.fastq_screen.subset' ${config_file})                               # Get user config: fastq_screen subsetption
+multiqc=$(yq -c '.multiqc.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: run multiqc
+subset=$(yq -r '.fastq_screen.subset' ${config_file})                            # Get user config: fastq_screen subsetption
 
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")               # Get system: analyzes starting time
-time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M")             # Convert time for archive (wo space)
-SECONDS=0                                                # Initialize SECONDS counter
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
+time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M") # Convert time for archive (wo space)
+SECONDS=0                                    # Initialize SECONDS counter
 
 # Print some analyzes settings
 echo -e "
@@ -329,7 +329,7 @@ ${blue}Reference genome${nc} ________ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
 
 ${blue}Min coverage${nc} ____________ ${red}${min_cov}${nc} X
-${blue}Min allele frequency${nc} ____ ${red}${min_af}${nc}
+${blue}Min allele frequency${nc} ____ ${red}${min_freq}${nc}
 
 ${blue}Hard-clipping primers${nc} ___ ${red}${clipping}${nc}
 

@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2024.01.23 (add Minimap indexing)
+# Latest modifications ___ 2024.01.31 (edit message format)
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
@@ -82,7 +82,10 @@ rule minimap2_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: minimap2 [OPTIONS] -d [INDEX.mmi] <query.fasta>
     message:
-        "Minimap2 indexing {wildcards.ref_seq} genome"
+        """
+        ~ Minimap2 ∞ Index Genome ~
+        Reference: _______ {wildcards.ref_seq}
+        """
     conda:
         MINIMAP2
     params:
@@ -112,7 +115,10 @@ rule bwa_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: bwa index -a [ALGO] -p [PREFIX] <genome.fasta>
     message:
-        "BWA-SW indexing {wildcards.ref_seq} genome"
+        """
+        ~ BWA-SW ∞ Index Genome ~
+        Reference: _______ {wildcards.ref_seq}
+        """
     conda:
         BWA
     params:
@@ -138,7 +144,10 @@ rule bowtie2_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: bowtie2-build [OPTIONS] <reference_in> <bt2_index_base>
     message:
-        "Bowtie2-build indexing {wildcards.ref_seq} genome"
+        """
+        ~ Bowtie2-build ∞ Index Genome ~
+        Reference: _______ {wildcards.ref_seq}
+        """
     conda:
         BOWTIE2
     resources:

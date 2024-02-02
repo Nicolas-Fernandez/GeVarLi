@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2024.01.24
+# Latest modifications ___ 2024.01.31 (edit message format)
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -73,7 +73,9 @@ rule multiqc_reports_aggregation:
     # Aim: aggregates bioinformatics analyses results into a single report
     # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
     message:
-        "MultiQC reports aggregating"
+        """
+        ~ MultiQC ∞ Aggregat HTML Qualities Reports ~
+        """
     conda:
         MULTIQC
     params:
@@ -106,7 +108,10 @@ rule fastqscreen_contamination_checking:
     # Aim: screen if the composition of the library matches with  what you expect
     # Use fastq_screen [OPTIONS] --outdir [DIR/] [FASTQ.GZ]
     message:
-        "Fastq-Screen contamination check for [ {wildcards.fastq} ] reads"
+        """
+        ~ Fasts-Screen ∞ Screen Contamination ~
+        Fastq: __________ {wildcards.fastq}
+        """
     conda:
         FASTQ_SCREEN
     resources:
@@ -136,7 +141,10 @@ rule fastqc_quality_control:
     # Aim: reads sequence files and produces a quality control report
     # Use: fastqc [OPTIONS] --output [DIR/] [FASTQ.GZ]
     message:
-        "FastQC quality control for [ {wildcards.fastq} ] reads"
+        """
+        ~ FastQC ∞ Quality Control ~
+        Fastq: __________ {wildcards.fastq}
+        """
     conda:
         FASTQC
     resources:

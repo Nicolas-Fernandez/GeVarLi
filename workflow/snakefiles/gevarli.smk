@@ -1,4 +1,4 @@
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M#A##I####
+###I###R###D###A###U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 ###                                                                         ###
 ###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
 ###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.26 (add minimap2 aligner)
+# Latest modifications ___ 2024.01.31 (add ivar caller)
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -35,15 +35,15 @@ def get_memory_per_thread(wildcards):
 def get_pangolin_input(wildcards):
     pangolin_list = []
     if "yes" in PANGO_RUN:
-        pangolin_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_pangolin-report.csv",
-                               reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV)
+        pangolin_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_pangolin-report.csv",
+                               reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER)
     return pangolin_list
 
 def get_nextclade_input(wildcards):
     nextclade_list = []
     if "yes" in NEXT_RUN:
-        nextclade_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_nextclade-report.tsv",
-                                reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV)
+        nextclade_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_nextclade-report.tsv",
+                                reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER)
     return nextclade_list
 
 ###############################################################################
@@ -77,6 +77,8 @@ SAMTOOLS = config["conda"][OS]["samtools"]       # SamTools conda environment
 BEDTOOLS = config["conda"][OS]["bedtools"]       # BedTools conda environment
 GAWK = config["conda"][OS]["gawk"]               # Awk (GNU) conda environment
 LOFREQ = config["conda"][OS]["lofreq"]           # LoFreq conda environment
+IVAR = config["conda"][OS]["ivar"]               # iVar conda environment
+TSV2VCF = config["conda"][OS]["tsv2vcf"]         # tsv2vcf conda environment
 BCFTOOLS = config["conda"][OS]["bcftools"]       # BcfTools conda environment
 PANGOLIN = config["conda"][OS]["pangolin"]       # Pangolin conda environment
 NEXTCLADE = config["conda"][OS]["nextclade"]     # Nextclade conda environment
@@ -85,47 +87,60 @@ NEXTCLADE = config["conda"][OS]["nextclade"]     # Nextclade conda environment
 ### PARAMETERS ###
 ##################
 
-C_LENGTH = config["cutadapt"]["length"]         # Cutadapt --minimum-length
-TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
-NEXTERA = config["cutadapt"]["kits"]["nextera"] # Cutadapt --adapter Illumina Nextera
-SMALL = config["cutadapt"]["kits"]["small"]     # Cutadapt --adapter Illumina Small
-CLIPPING = config["cutadapt"]["clipping"]       # Cutadapt --cut
+REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
+REF_PATH = config["consensus"]["path"]       # Path to genomes references
+MIN_COV = config["consensus"]["min_cov"]     # Minimum coverage, mask lower regions with 'N'
+IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
+ALIGNER = config["consensus"]["aligner"]     # Aligner ('minimap2', 'bwa' or 'bowtie2')
+CALLER = config["consensus"]["caller"]       # Variant Caller ('lofreq' or 'ivar')
 
-COMMAND = config["sickle_trim"]["command"]      # Sickle-trim command
-ENCODING = config["sickle_trim"]["encoding"]    # Sickle-trim --qual-type 
-QUALITY = config["sickle_trim"]["quality"]      # Sickle-trim --qual-threshold
-S_LENGTH = config["sickle_trim"]["length"]      # Sickle-trim --length-treshold
+CUT_LENGTH = config["cutadapt"]["length"]           # Cutadapt --minimum-length
+CUT_TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
+CUT_NEXTERA = config["cutadapt"]["kits"]["nextera"] # Cutadapt --adapter Illumina Nextera
+CUT_SMALL = config["cutadapt"]["kits"]["small"]     # Cutadapt --adapter Illumina Small
+CUT_CLIPPING = config["cutadapt"]["clipping"]       # Cutadapt --cut
 
-MM2_PATH = config["minimap2"]["path"]  # Minimpa2 path to indexes
-PRESET =  config["minimap2"]["preset"] # Minimap2 preset
+SIC_COMMAND = config["sickle_trim"]["command"]   # Sickle-trim command
+SIC_ENCODING = config["sickle_trim"]["encoding"] # Sickle-trim --qual-type 
+SIC_QUALITY = config["sickle_trim"]["quality"]   # Sickle-trim --qual-threshold
+SIC_LENGTH = config["sickle_trim"]["length"]     # Sickle-trim --length-treshold
 
-#LENGTH = config["minimap2"]["length"]                              #
-#KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # MM2 k-mer size
-#MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # MM2 minimizer window size  
-#SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # MM2 split index
-#HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # MM2 if PacBio
+MM2_PATH = config["minimap2"]["path"]     # Minimpa2 path to indexes
+MM2_PRESET = config["minimap2"]["preset"] # Minimap2 preset
+#MM2_LENGTH = config["minimap2"]["length"]                              # Minimap2 length
+#MM2_KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # Minimap2 k-mer size
+#MM2_MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # Minimap2 minimizer window size  
+#MM2_SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # Minimap2 split index
+#MM2_HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # Minimap2 for PacBio
 
-BWA_PATH = config["bwa"]["path"]                # BWA path to indexes
-BWA_ALGO = config["bwa"]["algorithm"]           # BWA indexing algorithm
+BWA_PATH = config["bwa"]["path"]      # BWA path to indexes
+BWA_ALGO = config["bwa"]["algorithm"] # BWA indexing algorithm
 
-BT2_PATH = config["bowtie2"]["path"]            # Bowtie2 path to indexes
-SENSITIVITY = config["bowtie2"]["sensitivity"]  # Bowtie2 sensitivity preset
-BT2_ALGO = config["bowtie2"]["algorithm"]       # BT2 indexing algorithm
+BT2_PATH = config["bowtie2"]["path"]               # Bowtie2 path to indexes
+BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
+BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
-ALIGNER = config["consensus"]["aligner"]        # Aligners ('bwa' or 'bowtie2')
-REF_PATH = config["consensus"]["path"]          # Path to genomes references
-REFERENCE = config["consensus"]["reference"]    # Genome reference sequence, in fasta format
-MIN_COV = config["consensus"]["min_cov"]        # Minimum coverage, mask lower regions with 'N'
 
-MIN_AF = config["lofreq"]["min_af"]     # Minimum allele frequency allowed
-IUPAC = config["lofreq"]["iupac"]       # Output variants in the form of IUPAC ambiguity codes
-MAP_QUAL = config["lofreq"]["map_qual"] # LoFreq mapping quality
+IVAR_MIN_DEPTH = config["consensus"]["min_cov"]   # iVar
+IVAR_MIN_FREQ = config["consensus"]["min_freq"]   # iVar minimum allele frequency allowed 
+IVAR_MIN_INSERT = config["consensus"]["min_freq"] # iVar minimum insertion frequency allowed
+#IVAR_MIN_DEPTH = config["ivar"]["min_depth"]      # iVar
+#IVAR_MIN_FREQ = config["ivar"]["min_freq"]        # iVar minimum allele frequency allowed 
+#IVAR_MIN_INSERT = config["ivar"]["min_insert"]    # iVar minimum insertion frequency allowed
+IVAR_MAX_DEPTH = config["ivar"]["max_depth"]      # iVar 
+IVAR_MIN_BQ = config["ivar"]["min_bq"]            # iVar
+IVAR_MIN_QUAL = config["ivar"]["min_qual"]        # iVar
+IVAR_MAP_QUAL = config["ivar"]["map_qual"]        # iVar mapping quality
 
-NEXT_RUN = config["nextclade"]["run"]           # Nextclade run option
-NEXT_PATH = config["nextclade"]["path"]         # Path to nextclade dataset
-NEXT_DATASET = config["nextclade"]["dataset"]   # Nextclade dataset
+LOF_MIN_FREQ = config["consensus"]["min_freq"] # LoFreq minimum allele frequency allowed  
+#LOf_MIN_FREQ = config["lofreq"]["min_freq"]    # LoFreq minimum allele frequency allowed
+LOF_MAP_QUAL = config["lofreq"]["map_qual"]    # LoFreq mapping quality
 
-PANGO_RUN = config["pangolin"]["run"]           # Pangolin run option
+NEXT_RUN = config["nextclade"]["run"]         # Nextclade run option
+NEXT_PATH = config["nextclade"]["path"]       # Path to nextclade dataset
+NEXT_DATASET = config["nextclade"]["dataset"] # Nextclade dataset
+
+PANGO_RUN = config["pangolin"]["run"] # Pangolin run option
 
 ###############################################################################
 ### RULES ###
@@ -137,8 +152,8 @@ rule all:
                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
         covstats = expand("results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv",
                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
-        consensus = expand("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta",
-                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
+        consensus = expand("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta",
+                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER),
         pangolin = get_pangolin_input,
         nextclade = get_nextclade_input
         #gisaid = get_gisaid_input # soon
@@ -148,7 +163,14 @@ rule nextclade_lineage:
     # Aim: nextclade lineage assignation
     # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Nextclade lineage assignation for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ Nextclade ∞ Assign Lineage ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ {wildcards.caller}
+        """
     conda:
         NEXTCLADE
     resources:
@@ -157,12 +179,12 @@ rule nextclade_lineage:
         path = NEXT_PATH,
         dataset = NEXT_DATASET
     input:
-        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta"
+        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_nextclade-report.tsv",
-        alignment = directory("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_nextclade-all/")
+        lineage = "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_nextclade-report.tsv",
+        alignment = directory("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_nextclade-all/")
     log:
-        "results/10_Reports/tools-log/nextclade/{reference}/{sample}_{aligner}_{min_cov}X_lineage.log"
+        "results/10_Reports/tools-log/nextclade/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_lineage.log"
     shell:
         "nextclade "                                    # Nextclade, assign queries sequences to clades and reports potential quality issues
         "run "                                           # Run analyzis
@@ -178,18 +200,25 @@ rule pangolin_lineage:
     # Aim: lineage mapping
     # Use: pangolin [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
     message:
-        "Pangolin lineage mapping for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ Pangolin ∞ Assign Lineage ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ {wildcards.caller}
+        """
     conda:
         PANGOLIN
     resources:
         cpus = CPUS,
         tmp_dir = TMP_DIR
     input:
-        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta"
+        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_pangolin-report.csv"
+        lineage = "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_pangolin-report.csv"
     log:
-        "results/10_Reports/tools-log/pangolin/{reference}/{sample}_{aligner}_{min_cov}X_lineage.log"
+        "results/10_Reports/tools-log/pangolin/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_lineage.log"
     shell:
         "pangolin "                     # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "             # Query fasta file of sequences to analyse
@@ -203,40 +232,197 @@ rule sed_rename_headers:
     # Aim: rename all fasta header with sample name
     # Use: sed 's/[OLD]/[NEW]/' [IN] > [OUT]
     message:
-        "Sed rename fasta header for [[ {wildcards.sample} ]] sample consensus (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ Sed ∞ Rename Fasta Header ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ {wildcards.caller}
+        """
     conda:
         GAWK
     input:
-        cons_tmp = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp"
+        cons_tmp = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta.tmp"
     output:
-        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta"
+        consensus = "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta"
     log:
-        "results/10_Reports/tools-log/sed/{reference}/{sample}_{aligner}_{min_cov}X_fasta-header.log"
+        "results/10_Reports/tools-log/sed/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_fasta-header.log"
     shell:
         "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
-        "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.min_cov}X/' "
+        "'s/^>.*$/>{wildcards.sample}_{wildcards.aligner}_{wildcards.min_cov}X_{wildcards.caller}/' "
         "{input.cons_tmp} "      # Input file
         "1> {output.consensus} " # Output file
         "2> {log}"               # Log redirection
-        
+
+
+###############################################################################
+#rule convert_tsv_vcf:
+#    message:
+#        """
+#        ~ iVar ∞ Convert TSV to VCF file ~
+#        Sample: __________ {wildcards.sample}
+#        Reference: _______ {wildcards.reference}
+#        Aligner: _________ {wildcards.aligner}
+#        Min. cov.: _______ {wildcards.min_cov}X
+#        Variant caller: __ iVar
+#        """
+#    conda:
+#        TSV2VCF
+#    input:
+#        tsv = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
+#    output:
+#        vcf = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-temp.vcf"),
+#        vcf_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-filt.vcf"
+#    log:
+#        "results/10_Reports/tools-log/tsv2vcf/{reference}/{sample}_{aligner}_{min_cov}X_ivar_tsv2vcf.log"
+#    shell:
+#        "python3 "                                  # Python 3
+#        "workflow/scripts/ivar_variants_to_vcf.py "  # Script (from viralrecon)
+#        "{input.tsv} "                               # TSV input
+#        "{output.vcf} "                              # VCF output
+#        "&> {log}"                                   # Log redirection
+#        "&& "                                         # AND
+#        "bcftools "                                 # Bcftools, tools for variant calling and manipulating VCFs and BCFs
+#        "sort "                                      # Sort VCF/BCF file
+#        "--output {output.vcf_sort} "                # Sorted VCF ouput file
+#        "{output.vcf} "                              # Unsorted VCF input file
+#        "&>> {log}"                                  # Log redirection 
+
+###############################################################################
+rule ivar_consensus:
+    # Aim:
+    # Use:
+    message:
+        """
+        ~ iVar ∞ Call Consensus ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ iVar
+        """
+    conda:
+        IVAR
+    params:
+        min_depth = IVAR_MIN_DEPTH,
+        min_freq = IVAR_MIN_FREQ,
+        min_insert = IVAR_MIN_INSERT,
+        max_depth = IVAR_MAX_DEPTH,
+        min_bq = IVAR_MIN_BQ,
+        min_qual = IVAR_MIN_QUAL,
+        baq = IVAR_MAP_QUAL
+    input:
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
+        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
+    output:
+        cons_fa = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.fa"),
+        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.fasta.tmp")
+    log:
+        "results/10_Reports/tools-log/ivar/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.log"
+    shell:
+        "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
+        #"-a "                             # -a: output all positions (including zero depth)
+        #"-a "                             # -a -a / -aa: output absolutely all positions, including unused ref. sequences
+        "--count-orphans "                # -A: do not discard anomalous read pairs
+        "--max-depth {params.max_depth} " # -d: max per-file depth; avoids excessive memory usage [INT] (default: 8000)
+        "{params.baq} "                   # --no-BAQ / -B: disable BAQ (per-Base Alignment Quality)
+        "--min-BQ {params.min_bq} "       # -Q: skip bases with baseQ/BAQ smaller than [INT] (default: 13)
+        #"--reference {input.masked_ref} " # Reference sequence FASTA FILE
+        "{input.mark_dup} "               # Markdup BAM input
+        "| "                               ### PIPE to iVar
+        "iVar consensus "                # iVar, with command 'consensus': Call consensus from aligned BAM file
+        "-p {output.cons_fa} "            # -p: prefix
+        "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base [INT] (Default: 20)
+        "-t {params.min_freq} "           # -t: Minimum frequency threshold to call variants [FLOAT] (Default: 0.03)
+        "-c {params.min_insert} "         # -c: Minimum insertion frequency threshold to call consensus [FLOAT] (Default: 0.8)    
+        "-m {params.min_depth} "          # -m: Minimum read depth to call variants [INT] (Default: 0)
+        #"-k "                             # -k: Regions with depth less than minimum depth will not be added to the consensus sequence
+        #                                        # Using '-k' will override any option specified using -n
+        #"-n "                             # -n: Character to print in regions with less than minimum coverage (Default: N)
+        #"-i "                             # -i: Name of fasta header (default: Consensus_<prefix>_threshold_<min_freq>_quality_<min_qual>_<min_insert>
+        "&> {log} "                        # Log redirection
+        "&& "                               ### AND
+        "cp "                              # copy consensus.fa
+        "{output.cons_fa} "                # consensus.fa (tmp)
+        "{output.cons_tmp}"                # to consensus.fasta.tmp (tmp)
+
+###############################################################################
+rule ivar_variant_calling:
+    # Aim: SNVs and Indels calling 
+    # Use: samtools mpileup -aa -A -d 0 -B -Q 0 --reference [<reference-fasta] <input.bam> | ivar variants -p <prefix> [-q <min-quality>] [-t <min-frequency-threshold>] [-m <minimum depth>] [-r <reference-fasta>] [-g GFF file]
+    # Note: samtools mpileup output must be piped into ivar variants
+    message:
+        """
+        ~ iVar ∞ Call Variants ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ iVar
+        """
+    conda:
+        IVAR
+    params:
+        min_depth = IVAR_MIN_DEPTH,
+        min_freq = IVAR_MIN_FREQ,
+        min_insert = IVAR_MIN_INSERT,
+        max_depth = IVAR_MAX_DEPTH,
+        min_bq = IVAR_MIN_BQ,
+        min_qual = IVAR_MIN_QUAL,
+        baq = IVAR_MAP_QUAL
+    input:
+        masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
+    output:
+        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
+    log:
+        "results/10_Reports/tools-log/ivar/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.log"
+    shell:
+        "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
+        #"-a "                             # -a: output all positions (including zero depth)
+        #"-a "                             # -a -a / -aa: output absolutely all positions, including unused ref. sequences
+        "--count-orphans "                # -A: do not discard anomalous read pairs
+        "--max-depth {params.max_depth} " # -d: max per-file depth; avoids excessive memory usage (default: 8000) [INT]
+        "{params.baq} "                   # --no-BAQ / -B: disable BAQ (per-Base Alignment Quality)
+        "--min-BQ {params.min_bq} "       # -Q: skip bases with baseQ/BAQ smaller than (default: 13) [INT]
+        "--reference {input.masked_ref} " # Reference sequence FASTA FILE
+        "{input.mark_dup} "               # Markdup BAM input
+        "| "                               ### pipe to iVar
+        "ivar variants "                 # iVar, with command 'variants': Call variants from aligned BAM file
+        "-p {output.variant_call} "       # -p: prefix
+        "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base (Default: 20) [INT]
+        "-t {params.min_freq} "           # -t: Minimum frequency threshold to call variants (Default: 0.03) [FLOAT]
+        "-m {params.min_depth} "          # -m: Minimum read depth to call variants (Default: 0) [INT]
+        "-r {input.masked_ref} "          # -r: Reference file used for alignment (translate the nuc. sequences and identify intra host single nuc. variants) 
+        #"-g "                            # -g: A GFF file in the GFF3 format can be supplied to specify coordinates of open reading frames (ORFs)
+        "&> {log}"                        # Log redirection 
+
 ###############################################################################
 rule bcftools_consensus:
     # Aim: create consensus
     # Use: bcftools consensus -f [REFERENCE] [VARIANTS.vcf.gz] -o [CONSENSUS.fasta] 
     message:
-        "BcfTools consensus for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ BcfTools ∞ Call Consensus ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         BCFTOOLS
     params:
         iupac = IUPAC
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz",
-        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.bgz.tbi"
+        archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.vcf.bgz",
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.bgz.tbi"
     output:
-        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_consensus.fasta.tmp")
+        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_consensus.fasta.tmp")
     log:
-        "results/10_Reports/tools-log/bcftools/{reference}/{sample}_{aligner}_{min_cov}X_consensus.log"
+        "results/10_Reports/tools-log/bcftools/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_consensus.log"
     shell:
         "bcftools "                      # Bcftools, tools for variant calling and manipulating VCFs and BCFs
         "consensus "                      # Create consensus sequence by applying VCF variants to a reference fasta file
@@ -252,15 +438,22 @@ rule tabix_tabarch_indexing:
     # Aim: tab archive indexing
     # Use: tabix [OPTIONS] [TAB.bgz]
     message:
-        "Tabix tab archive indexing for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ Tabix ∞ Index Tab Archive ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         LOFREQ
     input:
-        archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz"
+        archive = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.vcf.bgz"
     output:
-        index = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.bgz.tbi")
+        index = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.bgz.tbi")
     log:
-        "results/10_Reports/tools-log/tabix/{reference}/{sample}_{aligner}_{min_cov}X_variant-archive-index.log"
+        "results/10_Reports/tools-log/tabix/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-archive-index.log"
     shell:
         "tabix "            # Tabix, indexes a TAB-delimited genome position file in.tab.bgz and creates an index file
         "{input.archive} "   # The input data file must be position sorted and compressed by bgzip
@@ -272,17 +465,24 @@ rule bgzip_variant_archive:
     # Aim: Variant block compressing
     # Use: bgzip [OPTIONS] -c -@ [THREADS] [INDEL.vcf] 1> [COMPRESS.vcf.bgz]
     message:
-        "Bgzip variant block compressing for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ Bgzip ∞ Compress Variant Block ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         LOFREQ
     resources:
         cpus = CPUS
     input:
-        variant_filt = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf"
+        variant_filt = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.vcf"
     output:
-        archive = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf.bgz")
+        archive = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.vcf.bgz")
     log:
-        "results/10_Reports/tools-log/bgzip/{reference}/{sample}_{aligner}_{min_cov}X_variant-archive.log"
+        "results/10_Reports/tools-log/bgzip/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-archive.log"
     shell:
         "bgzip "                     # Bgzip, block compression/decompression utility
         "--stdout "                   # -c: Write to standard output, keep original files unchanged
@@ -297,22 +497,29 @@ rule lofreq_variant_filtering:
     # Use: lofreq filter [OPTIONS] -i [INDEL.vcf] -o [INDEL-FILT.vcf]
     # Note: without --no-defaults LoFreq's predefined filters are on
     message:
-        "LoFreq filtering SNVs and Indels for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ LoFreq ∞ Filter SNVs and InDels ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         LOFREQ
     params:
-        min_af = MIN_AF
+        min_freq = LOF_MIN_FREQ
     input:
-        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-call.vcf"
+        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-call.vcf"
     output:
-        variant_filt = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.vcf"
+        variant_filt = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.vcf"
     log:
-        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_variant-filt.log"
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-filt.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         "filter "                        # Filter SNVs and Indels parsed from vcf file
         "--cov-min {wildcards.min_cov} " # -v: Minimum coverage allowed (INT)
-        "--af-min {params.min_af} "      # -a: Minimum allele freq allowed (FLOAT)
+        "--af-min {params.min_freq} "    # -a: Minimum allele freq allowed (FLOAT)
         "--in {input.variant_call} "     # VCF input file, gzip suuported, no streaming supported
         "--out {output.variant_filt} "   # VCF output file, gzip supported (default: standard output)
         "&> {log}"                       # Log redirection 
@@ -322,27 +529,34 @@ rule lofreq_variant_calling:
     # Aim: SNVs and Indels calling
     # Use: lofreq call-parallel --pp-threads [THREADS] --call-indels -f [MASKED-REF.fasta] -o [INDEL.vcf] [INDEL.bam]
     message:
-        "LoFreq calling SNVs and Indels for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ LoFreq ∞ Call SNVs and InDels ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         LOFREQ
     resources:
         cpus = CPUS
     params:
-        map_qual = MAP_QUAL
+        map_qual = LOF_MAP_QUAL
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam",
-        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bai"
+        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.bam",
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.bai"
     output:
-        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_variant-call.vcf"
+        variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-call.vcf"
     log:
-        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_variant-call.log"
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_variant-call.log"
     shell:
         "lofreq "                       # LoFreq, fast and sensitive inference of SNVs and indels
         #"call-parallel "                 # Call variants with parallel wrapper, requires --pp-threads
         #"--pp-threads {resources.cpus} " # Number of threads (required) [INT] (default, dactivate because issue).
         "call "                          # Call variants (no parallel)
-        "{params.map_qual} "              # -N: Don't merge mapping quality in LoFreq's model
+        "{params.map_qual} "              # --no-mq / -N: Don't merge mapping quality in LoFreq's model
         "--call-indels "                 # Enable indel calls (note: preprocess your file to include indel alignment qualities!)
         "--ref {input.masked_ref} "      # -f: Indexed reference fasta file (gzip supported)
         "--out {output.variant_call} "   # -o: SNVs and Indels VCF file output (default: standard output)
@@ -354,17 +568,24 @@ rule samtools_indel_indexing:
     # Aim: indexing indel qualities BAM file
     # Use: samtools index -@ [THREADS] -b [INDEL-QUAL.bam] [INDEX.bai]
     message:
-        "SamTools indexing indel qualities BAM file [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ SamTools ∞ Index InDels Qualities BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         SAMTOOLS
     resources:
        cpus = CPUS
     input:
-        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam"
+        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.bam"
     output:
-        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bai"
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual-index.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # Number of additional threads to use (default: 0)
@@ -379,7 +600,14 @@ rule lofreq_indel_qualities:
     # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
     # Note: do not realign your BAM file afterwards!
     message:
-        "LoFreq insert indels qualities for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ LoFreq ∞ Insert InDels Qualities ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
     conda:
         LOFREQ
     input:
@@ -387,9 +615,9 @@ rule lofreq_indel_qualities:
         mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
         index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     output:
-        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.bam"
+        indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.bam"
     log:
-        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_indel-qual.log"
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.log"
     shell:
         "lofreq "                   # LoFreq, fast and sensitive inference of SNVs and Indels 
         "indelqual "                 # Insert indel qualities into BAM file (required for indel predictions)
@@ -404,7 +632,13 @@ rule bedtools_masking:
     # Aim: masking low coverage regions
     # Use: bedtools maskfasta [OPTIONS] -fi [REFERENCE.fasta] -bed [RANGE.bed] -fo [MASKEDREF.fasta]
     message:
-        "BedTools masking low coverage regions for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ BedTools ∞ Mask Low Coverage Regions ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        """
     conda:
         BEDTOOLS
     params:
@@ -416,18 +650,24 @@ rule bedtools_masking:
     log:
         "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_{min_cov}X_masking.log"
     shell:
-        "bedtools maskfasta "                       # Bedtools maskfasta, mask a fasta file based on feature coordinates
+        "bedtools maskfasta "                          # Bedtools maskfasta, mask a fasta file based on feature coordinates
         "-fi {params.path}{wildcards.reference}.fasta " # Input FASTA file 
-        "-bed {input.low_cov_mask} "                 # BED/GFF/VCF file of ranges to mask in -fi
-        "-fo {output.masked_ref} "                   # Output masked FASTA file
-        "&> {log}"                                   # Log redirection 
+        "-bed {input.low_cov_mask} "                    # BED/GFF/VCF file of ranges to mask in -fi
+        "-fo {output.masked_ref} "                      # Output masked FASTA file
+        "&> {log}"                                      # Log redirection 
 
 ###############################################################################
 rule bedtools_merged_mask:
     # Aim: merging overlaps
     # Use: bedtools merge [OPTIONS] -i [FILTERED.bed] -g [GENOME.fasta] 
     message:
-        "BedTools merging overlaps for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ BedTools ∞ Merge Overlaps ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        """
     conda:
         BEDTOOLS
     input:
@@ -447,7 +687,13 @@ rule awk_min_covfilt:
     # Aim: minimum coverage filtration
     # Use: awk '$4 < [MIN_COV]' [BEDGRAPH.bed] 1> [FILTERED.bed]
     message:
-        "Awk minimum coverage filtration for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner}, @{wildcards.min_cov}X)"
+        """
+        ~ Awk ∞ Minimum Coverage Filtration ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        """
     conda:
         GAWK
     input:
@@ -468,7 +714,12 @@ rule awk_coverage_statistics:
     # Aim: computing genomme coverage stats
     # Use: awk {FORMULA} END {{print [RESULTS.tsv] [BEDGRAPH.bed]
     message:
-        "Awk compute genome coverage statistics BED [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ Awk ∞ Compute Genome Coverage Statistics from BED file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         GAWK
     input:
@@ -584,7 +835,12 @@ rule bedtools_genome_coverage:
     # Aim: computing genome coverage sequencing
     # Use: bedtools genomecov [OPTIONS] -ibam [MARK-DUP.bam] 1> [BEDGRAPH.bed]
     message:
-        "BedTools computing genome coverage for [[ {wildcards.sample} ]] sample against reference genome sequence (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ BedTools ∞ Compute Genome Coverage ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         BEDTOOLS
     input:
@@ -606,7 +862,12 @@ rule samtools_coverage_histogram:
     # Aim: alignment depth and percent coverage histogram
     # Use: samtools coverage --histogram [INPUT.bam]
     message:
-        "SamTools calcul alignment depth and percent coverage @1X from BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Calcul Depth and Coverage from BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -639,7 +900,12 @@ rule samtools_flagstat_ext:
     # Aim: simple stats
     # Use: samtools flagstat -@ [THREADS] [INPUT.bam]
     message:
-        "SamTools calcul simple stats from BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Calcul simple Stats from BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -664,7 +930,12 @@ rule samtools_index_markdup:
     # Aim: indexing marked as duplicate BAM file
     # Use: samtools index -@ [THREADS] -b [MARK-DUP.bam] [INDEX.bai]
     message:
-        "SamTools indexing marked as duplicate BAM file for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Index 'Marked as Duplicate' BAM file
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -688,7 +959,12 @@ rule samtools_markdup:
     # Aim: marking duplicate alignments
     # Use: samtools markdup -@ [THREADS] -r -s -O BAM [SORTED.bam] [MARK-DUP.bam] 
     message:
-        "SamTools marking duplicate alignments for [[ {wildcards.sample} ]] sample (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Mark Duplicate Alignments ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -714,7 +990,12 @@ rule samtools_sorting:
     # Aim: sorting
     # Use: samtools sort -@ [THREADS] -m [MEM_GB] -T [TMP_DIR] -O BAM -o [SORTED.bam] [FIX-MATE.bam] 
     message:
-        "SamTools sorting [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Sort BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -742,7 +1023,12 @@ rule samtools_fixmate:
     # Aim: filling in mate coordinates
     # Use: samtools fixmate -@ [THREADS] -m -O BAM [SORT-BY-NAMES.bam] [FIX-MATE.bam] 
     message:
-        "SamTools filling in mate coordinates [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Fil Mate Coordinates ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -767,7 +1053,12 @@ rule samtools_sortbynames:
     # Aim: sorting by names
     # Use: samtools sort -t [THREADS] -m [MEM_GB] -n -O BAM -o [SORT-BY-NAMES.bam] [MAPPED.sam]
     message:
-        "SamTools sorting by names [[ {wildcards.sample} ]] sample reads (for {wildcards.reference} with {wildcards.aligner})"
+        """
+        ~ SamTools ∞ Sort by Names BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
         SAMTOOLS
     resources:
@@ -794,14 +1085,19 @@ rule minimap2_mapping:
     # Aim: reads mapping against reference sequence
     # Use: minimap2
     message:
-        "Minimap2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
+        """
+        ~ Minimap2 ∞ Map Reads ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ MiniMap2
+        """
     conda:
         MINIMAP2
     resources:
         cpus = CPUS
     params:
         mm2_path = MM2_PATH,
-        preset = PRESET
+        preset = MM2_PRESET
         #length = LENGTH
     input:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
@@ -832,7 +1128,12 @@ rule bwa_mapping:
     # Aim: reads mapping against reference sequence
     # Use: bwa mem -t [THREADS] -x [REFERENCE] [FWD_R1.fq] [REV_R2.fq] 1> [MAPPED.sam]
     message:
-        "BWA-MEM mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
+        """
+        ~ BWA-MEM ∞ Map Reads ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ BWA
+        """
     conda:
         BWA
     resources:
@@ -861,14 +1162,19 @@ rule bowtie2_mapping:
     # Aim: reads mapping against reference sequence
     # Use: bowtie2 -p [THREADS] -x [REFERENCE] -1 [FWD_R1.fq] -2 [REV_R2.fq] -S [MAPPED.sam]
     message:
-        "Bowtie2 mapping [[ {wildcards.sample} ]] sample reads against reference genome sequence (for {wildcards.reference})"
+        """
+        ~ Bowtie2 ∞ Map Reads ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ Bowtie2
+        """
     conda:
         BOWTIE2
     resources:
         cpus = CPUS
     params:
         bt2_path = BT2_PATH,
-        sensitivity = SENSITIVITY
+        sensitivity = BT2_SENSITIVITY
     input:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
@@ -893,14 +1199,17 @@ rule sickle_trim_quality:
     # Aim: windowed adaptive trimming tool for FASTQ files using quality
     # Use: sickle [COMMAND] [OPTIONS]
     message:
-        "Sickle-trim low quality sequences trimming for [[ {wildcards.sample} ]] sample"
+        """
+        ~ Sickle-trim ∞ Trim Low Quality Sequences ~
+        Sample: __________ {wildcards.sample}
+        """
     conda:
         SICKLE_TRIM
     params:
-        command = COMMAND,
-        encoding = ENCODING,
-        quality = QUALITY,
-        length = S_LENGTH
+        command = SIC_COMMAND,
+        encoding = SIC_ENCODING,
+        quality = SIC_QUALITY,
+        length = SIC_LENGTH
     input:
         fwd_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
@@ -931,17 +1240,20 @@ rule cutadapt_adapters_removing:
     # Use: cutadapt [OPTIONS] -a/-A [ADAPTER] -o [OUT_FWD.fastq.gz] -p [OUT_REV.fastq.gz] [IN_FWD.fastq.gz] [IN_REV.fastq.gz]
     # Rmq: multiple adapter sequences can be given using further -a options, but only the best-matching adapter will be removed
     message:
-        "Cutadapt adapters removing for [[ {wildcards.sample} ]] sample"
+        """
+        ~ Cutadapt ∞ Remove Adapters ~
+        Sample: __________ {wildcards.sample}
+        """
     conda:
         CUTADAPT
     resources:
         cpus = CPUS
     params:
-        length = C_LENGTH,
-        truseq = TRUSEQ,
-        nextera = NEXTERA,
-        small = SMALL,
-        cut = CLIPPING
+        length = CUT_LENGTH,
+        truseq = CUT_TRUSEQ,
+        nextera = CUT_NEXTERA,
+        small = CUT_SMALL,
+        cut = CUT_CLIPPING
     input:
         fwd_reads = "resources/reads/{sample}_R1.fastq.gz",
         rev_reads = "resources/reads/{sample}_R2.fastq.gz"
