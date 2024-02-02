@@ -65,10 +65,10 @@ consensus:
     #- 'Add_your_favorite_genome_ref'        # Custom      (na)
   min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT] *** LoFreq ***
   # Available options (not exhaustive), choose one:
-    - '60'                         # 60 x : for great coverage
+    #- '60'                         # 60 x : for great coverage
     - '30'                         # 30 X : AFROSCREEN SARS-CoV-2 with Illumina amplicons sequencing (default)
-    - '10'                         # 10 X : for some applications...
-    - '3'                          #  3 X : only for exploration !
+    #- '10'                         # 10 X : for some applications...
+    #- '3'                          #  3 X : only for exploration !
     #- 'Add_your_minimum_coverage'  # Custom minimum coverage 
   min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT] *** LoFreq ***
   iupac:        # Output variants in the form of IUPAC ambiguity codes (default: deactivate) *** LoFreq ***
@@ -78,12 +78,12 @@ consensus:
   aligner: # Select your favorite aligner (default: 'minimap2')
   # Available options, choose one:
     - 'minimap2' # A versatile sequence alignment program (default)
-    - 'bwa'      # Better, Faster, (Stronger, Harder...)
-    - 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    #- 'bwa'      # Better, Faster, (Stronger, Harder...)
+    #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
   caller: # Select your favorite variants caller (default: 'lofreq')
   # Available options, choose one:
     - 'lofreq' # 
-    - 'ivar'   #
+    #- 'ivar'   #
   
 ###############################################################################
 ### NEXTCLADE ###
@@ -113,8 +113,8 @@ pangolin:
 ###############
 multiqc:
   run: # Run Quality analyzes (default: yes)
-  #- 'yes' # Yes (default)
-  - 'no' # No
+  - 'yes' # Yes (default)
+  #- 'no' # No
 #  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
 #  tag: '' # Use only modules which tagged with this keyword
 
