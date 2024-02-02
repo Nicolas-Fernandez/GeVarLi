@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.26 (add minimap2 aligner)
+# Latest modifications ___ 2024.01.31 (add ivar caller)
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -23,7 +23,7 @@
 #################
 resources:
   cpus: '8'          # Set maximum cpus usage (for multithreading, default: "8") [INT]
-  ram: '12'          # Set maximum memory usage (in Gb, default: "16") [INT]
+  ram: '16'          # Set maximum memory usage (in Gb, default: "16") [INT]
   tmp_dir: '$TMPDIR' # Temporary directory (default: "$TMPDIR")
   ### Examples:
     ### '$TMPDIR'  # System variable $TMPDIR (default)
@@ -63,19 +63,28 @@ consensus:
     #- 'Human-enterovirus-68_AY-426531-1'    # Entero      (na)
     #- 'Loa-loa_JH-712066-1_GCA_000183805-3' # Loa loa V3  (na)
     #- 'Add_your_favorite_genome_ref'        # Custom      (na)
-  min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
+  min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT] *** LoFreq ***
   # Available options (not exhaustive), choose one:
-    #- '60'                         # 60 x : for great coverage
+    - '60'                         # 60 x : for great coverage
     - '30'                         # 30 X : AFROSCREEN SARS-CoV-2 with Illumina amplicons sequencing (default)
-    #- '10'                         # 10 X : for some applications...
-    #- '3'                          #  3 X : only for exploration !
+    - '10'                         # 10 X : for some applications...
+    - '3'                          #  3 X : only for exploration !
     #- 'Add_your_minimum_coverage'  # Custom minimum coverage 
-  aligner: # Select your favorite aligner (default: 'bwa')
+  min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT] *** LoFreq ***
+  iupac:        # Output variants in the form of IUPAC ambiguity codes (default: deactivate) *** LoFreq ***
+  # Available options, choose one:
+    - ''             # Deactivate (default)
+    #- '--iupac-code' # Activate
+  aligner: # Select your favorite aligner (default: 'minimap2')
   # Available options, choose one:
     - 'minimap2' # A versatile sequence alignment program (default)
-    #- 'bwa'      # Better, Faster, (Stronger, Harder...)
-    #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
-
+    - 'bwa'      # Better, Faster, (Stronger, Harder...)
+    - 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+  caller: # Select your favorite variants caller (default: 'lofreq')
+  # Available options, choose one:
+    - 'lofreq' # 
+    - 'ivar'   #
+  
 ###############################################################################
 ### NEXTCLADE ###
 #################
@@ -104,8 +113,8 @@ pangolin:
 ###############
 multiqc:
   run: # Run Quality analyzes (default: yes)
-  - 'yes' # Yes (default)
-  #- 'no' # No
+  #- 'yes' # Yes (default)
+  - 'no' # No
 #  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
 #  tag: '' # Use only modules which tagged with this keyword
 
@@ -144,6 +153,15 @@ sickle_trim:
 ### MINIMAP2 ###
 ################
 minimap2:
+  path: 'resources/indexes/minimap2/'
+  algorithm:
+    k-mer_size: '21'     # -k: k-mer size (default: "21", no larger than "28") [INT]
+    minimizer_size: '11' # -w: minimizer window size (default: "11") [INT]
+    split_size: '8G'     # -I: split index for every {NUM} input bases (default: "8G") [INT]
+    homopolymer:         # -H: use homopolymer-compressed k-mer  (default: no)
+    # Available options, choose one: 
+      - ''   # no (default)
+      #- '-H' # yes (preferrable for PacBio)
   preset: # -x: Minimap2 presets (always applied before other options)
   # Available preset options, choose one: 
     - 'sr'        # genomic short-read mapping, like Illumina (default)
@@ -157,21 +175,12 @@ minimap2:
     #- 'asm5'      # asm-to-ref mapping, for ~0.1% sequence divergence
     #- 'asm10'     # asm-to-ref mapping, for ~1.0% sequence divergence
     #- 'asm20'     # asm-to-ref mapping, for ~5.0% sequence divergence
-  path: 'resources/indexes/minimap2/'
-  algorithm:
-    k-mer_size: '21'     # -k: k-mer size (default: "21", no larger than "28") [INT]
-    minimizer_size: '11' # -w: minimizer window size (default: "11") [INT]
-    split_size: '8G'     # -I: split index for every {NUM} input bases (default: "8G") [INT]
-    homopolymer:         # -H: use homopolymer-compressed k-mer  (default: no)
-    # Available options, choose one: 
-      - ''   # no (default)
-      #- '-H' # yes (preferrable for PacBio)
 
 ###############################################################################
 ### BWA ###
 ###########
 bwa:
-  path: 'resources/indexes/bwa/' # Path to BWA indexes
+  path: 'resources/indexes/bwa/' # Path to BWA indexes (default)
   algorithm: # Algorithm for constructing BWA index (default: auto)
   # Available options, choose one:
     - ''         # Auto-select (default)
@@ -182,27 +191,37 @@ bwa:
 ### BOWTIE2 ###
 ###############
 bowtie2:
+  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes (default)
+  algorithm: # Algorithm for constructing BT2 index
+  # Available options, choose one:
+    - ''              # (default)
+    #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
   sensitivity: # Bowtie2 'sensitivity' preset (default: "--very-sensitive")
   # Available preset options, choose one:
     - '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
     #- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
     #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"    
     #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
-  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes (default path)
-  algorithm: # Algorithm for constructing BT2 index
+
+################################################################################
+### IVAR ###
+############
+ivar:
+  #min_depth: '0'    # Minimum read depth to call variants (Default: "0") [INT] *** iVar ***
+  #min_freq: '0.03'  # Minimum frequency threshold to call variants (Default: "0.03") [FLOAT] *** iVar ***
+  #min_insert: '0.8' # Minimum insertion frequency threshold to call variants (Default: "0.8") [FLOAT] *** iVar ***
+  max_depth: '1000000' # Max per-file depth; avoids excessive memory usage (default: "8000", recomanded "1000000") [INT]
+  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: "13", recomanded: "0") [INT]
+  min_qual: '0'        # -q: Minimum quality score threshold to count base (Default: "20", recomanded: "0") [INT]
+  map_qual:            # Disable BAQ, per-Base Alignment Quality (default: no='do not merge')
   # Available options, choose one:
-    - ''              # (default)
-    #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
+  - '--no-BAQ' # no, don't merge mapping quality (default)
+  #- ''         # yes, merge mapping quality (not recommanded with Samtools)
 
 ################################################################################
 ### LOFREQ ###
 ##############
 lofreq:
-  min_af: '0.2' # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  iupac:        # Output variants in the form of IUPAC ambiguity codes (default: deactivate)
-  # Available options, choose one:
-    - ''             # Deactivate (default)
-    #- '--iupac-code' # Activate
   map_qual:     # Don't merge mapping quality in LoFreq's model (default: no='do not merge')
   # Available options, choose one:
     - '--no-mq' # no, don't merge mapping quality (default)
@@ -245,6 +264,7 @@ conda:
     pangolin:      '../environments/osx/pangolin_v.4.3.yaml'            # Pangolin      ver. 4.3
     samtools:      '../environments/osx/samtools_v.1.17.yaml'           # Samtools      ver. 1.17
     sickle_trim:   '../environments/osx/sickle-trim_v.1.33.yaml'        # Sickle-trim   ver. 1.33
+    tsv2vcf:       '../environments/osx/tsv2vcf_v.1.0.yaml'             # tsv2vcf       ver. 1.0
     workflow_base: '../environments/osx/workflow-base_v.2024.01.yaml'   # Workflow-Base ver. 2024.01
   linux: # Conda Linux environement yaml files:
     bamclipper:    '../environments/linux/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
@@ -264,6 +284,7 @@ conda:
     pangolin:      '../environments/linux/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
     samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
     sickle_trim:   '../environments/linux/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
+    tsv2vcf:       '../environments/linux/tsv2vcf_v.1.0.yaml'           # tsv2vcf       ver. 1.0
     workflow_base: '../environments/linux/workflow-base_v.2024.01.yaml' # Workflow-Base ver. 2024.01
 
 ###############################################################################
