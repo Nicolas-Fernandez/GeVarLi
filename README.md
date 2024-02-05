@@ -143,7 +143,7 @@ rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
 exit
 ```
 
-e.g. for **MacOSX_INTEL-chips_x86_64-bit** systems:  
+e.g. for **MacOSX_INTEL-chips_x86_64-bit** or **MacOSX_M1/M2-chips_arm_64-bit (with Rosetta)** systems:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda3/ && \
@@ -153,7 +153,7 @@ rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 exit
 ```
 
-e.g. for **MacOSX_M1/M2-chips_arm_64-bit** systems:  
+e.g. for **MacOSX_M1/M2-chips_arm_64-bit (without Rosetta)** systems:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/Miniconda3-latest-MacOSX-arm64.sh && \
 bash ~/Miniconda3-latest-MacOSX-arm64.sh -b -p ~/miniconda3/ && \
