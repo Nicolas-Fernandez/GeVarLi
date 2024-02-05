@@ -1,4 +1,4 @@
-# GeVarLi: GEnome assemblyA, VARiant calling and LIneage assignation #
+# GeVarLi: GEnome Assembly, VARiant calling and LIneage assignation #
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
 ![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.3.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
@@ -43,7 +43,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
   - (_bam files_)
   - (_bed files_)
   - Visualization (IGV)
-- Variants calling and filtering (_vcf files_)
+- Variants calling and filtering (_using lofreq (vcf files) or ivar (tsv files)_)
 - Genome coverage (_statistics reports_)
 - Consensus sequences (_fasta file_)
 - Genomes classification
