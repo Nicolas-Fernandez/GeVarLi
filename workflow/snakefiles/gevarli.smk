@@ -331,7 +331,7 @@ rule ivar_consensus:
         #"--reference {input.masked_ref} " # Reference sequence FASTA FILE
         "{input.mark_dup} "               # Markdup BAM input
         "| "                               ### PIPE to iVar
-        "iVar consensus "                # iVar, with command 'consensus': Call consensus from aligned BAM file
+        "ivar consensus "                # iVar, with command 'consensus': Call consensus from aligned BAM file
         "-p {output.cons_fa} "            # -p: prefix
         "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base [INT] (Default: 20)
         "-t {params.min_freq} "           # -t: Minimum frequency threshold to call variants [FLOAT] (Default: 0.03)
