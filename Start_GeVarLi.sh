@@ -1,4 +1,4 @@
-A#!/bin/bash
+#!/bin/bash
 
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 ###                                                                         ###
@@ -15,7 +15,7 @@ A#!/bin/bash
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.26 (add minimap2 aligner)
+# Latest modifications ___ 2024.02.07 (update nextclade to v.3.1.0)
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -33,8 +33,8 @@ nc="\033[0m"       # no color
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 gevarli_version="2024.01"                              # GeVarLi version
-workflow_base_version="2024.01"                        # Workflow base version
-nextclade_version="3.0.0"                              # Nextclade version
+workflow_base_version="2024.02"                        # Workflow base version
+nextclade_version="3.1.0"                              # Nextclade version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -47,7 +47,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.01.26 (update Nextclade to v_3.0.0)
+${blue}Latest modifications${nc} ___ 2024.01.26 (update Nextclade to v.3.1.0)
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -165,7 +165,7 @@ else # Test network conection
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 8.4.0)
+    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 8.4.6)
     # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.5.6)
     # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.3)
     # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
@@ -192,7 +192,8 @@ old_envs="gevarli-base_v.2022.11 \
           snakemake-base_v.2023.02 \
           snakemake-base_v.2023.03 \
           snakemake-base_v.2023.04 \
-          workflow-base_v.2023.06"
+          workflow-base_v.2023.06 \
+          workflow-base_v.2024.01"
 
 for env in ${old_envs} ; do
     conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
@@ -208,15 +209,23 @@ ${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
 ${green}--------------------------------------${nc}
 "
 
+## Nextclade installation
 # Test if a 'nextclade' environment exist
 if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
 then
     echo -e "
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} already created!
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} it's already created!
 "
 else
+    # Test network conection
     if [[ ${network} = "Online" ]]
     then
+	echo -e "
+Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...                                                                                                
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now created, with:
+
+    #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
+"
         conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
     else
 	echo -e "
@@ -227,7 +236,8 @@ Please, check your network conection!
     fi
 fi
 
-# Test network conection                                                                                                                                                        
+## Databases update
+# Test network conection
 if [[ ${network} = "Online" ]]
 then
     echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}"
@@ -241,7 +251,7 @@ then
 else
     echo -e "
 ${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-${blue}Nextclade${nc} datasets updatdes ${red}not available${nc}!
+${blue}Nextclade${nc} datasets updatde ${red}not available${nc}!
 "
 fi
 
@@ -682,7 +692,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.01.26 (update Nextclade to v_3.0.0)
+Latest modifications ___ 2024.01.26 (update Nextclade to v_3.1.0)
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}

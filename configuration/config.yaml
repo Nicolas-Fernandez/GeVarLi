@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.31 (add ivar caller)
+# Latest modifications ___ 2024.02.07 (update nextclade to v.3.1.0)
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -83,7 +83,7 @@ consensus:
   caller: # Select your favorite variants caller (default: 'lofreq')
   # Available options, choose one:
     - 'lofreq' # 
-    #- 'ivar'   #
+    - 'ivar'   #
   
 ###############################################################################
 ### NEXTCLADE ###
@@ -105,8 +105,8 @@ nextclade:
 ################
 pangolin:
   run: # Run Pangolin analyzes (default: no)
-  #- 'yes' # Yes
-  - 'no' # No (default)
+  - 'yes' # Yes
+  #- 'no' # No (default)
 
 ###############################################################################
 ### MULTIQC ###
@@ -260,7 +260,7 @@ conda:
     lofreq:        '../environments/osx/lofreq_v.2.1.5.yaml'            # Lofreq        ver. 2.1.5
     multiqc:       '../environments/osx/multiqc_v.1.14.yaml'            # MultiQC       ver. 1.14
     minimap2:      '../environments/osx/minimap2_v.2.26.yaml'           # Minimap2      ver. 2.26
-    nextclade:     '../environments/osx/nextclade_v.3.0.0.yaml'         # Nextclade     ver. 3.0.0
+    nextclade:     '../environments/osx/nextclade_v.3.1.0.yaml'         # Nextclade     ver. 3.1.0
     pangolin:      '../environments/osx/pangolin_v.4.3.yaml'            # Pangolin      ver. 4.3
     samtools:      '../environments/osx/samtools_v.1.17.yaml'           # Samtools      ver. 1.17
     sickle_trim:   '../environments/osx/sickle-trim_v.1.33.yaml'        # Sickle-trim   ver. 1.33
@@ -280,7 +280,7 @@ conda:
     lofreq:        '../environments/linux/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5
     minimap2:      '../environments/linux/minimap2_v.2.26.yaml'         # Minimap2      ver. 2.26
     multiqc:       '../environments/linux/multiqc_v.1.14.yaml'          # MultiQC       ver. 1.14
-    nextclade:     '../environments/linux/nextclade_v.3.0.0.yaml'       # Nextclade     ver. 3.0.0
+    nextclade:     '../environments/linux/nextclade_v.3.1.0.yaml'       # Nextclade     ver. 3.1.0
     pangolin:      '../environments/linux/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
     samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
     sickle_trim:   '../environments/linux/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
