@@ -1,4 +1,4 @@
-name: workflow-base_v.2024.01
+name: workflow-base_v.2024.02
 channels:
   - bioconda
   - conda-forge
@@ -16,9 +16,9 @@ dependencies:
   - brotli-python=1.1.0=py312heafc425_1
   - bzip2=1.0.8=h10d778d_5
   - c-ares=1.26.0=h10d778d_0
-  - ca-certificates=2023.11.17=h8857fd0_0
+  - ca-certificates=2024.2.2=h8857fd0_0
   - cairo=1.18.0=h99e66fa_0
-  - certifi=2023.11.17=pyhd8ed1ab_0
+  - certifi=2024.2.2=pyhd8ed1ab_0
   - cffi=1.16.0=py312h38bf5a0_0
   - charset-normalizer=3.3.2=pyhd8ed1ab_0
   - coincbc=2.10.3=h7a5a08d_3
@@ -93,39 +93,39 @@ dependencies:
   - libmambapy=1.5.6=py312h67f5953_0
   - libnghttp2=1.58.0=h64cf6d3_1
   - libopenblas=0.3.20=h9a5756b_0
-  - libpng=1.6.39=ha978bb4_0
+  - libpng=1.6.42=h92b6c6a_0
   - librsvg=2.56.3=h1877882_1
-  - libsolv=0.7.27=hf4d7fad_0
+  - libsolv=0.7.28=h2d185b6_0
   - libsqlite=3.44.2=h92b6c6a_0
   - libssh2=1.11.0=hd019ec5_0
   - libtiff=4.6.0=h684deea_2
   - libwebp=1.3.2=h44782d1_1
   - libwebp-base=1.3.2=h0dc2134_0
-  - libxml2=2.12.4=hc0ae0f7_1
+  - libxml2=2.12.5=hc0ae0f7_0
   - libzlib=1.2.13=h8a1eda9_5
   - logmuse=0.2.6=pyh8c360ce_0
   - lz4-c=1.9.4=hf0c8a7f_0
   - lzo=2.10=haf1e3a3_1000
   - mamba=1.5.6=py312ha12221d_0
   - markdown-it-py=3.0.0=pyhd8ed1ab_0
-  - markupsafe=2.1.4=py312h41838bb_0
+  - markupsafe=2.1.5=py312h41838bb_0
   - mdurl=0.1.2=pyhd8ed1ab_0
   - menuinst=2.0.2=py312hb401068_0
   - nbformat=5.9.2=pyhd8ed1ab_0
   - ncurses=6.4=h93d8f39_2
-  - numpy=1.26.3=py312he3a82b2_0
-  - openssl=3.2.0=hd75f5a5_1
+  - numpy=1.26.4=py312he3a82b2_0
+  - openssl=3.2.1=hd75f5a5_0
   - packaging=23.2=pyhd8ed1ab_0
   - pandas=2.2.0=py312h83c8a23_0
   - pango=1.50.14=h19c1c8a_2
   - pcre2=10.42=h0ad2156_0
   - peppy=0.40.1=pyhd8ed1ab_0
   - perl=5.32.1=7_h10d778d_perl5
-  - pip=23.3.2=pyhd8ed1ab_0
+  - pip=24.0=pyhd8ed1ab_0
   - pixman=0.43.2=h73e2aa4_0
   - pkgutil-resolve-name=1.3.10=pyhd8ed1ab_1
   - plac=1.4.2=pyhd8ed1ab_0
-  - platformdirs=4.1.0=pyhd8ed1ab_0
+  - platformdirs=4.2.0=pyhd8ed1ab_0
   - pluggy=1.4.0=pyhd8ed1ab_0
   - psutil=5.9.8=py312h41838bb_0
   - pulp=2.8.0=py312hb401068_0
@@ -141,10 +141,10 @@ dependencies:
   - python-fastjsonschema=2.19.1=pyhd8ed1ab_0
   - python-tzdata=2023.4=pyhd8ed1ab_0
   - python_abi=3.12=4_cp312
-  - pytz=2023.4=pyhd8ed1ab_0
+  - pytz=2024.1=pyhd8ed1ab_0
   - pyyaml=6.0.1=py312h104f124_1
   - readline=8.2=h9e318b2_1
-  - referencing=0.32.1=pyhd8ed1ab_0
+  - referencing=0.33.0=pyhd8ed1ab_0
   - rename=1.601=hdfd78af_1
   - reproc=14.2.4.post0=h10d778d_1
   - reproc-cpp=14.2.4.post0=h93d8f39_1
@@ -152,7 +152,7 @@ dependencies:
   - reretry=0.11.8=pyhd8ed1ab_0
   - rich=13.7.0=pyhd8ed1ab_0
   - rpds-py=0.17.1=py312h6e28e45_0
-  - ruamel.yaml=0.18.5=py312h41838bb_0
+  - ruamel.yaml=0.18.6=py312h41838bb_0
   - ruamel.yaml.clib=0.2.7=py312h104f124_2
   - setuptools=69.0.3=pyhd8ed1ab_0
   - six=1.16.0=pyh6c4a22f_0
@@ -160,11 +160,11 @@ dependencies:
   - slack_sdk=3.26.2=hd8ed1ab_0
   - smart_open=6.4.0=pyhd8ed1ab_0
   - smmap=5.0.0=pyhd8ed1ab_0
-  - snakemake=8.4.0=hdfd78af_0
-  - snakemake-interface-common=1.15.2=pyhdfd78af_0
+  - snakemake=8.4.6=hdfd78af_0
+  - snakemake-interface-common=1.15.3=pyhdfd78af_0
   - snakemake-interface-executor-plugins=8.2.0=pyhdfd78af_0
   - snakemake-interface-storage-plugins=3.0.0=pyhdfd78af_0
-  - snakemake-minimal=8.4.0=pyhdfd78af_0
+  - snakemake-minimal=8.4.6=pyhdfd78af_0
   - stopit=1.1.2=py_0
   - tabulate=0.9.0=pyhd8ed1ab_1
   - throttler=1.2.2=pyhd8ed1ab_0
@@ -177,9 +177,9 @@ dependencies:
   - traitlets=5.14.1=pyhd8ed1ab_0
   - truststore=0.8.0=pyhd8ed1ab_0
   - typing_extensions=4.9.0=pyha770c72_0
-  - tzdata=2023d=h0c530f3_0
-  - ubiquerg=0.6.3=pyhd8ed1ab_0
-  - urllib3=2.1.0=pyhd8ed1ab_0
+  - tzdata=2024a=h0c530f3_0
+  - ubiquerg=0.7.0=pyhd8ed1ab_0
+  - urllib3=2.2.0=pyhd8ed1ab_0
   - veracitools=0.1.3=py_0
   - wheel=0.42.0=pyhd8ed1ab_0
   - wrapt=1.16.0=py312h41838bb_0
@@ -193,4 +193,4 @@ dependencies:
   - zlib=1.2.13=h8a1eda9_5
   - zstandard=0.22.0=py312h7a629f7_0
   - zstd=1.5.5=h829000d_0
-prefix: /Users/2021nf001/miniconda3/envs/workflow-base_v.2024.01
+prefix: /Users/2021nf001/miniconda3/envs/workflow-base_v.2024.02

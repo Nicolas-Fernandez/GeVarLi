@@ -1,4 +1,4 @@
-###I###R###D###A###U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 ###                                                                         ###
 ###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
 ###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.31 (add ivar caller)
+# Latest modifications ___ 2024.01.31 (fix: python - SyntaxWarning: invalid escape sequence '\ ')
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -734,101 +734,101 @@ rule awk_coverage_statistics:
     log:
         "results/10_Reports/tools-log/awk/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.log"
     shell:
-        """ rawReads=$(grep -o -E  """                                  # Get raw reads 
-        """ 'Total read pairs processed:.+' {input.cutadapt}  """       #
-        """ | sed -E 's/Total read pairs processed:\ +//'  """          #
-        """ | sed 's/,//g') ; """                                       #
+        r""" rawReads=$(grep -o -E  """                                  # Get raw reads 
+        r""" 'Total read pairs processed:.+' {input.cutadapt}  """       #
+        r""" | sed -E 's/Total read pairs processed:\ +//'  """          #
+        r""" | sed 's/,//g') ; """                                       #
         #
-        """ cutadaptPF=$(grep -o -E """                                 # Get cutadapt Passing Filtes reads
-        """ 'Pairs written \(passing filters\):.+' {input.cutadapt} """ #
-        """ | sed -E 's/Pairs written \(passing filters\):\ +//' """    #
-        """ | sed 's/,//g') ; """                                       #
+        r""" cutadaptPF=$(grep -o -E """                                 # Get cutadapt Passing Filtes reads
+        r""" 'Pairs written \(passing filters\):.+' {input.cutadapt} """ #
+        r""" | sed -E 's/Pairs written \(passing filters\):\ +//' """    #
+        r""" | sed 's/,//g') ; """                                       #
         #
-        """ sicklePF=$(grep -o -E """                                   # Get sickle Passing Filtes reads
-        """ 'FastQ paired records kept:.+' {input.sickle} """           #
-        """ | sed -E 's/FastQ paired records kept:\ +//') ; """         #
+        r""" sicklePF=$(grep -o -E """                                   # Get sickle Passing Filtes reads
+        r""" 'FastQ paired records kept:.+' {input.sickle} """           #
+        r""" | sed -E 's/FastQ paired records kept:\ +//') ; """         #
         #
-        """ totalDuplicate=$(grep -o -E """                             # Get total duplicated reads
-        """ 'DUPLICATE TOTAL:.+' {input.samtools} """                   #
-        """ | sed -E 's/DUPLICATE TOTAL:\ +//') ; """                   #
+        r""" totalDuplicate=$(grep -o -E """                             # Get total duplicated reads
+        r""" 'DUPLICATE TOTAL:.+' {input.samtools} """                   #
+        r""" | sed -E 's/DUPLICATE TOTAL:\ +//') ; """                   #
         #
-        """ estimatedLibrarySize=$(grep -o -E """                       # Get estimated library size
-        """ 'ESTIMATED_LIBRARY_SIZE:.+' {input.samtools} """            #
-        """ | sed -E 's/ESTIMATED_LIBRARY_SIZE:\ +//') ; """            #
+        r""" estimatedLibrarySize=$(grep -o -E """                       # Get estimated library size
+        r""" 'ESTIMATED_LIBRARY_SIZE:.+' {input.samtools} """            #
+        r""" | sed -E 's/ESTIMATED_LIBRARY_SIZE:\ +//') ; """            #
         #
-        """ samtoolsPF=$(grep -o -E """                                 # Get samtool Passing Filter reads
-        """ 'WRITTEN: .+' {input.samtools} """                          #
-        """ | sed -E 's/WRITTEN:\ +//') ; """                           #
+        r""" samtoolsPF=$(grep -o -E """                                 # Get samtool Passing Filter reads
+        r""" 'WRITTEN: .+' {input.samtools} """                          #
+        r""" | sed -E 's/WRITTEN:\ +//') ; """                           #
         #
-        """ mappedReads=$(grep -o -E -m 1 """                           # Get mapped reads
-        """ '"mapped": .+' {input.flagstat} """                         #
-        """ | sed -E 's/"mapped":\ +//' """                             #
-        """ | sed 's/,//g') ; """                                       #
+        r""" mappedReads=$(grep -o -E -m 1 """                           # Get mapped reads
+        r""" '"mapped": .+' {input.flagstat} """                         #
+        r""" | sed -E 's/"mapped":\ +//' """                             #
+        r""" | sed 's/,//g') ; """                                       #
         #
-        """ mappedPercentReads=$(grep -o -E -m 1 """                    # Get mapped precent reads
-        """ '"mapped %": .+' {input.flagstat} """                       #
-        """ | sed -E 's/"mapped %":\ +//' """                           #
-        """ | sed 's/,//g') ; """                                       #
+        r""" mappedPercentReads=$(grep -o -E -m 1 """                    # Get mapped precent reads
+        r""" '"mapped %": .+' {input.flagstat} """                       #
+        r""" | sed -E 's/"mapped %":\ +//' """                           #
+        r""" | sed 's/,//g') ; """                                       #
         #
-        """ covPercentAt1X=$(grep -o -E """                             # Get coverage percent @1X
-        """ 'Percent covered:.+' {input.histogram} """                  #
-        """ | sed -E 's/Percent covered:\ +//') ; """                   #
+        r""" covPercentAt1X=$(grep -o -E """                             # Get coverage percent @1X
+        r""" 'Percent covered:.+' {input.histogram} """                  #
+        r""" | sed -E 's/Percent covered:\ +//') ; """                   #
         #
-        """ awk """                                                   # Awk, a program to select particular records in a file and perform operations upon them
-        """ -v rawReads="${{rawReads}}" """                             # Define external variable
-        """ -v cutadaptPF="${{cutadaptPF}}" """                         # Define external variable
-        """ -v sicklePF="${{sicklePF}}" """                             # Define external variable
-        """ -v totalDuplicate="${{totalDuplicate}}" """                 # Define external variable
-        """ -v estimatedLibrarySize="${{estimatedLibrarySize}}" """     # Define external variable
-        """ -v samtoolsPF="${{samtoolsPF}}" """                         # Define external variable
-        """ -v mappedReads="${{mappedReads}}" """                       # Define external variable
-        """ -v mappedPercentReads="${{mappedPercentReads}}" """         # Define external variable
-        """ -v covPercentAt1X="${{covPercentAt1X}}" """                 # Define external variable
-        """ '$4 >= {wildcards.min_cov} {{supMin_Cov+=$3-$2}} ; """      # Genome size (>= min_cov @X)
-        """ {{genomeSize+=$3-$2}} ; """                                 # Genome size (total)
-        """ {{totalBases+=($3-$2)*$4}} ; """                            # Total bases @1X
-        """ {{totalBasesSq+=(($3-$2)*$4)**2}} """                       # Total bases square @1X
-        """ END """                                                    # END
-        """ {{print """                                                # Print
-        """ "sample_id", "\t", """                                      # header: Sample ID
-        """ "raw_paired_reads", "\t", """                               # header: Raw paired reads
-        """ "cutadapt_pairs_PF", "\t", """                              # header: Cutadapt Passing Filters
-        """ "sickle_reads_PF", "\t", """                                # header: Sickle-trim Passing Filters
-        """ "duplicated_reads", "\t", """                               # header:
-        """ "duplicated_percent_%","\t", """                            # header:
-        """ "estimated_library_size*", "\t", """                        # header:
-        """ "samtools_pairs_PF", "\t", """                              # header:
-        """ "mapped_with", "\t",  """                                   # header: aligner
-        """ "mapped_on", "\t",  """                                     # header: reference
-        """ "mapped_reads", "\t", """                                   # header:
-        """ "mapped_percent_%", "\t", """                               # header:
-        """ "mean_depth", "\t", """                                     # header: mean depth
-        """ "standard_deviation", "\t", """                             # header: standard deviation
-        """ "cov_percent_%_@1X", "\t", """                              # header: coverage percentage @1X
-        """ "cov_percent_%" "\t", """                                   # header: coverage percentage
-        """ "@_min_cov" """                                             # header: @_[min_cov]_X
-        """ ORS """                                                      # \n newline
-        """ "{wildcards.sample}", "\t", """                             # value: Sample ID
-        """ rawReads, "\t", """                                         # value: Raw sequences
-        """ cutadaptPF, "\t", """                                       # value: Cutadapt Passing Filter
-        """ sicklePF, "\t", """                                         # value: Sickle Passing Filter
-        """ totalDuplicate, "\t", """                                   # value:
-        """ int(((totalDuplicate)/(rawReads*2))*100), "%", "\t", """    # value: (divided by 2 to estimated pairs)
-        """ estimatedLibrarySize, "\t", """                             # value:
-        """ samtoolsPF, "\t", """                                       # value:
-        """ "{wildcards.aligner}", "\t",  """                           # value: aligner
-        """ "{wildcards.reference}", "\t",  """                         # value: reference
-        """ mappedReads, "\t", """                                      # value:
-        """ mappedPercentReads, "%", "\t", """                          # value:
-        """ int(totalBases/genomeSize), "\t", """                       # value: mean depth
-        """ int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
-        """ covPercentAt1X, "\t", """                                   # value
-        """ supMin_Cov/genomeSize*100, "%", "\t", """                   # Coverage percent (@ min_cov X) value
-        """ "@{wildcards.min_cov}X" """                                 # @ min_cov X value
-        """ }}' """                                                     # Close print
-        """ {input.genome_cov} """                                      # BedGraph coverage input
-        """ 1> {output.cov_stats} """                                   # Mean depth output
-        """ 2> {log}"""                                                 # Log redirection
+        r""" awk """                                                   # Awk, a program to select particular records in a file and perform operations upon them
+        r""" -v rawReads="${{rawReads}}" """                             # Define external variable
+        r""" -v cutadaptPF="${{cutadaptPF}}" """                         # Define external variable
+        r""" -v sicklePF="${{sicklePF}}" """                             # Define external variable
+        r""" -v totalDuplicate="${{totalDuplicate}}" """                 # Define external variable
+        r""" -v estimatedLibrarySize="${{estimatedLibrarySize}}" """     # Define external variable
+        r""" -v samtoolsPF="${{samtoolsPF}}" """                         # Define external variable
+        r""" -v mappedReads="${{mappedReads}}" """                       # Define external variable
+        r""" -v mappedPercentReads="${{mappedPercentReads}}" """         # Define external variable
+        r""" -v covPercentAt1X="${{covPercentAt1X}}" """                 # Define external variable
+        r""" '$4 >= {wildcards.min_cov} {{supMin_Cov+=$3-$2}} ; """      # Genome size (>= min_cov @X)
+        r""" {{genomeSize+=$3-$2}} ; """                                 # Genome size (total)
+        r""" {{totalBases+=($3-$2)*$4}} ; """                            # Total bases @1X
+        r""" {{totalBasesSq+=(($3-$2)*$4)**2}} """                       # Total bases square @1X
+        r""" END """                                                    # END
+        r""" {{print """                                                # Print
+        r""" "sample_id", "\t", """                                      # header: Sample ID
+        r""" "raw_paired_reads", "\t", """                               # header: Raw paired reads
+        r""" "cutadapt_pairs_PF", "\t", """                              # header: Cutadapt Passing Filters
+        r""" "sickle_reads_PF", "\t", """                                # header: Sickle-trim Passing Filters
+        r""" "duplicated_reads", "\t", """                               # header:
+        r""" "duplicated_percent_%","\t", """                            # header:
+        r""" "estimated_library_size*", "\t", """                        # header:
+        r""" "samtools_pairs_PF", "\t", """                              # header:
+        r""" "mapped_with", "\t",  """                                   # header: aligner
+        r""" "mapped_on", "\t",  """                                     # header: reference
+        r""" "mapped_reads", "\t", """                                   # header:
+        r""" "mapped_percent_%", "\t", """                               # header:
+        r""" "mean_depth", "\t", """                                     # header: mean depth
+        r""" "standard_deviation", "\t", """                             # header: standard deviation
+        r""" "cov_percent_%_@1X", "\t", """                              # header: coverage percentage @1X
+        r""" "cov_percent_%" "\t", """                                   # header: coverage percentage
+        r""" "@_min_cov" """                                             # header: @_[min_cov]_X
+        r""" ORS """                                                      # \n newline
+        r""" "{wildcards.sample}", "\t", """                             # value: Sample ID
+        r""" rawReads, "\t", """                                         # value: Raw sequences
+        r""" cutadaptPF, "\t", """                                       # value: Cutadapt Passing Filter
+        r""" sicklePF, "\t", """                                         # value: Sickle Passing Filter
+        r""" totalDuplicate, "\t", """                                   # value:
+        r""" int(((totalDuplicate)/(rawReads*2))*100), "%", "\t", """    # value: (divided by 2 to estimated pairs)
+        r""" estimatedLibrarySize, "\t", """                             # value:
+        r""" samtoolsPF, "\t", """                                       # value:
+        r""" "{wildcards.aligner}", "\t",  """                           # value: aligner
+        r""" "{wildcards.reference}", "\t",  """                         # value: reference
+        r""" mappedReads, "\t", """                                      # value:
+        r""" mappedPercentReads, "%", "\t", """                          # value:
+        r""" int(totalBases/genomeSize), "\t", """                       # value: mean depth
+        r""" int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
+        r""" covPercentAt1X, "\t", """                                   # value
+        r""" supMin_Cov/genomeSize*100, "%", "\t", """                   # Coverage percent (@ min_cov X) value
+        r""" "@{wildcards.min_cov}X" """                                 # @ min_cov X value
+        r""" }}' """                                                     # Close print
+        r""" {input.genome_cov} """                                      # BedGraph coverage input
+        r""" 1> {output.cov_stats} """                                   # Mean depth output
+        r""" 2> {log}"""                                                 # Log redirection
         
 ###############################################################################
 rule bedtools_genome_coverage:
