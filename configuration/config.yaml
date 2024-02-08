@@ -78,12 +78,12 @@ consensus:
   aligner: # Select your favorite aligner (default: 'minimap2')
   # Available options, choose one:
     - 'minimap2' # A versatile sequence alignment program (default)
-    - 'bwa'      # Better, Faster, (Stronger, Harder...)
-    - 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    #- 'bwa'      # Better, Faster, (Stronger, Harder...)
+    #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
   caller: # Select your favorite variants caller (default: 'lofreq')
   # Available options, choose one:
     - 'lofreq' # 
-    - 'ivar'   #
+    #- 'ivar'   #
   
 ###############################################################################
 ### NEXTCLADE ###
