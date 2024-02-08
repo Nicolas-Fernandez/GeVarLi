@@ -1,21 +1,21 @@
 # GeVarLi: GEnome Assembly, VARiant calling and LIneage assignation #
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.3.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.3.1) | Sonoma( 14.2.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU-Linux Ubuntu](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![WSL/WSL2](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
-![Issues closed](<https://badgen.net/badge/Issues closed/0/green?scale=0.9>)
-![Issues opened](<https://badgen.net/badge/Issues opened/0/yellow?scale=0.9>)
+![Issues closed](<https://badgen.net/badge/Issues closed/2/green?scale=0.9>)
+![Issues opened](<https://badgen.net/badge/Issues opened/1/yellow?scale=0.9>)
 ![Maintened](<https://badgen.net/badge/Maintened/Yes/red?scale=0.9>)
 ![Wiki](<https://badgen.net/badge/icon/Wiki/pink?icon=wiki&label&scale=0.9>)
 ![Open Source](<https://badgen.net/badge/icon/Open Source/purple?icon=https://upload.wikimedia.org/wikipedia/commons/4/44/Corazón.svg&label&scale=0.9>)
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Gitlab](<https://badgen.net/badge/icon/Gitlab/orange?icon=gitlab&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.9.16/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
-![Snakemake](<https://badgen.net/badge/icon/Snakemake 7.25.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.12.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.4.6/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda >= 23.3.1/black?icon=codacy&label&scale=0.9>)
-
+conda
 
 ## ~ ABOUT ~ ##
 
@@ -53,13 +53,15 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Version ###
 
-*v.2024.02_001*  
+*v.2024.02*  
 
 ### Rulegraph ###
 
-<img src="./resources/visuals/gevarli_rulegraph.png" width="400" height="1200">  
-<img src="./resources/visuals/quality_control_rulegraph.png" width="250" height="150">  
-<img src="./resources/visuals/indexing_genomes_rulegraph.png" width="250" height="100">  
+<img src="./resources/visuals/indexing_genomes_rulegraph.png" width="350" height="100">  
+<img src="./resources/visuals/quality_control_rulegraph.png" width="300" height="150">  
+<img src="./resources/visuals/gevarli_rulegraph.png" width="500" height="1200">  
+
+
 
 
 ## ~ SUPPORT ~ ##
