@@ -4,4 +4,3 @@ channels:
   - defaults
 dependencies:
   - nextclade=3.1.0=h9ee0642_0
-prefix: /home/fernandez/.conda/envs/nextclade_v.3.1.0

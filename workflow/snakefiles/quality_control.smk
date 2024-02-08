@@ -1,4 +1,4 @@
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###I###RA###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 ###                                                                         ###
 ###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
 ###    ||  \ \ \ \    / __| ___| \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2024.01.31 (edit message format)
+# Latest modifications ___ 2024.02.08 (add multiqc plot graphs and pdf export)
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -62,11 +62,7 @@ FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
 
 rule all:
     input:
-        multiqc = "results/00_Quality_Control/multiqc/",
-        fastq_screen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
-                             fastq = FASTQ),
-        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
-                        fastq = FASTQ)
+        multiqc = "results/00_Quality_Control/multiqc/"
 
 ###############################################################################
 rule multiqc_reports_aggregation:
@@ -96,8 +92,8 @@ rule multiqc_reports_aggregation:
         "--no-ansi "                 # Disable coloured log
         #"--config {params.config} "  # Specific config file to load
         #"--tag {params.tag} "        # Use only modules which tagged with this keyword
-        #"--pdf "                     # Creates PDF report with 'simple' template (Requires Pandoc to be installed)
-        #"--export "                  # Export plots as static images in addition to the report
+        "--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
+        "--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
         "{input.fastqc} "            # Input FastQC files
         "{input.fastq_screen} "      # Input Fastq-Screen

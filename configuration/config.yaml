@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.02.07 (update nextclade to v.3.1.0)
+# Latest modifications ___ 2024.02.08 (update multiqc to v.1.19)
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -258,7 +258,7 @@ conda:
     gawk:          '../environments/osx/gawk_v.5.1.0.yaml'              # Awk (GNU)     ver. 5.1.0
     ivar:          '../environments/osx/ivar_v.1.4.2.yaml'              # iVar          ver. 1.4.2
     lofreq:        '../environments/osx/lofreq_v.2.1.5.yaml'            # Lofreq        ver. 2.1.5
-    multiqc:       '../environments/osx/multiqc_v.1.14.yaml'            # MultiQC       ver. 1.14
+    multiqc:       '../environments/osx/multiqc_v.1.19.yaml'            # MultiQC       ver. 1.19
     minimap2:      '../environments/osx/minimap2_v.2.26.yaml'           # Minimap2      ver. 2.26
     nextclade:     '../environments/osx/nextclade_v.3.1.0.yaml'         # Nextclade     ver. 3.1.0
     pangolin:      '../environments/osx/pangolin_v.4.3.yaml'            # Pangolin      ver. 4.3
@@ -279,7 +279,7 @@ conda:
     ivar:          '../environments/linux/ivar_v.1.4.2.yaml'            # iVar          ver. 1.4.2
     lofreq:        '../environments/linux/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5
     minimap2:      '../environments/linux/minimap2_v.2.26.yaml'         # Minimap2      ver. 2.26
-    multiqc:       '../environments/linux/multiqc_v.1.14.yaml'          # MultiQC       ver. 1.14
+    multiqc:       '../environments/linux/multiqc_v.1.19.yaml'          # MultiQC       ver. 1.19
     nextclade:     '../environments/linux/nextclade_v.3.1.0.yaml'       # Nextclade     ver. 3.1.0
     pangolin:      '../environments/linux/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
     samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
