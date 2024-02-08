@@ -154,6 +154,8 @@ rule all:
                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
         consensus = expand("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta",
                            reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER),
+        vcf = expand("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_variant-filt.vcf",
+                     reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER),
         pangolin = get_pangolin_input,
         nextclade = get_nextclade_input
         #gisaid = get_gisaid_input # soon
@@ -255,39 +257,38 @@ rule sed_rename_headers:
         "1> {output.consensus} " # Output file
         "2> {log}"               # Log redirection
 
-
 ###############################################################################
-#rule convert_tsv_vcf:
-#    message:
-#        """
-#        ~ iVar ∞ Convert TSV to VCF file ~
-#        Sample: __________ {wildcards.sample}
-#        Reference: _______ {wildcards.reference}
-#        Aligner: _________ {wildcards.aligner}
-#        Min. cov.: _______ {wildcards.min_cov}X
-#        Variant caller: __ iVar
-#        """
-#    conda:
-#        TSV2VCF
-#    input:
-#        tsv = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
-#    output:
-#        vcf = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-temp.vcf"),
-#        vcf_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-filt.vcf"
-#    log:
-#        "results/10_Reports/tools-log/tsv2vcf/{reference}/{sample}_{aligner}_{min_cov}X_ivar_tsv2vcf.log"
-#    shell:
-#        "python3 "                                  # Python 3
-#        "workflow/scripts/ivar_variants_to_vcf.py "  # Script (from viralrecon)
-#        "{input.tsv} "                               # TSV input
-#        "{output.vcf} "                              # VCF output
-#        "&> {log}"                                   # Log redirection
-#        "&& "                                         # AND
-#        "bcftools "                                 # Bcftools, tools for variant calling and manipulating VCFs and BCFs
-#        "sort "                                      # Sort VCF/BCF file
-#        "--output {output.vcf_sort} "                # Sorted VCF ouput file
-#        "{output.vcf} "                              # Unsorted VCF input file
-#        "&>> {log}"                                  # Log redirection 
+rule convert_tsv2vcf:
+    message:
+        """
+        ~ iVar ∞ Convert TSV to VCF file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ iVar
+        """
+    conda:
+        TSV2VCF
+    input:
+        tsv = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
+    output:
+        vcf = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-filt.vcf"
+        #vcf_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-filt.vcf"
+    log:
+        "results/10_Reports/tools-log/tsv2vcf/{reference}/{sample}_{aligner}_{min_cov}X_ivar_tsv2vcf.log"
+    shell:
+        "python3 "                                  # Python 3
+        "workflow/scripts/ivar_variants_to_vcf.py "  # Script (from viralrecon)
+        "{input.tsv} "                               # TSV input
+        "{output.vcf} "                              # VCF output
+        "&> {log}"                                   # Log redirection
+        #"&& "                                         # AND
+        #"bcftools "                                 # Bcftools, tools for variant calling and manipulating VCFs and BCFs
+        #"sort "                                      # Sort VCF/BCF file
+        #"--output {output.vcf_sort} "                # Sorted VCF ouput file
+        #"{output.vcf} "                              # Unsorted VCF input file
+        #"&>> {log}"                                  # Log redirection 
 
 ###############################################################################
 rule ivar_consensus:
@@ -316,14 +317,16 @@ rule ivar_consensus:
         mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
         variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
     output:
-        cons_fa = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.fa"),
-        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.fasta.tmp")
+        prefix = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus"),
+        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.fasta.tmp"),
+        qual_txt = "results/05_Consensus/{reference}/ivar_consensus-quality/{sample}_{aligner}_{min_cov}X_ivar_consensus.qual.txt",
     log:
         "results/10_Reports/tools-log/ivar/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus.log"
     shell:
         "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
-        #"-a "                             # -a: output all positions (including zero depth)
-        #"-a "                             # -a -a / -aa: output absolutely all positions, including unused ref. sequences
+        "--verbosity 0 "                  # Set level of verbosity [INT]
+        "-a "                             # -a: output all positions (including zero depth)
+        "-a "                             # -a -a / -aa: output absolutely all positions, including unused ref. sequences
         "--count-orphans "                # -A: do not discard anomalous read pairs
         "--max-depth {params.max_depth} " # -d: max per-file depth; avoids excessive memory usage [INT] (default: 8000)
         "{params.baq} "                   # --no-BAQ / -B: disable BAQ (per-Base Alignment Quality)
@@ -332,20 +335,17 @@ rule ivar_consensus:
         "{input.mark_dup} "               # Markdup BAM input
         "| "                               ### PIPE to iVar
         "ivar consensus "                # iVar, with command 'consensus': Call consensus from aligned BAM file
-        "-p {output.cons_fa} "            # -p: prefix
+        "-p {output.prefix} "             # -p: prefix
         "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base [INT] (Default: 20)
         "-t {params.min_freq} "           # -t: Minimum frequency threshold to call variants [FLOAT] (Default: 0.03)
         "-c {params.min_insert} "         # -c: Minimum insertion frequency threshold to call consensus [FLOAT] (Default: 0.8)    
         "-m {params.min_depth} "          # -m: Minimum read depth to call variants [INT] (Default: 0)
-        #"-k "                             # -k: Regions with depth less than minimum depth will not be added to the consensus sequence
-        #                                        # Using '-k' will override any option specified using -n
-        #"-n "                             # -n: Character to print in regions with less than minimum coverage (Default: N)
-        #"-i "                             # -i: Name of fasta header (default: Consensus_<prefix>_threshold_<min_freq>_quality_<min_qual>_<min_insert>
-        "&> {log} "                        # Log redirection
-        "&& "                               ### AND
-        "cp "                              # copy consensus.fa
-        "{output.cons_fa} "                # consensus.fa (tmp)
-        "{output.cons_tmp}"                # to consensus.fasta.tmp (tmp)
+        "-n N "                           # -n: Character to print in regions with less than minimum coverage (Default: N)
+        #"-i {wildcards.sample} "          # -i: Name of fasta header (default: Consensus_<prefix>_threshold_<min_freq>_quality_<min_qual>_<min_insert>
+        "&> {log} "                       # Log redirection
+        "&& mv {output.prefix}.fa {output.cons_tmp} "       # copy consensus.fa (temp) to consensus.fasta.tmp (tmp)
+        "&& mv {output.prefix}.qual.txt {output.qual_txt} " # cppty consensus.qual.txt (tmp) to ivar_consensus-quality/ directory
+        "&& touch {output.prefix}"                          # Touch done
 
 ###############################################################################
 rule ivar_variant_calling:
@@ -380,8 +380,9 @@ rule ivar_variant_calling:
         "results/10_Reports/tools-log/ivar/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.log"
     shell:
         "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
-        #"-a "                             # -a: output all positions (including zero depth)
-        #"-a "                             # -a -a / -aa: output absolutely all positions, including unused ref. sequences
+        "--verbosity 0 "                  # Set level of verbosity [INT]
+        "-a "                             # -a: output all positions (including zero depth)
+        "-a "                             # -a -a / -aa: output absolutely all positions, including unused ref. sequences
         "--count-orphans "                # -A: do not discard anomalous read pairs
         "--max-depth {params.max_depth} " # -d: max per-file depth; avoids excessive memory usage (default: 8000) [INT]
         "{params.baq} "                   # --no-BAQ / -B: disable BAQ (per-Base Alignment Quality)
