@@ -43,7 +43,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
   - (_bam files_)
   - (_bed files_)
   - Visualization (IGV)
-- Variants calling and filtering (_using lofreq (vcf files) or ivar (tsv files)_)
+- Variants calling and filtering (_using lofreq or ivar_)
 - Genome coverage (_statistics reports_)
 - Consensus sequences (_fasta file_)
 - Genomes classification
@@ -53,7 +53,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Version ###
 
-*v.2024.01_003*  
+*v.2024.02_001*  
 
 ### Rulegraph ###
 
