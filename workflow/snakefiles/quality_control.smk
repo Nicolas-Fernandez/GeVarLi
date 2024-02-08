@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with quality control rules
 # Date ___________________ 2021.09.28
-# Latest modifications ___ 2024.02.08 (add multiqc plot graphs and pdf export)
+# Latest modifications ___ 2024.02.08 (add multiqc plot graphs export)
 # Run ____________________ snakemake -s quality_control.smk --use-conda 
 
 ###############################################################################
@@ -92,7 +92,7 @@ rule multiqc_reports_aggregation:
         "--no-ansi "                 # Disable coloured log
         #"--config {params.config} "  # Specific config file to load
         #"--tag {params.tag} "        # Use only modules which tagged with this keyword
-        "--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
+        #"--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
         "--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
         "{input.fastqc} "            # Input FastQC files
