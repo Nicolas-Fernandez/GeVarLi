@@ -313,7 +313,6 @@ _Some [temp] tagged files are removed by default, to save disk usage_
             └── 📂 tools-log/
                  ├── 📂 awk/
                  ├── 📂 {TOOL}/
-                 └── 📝 {QC_TOOL}.log
 ```
 
 <img src="./resources/visuals/gevarli_filegraph.png" width="300" height="1200">  
@@ -326,6 +325,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 - **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
 - **FAI**: FASTA Indexes. 
 - **SAM**: Sequence Alignment Map, text-based format consists of a header and an alignment section.
+- **VCF**: Variant Call Format, text-base format used in bioinformatics for storing gene sequence variations. 
+- **TSV**: Tab-Separated Values, text-based format for storing tabular data.
 - **YAML**: Commonly used for configuration filesand in applications where data is being stored or transmitted.
 - **GZ**: format used for file compression and decompression, normally used to compress just single files.
 - **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
