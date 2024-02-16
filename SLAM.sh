@@ -9,11 +9,11 @@
 ###    \/                                                            \/     ###
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ SLAM.sh : SLURM Lightweight Automated Manager
+# Name ___________________ SLAM.sh (SLURM Lightweight Automated Manager)
 # Version ________________ v.2024.02
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Sbatch script for iTROP HPC GeVarLi SLURM submission
+# Aim ____________________ Generate SLURM script for SBATCH GeVarLi submission on iTrop HPC
 # Date ___________________ 2024.02.14
 # Latest modifications ___ 2024.02.16
 # Use ____________________ bash SLAM.sh
@@ -23,7 +23,7 @@
 # Get user
 user=$(whoami)
 
-# Usage
+# Usage function
 usage() {
     echo "
     SLAM: SLURM Lightweight Automated Manager
@@ -31,15 +31,15 @@ usage() {
     Usage: $0 [-p partition] [-c cpu] [-m mem] [-i infiniband] [-n name] [-d data] [-h help] [-u usage] [-v version]
 
     Options:
-      -p, --partition=partition   partition requested: short, normal, long, highmem, supermem, gpu
-      -c, --cpus-per-task=ncpus   number of cpus required per task [INT]
-      -m, --mem=MB                minimum amount of real memory [INT]
-      -i, --infiniband            specify --constraint=infiniband (exclud -b)
-      -b, --beast                 specify --constraint=beast (exclud -i)
-      -n, --name=jobname          name of job (--job-name) [STR]
-      -d, --data                  path to data
-          --mail-user=user        who to send email notification for job state
-          --mail-type=type        notify on state change: BEGIN, END, FAIL or ALL
+      -p, --partition=partition   partition requested: short, normal, long, highmem, supermem, gpu (default: ${partition})
+      -c, --cpu=ncpus             number of cpus required per task [INT] (sbatch --cpus-per-task ; default: ${cpu})
+      -m, --mem=MB                minimum amount of real memory [INT] (default: ${mem} MB)
+      -i, --infiniband            use infiniband nodes (sbatch --constraint=infiniband ; exclud -b ; default: no)
+      -b, --beast                 use beast nodes (sbatch --constraint=beast ; exclud -i ; default: no)
+      -n, --name=jobname          name of job [STR] (sbatch --job-name ; default ${name})
+      -d, --data                  path to project data [STR] (default: ${data})
+          --mail-user=user        who to send email notification for job state (default: ${mail_use})
+          --mail-type=type        notify on state change: BEGIN, END, FAIL or ALL (default: ${mail_type})
       -h, --help                  show this help message and exit
       -u, --usage                 display brief usage message and exit
       -v, --version               output version information and exit
@@ -47,7 +47,7 @@ usage() {
     exit 1
 }
 
-# Version
+# Version function
 version="2024.02"
 version() {
     echo "
@@ -57,17 +57,19 @@ version() {
 }
 
 # Default options
-partition="short"
-cpu="12"
-mem="64"
-infiniband=""
-ib=""
-beast=""
-bst=""
-name="GeVarLi"
-project="/projects/large/GorillaSIVmeta/GeVarLi/"
-mail_user="nicolas.fernandez@ird.fr"
-mail_type="ALL"
+partition="short" # can be set with -p|--partition (default: 'short' )
+cpu="12"          # can be set with -c|--cpu       (default: '24')
+mem="64"          # can be set with -m|--mem       (default: '64')
+
+name="GeVarLi"                                    # can be set with -n|--name   (default: 'GeVarLi') 
+project="/projects/large/GorillaSIVmeta/GeVarLi/" # can be set with -d|--data   (default: 'iTROP HPC path')
+mail_user="john.doe@ird.fr"                       # can be set with --mail-user (default: 'john.doe@ird.fr')
+mail_type="ALL"                                   # can be set with --mail-type (default: 'ALL')
+
+infiniband="" # should be set only with -i|--infiniband (let default 'empty')
+ib=""         # if -i|--infiniband > auto-set to '-ib'  (let default 'empty')
+beast=""      # should be set only with -b|--beast      (let default 'empty')
+bst=""        # if -b|--beast > auto-set to '-bst'      (let default 'empty')
 
 # Parse options
 while [[ ${#} -gt 0 ]]; do
