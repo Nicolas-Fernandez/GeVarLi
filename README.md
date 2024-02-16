@@ -49,7 +49,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Genomes classification
   - Nextclade (_consensus quality and lineages reports_)
   - Pangolin (_lineages reports_)
-
+- SLAM: SLURM Lightweight Automated Manager
 
 ### Version ###
 
