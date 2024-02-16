@@ -13,7 +13,7 @@
 # Version ________________ v.2024.02
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Generate SLURM script for SBATCH GeVarLi submission on iTrop HPC
+# Aim ____________________ Generate SBATCH script for iTrop HPC SLURM submission
 # Date ___________________ 2024.02.14
 # Latest modifications ___ 2024.02.16
 # Use ____________________ bash SLAM.sh
