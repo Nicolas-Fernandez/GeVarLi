@@ -36,7 +36,7 @@ usage() {
       -m, --mem=MB                minimum amount of real memory [INT] (default: ${mem} MB)
       -i, --infiniband            use infiniband nodes (sbatch --constraint=infiniband ; exclud -b ; default: no)
       -b, --beast                 use beast nodes (sbatch --constraint=beast ; exclud -i ; default: no)
-      -n, --name=jobname          name of job [STR] (sbatch --job-name ; default ${name})
+      -n, --name=jobname          name of job [STR] (sbatch --job-name ; default: ${name})
       -d, --data                  path to project data [STR] (default: ${data})
           --mail-user=user        who to send email notification for job state (default: ${mail_use})
           --mail-type=type        notify on state change: BEGIN, END, FAIL or ALL (default: ${mail_type})
