@@ -10,7 +10,7 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2024.01
+# Version ________________ v.2024.02
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
@@ -32,7 +32,7 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2024.01"                              # GeVarLi version
+gevarli_version="2024.02"                              # GeVarLi version
 workflow_base_version="2024.02"                        # Workflow base version
 nextclade_version="3.1.0"                              # Nextclade version
 
