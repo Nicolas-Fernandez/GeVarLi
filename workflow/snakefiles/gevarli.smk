@@ -8,12 +8,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
-# Version ________________ v.2023.06
+# Version ________________ v.2024.03
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.01.31 (fix: python - SyntaxWarning: invalid escape sequence '\ ')
+# Latest modifications ___ 2024.03.15 (fix: add more steps to lofreq call)
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -592,13 +592,13 @@ rule samtools_indel_indexing:
         "-@ {resources.cpus} " # Number of additional threads to use (default: 0)
         "-b "                  # -b: Generate BAI-format index for BAM files (default)
         "{input.indel_qual} "  # Sorted bam input
-        "{output.index} "      # Markdup bam output
+        "{output.index} "      # Indexed bam output
         "&> {log}"             # Log redirection 
 
 ###############################################################################
 rule lofreq_indel_qualities:
-    # Aim: Indels qualities 
-    # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [MARKDUP.bam]
+    # Aim: Insert indels qualities 
+    # Use: lofreq indelqual --dindel -f [MASKEDREF.fasta] -o [INDEL.bam] [VITERBI.bam]
     # Note: do not realign your BAM file afterwards!
     message:
         """
@@ -613,8 +613,8 @@ rule lofreq_indel_qualities:
         LOFREQ
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
+        viterbi_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi_sorted.bam",
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi_sorted.bam.bai"
     output:
         indel_qual = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_indel-qual.bam"
     log:
@@ -625,8 +625,107 @@ rule lofreq_indel_qualities:
         "--dindel "                  # Add Dindel's indel qualities Illumina specifics (need --ref and clashes with -u)
         "--ref {input.masked_ref} "  # -f: Reference (masked) sequence used for mapping (only required for --dindel)
         "--out {output.indel_qual} " # -o: Indel BAM file output (default: standard output)
-        "{input.mark_dup} "          # Markdup BAM input
+        "{input.viterbi_sort} "      # Markdup BAM input
         "&> {log}"                   # Log redirection 
+
+###############################################################################
+rule samtools_index_viterbi:
+    # Aim: indexing marked as duplicate BAM file
+    # Use: samtools index -@ [THREADS] -b [MARK-DUP.bam] [INDEX.bai]
+    message:
+        """
+        ~ SamTools ∞ Index 'Viterbi Sorted' BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
+    conda:
+        SAMTOOLS
+    resources:
+       cpus = CPUS
+    input:
+        viterbi_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi_sorted.bam"
+    output:
+        index = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi_sorted.bam.bai"
+    log:
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_{min_cov}_viterbi_sorted-index.log"
+    shell:
+        "samtools index "      # Samtools index, tools for alignments in the SAM format with command to index alignment
+        "-@ {resources.cpus} "  # --threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
+        "-b "                   # -b: Generate BAI-format index for BAM files (default)
+        "{input.viterbi_sort} " # Mark_dup bam input
+        "{output.index} "       # Mark_dup index output
+        "&> {log}"              # Log redirection
+
+###############################################################################
+rule samtools_viterbi_sorting:
+    # Aim: sorting
+    # Use: samtools sort -@ [THREADS] -m [MEM_GB] -T [TMP_DIR] -O BAM -o [SORTED.bam] [FIX-MATE.bam] 
+    message:
+        """
+        ~ SamTools ∞ Sort Viterbi BAM file ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
+    conda:
+        SAMTOOLS
+    resources:
+       cpus = CPUS,
+       mem_gb = MEM_GB,
+       tmp_dir = TMP_DIR
+    input:
+        viterbi = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi.bam"
+    output:
+        viterbi_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi_sorted.bam"
+    log:
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi_sorted.log"
+    shell:
+        "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
+        "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
+        "-m {resources.mem_gb}G "     # -m: Set maximum memory per thread, suffix K/M/G recognized (default: 768M)
+        "-T {resources.tmp_dir} "     # -T: Write temporary files to PREFIX.nnnn.bam
+        "--output-fmt BAM "           # -O: Specify output format: SAM, BAM, CRAM (here, BAM format)
+        "-o {output.viterbi_sort} "   # Sorted bam output
+        "{input.viterbi} "            # Fixmate bam input
+        "&> {log}"                    # Log redirection 
+
+###############################################################################
+rule lofreq_viterbi:
+    # Aim: Viterbi realignment 
+    # Use: lofreq viterbi -f [MASKEDREF.fasta] -o [REALIGNED.bam] [MARKDUP.bam]
+    # Note: Output BAM file will (likely) be unsorted (use samtools sort)
+    message:
+        """
+        ~ LoFreq ∞ Viterbi Realignment ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        Min. cov.: _______ {wildcards.min_cov}X
+        Variant caller: __ LoFreq
+        """
+    conda:
+        LOFREQ
+    input:
+        masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
+    output:
+        viterbi = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi.bam")
+    log:
+        "results/10_Reports/tools-log/lofreq/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi.log"
+    shell:
+        "lofreq "                  # LoFreq, fast and sensitive inference of SNVs and Indels 
+        "viterbi "                  # Viterbi realignment
+        "--keepflags "              # -k: Don't delete flags MC, MD, NM and A, which are all prone to change during realignment
+        "--ref {input.masked_ref} " # -f: Indexed reference (masked) fasta file
+        "--out {output.viterbi} "   # -o: Output BAM file (default: standard output)
+        "{input.mark_dup} "         # Markdup BAM input
+        "&> {log}"                  # Log redirection 
 
 ###############################################################################
 rule bedtools_masking:
@@ -923,7 +1022,7 @@ rule samtools_flagstat_ext:
         "--verbosity 4 "                # Set level of verbosity [INT] (default: 3)
         "--output-fmt {wildcards.ext} " # -O Specify output format (none, tsv and json)
         "{input.mark_dup} "             # Mark_dup bam input
-        "1> {output.flagstat} "        # Mark_dup index output
+        "1> {output.flagstat} "         # Mark_dup index output
         "2> {log}"                      # Log redirection
 
 ###############################################################################
@@ -932,7 +1031,7 @@ rule samtools_index_markdup:
     # Use: samtools index -@ [THREADS] -b [MARK-DUP.bam] [INDEX.bai]
     message:
         """
-        ~ SamTools ∞ Index 'Marked as Duplicate' BAM file
+        ~ SamTools ∞ Index 'Marked as Duplicate' BAM file ~
         Sample: __________ {wildcards.sample}
         Reference: _______ {wildcards.reference}
         Aligner: _________ {wildcards.aligner}
@@ -949,7 +1048,7 @@ rule samtools_index_markdup:
         "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
-        "-@ {resources.cpus} " #--threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
+        "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
         "-b "                  # -b: Generate BAI-format index for BAM files (default)
         "{input.mark_dup} "    # Mark_dup bam input
         "{output.index} "      # Mark_dup index output

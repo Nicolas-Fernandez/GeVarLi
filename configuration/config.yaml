@@ -69,21 +69,21 @@ consensus:
     - '30'                         # 30 X : AFROSCREEN SARS-CoV-2 with Illumina amplicons sequencing (default)
     #- '10'                         # 10 X : for some applications...
     #- '3'                          #  3 X : only for exploration !
-    #- 'Add_your_minimum_coverage'  # Custom minimum coverage 
+    #- 'Add_your_minimum_coverage'  # Custom minimum coverage
   min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT] *** LoFreq ***
   iupac:        # Output variants in the form of IUPAC ambiguity codes (default: deactivate) *** LoFreq ***
   # Available options, choose one:
     - ''             # Deactivate (default)
     #- '--iupac-code' # Activate
-  aligner: # Select your favorite aligner (default: 'minimap2')
+  aligner: # Select your favorite aligner (default: 'bwa')
   # Available options, choose one:
-    - 'minimap2' # A versatile sequence alignment program (default)
-    #- 'bwa'      # Better, Faster, (Stronger, Harder...)
+    - 'bwa'      # Better, Faster, (Stronger, Harder...)
     #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    #- 'minimap2' # A versatile sequence alignment program
   caller: # Select your favorite variants caller (default: 'ivar')
   # Available options, choose one:
-    - 'ivar' # 
-    #- 'lofreq'   #
+    - 'ivar'   #  
+    #- 'lofreq' #
   
 ###############################################################################
 ### NEXTCLADE ###
@@ -105,8 +105,8 @@ nextclade:
 ################
 pangolin:
   run: # Run Pangolin analyzes (default: no)
-  - 'yes' # Yes
-  #- 'no' # No (default)
+  #- 'yes' # Yes
+  - 'no' # No (default)
 
 ###############################################################################
 ### MULTIQC ###
