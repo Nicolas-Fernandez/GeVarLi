@@ -4,12 +4,12 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - _libgcc_mutex=0.1=conda_forge
-  - _openmp_mutex=4.5=2_gnu
-  - k8=0.2.5=hdcf5f25_4
-  - libgcc-ng=13.2.0=h807b86a_3
-  - libgomp=13.2.0=h807b86a_3
-  - libstdcxx-ng=13.2.0=h7e041cc_3
-  - libzlib=1.2.13=hd590300_5
-  - minimap2=2.26=he4a0461_2
-  - zlib=1.2.13=hd590300_5
+  - _libgcc_mutex=0.1
+  - _openmp_mutex=4.5
+  - k8=0.2.5
+  - libgcc-ng=13.2.0
+  - libgomp=13.2.0
+  - libstdcxx-ng=13.2.0
+  - libzlib=1.2.13
+  - minimap2=2.26
+  - zlib=1.2.13
