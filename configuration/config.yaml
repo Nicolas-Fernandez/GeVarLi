@@ -105,8 +105,8 @@ nextclade:
 ################
 pangolin:
   run: # Run Pangolin analyzes (default: no)
-  #- 'yes' # Yes
-  - 'no' # No (default)
+  - 'yes' # Yes
+  #- 'no' # No (default)
 
 ###############################################################################
 ### MULTIQC ###
