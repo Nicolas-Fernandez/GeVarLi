@@ -90,7 +90,11 @@
     "hMPXV"
   ],
   "version": {
-    "updatedAt": "2024-01-16T20:31:02Z",
-    "tag": "2024-01-16--20-31-02Z"
+    "updatedAt": "2024-04-19T07:50:39Z",
+    "tag": "2024-04-19--07-50-39Z",
+    "compatibility": {
+      "cli": "3.0.0-alpha.0",
+      "web": "3.0.0-alpha.0"
+    }
   }
 }

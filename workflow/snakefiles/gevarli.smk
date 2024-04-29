@@ -1203,7 +1203,7 @@ rule minimap2_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam")
+        mapped = "results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam"
     log:
         "results/10_Reports/tools-log/minimap2/{sample}_{reference}.log"
     shell:
@@ -1244,7 +1244,7 @@ rule bwa_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{reference}/{sample}_bwa-mapped.sam")
+        mapped = "results/02_Mapping/{reference}/{sample}_bwa-mapped.sam"
     log:
         "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
     shell:
