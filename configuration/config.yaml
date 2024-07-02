@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.02 (Add Measles virus)
+# Latest modifications ___ 2024.07.02 (Update Nextstrain to 3.7.4)
 # Use ____________________ Edit default settings
 
 ###############################################################################
