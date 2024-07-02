@@ -307,7 +307,7 @@ rsync -a san${ib}:/${project}/ /scratch/${user}_${name}_\${SLURM_JOB_ID}/
 # MODULE
 
 # ANALYSIS
-bash /scratch/${user}_${name}_\${SLURM_JOB_ID}/Start_GeVarLi.sh
+bash scratch/${user}_${name}_\${SLURM_JOB_ID}/Start_GeVarLi.sh
 
 # TRANSFER RESULTS
 rsync -a /scratch/${user}_${name}_\${SLURM_JOB_ID}/ san${ib}:/${project}
