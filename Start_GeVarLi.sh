@@ -10,12 +10,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2024.03
+# Version ________________ v.2024.07
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.03.22 (update version)
+# Latest modifications ___ 2024.07.02 (Add Measles virus)
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -32,9 +32,10 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2024.03"                              # GeVarLi version
+gevarli_version="2024.07"                              # GeVarLi version
 workflow_base_version="2024.02"                        # Workflow base version
-nextclade_version="3.1.0"                              # Nextclade version
+snakemake_version="8.4.6"                              # Snakemake version
+nextclade_version="3.7.4"                              # Nextclade version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -47,7 +48,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.03.22 (update version)
+${blue}Latest modifications${nc} ___ 2024.07.02 (Add Measles virus)
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -692,7 +693,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.03.22 (update version)
+Latest modifications ___ 2024.07.02 (Add Measles virus)
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
