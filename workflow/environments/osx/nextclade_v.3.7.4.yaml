@@ -1,6 +1,6 @@
-name: nextclade_v.3.1.0
+name: nextclade_v.3.7.4
 channels:
   - bioconda
   - defaults
 dependencies:
-  - nextclade=3.1.0
+  - nextclade=3.7.4
