@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.02 (Add Measles virus)
+# Latest modifications ___ 2024.07.07 (Update workflow-base)
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -33,8 +33,8 @@ nc="\033[0m"       # no color
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 gevarli_version="2024.07"                              # GeVarLi version
-workflow_base_version="2024.02"                        # Workflow base version
-snakemake_version="8.4.6"                              # Snakemake version
+workflow_base_version="2024.07"                        # Workflow base version
+snakemake_version="8.14.0"                             # Snakemake version
 nextclade_version="3.7.4"                              # Nextclade version
 
 echo -e "
@@ -48,7 +48,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.07.02 (Add Measles virus)
+${blue}Latest modifications${nc} ___ 2024.07.03 (Update workflow-base)
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -166,11 +166,11 @@ else # Test network conection
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc}: Run GeVarLi workflow (ver. 8.4.6)
-    # ${red}Mamba${nc}:     Install snakemake conda's environments, faster than conda (ver. 1.5.6)
-    # ${red}Yq${nc}:        Parse config.yaml file (ver. 3.2.3)
-    # ${red}Rename${nc}:    Rename fastq files (ver. 1.601)
-    # ${red}Graphviz${nc}:  Dot snakemake DAG (ver. 9.0.0)
+    # ${red}Snakemake${nc} (ver. 8.14.0) ${blue} ___ Workflow manager (rules)${nc}
+    # ${red}Mamba${nc}     (ver. 1.5.8)  ${blue} ___ Packages manager (conda environments)${nc}
+    # ${red}Yq${nc}        (ver. 3.4.3)  ${blue} ___ YAML parser (config)${nc}
+    # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ File renamer (FASTQ)${nc}
+    # ${red}Graphviz${nc}  (ver. 11.0.0) ${blue} ___ Graph visualization (DAG)${nc}
 "
         conda env create -f ${workdir}/workflow/environments/${os}/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
     else
@@ -194,7 +194,8 @@ old_envs="gevarli-base_v.2022.11 \
           snakemake-base_v.2023.03 \
           snakemake-base_v.2023.04 \
           workflow-base_v.2023.06 \
-          workflow-base_v.2024.01"
+          workflow-base_v.2024.01 \
+          workflow-base_v.2024.02"
 
 for env in ${old_envs} ; do
     conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
@@ -693,7 +694,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.07.02 (Add Measles virus)
+Latest modifications ___ 2024.07.03 (Update workflow-base)
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}
