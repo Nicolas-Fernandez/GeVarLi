@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.02 (Update Nextstrain to 3.7.4)
+# Latest modifications ___ 2024.07.07 (Update workflow-base)
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -281,7 +281,7 @@ conda:
     samtools:      '../environments/osx/samtools_v.1.17.yaml'           # Samtools      ver. 1.17
     sickle_trim:   '../environments/osx/sickle-trim_v.1.33.yaml'        # Sickle-trim   ver. 1.33
     tsv2vcf:       '../environments/osx/tsv2vcf_v.1.0.yaml'             # tsv2vcf       ver. 1.0
-    workflow_base: '../environments/osx/workflow-base_v.2024.01.yaml'   # Workflow-Base ver. 2024.01
+    workflow_base: '../environments/osx/workflow-base_v.2024.07.yaml'   # Workflow-Base ver. 2024.07
   linux: # Conda Linux environement yaml files:
     bamclipper:    '../environments/linux/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
     bcftools:      '../environments/linux/bcftools_v.1.17.yaml'         # Bcftools      ver. 1.17
@@ -301,7 +301,7 @@ conda:
     samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
     sickle_trim:   '../environments/linux/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
     tsv2vcf:       '../environments/linux/tsv2vcf_v.1.0.yaml'           # tsv2vcf       ver. 1.0
-    workflow_base: '../environments/linux/workflow-base_v.2024.01.yaml' # Workflow-Base ver. 2024.01
+    workflow_base: '../environments/linux/workflow-base_v.2024.07.yaml' # Workflow-Base ver. 2024.07
 
 ###############################################################################
 ### OPERATING SYSTEM ###
