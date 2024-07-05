@@ -56,7 +56,7 @@ consensus:
     #- 'Ebola-virus_Zaire_AF-272001-1'           # Ebola      (na)
     #- 'Ebola-virus_Sudan_MH-121162-1'           # Ebola      (na)
     #- 'Measles-virus_NC-001498-1'                         # Measles (na)
-    #- 'Measles-virus_B3_Khartoum_Sudan_MG-912590-1'       # Measles (na)
+    #- 'Measles-virus_B3_Khartoum-Sudan_MG-912590-1'       # Measles (na)
     #- 'Measles-virus_B3_Kole-Uganda_ON-642796-1'          # Measles (na)
     #- 'Measles-virus_B3_Bura-Kenya_MZ-615446-1_partial'   # Measles (na)
     #- 'Measles-virus_C2_Netherland-Bilthoven_MG-912589-1' # Measles (na)
