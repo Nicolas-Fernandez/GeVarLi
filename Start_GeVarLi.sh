@@ -104,7 +104,7 @@ then
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -E "s/MemTotal: +//")                       # Get memory size (Kb)
     ram_gb=$( expr ${mem_size} \/ $((1024**2)) )                                                              # mem_size / 1024**2 = Gb
 else
-    echo -e "Please, use '${red}osx${nc}' or '${red}linux${nc}' operating systems"
+    echo -e "Please, use '${red}osx${nc}', '${red}linux${nc}' or '${red}WSL${nc}' operating systems"
     exit 1
 fi
 
@@ -139,6 +139,73 @@ ${blue}Network${nc} ________________ ${red}${network}${nc}
 
 
 ###############################################################################
+### CONDA INIT ###
+##################
+
+# Intern shell source conda
+source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user
+source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server : conda 23.11.0
+#source /usr/local/bioinfo/miniconda3-4.10.3/etc/profile.d/conda.sh 2> /dev/null    # iTROP HPC server : conda 23.1.0 
+
+
+###############################################################################
+### NEXTCLADE DATASETS UPDATES ###
+##################################
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
+${green}--------------------------------------${nc}
+"
+
+## Nextclade installation
+# Check if a 'nextclade' environment exist
+if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
+then
+    echo -e "
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} it's already created!
+"
+else
+    # Check network conection
+    if [[ ${network} = "Online" ]]
+    then
+	echo -e "
+Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...                                                                                                
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now created, with:
+
+    #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
+"
+        conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
+    else
+	echo -e "
+Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+Please, check your network conection!
+"
+    fi
+fi
+
+## Databases update
+# Check network conection
+if [[ ${network} = "Online" ]]
+then
+    echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}
+"
+    conda activate nextclade_v.${nextclade_version}
+    for dataset in resources/nextclade/* ; do
+	name=$(basename ${dataset})
+	echo "Updating: ${name}"
+	nextclade dataset get --name ${name} --output-dir ${dataset}/
+    done
+    conda deactivate
+else
+    echo -e "
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+${blue}Nextclade${nc} datasets updatde ${red}not available${nc}!
+"
+fi
+
+
+###############################################################################
 ### WORKFLOW-BASE INSTALLATION ###
 ##################################
 echo -e "
@@ -146,12 +213,6 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}WORKFLOW-BASE INSTALLATION${nc} ${green}#####${nc}
 ${green}---------------------------------------${nc}
 "
-
-# Intern shell source conda
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user
-source /usr/local/bioinfo/miniconda3-4.10.3/etc/profile.d/conda.sh 2> /dev/null    # HPC server (new iTROP)
-#source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # HPC server (new iTROP)
-#source /usr/local/miniconda3/etc/profile.d/conda.sh 2> /dev/null                   # HPC server (old iTROP)
 
 # Test if latest 'workflow-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
@@ -201,63 +262,6 @@ for env in ${old_envs} ; do
     conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
 done
 
-
-###############################################################################
-### NEXTCLADE DATASETS UPDATES ###
-##################################
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
-${green}--------------------------------------${nc}
-"
-
-## Nextclade installation
-# Test if a 'nextclade' environment exist
-if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
-then
-    echo -e "
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} it's already created!
-"
-else
-    # Test network conection
-    if [[ ${network} = "Online" ]]
-    then
-	echo -e "
-Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...                                                                                                
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now created, with:
-
-    #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
-"
-        conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
-    else
-	echo -e "
-Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-Please, check your network conection!
-"
-    fi
-fi
-
-## Databases update
-# Test network conection
-if [[ ${network} = "Online" ]]
-then
-    echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}"
-    conda activate nextclade_v.${nextclade_version}
-    for dataset in resources/nextclade/* ; do
-	name=$(basename ${dataset})
-	echo "Updating: ${name}"
-	nextclade dataset get --name ${name} --output-dir ${dataset}/
-    done
-    conda deactivate
-else
-    echo -e "
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-${blue}Nextclade${nc} datasets updatde ${red}not available${nc}!
-"
-fi
-
-
 ###############################################################################
 ### CONDA ACTIVATION ###
 ########################
@@ -280,12 +284,13 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-snakemake_version=$(snakemake --version)                        # Snakemake version (ver. 8.2.0)
-conda_version=$(conda --version | sed 's/conda //')             # Conda version (ver. 23.11.0)
-mamba_version=$(mamba --version | sed 's/mamba //' | head -n 1) # Mamba version (ver. 1.5.6)
-yq_version=$(yq --version | sed 's/yq //')                      # Yq version (ver. 3.2.3)
-rename_version="1.601"                                          # Rename version (ver. 1.601)
-graphviz_version="9.0.0"                                        # GraphViz version (ver. 9.0.0)
+snakemake_version=$(snakemake --version)                        # Snakemake version (ver. 8.14.0 from 2024-07)
+conda_version=$(conda --version | sed 's/conda //')             # Conda version     (ver. 24.5.0 from 2024-07)
+mamba_version=$(mamba --version | head -n 1 | sed 's/mamba //') # Mamba version     (ver. 1.5.8  from 2024-07)
+yq_version=$(yq --version | sed 's/yq //')                      # Yq version        (ver. 3.4.3  from 2024-07)
+rename_version="1.601"                                          # Rename version    (ver. 1.601  from 2024-02)
+graphviz_version="11.0.0"                                       # GraphViz version  (ver. 11.0.0 from 2024-02)
+#graphviz_version=$#(dot -V | sed 's/dot - graphviz version //')  # GraphViz version  (ver. 11.0.0 from 2024-02)
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
 if [[ "${fastq}" == "0" ]]                                                         # If no sample,
@@ -299,24 +304,35 @@ samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end
 
 config_file="${workdir}/configuration/config.yaml" # Get configuration file
 
-conda_frontend=$(yq -c '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
-max_threads=$(yq -r '.resources.cpus' ${config_file})  # Get user config: max threads
-max_memory=$(yq -r '.resources.ram' ${config_file})    # Get user config: max memory (Gb)
+conda_frontend=$(yq -Mc '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
+max_threads=$(yq -Mr '.resources.cpus' ${config_file}) # Get user config: max threads
+max_memory=$(yq -Mr '.resources.ram' ${config_file})   # Get user config: max memory (Gb)
 memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
 
-consensus=$(yq -c '.consensus.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: run consensus
-reference=$(yq -c '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g') # Get user config: genome reference
-aligner=$(yq -c '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')     # Get user config: aligner 
-min_cov=$(yq  -c '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')    # Get user config: minimum coverage
-min_freq=$(yq -r '.consensus.min_freq' ${config_file}) # Get user config: minimum allele frequency
-clipping=$(yq -r '.cutadapt.clipping' ${config_file})  # Get user config: hard clipping option
+module_list=$(yq -Mc '.modules' ${config_file} | sed 's/"//g') # Get user config: modules list
+reads_controls="OFF"                                            # Reads QC
+reads_cleaning="OFF"                                            # Reads trimmed
+reads_cleapping="OFF"                                           # Reads cleapping
+reads_mapping="OFF"                                             # Reads mapping
+nextclade="OFF"                                                 # Nextclade
+pangolin="OFF"                                                  # Pangolin
+gisaid="OFF"                                                    # Gisaid
+if [[ ${module_list} =~ "reads_controls" ]] ; then reads_control="ON" ; fi
+if [[ ${module_list} =~ "reads_cleaning" ]] ; then reads_cleaning="ON" ; fi
+if [[ ${module_list} =~ "reads_cleapping" ]] ; then reads_cleapping="ON" ; fi
+if [[ ${module_list} =~ "reads_mapping" ]] ; then reads_mapping="ON" ; fi
+if [[ ${module_list} =~ "nextclade" ]] ; then nextclade="ON" ; fi
+if [[ ${module_list} =~ "pangolin" ]] ; then pangolin="ON" ; fi
+if [[ ${module_list} =~ "gisaid" ]] ; then gisaid="ON" ; fi
+#if [[ ${module_list} =~ "" ]] ; then ="yes" ; fi
 
-nextclade=$(yq -c '.nextclade.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')   # Get user config: run nextclade
-dataset=$(yq -c '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: dataset for nextclade
-pangolin=$(yq -c '.pangolin.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')     # Get user config: run pangolin
-
-multiqc=$(yq -c '.multiqc.run' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: run multiqc
-subset=$(yq -r '.fastq_screen.subset' ${config_file})                            # Get user config: fastq_screen subsetption
+reference=$(yq -Mc '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g') # Get user config: genome reference
+aligner=$(yq -Mc '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')     # Get user config: aligner 
+min_cov=$(yq  -Mc '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')    # Get user config: minimum coverage
+min_freq=$(yq -Mr '.consensus.min_freq' ${config_file})                                                            # Get user config: minimum allele frequency
+clipping=$(yq -Mr '.cutadapt.clipping' ${config_file})                                                             # Get user config: hard clipping option
+nextclade_dataset=$(yq -Mc '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')                  # Get user config: dataset for nextclade
+fastqscreen_subset=$(yq -Mr '.fastq_screen.subset' ${config_file})                                                 # Get user config: fastq_screen subsetption
 
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
 time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M") # Convert time for archive (wo space)
@@ -324,6 +340,11 @@ SECONDS=0                                    # Initialize SECONDS counter
 
 # Print some analyzes settings
 echo -e "
+${blue}Max threads${nc} _____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
+${blue}Max memory${nc} ______________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
+${blue}Jobs memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
+
+${blue}Starting time${nc} ___________ ${time_stamp_start}
 ${blue}Working directory${nc} _______ ${workdir}/
 ${blue}Samples processed${nc} _______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
@@ -331,30 +352,23 @@ ${blue}Snakemake version${nc} _______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
 ${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
+${blue}Nextclade version${nc} _______ ${ylo}${nextclade_version}${nc}
 
-${blue}Max threads${nc} _____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
-${blue}Max memory${nc} ______________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
-${blue}Jobs memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
+${blue}Reads QC${nc} ________________ ${red}${reads_control}${nc}
+${blue}Reads trimmed${nc} ___________ ${red}${reads_cleaning}${nc}
+${blue}Reads cleapping${nc} _________ ${red}${reads_cleapping}${nc}
+${blue}Reads mapping${nc} ___________ ${red}${reads_mapping}${nc}
+${blue}Nextclade${nc} _______________ ${red}${nextclade}${nc}
+${blue}Pangolin${nc} ________________ ${red}${pangolin}${nc}
+${blue}Gisaid${nc} __________________ ${red}${gisaid}${nc}
 
-${blue}Consensus run${nc} ___________ ${red}${consensus}${nc}  
+${blue}Fastq-Screen subset${nc} _____ ${red}${fastqscreen_subset}${nc} reads per sample
+${blue}Hard-clipping primers${nc} ___ ${red}${clipping}${nc}
 ${blue}Reference genome${nc} ________ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
-
 ${blue}Min coverage${nc} ____________ ${red}${min_cov}${nc} X
 ${blue}Min allele frequency${nc} ____ ${red}${min_freq}${nc}
-
-${blue}Hard-clipping primers${nc} ___ ${red}${clipping}${nc}
-
-${blue}Nextclade run${nc} ___________ ${red}${nextclade}${nc}
-${blue}Nextclade dataset${nc} _______ ${red}${dataset}${nc}
-${blue}Nextclade version${nc} _______ ${red}v.${nextclade_version}${nc}
-
-${blue}Pangolin run${nc} ____________ ${red}${pangolin}${nc}
-
-${blue}MultiQC run${nc} _____________ ${red}${multiqc}${nc}
-${blue}Fastq-Screen subset${nc} _____ ${red}${subset}${nc} reads per sample
-
-${blue}Starting time${nc} ___________ ${time_stamp_start}
+${blue}Nextclade dataset${nc} _______ ${red}${nextclade_dataset}${nc}
 "
 
 
@@ -390,14 +404,15 @@ ${green}#####${nc} ${red}SNAKEMAKE PIPELINES${nc} ${green}#####${nc}
 ${green}-------------------------------${nc}
 "
 
-snakefiles_list="indexing_genomes quality_control gevarli"
-if [[ "${multiqc}" == "no" ]]                         # Run only CONSENSUS, no quality output
-then
-    snakefiles_list="indexing_genomes gevarli"
-elif [[ "${consensus}" == "no" ]]                     # Run only QUALITY, no consensus output
-then
-    snakefiles_list="indexing_genomes quality_control"
-fi
+# MODULES
+snakefiles_list="indexing_genomes"
+
+# MODULE QC
+if [[ "${reads_controls}" == "ON" ]] ; then snakefiles_lis+=("quality_control") ; fi
+
+# MODULE MAPPING
+if [[ "${reads_mapping}" == "ON" ]] ; then snakefiles_list+=("gevarli") ; fi
+
 
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
@@ -706,39 +721,30 @@ Physical CPUs __________ ${physical_cpu} cores
 Logical CPUs ___________ ${logical_cpu} threads
 System Memory __________ ${ram_size} Gb of RAM
 
-Working directory ______ ${workdir}/
-Samples processed ______ ${samples} samples (${fastq} fastq files)
+Max threads ____________ ${max_threads} of ${logical_cpu} threads available
+Max memory _____________ ${max_memory} of ${ram_size} Gb available
+Jobs memory ____________ ${memory_per_job} Gb per job maximum
+
+Start time _____________ ${time_stamp_start}
+End time _______________ ${time_stamp_end}
+Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
 
 Snakemake version ______ ${snakemake_version}
 Conda version __________ ${conda_version}
 Conda frontend _________ ${conda_frontend}
 Mamba version __________ ${mamba_version}
+Nextclade version ______ ${nextclade_version}
 
-Max threads ____________ ${max_threads} of ${logical_cpu} threads available
-Max memory _____________ ${max_memory} of ${ram_size} Gb available
-Jobs memory ____________ ${memory_per_job} Gb per job maximum
+Working directory ______ ${workdir}/
+Samples processed ______ ${samples} samples (${fastq} fastq files)
 
-Consensus run __________ ${consensus}
+Fastq-Screen subset ____ ${fastqscreen_subset} reads per sample
+Hard-clipping primers __ ${clipping}
 Reference genome _______ ${reference}
 Aligner ________________ ${aligner}
-
 Min coverage ___________ ${min_cov}
 Min allele frequency ___ ${min_af}
-
-Hard-clipping primers __ ${clipping}
-
-Nextclade run __________ ${nextclade}
-Nextclade dataset ______ ${dataset}
-Nextclade version ______ v.${nextclade_version}
-
-Pangolin run ___________ ${pangolin}
-
-MultiQC run ____________ ${multiqc}
-Fastq-Screen subset ____ ${subset} reads per sample
-
-Start time _____________ ${time_stamp_start}
-End time _______________ ${time_stamp_end}
-Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
+Nextclade dataset ______ ${nextclade_dataset}
 " > ${workdir}/results/10_Reports/settings.log
 
 # Gzip reports directory
