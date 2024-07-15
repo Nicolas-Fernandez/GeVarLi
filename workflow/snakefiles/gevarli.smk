@@ -13,7 +13,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.03.15 (fix: add more steps to lofreq call)
+# Latest modifications ___ 2024.07.15 (Add 'modules' system and QC)
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -32,26 +32,117 @@ def get_memory_per_thread(wildcards):
         memory_per_thread = 1
     return memory_per_thread
 
+
+def get_quality_input(wildcards):
+    quality_list = []
+    if "quality" in MODULES:
+        quality_list = "results/00_Quality_Control/multiqc/"
+    return quality_list
+
+def get_trimming_input(wildcards):
+    trimming_list = []
+    if "trimming" in MODULES:
+        trimming_list = expand(
+            "results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz",
+            sample = SAMPLE
+        )
+    return trimming_list
+
+def get_cleapping_input(wildcards):
+    cleapping_list = []
+    if "cleapping" in MODULES:
+        cleapping_list = ""
+    return cleapping_list
+
+def get_flagstat_input(wildcards):
+    flagstat_list = []
+    if "covstats" in MODULES:
+        flagstat_list = expand(
+            "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}",
+             reference = REFERENCE,
+            sample = SAMPLE,
+            aligner = ALIGNER,
+            ext = ["txt", "tsv", "json"]
+        )
+    return flagstat_list
+
+def get_covstats_input(wildcards):
+    covstats_list = []
+    if "covstats" in MODULES:
+        covstats_list = expand(
+            "results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv",
+            reference = REFERENCE,
+            sample = SAMPLE,
+            aligner = ALIGNER,
+            min_cov = MIN_COV
+        )
+    return covstats_list
+
+def get_consensus_input(wildcards):
+    consensus_list = []
+    if "consensus" in MODULES:
+        consensus_list = expand(
+            "results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta",
+            reference = REFERENCE,
+            sample = SAMPLE,
+            aligner = ALIGNER,
+            min_cov = MIN_COV,
+            caller = CALLER
+        )
+    return consensus_list
+
+def get_vcf_input(wildcards):
+    vcf_list = []
+    if "consensus" in MODULES:
+        vcf_list = expand(
+            "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_variant-filt.vcf",
+            reference = REFERENCE,
+            sample = SAMPLE,
+            aligner = ALIGNER,
+            min_cov = MIN_COV,
+            caller = CALLER
+        )
+    return vcf_list
+
 def get_pangolin_input(wildcards):
     pangolin_list = []
-    if "yes" in PANGO_RUN:
-        pangolin_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_pangolin-report.csv",
-                               reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER)
+    if "pangolin" in MODULES:
+        pangolin_list = expand(
+            "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_pangolin-report.csv",
+            reference = REFERENCE,
+            sample = SAMPLE,
+            aligner = ALIGNER,
+            min_cov = MIN_COV,
+            caller = CALLER
+        )
     return pangolin_list
 
 def get_nextclade_input(wildcards):
     nextclade_list = []
-    if "yes" in NEXT_RUN:
-        nextclade_list = expand("results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_nextclade-report.tsv",
-                                reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER)
+    if "nextclade" in MODULES:
+        nextclade_list = expand(
+            "results/06_Lineages/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_nextclade-report.tsv",
+            reference = REFERENCE,
+            sample = SAMPLE,
+            aligner = ALIGNER,
+            min_cov = MIN_COV,
+            caller = CALLER
+        )
     return nextclade_list
+
+def get_gisaid_input(wildcards):
+    gisaid_list = []
+    if "gisaid" in MODULES:
+        gisaid_list = expand(
+            ""
+        )
+    return gisaid_list
 
 ###############################################################################
 ### WILDCARDS ###
 #################
 
-#SAMPLE, = glob_wildcards("/users/illumina/local/data/run_1/FATSQ/{sample}_R1.fastq.gz")
-
+FASTQ, = glob_wildcards("resources/reads/{fastq}.fastq.gz")
 SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 
 ###############################################################################
@@ -68,6 +159,9 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 ### ENVIRONMENTS ###
 ####################
 
+MULTIQC = config["conda"][OS]["multiqc"]           # Multi-QC conda env
+FASTQ_SCREEN = config["conda"][OS]["fastq_screen"] # Fastq-Screen conda env
+FASTQC= config["conda"][OS]["fastqc"]              # FastQC conda env
 CUTADAPT = config["conda"][OS]["cutadapt"]       # Cutadapt conda environment
 SICKLE_TRIM = config["conda"][OS]["sickle_trim"] # Sickle-Trim conda environment
 MINIMAP2 = config["conda"][OS]["minimap2"]       # BWA conda environment
@@ -86,6 +180,13 @@ NEXTCLADE = config["conda"][OS]["nextclade"]     # Nextclade conda environment
 ###############################################################################
 ### PARAMETERS ###
 ##################
+
+MODULES = config["modules"] # Modules
+
+SUBSET = config["fastq_screen"]["subset"]     # Fastq-Screen --subset
+FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
+#MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
+#TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
 REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
 REF_PATH = config["consensus"]["path"]       # Path to genomes references
@@ -120,7 +221,6 @@ BT2_PATH = config["bowtie2"]["path"]               # Bowtie2 path to indexes
 BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
 BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
-
 IVAR_MIN_DEPTH = config["consensus"]["min_cov"]   # iVar
 IVAR_MIN_FREQ = config["consensus"]["min_freq"]   # iVar minimum allele frequency allowed 
 IVAR_MIN_INSERT = config["consensus"]["min_freq"] # iVar minimum insertion frequency allowed
@@ -136,29 +236,29 @@ LOF_MIN_FREQ = config["consensus"]["min_freq"] # LoFreq minimum allele frequency
 #LOf_MIN_FREQ = config["lofreq"]["min_freq"]    # LoFreq minimum allele frequency allowed
 LOF_MAP_QUAL = config["lofreq"]["map_qual"]    # LoFreq mapping quality
 
-NEXT_RUN = config["nextclade"]["run"]         # Nextclade run option
 NEXT_PATH = config["nextclade"]["path"]       # Path to nextclade dataset
 NEXT_DATASET = config["nextclade"]["dataset"] # Nextclade dataset
-
-PANGO_RUN = config["pangolin"]["run"] # Pangolin run option
 
 ###############################################################################
 ### RULES ###
 #############
-
 rule all:
     input:
-        flagstat = expand("results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}",
-                          reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, ext = ["txt", "tsv", "json"]),
-        covstats = expand("results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv",
-                          reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV),
-        consensus = expand("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_consensus.fasta",
-                           reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER),
-        vcf = expand("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_{caller}_variant-filt.vcf",
-                     reference = REFERENCE, sample = SAMPLE, aligner = ALIGNER, min_cov = MIN_COV, caller = CALLER),
+        multiqc = get_quality_input,
+        trimming = get_trimming_input,
+        cleapping = get_cleapping_input,
+        consensus = get_consensus_input,
+        flagstat = get_flagstat_input,
+        covstats = get_covstats_input,
+        vcf = get_vcf_input,
         pangolin = get_pangolin_input,
-        nextclade = get_nextclade_input
-        #gisaid = get_gisaid_input # soon
+        nextclade = get_nextclade_input,
+        gisaid = get_gisaid_input
+
+
+###############################################################################
+################################## LINEAGES ###################################
+###############################################################################
 
 ###############################################################################
 rule nextclade_lineage:
@@ -228,6 +328,10 @@ rule pangolin_lineage:
         "--tempdir {resources.tmp_dir} " # Specify where you want the temp stuff to go (default: $TMPDIR)
         "--outfile {output.lineage} "    # Optional output file name (default: lineage_report.csv)
         "&> {log}"                       # Log redirection
+
+###############################################################################
+################################## CONSENSUS ##################################
+###############################################################################
 
 ###############################################################################
 rule sed_rename_headers:
@@ -797,7 +901,7 @@ rule awk_min_covfilt:
     conda:
         GAWK
     input:
-        genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     output:
         min_cov_filt = temp("results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed")
     log:
@@ -808,6 +912,10 @@ rule awk_min_covfilt:
         "{input.genome_cov} "         # BedGraph coverage input
         "1> {output.min_cov_filt} "   # Minimum coverage filtered bed output
         "2> {log} "                   # Log redirection
+
+###############################################################################
+################################## STATISTICS #################################
+###############################################################################
 
 ###############################################################################
 rule awk_coverage_statistics:
@@ -828,7 +936,7 @@ rule awk_coverage_statistics:
         samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup.log",
         flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.json",
         histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt",
-        genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     output:
         cov_stats = "results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv"
     log:
@@ -947,7 +1055,7 @@ rule bedtools_genome_coverage:
         mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
         index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     output:
-        genome_cov = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
     log:
         "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_genome-cov.log"
     shell:
@@ -1024,6 +1132,10 @@ rule samtools_flagstat_ext:
         "{input.mark_dup} "             # Mark_dup bam input
         "1> {output.flagstat} "         # Mark_dup index output
         "2> {log}"                      # Log redirection
+
+###############################################################################
+################################### DE-DUP ####################################
+###############################################################################
 
 ###############################################################################
 rule samtools_index_markdup:
@@ -1180,6 +1292,11 @@ rule samtools_sortbynames:
         "{input.mapped} "             # Mapped reads input
         "&> {log}"                    # Log redirection 
 
+
+###############################################################################
+################################### MAPPING ###################################
+###############################################################################
+
 ###############################################################################
 rule minimap2_mapping:
     # Aim: reads mapping against reference sequence
@@ -1295,6 +1412,10 @@ rule bowtie2_mapping:
         "2> {log}"                    # Log redirection 
 
 ###############################################################################
+################################## TRIMMING ###################################
+###############################################################################
+
+###############################################################################
 rule sickle_trim_quality:
     # Aim: windowed adaptive trimming tool for FASTQ files using quality
     # Use: sickle [COMMAND] [OPTIONS]
@@ -1383,5 +1504,107 @@ rule cutadapt_adapters_removing:
         "{input.rev_reads} "                  # Input reverse reads R2.fastq
         "&> {log} "                           # Log redirection
         "&& echo 'keep.dir' > results/01_Trimming/cutadapt/.keep"
+
+###############################################################################
+############################### QUALITY CONTROL ###############################
+###############################################################################
+
+###############################################################################
+rule multiqc_reports_aggregation:
+    # Aim: aggregates bioinformatics analyses results into a single report
+    # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
+    priority: 999 # Explicit high priority
+    message:
+        """
+        ~ MultiQC ∞ Aggregat HTML Qualities Reports ~
+        """
+    conda:
+        MULTIQC
+    params:
+        #config = MQC_CONFIG,
+        #tag = TAG
+    input:
+        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
+                        fastq = FASTQ),
+        fastq_screen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
+                             fastq = FASTQ)
+    output:
+        multiqc = directory("results/00_Quality_Control/multiqc/")
+    log:
+        "results/10_Reports/tools-log/multiqc.log"
+    shell:
+        "multiqc "                  # Multiqc, searches in given directories for analysis & compiles a HTML report
+        "--quiet "                   # -q: Only show log warning
+        "--no-ansi "                 # Disable coloured log
+        #"--config {params.config} "  # Specific config file to load
+        #"--tag {params.tag} "        # Use only modules which tagged with this keyword
+        #"--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
+        "--export "                  # Export plots as static images in addition to the report
+        "--outdir {output.multiqc} " # -o: Create report in the specified output directory
+        "{input.fastqc} "            # Input FastQC files
+        "{input.fastq_screen} "      # Input Fastq-Screen
+        "&> {log}"                   # Log redirection
+
+###############################################################################
+rule fastqscreen_contamination_checking:
+    # Aim: screen if the composition of the library matches with  what you expect
+    # Use fastq_screen [OPTIONS] --outdir [DIR/] [FASTQ.GZ]
+    message:
+        """
+        ~ Fasts-Screen ∞ Screen Contamination ~
+        Fastq: __________ {wildcards.fastq}
+        """
+    conda:
+        FASTQ_SCREEN
+    resources:
+        cpus = CPUS
+    params:
+        config = FQC_CONFIG,
+        subset = SUBSET
+    input:
+        fastq = "resources/reads/{fastq}.fastq.gz"
+    output:
+        fastq_screen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
+    log:
+        "results/10_Reports/tools-log/fastq-screen/{fastq}.log"
+    shell:
+        "fastq_screen "                  # FastqScreen, what did you expect ?
+        "-q "                             # --quiet: Only show log warning
+        "--threads {resources.cpus} "     # --threads: Specifies across how many aligner  will be allowed to run
+        "--aligner 'bwa' "                # -a: choose aligner 'bowtie', 'bowtie2', 'bwa'
+        "--conf {params.config} "         # path to configuration file
+        "--subset {params.subset} "       # Don't use the whole sequence file, but create a subset of specified size
+        "--outdir {output.fastq_screen} " # Output directory
+        "{input.fastq} "                  # Input file.fastq
+        "&> {log}"                        # Log redirection
+
+###############################################################################
+rule fastqc_quality_control:
+    # Aim: reads sequence files and produces a quality control report
+    # Use: fastqc [OPTIONS] --output [DIR/] [FASTQ.GZ]
+    message:
+        """
+        ~ FastQC ∞ Quality Control ~
+        Fastq: __________ {wildcards.fastq}
+        """
+    conda:
+        FASTQC
+    resources:
+        cpus = CPUS
+    input:
+        fastq = "resources/reads/{fastq}.fastq.gz"
+    output:
+        fastqc = directory("results/00_Quality_Control/fastqc/{fastq}/")
+    log:
+        "results/10_Reports/tools-log/fastqc/{fastq}.log"
+    shell:
+        "mkdir -p {output.fastqc} "    # (*) this directory must exist as the program will not create it
+        "2> /dev/null && "             # in silence and then... 
+        "fastqc "                    # FastQC, a high throughput sequence QC analysis tool
+        "--quiet "                    # -q: Supress all progress messages on stdout and only report errors
+        "--threads {resources.cpus} " # -t: Specifies files number which can be processed simultaneously
+        "--outdir {output.fastqc} "   # -o: Create all output files in the specified output directory (*)
+        "{input.fastq} "              # Input file.fastq
+        "&> {log}"                    # Log redirection
 
 ###############################################################################

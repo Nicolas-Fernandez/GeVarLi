@@ -15,36 +15,36 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.07 (Update workflow-base)
+# Latest modifications ___ 2024.07.15 (Re-order and simplify config file)
 # Use ____________________ Edit default settings
 
 ###############################################################################
-### RESOURCES ###
-#################
+################################## GENERAL ####################################
+###############################################################################
+
+###############################################################################
 resources:
   cpus: '8' # Set maximum cpus usage (for multithreading, default: "8") [INT]
   ram: '16' # Set maximum memory usage (in Gb, default: "16") [INT]
-  tmp_dir:  # Temporary directory, set only one:
-    - '$TMPDIR'  # System variable $TMPDIR (default)
-    #- '.'        # Local (i.e. GeVarLi directory)
-    #- '/scratch' # HPC (set it to match your HPC usage)
-    #- ''         # Custom (set your own)
+  tmp_dir: '$TMPDIR' # Temporary directory
+  # Available options (just for information, not exhaustive)
+    ### '$TMPDIR'  # System variable $TMPDIR (default)
+    ### '.'        # Local (i.e. GeVarLi directory)
+    ### '/scratch' # HPC (set it to match your HPC usage)
+    ### ''         # Custom (set your own)
 
 ###############################################################################
-### MODULES ###
-###############
 modules:
-  #- 'reads_controls' # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
-  #- 'reads_cleaning' # Perform reads cleaning (Cutadapt, Sickle-trim)
-  #- 'reads_cleapping' # Perform reads clipping (Cutadapt)
-  - 'reads_mapping'  # Perform reads mapping to reference (BWA, Bowtie2, Minimap)
-  #- 'nextclade'      # Perform nextclade clade assignation (Nexclade)
-  #- 'pangolin'       # Perform pangolin lineage assignation (Pangolin)
-  #- 'gisaid'         # Perform gisaid submission (GisAid)
+  - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
+  #- 'trimming'  # Perform and keep reads cleaning (Cutadapt, Sickle-trim)
+  #- 'cleapping' # Perform reads clipping (Cutadapt)
+  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
+  - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
+  - 'nextclade' # Perform nextclade clade assignation (Nexclade)
+  - 'pangolin'  # Perform pangolin lineage assignation (Pangolin)
+  #- 'gisaid'    # Perform gisaid submission (GisAid)
 
 ###############################################################################
-### CONSENSUS ###
-#################
 consensus:
   path: 'resources/genomes/' # Path to genomes references (default: "resources/genomes/")
   reference: # Your reference, in fasta format (default: "SARS-CoV-2_Wuhan_MN-908947-3")
@@ -100,10 +100,12 @@ consensus:
   # Available options, set one:
     - 'ivar'   # (default)
     #- 'lofreq' #
-  
+
 ###############################################################################
-### NEXTCLADE ###
-#################
+################################## LINEAGES ###################################
+###############################################################################
+
+###############################################################################
 nextclade:
   dataset: # Nextclade dataset
   # Available options (not exhaustive), set only one:
@@ -114,51 +116,69 @@ nextclade:
   path: 'resources/nextclade/' # Path to nextclade datasets (default path)
 
 ###############################################################################
-### PANGOLIN ###
-################
-#pangolin:
+pangolin:
 
 ###############################################################################
-### MULTIQC ###
-###############
-#multiqc:
-#  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
-#  tag: '' # Use only modules which tagged with this keyword
+################################## VARIANTS ###################################
+###############################################################################
+
+################################################################################
+ivar:
+  #min_depth: '0'    # Minimum read depth to call variants (Default: "0") [INT] *** iVar ***
+  #min_freq: '0.03'  # Minimum frequency threshold to call variants (Default: "0.03") [FLOAT] *** iVar ***
+  #min_insert: '0.8' # Minimum insertion frequency threshold to call variants (Default: "0.8") [FLOAT] *** iVar ***
+  max_depth: '1000000' # Max per-file depth; avoids excessive memory usage (default: "8000", recomanded "1000000") [INT]
+  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: "13", recomanded: "0") [INT]
+  min_qual: '0'        # -q: Minimum quality score threshold to count base (Default: "20", recomanded: "0") [INT]
+  map_qual:            # Disable BAQ, per-Base Alignment Quality (default: "--no-BAQ")
+  # Available options, set only one:
+  - '--no-BAQ' # no, don't merge mapping quality (default)
+  #- ''         # yes, merge mapping quality (not recommanded with Samtools)
+
+################################################################################
+lofreq:
+  map_qual:     # Don't merge mapping quality in LoFreq's model (default: "--no-mq")
+  # Available options, set only one:
+    - '--no-mq' # no, don't merge mapping quality (default)
+    #- ''        # yes, merge mapping quality (not recommanded with BWA or Bowtie2)
 
 ###############################################################################
-### FASTQ-SCREEN ###
-####################
-fastq_screen:
-  config: 'configuration/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+gisaid:
+  username: 'username'
+  threshold: '30'
+  name: 'hCoV-19'
+  country: 'France'
+  identifier: ''
+  year: '2022'
 
 ###############################################################################
-### CUTADAPT ###
-################
-cutadapt:
-  length: '50' # Discard reads shorter than 'length' after trim (default: "50")
-  kits: # Sequence of an adapter ligated to the 3' end of the first read
-    truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
-    nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
-    small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
-  clipping: '0' # Cut 'n' first nucleotides reads, used for amplicon primers hard-clipping (default: 0)
+################################### MAPPING ###################################
+###############################################################################
 
 ###############################################################################
-### SICKLE-TRIM ###
-###################
-sickle_trim:
-  quality: '30'      # Phred score limit (default: "30")
-  length: '50'       # Read length limit after trim (default: "50")
-  command: 'pe'      # Reading (default and should be "pe" for paired-end sequences)
-  encoding: 'sanger' # Quality encoding (default SHOULD BE "sanger")
-  # Only for information:
-    ###- 'sanger'   # for CASAVA >= 1.8 for "recent" Illumina reads (default)
-    ###- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
-    ###- 'solexa'   # for CASAVA < 1.3 for Solexa
+bwa:
+  path: 'resources/indexes/bwa/' # Path to BWA indexes (default: "resources/indexes/bwa/")
+  algorithm: # Algorithm for constructing BWA index (default: auto --> '')
+  # Available options, set only one:
+    - ''         # Auto-select (default)
+    #- '-a is'    # Moderately fast, but does not work with database larger than 2GB
+    #- '-a bwtsw' # This method works with the whole human genome
 
 ###############################################################################
-### MINIMAP2 ###
-################
+bowtie2:
+  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes (default: "resources/indexes/bowtie2/")
+  algorithm: # Algorithm for constructing BT2 index (default: small --> '')
+  # Available options, set only one:
+    - ''              # (default)
+    #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
+  sensitivity: # Bowtie2 'sensitivity' preset (default: "--very-sensitive")
+  # Available preset options, set only one:
+    - '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
+    #- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
+    #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"    
+    #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
+
+###############################################################################
 minimap2:
   path: 'resources/indexes/minimap2/' # Path to Minimap2 indexes (default: "resources/indexes/minimap2/")
   algorithm:
@@ -183,71 +203,53 @@ minimap2:
     #- 'asm10'     # asm-to-ref mapping, for ~1.0% sequence divergence
     #- 'asm20'     # asm-to-ref mapping, for ~5.0% sequence divergence
 
-###############################################################################
-### BWA ###
-###########
-bwa:
-  path: 'resources/indexes/bwa/' # Path to BWA indexes (default: "resources/indexes/bwa/")
-  algorithm: # Algorithm for constructing BWA index (default: auto --> '')
-  # Available options, set only one:
-    - ''         # Auto-select (default)
-    #- '-a is'    # Moderately fast, but does not work with database larger than 2GB
-    #- '-a bwtsw' # This method works with the whole human genome
 
 ###############################################################################
-### BOWTIE2 ###
-###############
-bowtie2:
-  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes (default: "resources/indexes/bowtie2/")
-  algorithm: # Algorithm for constructing BT2 index (default: small --> '')
-  # Available options, set only one:
-    - ''              # (default)
-    #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
-  sensitivity: # Bowtie2 'sensitivity' preset (default: "--very-sensitive")
-  # Available preset options, set only one:
-    - '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
-    #- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
-    #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"    
-    #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
-
-################################################################################
-### IVAR ###
-############
-ivar:
-  #min_depth: '0'    # Minimum read depth to call variants (Default: "0") [INT] *** iVar ***
-  #min_freq: '0.03'  # Minimum frequency threshold to call variants (Default: "0.03") [FLOAT] *** iVar ***
-  #min_insert: '0.8' # Minimum insertion frequency threshold to call variants (Default: "0.8") [FLOAT] *** iVar ***
-  max_depth: '1000000' # Max per-file depth; avoids excessive memory usage (default: "8000", recomanded "1000000") [INT]
-  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: "13", recomanded: "0") [INT]
-  min_qual: '0'        # -q: Minimum quality score threshold to count base (Default: "20", recomanded: "0") [INT]
-  map_qual:            # Disable BAQ, per-Base Alignment Quality (default: "--no-BAQ")
-  # Available options, set only one:
-  - '--no-BAQ' # no, don't merge mapping quality (default)
-  #- ''         # yes, merge mapping quality (not recommanded with Samtools)
-
-################################################################################
-### LOFREQ ###
-##############
-lofreq:
-  map_qual:     # Don't merge mapping quality in LoFreq's model (default: "--no-mq")
-  # Available options, set only one:
-    - '--no-mq' # no, don't merge mapping quality (default)
-    #- ''        # yes, merge mapping quality (not recommanded with BWA or Bowtie2)
+################################## TRIMMING ###################################
+###############################################################################
 
 ###############################################################################
-### GISAID ###
-##############
-#gisaid:
-#  username: 'username'
-#  threshold: '30'
-#  name: 'hCoV-19'
-#  country: 'France'
-#  identifier: ''
-#  year: '2022'
+sickle_trim:
+  quality: '30'      # Phred score limit (default: "30")
+  length: '50'       # Read length limit after trim (default: "50")
+  command: 'pe'      # Reading (default and should be "pe" for paired-end sequences)
+  encoding: 'sanger' # Quality encoding (default SHOULD BE "sanger")
+  # Only for information:
+    ###- 'sanger'   # for CASAVA >= 1.8 for "recent" Illumina reads (default)
+    ###- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
+    ###- 'solexa'   # for CASAVA < 1.3 for Solexa
 
 ###############################################################################
-### ENVIRONNEMENTS ###
-######################
+cutadapt:
+  length: '50' # Discard reads shorter than 'length' after trim (default: "50")
+  kits: # Sequence of an adapter ligated to the 3' end of the first read
+    truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
+    nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
+    small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
+  clipping: '0' # Cut 'n' first nucleotides reads, used for amplicon primers hard-clipping (default: 0)
+
+
+###############################################################################
+############################### QUALITY CONTROL ###############################
+###############################################################################
+
+###############################################################################
+multiqc:
+  config: 'configuration/multiqc/default.yaml' # Path to the multiqc configuration file
+  tag: '' # Use only modules which tagged with this keyword
+
+###############################################################################
+fastq_screen:
+  config: 'configuration/fastq-screen.conf' # Path to the fastq-screen configuration file
+  subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+
+
+###############################################################################
+#################################### SYSTEM ###################################
+###############################################################################
+
+
+###############################################################################
 conda:
   frontend: # Conda frontend (default: "mamba")
   # Available options, set only one:
@@ -295,12 +297,10 @@ conda:
     workflow_base: '../environments/linux/workflow-base_v.2024.07.yaml' # Workflow-Base ver. 2024.07
 
 ###############################################################################
-### OPERATING SYSTEM ###
-########################
-os: 'osx' # Operating System (default: "osx", but auto-set by Start_GeVarLi.sh)
-# Available options, set only one:
-  ###- 'linux'   # GNU Linux      | Free                       [UNIX-like] (suported)
-  ###- 'osx'     # Mac OSX        | Apple (R)                  [UNIX-like] (suported)
-  ###- 'bsd'     # Free BSD       | Free                       [UNIX-like] (not tested)
-  ###- 'solaris' # Oracle Solaris | Sun Microsystems (R)       [UNIX-like] (not tested)
-  ###- 'windows' # Windows        | Microsoft Corporation (R)  [Not-UNIX]  (use WSL!)
+os: 'osx' # Operating System (default: "osx", but check and set by Start_GeVarLi.sh)
+# Available options (just for information)
+  ### 'linux'   # GNU Linux      | Free                       [UNIX-like] (suported)
+  ### 'osx'     # Mac OSX        | Apple (R)                  [UNIX-like] (suported)
+  ### 'bsd'     # Free BSD       | Free                       [UNIX-like] (not tested)
+  ### 'solaris' # Oracle Solaris | Sun Microsystems (R)       [UNIX-like] (not tested)
+  ### 'windows' # Windows        | Microsoft Corporation (R)  [Not-UNIX]  (use WSL!)
