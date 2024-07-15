@@ -309,22 +309,25 @@ max_threads=$(yq -Mr '.resources.cpus' ${config_file}) # Get user config: max th
 max_memory=$(yq -Mr '.resources.ram' ${config_file})   # Get user config: max memory (Gb)
 memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
 
-module_list=$(yq -Mc '.modules' ${config_file} | sed 's/"//g') # Get user config: modules list
-reads_controls="OFF"                                            # Reads QC
-reads_cleaning="OFF"                                            # Reads trimmed
-reads_cleapping="OFF"                                           # Reads cleapping
-reads_mapping="OFF"                                             # Reads mapping
-nextclade="OFF"                                                 # Nextclade
-pangolin="OFF"                                                  # Pangolin
-gisaid="OFF"                                                    # Gisaid
-if [[ ${module_list} =~ "reads_controls" ]] ; then reads_control="ON" ; fi
-if [[ ${module_list} =~ "reads_cleaning" ]] ; then reads_cleaning="ON" ; fi
-if [[ ${module_list} =~ "reads_cleapping" ]] ; then reads_cleapping="ON" ; fi
-if [[ ${module_list} =~ "reads_mapping" ]] ; then reads_mapping="ON" ; fi
+module_list=$(yq -Mc '.modules' ${config_file} | sed 's/"//g') # Get user config: modules list (default: OFF)
+quality="OFF"   # Reads QC
+trimming="OFF"  # Reads trimmed
+cleapping="OFF" # Reads cleapping
+covstats="OFF"  # Mapping coverage stats
+consensus="OFF" # Consensus
+nextclade="OFF" # Nextclade
+pangolin="OFF"  # Pangolin
+gisaid="OFF"    # Gisaid
+#MODULE="OFF"    # Default module = 'OFF'
+if [[ ${module_list} =~ "quality" ]] ; then quality="ON" ; fi
+if [[ ${module_list} =~ "trimming" ]] ; then trimming="ON" ; fi
+if [[ ${module_list} =~ "cleapping" ]] ; then cleapping="ON" ; fi
+if [[ ${module_list} =~ "covstats" ]] ; then covstats="ON" ; fi
+if [[ ${module_list} =~ "consensus" ]] ; then consensus="ON" ; fi
 if [[ ${module_list} =~ "nextclade" ]] ; then nextclade="ON" ; fi
 if [[ ${module_list} =~ "pangolin" ]] ; then pangolin="ON" ; fi
 if [[ ${module_list} =~ "gisaid" ]] ; then gisaid="ON" ; fi
-#if [[ ${module_list} =~ "" ]] ; then ="yes" ; fi
+#if [[ ${module_list} =~ "MODULE" ]] ; then MODULE="ON" ; fi
 
 reference=$(yq -Mc '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g') # Get user config: genome reference
 aligner=$(yq -Mc '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')     # Get user config: aligner 
@@ -354,10 +357,11 @@ ${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
 ${blue}Nextclade version${nc} _______ ${ylo}${nextclade_version}${nc}
 
-${blue}Reads QC${nc} ________________ ${red}${reads_control}${nc}
-${blue}Reads trimmed${nc} ___________ ${red}${reads_cleaning}${nc}
-${blue}Reads cleapping${nc} _________ ${red}${reads_cleapping}${nc}
-${blue}Reads mapping${nc} ___________ ${red}${reads_mapping}${nc}
+${blue}Quality Ccontrol${nc} ________ ${red}${quality}${nc}
+${blue}Trimming${nc} ________________ ${red}${trimming}${nc}
+${blue}Cleapping${nc} _______________ ${red}${cleapping}${nc}
+${blue}mapping covstat${nc} _________ ${red}${covstats}${nc}
+${blue}Consensus${nc} _______________ ${red}${consensus}${nc}
 ${blue}Nextclade${nc} _______________ ${red}${nextclade}${nc}
 ${blue}Pangolin${nc} ________________ ${red}${pangolin}${nc}
 ${blue}Gisaid${nc} __________________ ${red}${gisaid}${nc}
@@ -405,13 +409,13 @@ ${green}-------------------------------${nc}
 "
 
 # MODULES
-snakefiles_list="indexing_genomes"
+snakefiles_list="indexing_genomes gevarli"
 
 # MODULE QC
-if [[ "${reads_controls}" == "ON" ]] ; then snakefiles_lis+=("quality_control") ; fi
+#if [[ "${reads_controls}" == "ON" ]] ; then snakefiles_lis+=("quality_control") ; fi
 
 # MODULE MAPPING
-if [[ "${reads_mapping}" == "ON" ]] ; then snakefiles_list+=("gevarli") ; fi
+#if [[ "${reads_mapping}" == "ON" ]] ; then snakefiles_list+=("gevarli") ; fi
 
 
 echo -e "
