@@ -32,7 +32,6 @@ def get_memory_per_thread(wildcards):
         memory_per_thread = 1
     return memory_per_thread
 
-
 def get_quality_input(wildcards):
     quality_list = []
     if "quality" in MODULES:
@@ -47,6 +46,12 @@ def get_trimming_input(wildcards):
             sample = SAMPLE
         )
     return trimming_list
+
+def stash_or_trash(path):
+    if "trimming" in MODULES:
+        return path
+    else:
+        return temp(path)
 
 def get_cleapping_input(wildcards):
     cleapping_list = []
@@ -901,7 +906,7 @@ rule awk_min_covfilt:
     conda:
         GAWK
     input:
-        genome_cov = "results/02_Mapping/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/{sample}_{aligner}_genome-cov.bed"
     output:
         min_cov_filt = temp("results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_min-cov-filt.bed")
     log:
@@ -936,7 +941,7 @@ rule awk_coverage_statistics:
         samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup.log",
         flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.json",
         histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt",
-        genome_cov = "results/02_Mapping/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/{sample}_{aligner}_genome-cov.bed"
     output:
         cov_stats = "results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv"
     log:
@@ -1055,7 +1060,7 @@ rule bedtools_genome_coverage:
         mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
         index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     output:
-        genome_cov = "results/02_Mapping/{reference}/bed/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/{sample}_{aligner}_genome-cov.bed"
     log:
         "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_genome-cov.log"
     shell:
@@ -1320,7 +1325,7 @@ rule minimap2_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = "results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam"
+        mapped = temp("results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam")
     log:
         "results/10_Reports/tools-log/minimap2/{sample}_{reference}.log"
     shell:
@@ -1361,7 +1366,7 @@ rule bwa_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
-        mapped = "results/02_Mapping/{reference}/{sample}_bwa-mapped.sam"
+        mapped = temp("results/02_Mapping/{reference}/{sample}_bwa-mapped.sam")
     log:
         "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
     shell:
@@ -1435,9 +1440,9 @@ rule sickle_trim_quality:
         fwd_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
     output:
-        fwd_reads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz"),
-        rev_reads = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"),
-        single = temp("results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz")
+        fwd_reads = stash_or_trash("results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz"),
+        rev_reads = stash_or_trash("results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"),
+        single = stash_or_trash("results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz")
     log:
         "results/10_Reports/tools-log/sickle-trim/{sample}.log"
     shell:
@@ -1453,7 +1458,6 @@ rule sickle_trim_quality:
         "-p {output.rev_reads} " # --output-pe2: Output trimmed reverse fastq file (must use -s option)
         "-s {output.single} "    # --output-single: Output trimmed singles fastq file
         "&> {log} "              # Log redirection
-        "&& echo 'keep.dir' > results/01_Trimming/sickle/.keep"
 
 ###############################################################################
 rule cutadapt_adapters_removing:
@@ -1503,7 +1507,6 @@ rule cutadapt_adapters_removing:
         "{input.fwd_reads} "                  # Input forward reads R1.fastq
         "{input.rev_reads} "                  # Input reverse reads R2.fastq
         "&> {log} "                           # Log redirection
-        "&& echo 'keep.dir' > results/01_Trimming/cutadapt/.keep"
 
 ###############################################################################
 ############################### QUALITY CONTROL ###############################
