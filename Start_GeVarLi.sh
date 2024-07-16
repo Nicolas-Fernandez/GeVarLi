@@ -149,63 +149,6 @@ source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/nu
 
 
 ###############################################################################
-### NEXTCLADE DATASETS UPDATES ###
-##################################
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
-${green}--------------------------------------${nc}
-"
-
-## Nextclade installation
-# Check if a 'nextclade' environment exist
-if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
-then
-    echo -e "
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} it's already created!
-"
-else
-    # Check network conection
-    if [[ ${network} = "Online" ]]
-    then
-	echo -e "
-Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...                                                                                                
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now created, with:
-
-    #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
-"
-        conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
-    else
-	echo -e "
-Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-Please, check your network conection!
-"
-    fi
-fi
-
-## Databases update
-# Check network conection
-if [[ ${network} = "Online" ]]
-then
-    echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}
-"
-    conda activate nextclade_v.${nextclade_version}
-    for dataset in resources/nextclade/* ; do
-	name=$(basename ${dataset})
-	echo "Updating: ${name}"
-	nextclade dataset get --name ${name} --output-dir ${dataset}/
-    done
-    conda deactivate
-else
-    echo -e "
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-${blue}Nextclade${nc} datasets updatde ${red}not available${nc}!
-"
-fi
-
-
-###############################################################################
 ### WORKFLOW-BASE INSTALLATION ###
 ##################################
 echo -e "
@@ -309,31 +252,34 @@ max_threads=$(yq -Mr '.resources.cpus' ${config_file}) # Get user config: max th
 max_memory=$(yq -Mr '.resources.ram' ${config_file})   # Get user config: max memory (Gb)
 memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
 
+
+[ON / off]
+
 module_list=$(yq -Mc '.modules' ${config_file} | sed 's/"//g') # Get user config: modules list (default: OFF)
-quality="OFF"   # Reads QC
-trimming="OFF"  # Reads trimmed
-cleapping="OFF" # Reads cleapping
-covstats="OFF"  # Mapping coverage stats
-consensus="OFF" # Consensus
-nextclade="OFF" # Nextclade
-pangolin="OFF"  # Pangolin
-gisaid="OFF"    # Gisaid
-#MODULE="OFF"    # Default module = 'OFF'
-if [[ ${module_list} =~ "quality" ]] ; then quality="ON" ; fi
-if [[ ${module_list} =~ "trimming" ]] ; then trimming="ON" ; fi
-if [[ ${module_list} =~ "cleapping" ]] ; then cleapping="ON" ; fi
-if [[ ${module_list} =~ "covstats" ]] ; then covstats="ON" ; fi
-if [[ ${module_list} =~ "consensus" ]] ; then consensus="ON" ; fi
-if [[ ${module_list} =~ "nextclade" ]] ; then nextclade="ON" ; fi
-if [[ ${module_list} =~ "pangolin" ]] ; then pangolin="ON" ; fi
-if [[ ${module_list} =~ "gisaid" ]] ; then gisaid="ON" ; fi
-#if [[ ${module_list} =~ "MODULE" ]] ; then MODULE="ON" ; fi
+quality="   / off"   # Reads QC
+trimming="   / off"  # Reads trimmed
+cleapping="   / off" # Reads cleapping
+covstats="   / off"  # Mapping coverage stats
+consensus="   / off" # Consensus
+nextclade="   / off" # Nextclade
+pangolin="   / off"  # Pangolin
+gisaid="   / off"    # Gisaid
+#MODULE="   / off"    # Default module = 'OFF'
+if [[ ${module_list} =~ "quality" ]] ; then quality="ON /    " ; fi
+if [[ ${module_list} =~ "trimming" ]] ; then trimming="ON /    " ; fi
+if [[ ${module_list} =~ "cleapping" ]] ; then cleapping="ON /    " ; fi
+if [[ ${module_list} =~ "covstats" ]] ; then covstats="ON /    " ; fi
+if [[ ${module_list} =~ "consensus" ]] ; then consensus="ON /    " ; fi
+if [[ ${module_list} =~ "nextclade" ]] ; then nextclade="ON /    " ; fi
+if [[ ${module_list} =~ "pangolin" ]] ; then pangolin="ON /    " ; fi
+if [[ ${module_list} =~ "gisaid" ]] ; then gisaid="ON /    " ; fi
+#if [[ ${module_list} =~ "MODULE" ]] ; then MODULE="ON /    " ; fi
 
 reference=$(yq -Mc '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g') # Get user config: genome reference
 aligner=$(yq -Mc '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')     # Get user config: aligner 
 min_cov=$(yq  -Mc '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')    # Get user config: minimum coverage
 min_freq=$(yq -Mr '.consensus.min_freq' ${config_file})                                                            # Get user config: minimum allele frequency
-clipping=$(yq -Mr '.cutadapt.clipping' ${config_file})                                                             # Get user config: hard clipping option
+hard_clipping=$(yq -Mr '.cutadapt.clipping' ${config_file})                                                        # Get user config: hard clipping option
 nextclade_dataset=$(yq -Mc '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')                  # Get user config: dataset for nextclade
 fastqscreen_subset=$(yq -Mr '.fastq_screen.subset' ${config_file})                                                 # Get user config: fastq_screen subsetption
 
@@ -357,17 +303,17 @@ ${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
 ${blue}Nextclade version${nc} _______ ${ylo}${nextclade_version}${nc}
 
-${blue}Quality Ccontrol${nc} ________ ${red}${quality}${nc}
-${blue}Trimming${nc} ________________ ${red}${trimming}${nc}
-${blue}Cleapping${nc} _______________ ${red}${cleapping}${nc}
-${blue}mapping covstat${nc} _________ ${red}${covstats}${nc}
-${blue}Consensus${nc} _______________ ${red}${consensus}${nc}
-${blue}Nextclade${nc} _______________ ${red}${nextclade}${nc}
-${blue}Pangolin${nc} ________________ ${red}${pangolin}${nc}
-${blue}Gisaid${nc} __________________ ${red}${gisaid}${nc}
+${blue}Quality Ccontrol${nc} ________ [ ${red}${quality}${nc} ]
+${blue}Trimming${nc} ________________ [ ${red}${trimming}${nc} ]
+${blue}Cleapping${nc} _______________ [ ${red}${cleapping}${nc} ]
+${blue}mapping covstat${nc} _________ [ ${red}${covstats}${nc} ]
+${blue}Consensus${nc} _______________ [ ${red}${consensus}${nc} ]
+${blue}Nextclade${nc} _______________ [ ${red}${nextclade}${nc} ]
+${blue}Pangolin${nc} ________________ [ ${red}${pangolin}${nc} ]
+${blue}Gisaid${nc} __________________ [ ${red}${gisaid}${nc} ]
 
 ${blue}Fastq-Screen subset${nc} _____ ${red}${fastqscreen_subset}${nc} reads per sample
-${blue}Hard-clipping primers${nc} ___ ${red}${clipping}${nc}
+${blue}Hard-clipping${nc} ___________ ${red}${clipping}${nc} (with Cutadapt)
 ${blue}Reference genome${nc} ________ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
 ${blue}Min coverage${nc} ____________ ${red}${min_cov}${nc} X
@@ -375,6 +321,67 @@ ${blue}Min allele frequency${nc} ____ ${red}${min_freq}${nc}
 ${blue}Nextclade dataset${nc} _______ ${red}${nextclade_dataset}${nc}
 "
 
+
+###############################################################################
+### NEXTCLADE DATASETS UPDATES ###
+##################################
+if [[ ${nextclade} = "ON" ]]
+then
+ 
+    echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
+${green}--------------------------------------${nc}
+"
+
+    ## Nextclade installation
+    # Check if a 'nextclade' environment exist
+    if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
+    then
+        echo -e "
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} it's already created!
+"
+    else
+        # Check network conection
+        if [[ ${network} = "Online" ]]
+        then
+	    echo -e "
+Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...                                                                                                
+Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now created, with:
+
+    #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
+"
+            conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
+        else
+	    echo -e "
+Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+Please, check your network conection!
+"
+        fi
+    fi
+
+    ## Databases update
+    # Check network conection
+    if [[ ${network} = "Online" ]]
+    then
+        echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}
+"
+        conda activate nextclade_v.${nextclade_version}
+        for dataset in resources/nextclade/* ; do
+	    name=$(basename ${dataset})
+	    echo "Updating: ${name}"
+	    nextclade dataset get --name ${name} --output-dir ${dataset}/
+        done
+        conda deactivate
+    else
+        echo -e "
+${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
+${blue}Nextclade${nc} datasets updatde ${red}not available${nc}!
+"
+    fi
+fi
+ 
 
 ###############################################################################
 ### RENAME SAMPLES ###
@@ -410,13 +417,6 @@ ${green}-------------------------------${nc}
 
 # MODULES
 snakefiles_list="indexing_genomes gevarli"
-
-# MODULE QC
-#if [[ "${reads_controls}" == "ON" ]] ; then snakefiles_lis+=("quality_control") ; fi
-
-# MODULE MAPPING
-#if [[ "${reads_mapping}" == "ON" ]] ; then snakefiles_list+=("gevarli") ; fi
-
 
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
@@ -733,22 +733,31 @@ Start time _____________ ${time_stamp_start}
 End time _______________ ${time_stamp_end}
 Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
 
-Snakemake version ______ ${snakemake_version}
-Conda version __________ ${conda_version}
-Conda frontend _________ ${conda_frontend}
-Mamba version __________ ${mamba_version}
-Nextclade version ______ ${nextclade_version}
+Working directory _______ ${workdir}/
+Samples processed _______ ${samples} samples (${ylo}${fastq} fastq files)
 
-Working directory ______ ${workdir}/
-Samples processed ______ ${samples} samples (${fastq} fastq files)
+Snakemake version _______ ${snakemake_version}
+Conda version ___________ ${conda_version}
+Conda frontend __________ ${conda_frontend}
+Mamba version ___________ ${mamba_version}  
+Nextclade version _______ ${nextclade_version}
 
-Fastq-Screen subset ____ ${fastqscreen_subset} reads per sample
-Hard-clipping primers __ ${clipping}
-Reference genome _______ ${reference}
-Aligner ________________ ${aligner}
-Min coverage ___________ ${min_cov}
-Min allele frequency ___ ${min_af}
-Nextclade dataset ______ ${nextclade_dataset}
+Quality Ccontrol ________ [ ${quality} ]
+Trimming ________________ [ ${trimming} ]
+Cleapping _______________ [ ${cleapping} ]
+mapping covstat _________ [ ${covstats} ]
+Consensus _______________ [ ${consensus} ]
+Nextclade _______________ [ ${nextclade} ]
+Pangolin ________________ [ ${pangolin} ]
+Gisaid __________________ [ ${gisaid} ]
+
+Fastq-Screen subset _____ ${fastqscreen_subset} reads per sample
+Hard-clipping primers ___ ${clipping}
+Reference genome ________ ${reference}
+Aligner _________________ ${aligner}
+Min coverage ____________ ${min_cov} X
+Min allele frequency ____ ${min_freq}
+Nextclade dataset _______ ${nextclade_dataset}
 " > ${workdir}/results/10_Reports/settings.log
 
 # Gzip reports directory

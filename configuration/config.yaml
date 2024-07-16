@@ -36,7 +36,7 @@ resources:
 ###############################################################################
 modules:
   - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
-  #- 'trimming'  # Perform and keep reads cleaning (Cutadapt, Sickle-trim)
+  - 'trimming'  # Perform (default) and KEEP reads cleaning (Cutadapt, Sickle-trim)
   #- 'cleapping' # Perform reads clipping (Cutadapt)
   - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
