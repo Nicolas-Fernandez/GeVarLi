@@ -37,13 +37,13 @@ resources:
 modules:
   - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
   - 'trimming'  # Perform (default) and KEEP reads cleaning (Cutadapt, Sickle-trim)
-  #- 'cleapping' # Perform reads clipping (Cutadapt)
+  - 'cleapping' # Perform reads clipping (Bamclipper)
   - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
   - 'nextclade' # Perform nextclade clade assignation (Nexclade)
   - 'pangolin'  # Perform pangolin lineage assignation (Pangolin)
-  #- 'gisaid'    # Perform gisaid submission (GisAid)
-
+  #- 'gisaid'    # Perform gisaid submission (GisAid : TODO)
+  
 ###############################################################################
 consensus:
   path: 'resources/genomes/' # Path to genomes references (default: "resources/genomes/")
@@ -151,6 +151,33 @@ gisaid:
   identifier: ''
   year: '2022'
 
+
+
+###############################################################################
+bamclipper:
+  clipping: 'no' # Do you need to clip amplicon primers ? Need to provide primers BEDPE file
+  # Available options:
+    #- 'no'  # Deactivate (default)
+    #- 'yes' # Activate
+  path: 'resources/primers/bedpe/' # Path to primers bedpe files
+  primers: 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3'
+  # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
+  # Available options:
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1'           # SARS-CoV-2 Artic V1
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2'           # SARS-CoV-2 Artic V2
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3'           # SARS-CoV-2 Artic V3
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4'           # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3_arctiv-primers-V4-1'        # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+    #- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V1'          # EBOV Artic V1
+    #- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2'          # EBOV Artic V2 (based on AF272001.1)
+    #- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V3'          # EBOV Artic V3
+    #- 'Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1'       # NIV Artic V1
+    #- 'Monkeypox-virus_UK_MT-903345-1_custom-VGCARE-primers-V1' # MPXV VGCARE V1
+    #- 'Add_your_favorite_amplicon_kit'                          # Custom
+  upstream: '1'   # (default: 1)
+  downstream: '5' # (default: 5)
+
+
 ###############################################################################
 ################################### MAPPING ###################################
 ###############################################################################
@@ -247,7 +274,6 @@ fastq_screen:
 ###############################################################################
 #################################### SYSTEM ###################################
 ###############################################################################
-
 
 ###############################################################################
 conda:
