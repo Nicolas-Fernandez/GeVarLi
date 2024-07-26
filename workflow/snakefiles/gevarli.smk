@@ -59,6 +59,31 @@ def get_cleapping_input(wildcards):
         cleapping_list = ""
     return cleapping_list
 
+
+
+
+
+def get_bam_input(wildcards):
+    if BAMCLIP == "yes":
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam"
+    elif BAMCLIP == "no":
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
+    else:
+        markdup = "error_config_file_yaml"
+    return markdup
+
+def get_bai_input(wildcards):
+    if BAMCLIP == "yes":
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
+    elif BAMCLIP == "no":
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+    else:
+        index = "error_config_file_yaml"
+    return index
+
+
+
+
 def get_flagstat_input(wildcards):
     flagstat_list = []
     if "covstats" in MODULES:
@@ -167,20 +192,21 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 MULTIQC = config["conda"][OS]["multiqc"]           # Multi-QC conda env
 FASTQ_SCREEN = config["conda"][OS]["fastq_screen"] # Fastq-Screen conda env
 FASTQC= config["conda"][OS]["fastqc"]              # FastQC conda env
-CUTADAPT = config["conda"][OS]["cutadapt"]       # Cutadapt conda environment
-SICKLE_TRIM = config["conda"][OS]["sickle_trim"] # Sickle-Trim conda environment
-MINIMAP2 = config["conda"][OS]["minimap2"]       # BWA conda environment
-BWA = config["conda"][OS]["bwa"]                 # BWA conda environment
-BOWTIE2 = config["conda"][OS]["bowtie2"]         # Bowtie2 conda environment
-SAMTOOLS = config["conda"][OS]["samtools"]       # SamTools conda environment
-BEDTOOLS = config["conda"][OS]["bedtools"]       # BedTools conda environment
-GAWK = config["conda"][OS]["gawk"]               # Awk (GNU) conda environment
-LOFREQ = config["conda"][OS]["lofreq"]           # LoFreq conda environment
-IVAR = config["conda"][OS]["ivar"]               # iVar conda environment
-TSV2VCF = config["conda"][OS]["tsv2vcf"]         # tsv2vcf conda environment
-BCFTOOLS = config["conda"][OS]["bcftools"]       # BcfTools conda environment
-PANGOLIN = config["conda"][OS]["pangolin"]       # Pangolin conda environment
-NEXTCLADE = config["conda"][OS]["nextclade"]     # Nextclade conda environment
+CUTADAPT = config["conda"][OS]["cutadapt"]         # Cutadapt conda environment
+SICKLE_TRIM = config["conda"][OS]["sickle_trim"]   # Sickle-Trim conda environment
+MINIMAP2 = config["conda"][OS]["minimap2"]         # BWA conda environment
+BWA = config["conda"][OS]["bwa"]                   # BWA conda environment
+BOWTIE2 = config["conda"][OS]["bowtie2"]           # Bowtie2 conda environment
+SAMTOOLS = config["conda"][OS]["samtools"]         # SamTools conda environment
+BEDTOOLS = config["conda"][OS]["bedtools"]         # BedTools conda environment
+BAMCLIPPER = config["conda"][OS]["bamclipper"]     # BAMClipper
+GAWK = config["conda"][OS]["gawk"]                 # Awk (GNU) conda environment
+LOFREQ = config["conda"][OS]["lofreq"]             # LoFreq conda environment
+IVAR = config["conda"][OS]["ivar"]                 # iVar conda environment
+TSV2VCF = config["conda"][OS]["tsv2vcf"]           # tsv2vcf conda environment
+BCFTOOLS = config["conda"][OS]["bcftools"]         # BcfTools conda environment
+PANGOLIN = config["conda"][OS]["pangolin"]         # Pangolin conda environment
+NEXTCLADE = config["conda"][OS]["nextclade"]       # Nextclade conda environment
 
 ###############################################################################
 ### PARAMETERS ###
@@ -225,6 +251,12 @@ BWA_ALGO = config["bwa"]["algorithm"] # BWA indexing algorithm
 BT2_PATH = config["bowtie2"]["path"]               # Bowtie2 path to indexes
 BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
 BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
+
+BAMCLIP = config["bamclipper"]["clipping"]      # Bamclipper option on / off
+CLIPPATH = config["bamclipper"]["path"]         # Bamclipper path to primers
+PRIMERS = config["bamclipper"]["primers"]       # Bamclipper primers bed files
+UPSTREAM = config["bamclipper"]["upstream"]     # Bamclipper upstream nucleotides
+DOWNSTREAM = config["bamclipper"]["downstream"] # Bamclipper downstream nucleotides
 
 IVAR_MIN_DEPTH = config["consensus"]["min_cov"]   # iVar
 IVAR_MIN_FREQ = config["consensus"]["min_freq"]   # iVar minimum allele frequency allowed 
@@ -1139,8 +1171,43 @@ rule samtools_flagstat_ext:
         "2> {log}"                      # Log redirection
 
 ###############################################################################
-################################### DE-DUP ####################################
+############################## CLEAN-ALIGNMENTS ###############################
 ###############################################################################
+
+###############################################################################
+rule bamclipper_amplicon_primers:
+    # Aim: soft-clip primer sequences from BAM alignments of PCR amplicons
+    # Use: bamclipper.sh -n [THREADS] -b [MARKDUP.bam] -p [PRIMER.bed] -u [UPSTREAM] -d [DOWNSTREAM]
+    message:
+        "BAMClipper soft-clipping BAM alignments for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+    conda:
+        GEVARLI
+    resources:
+       cpus = CPUS
+    params:
+        path = CLIPPATH,
+        primers = PRIMERS,
+        upstream = UPSTREAM,
+        downstream = DOWNSTREAM
+    input:
+        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+    output:
+        bamclip = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam",
+        baiclip = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
+    log:
+        "results/10_Reports/tools-log/bamclipper/{sample}_{aligner}_primers-clip.log"
+    shell:
+        "bamclipper.sh "                          # BAMClipper, remove primer sequences from BAM alignments of PCR amplicons by soft-clipping
+        "-b {input.markdup} "                      # Indexed BAM alignment file
+        "-p {params.path}/{params.primers}.bedpe " # BEDPE of primer pair locations
+        "-n {resources.cpus} "                     # Number of threads (default: 1)
+        "-u {params.upstream} "                    # Number of nuc. upstream for assigning alignments to primers (default: 1)
+        "-d {params.downstream} "                  # Number of nuc. downstream for assigning alignments to primers (default: 5)
+        #"-o results/02_Mapping/ "                  # Path to write output (BamClipper v.1.1.3) (todo)
+        "&> {log} "                                # Log redirection
+        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam {output.bamclip} "    # because BamClipper v.1 default output system...
+        "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam.bai {output.baiclip}" # because BamClipper v.1 default output system...
 
 ###############################################################################
 rule samtools_index_markdup:
