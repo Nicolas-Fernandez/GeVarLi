@@ -63,6 +63,8 @@ def get_cleapping_input(wildcards):
 
 
 
+
+
 def get_bam_input(wildcards):
     if BAMCLIP == "yes":
         markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam"
@@ -89,7 +91,7 @@ def get_flagstat_input(wildcards):
     if "covstats" in MODULES:
         flagstat_list = expand(
             "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}",
-             reference = REFERENCE,
+            reference = REFERENCE,
             sample = SAMPLE,
             aligner = ALIGNER,
             ext = ["txt", "tsv", "json"]

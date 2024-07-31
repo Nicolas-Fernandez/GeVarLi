@@ -252,9 +252,6 @@ max_threads=$(yq -Mr '.resources.cpus' ${config_file}) # Get user config: max th
 max_memory=$(yq -Mr '.resources.ram' ${config_file})   # Get user config: max memory (Gb)
 memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
 
-
-[ON / off]
-
 module_list=$(yq -Mc '.modules' ${config_file} | sed 's/"//g') # Get user config: modules list (default: OFF)
 quality="   / off"   # Reads QC
 trimming="   / off"  # Reads trimmed

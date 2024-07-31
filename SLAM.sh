@@ -62,7 +62,7 @@ cpu="12"          # can be set with -c|--cpu       (default: '24')
 mem="64"          # can be set with -m|--mem       (default: '64')
 
 name="GeVarLi"                                    # can be set with -n|--name   (default: 'GeVarLi') 
-project="/projects/large/GorillaSIVmeta/GeVarLi/" # can be set with -d|--data   (default: 'iTROP HPC path')
+data="/projects/large/GorillaSIVmeta/GeVarLi/" # can be set with -d|--data   (default: 'iTROP HPC path')
 mail_user="john.doe@ird.fr"                       # can be set with --mail-user (default: 'john.doe@ird.fr')
 mail_type="ALL"                                   # can be set with --mail-type (default: 'ALL')
 
@@ -302,7 +302,7 @@ cat > dyna-slurm_${name}_${partition}-${cpu}-${mem}${ib}${bst}.sh <<EOF
 mkdir -p /scratch/${user}_${name}_\${SLURM_JOB_ID}/
 
 # TRANSFER DATA
-rsync -a san${ib}:/${project}/ /scratch/${user}_${name}_\${SLURM_JOB_ID}/
+rsync -a san${ib}:/${data}/ /scratch/${user}_${name}_\${SLURM_JOB_ID}/
 
 # MODULE
 
@@ -310,7 +310,7 @@ rsync -a san${ib}:/${project}/ /scratch/${user}_${name}_\${SLURM_JOB_ID}/
 bash scratch/${user}_${name}_\${SLURM_JOB_ID}/Start_GeVarLi.sh
 
 # TRANSFER RESULTS
-rsync -a /scratch/${user}_${name}_\${SLURM_JOB_ID}/ san${ib}:/${project}
+rsync -a /scratch/${user}_${name}_\${SLURM_JOB_ID}/ san${ib}:/${data}
 
 # DELETE SCRATCH FOLDER
 rm -rf /scratch/${user}_${name}_\${SLURM_JOB_ID}/
@@ -318,4 +318,4 @@ rm -rf /scratch/${user}_${name}_\${SLURM_JOB_ID}/
 EOF
 
 # Sbatch run (optional, comment if you wan't)
-sbatch dyna-slurm_${name}_${partition}-${cpu}-${mem}${ib}${bst}.sh
+#sbatch dyna-slurm_${name}_${partition}-${cpu}-${mem}${ib}${bst}.sh

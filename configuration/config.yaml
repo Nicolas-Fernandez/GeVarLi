@@ -36,12 +36,12 @@ resources:
 ###############################################################################
 modules:
   - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
-  - 'trimming'  # Perform (default) and KEEP reads cleaning (Cutadapt, Sickle-trim)
-  - 'cleapping' # Perform reads clipping (Bamclipper)
-  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
-  - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
-  - 'nextclade' # Perform nextclade clade assignation (Nexclade)
-  - 'pangolin'  # Perform pangolin lineage assignation (Pangolin)
+  #- 'trimming'  # Perform (default) and KEEP reads cleaning (Cutadapt, Sickle-trim)
+  #- 'cleapping' # Perform reads clipping (Bamclipper)
+  #- 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
+  #- 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
+  #- 'nextclade' # Perform nextclade clade assignation (Nexclade)
+  #- 'pangolin'  # Perform pangolin lineage assignation (Pangolin)
   #- 'gisaid'    # Perform gisaid submission (GisAid : TODO)
   
 ###############################################################################
