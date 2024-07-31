@@ -143,7 +143,8 @@ ${blue}Network${nc} ________________ ${red}${network}${nc}
 ##################
 
 # Intern shell source conda
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user
+source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda
+source ~/minigorge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge
 source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server : conda 23.11.0
 #source /usr/local/bioinfo/miniconda3-4.10.3/etc/profile.d/conda.sh 2> /dev/null    # iTROP HPC server : conda 23.1.0 
 
