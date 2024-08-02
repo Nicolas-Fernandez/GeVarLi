@@ -22,7 +22,7 @@ dependencies:
   - openssl=3.1.1
   - parallel=20170422
   - perl=5.22.0.1
-  - samtools=1.17
+  - samtools=1.6
   - xz=5.2.6
   - zlib=1.2.13
   - zstd=1.5.2
