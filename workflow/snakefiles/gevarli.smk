@@ -41,10 +41,8 @@ def get_quality_input(wildcards):
 def get_trimming_input(wildcards):
     trimming_list = []
     if "trimming" in MODULES:
-        trimming_list = expand(
-            "results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz",
-            sample = SAMPLE
-        )
+        trimming_list = expand("results/01_Trimming/sickle/{sample}_sickle-trimmed_SE.fastq.gz",
+                               sample = SAMPLE)
     return trimming_list
 
 def stash_or_trash(path):
@@ -59,32 +57,17 @@ def get_cleapping_input(wildcards):
         cleapping_list = ""
     return cleapping_list
 
-
-
-
-
-
-
 def get_bam_input(wildcards):
-    if BAMCLIP == "yes":
-        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam"
-    elif BAMCLIP == "no":
-        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam"
-    else:
-        markdup = "error_config_file_yaml"
+    markdup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
+    if "cleapping" in MODULES:
+        markdup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.primerclipped.bam"
     return markdup
 
 def get_bai_input(wildcards):
-    if BAMCLIP == "yes":
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
-    elif BAMCLIP == "no":
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
-    else:
-        index = "error_config_file_yaml"
+    index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
+    if "cleapping" in MODULES:
+        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
     return index
-
-
-
 
 def get_flagstat_input(wildcards):
     flagstat_list = []
@@ -218,7 +201,8 @@ MODULES = config["modules"] # Modules
 
 SUBSET = config["fastq_screen"]["subset"]     # Fastq-Screen --subset
 FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
-#MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
+#MQC_PATH = config["multiqc"]["path"]          # MultiQC --conf
+#MQC_CONF = config["multiqc"]["config"]        # MultiQC --conf
 #TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
 REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
@@ -254,7 +238,6 @@ BT2_PATH = config["bowtie2"]["path"]               # Bowtie2 path to indexes
 BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
 BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
-BAMCLIP = config["bamclipper"]["clipping"]      # Bamclipper option on / off
 CLIPPATH = config["bamclipper"]["path"]         # Bamclipper path to primers
 PRIMERS = config["bamclipper"]["primers"]       # Bamclipper primers bed files
 UPSTREAM = config["bamclipper"]["upstream"]     # Bamclipper upstream nucleotides
@@ -272,7 +255,7 @@ IVAR_MIN_QUAL = config["ivar"]["min_qual"]        # iVar
 IVAR_MAP_QUAL = config["ivar"]["map_qual"]        # iVar mapping quality
 
 LOF_MIN_FREQ = config["consensus"]["min_freq"] # LoFreq minimum allele frequency allowed  
-#LOf_MIN_FREQ = config["lofreq"]["min_freq"]    # LoFreq minimum allele frequency allowed
+#LOF_MIN_FREQ = config["lofreq"]["min_freq"]    # LoFreq minimum allele frequency allowed
 LOF_MAP_QUAL = config["lofreq"]["map_qual"]    # LoFreq mapping quality
 
 NEXT_PATH = config["nextclade"]["path"]       # Path to nextclade dataset
@@ -285,7 +268,6 @@ rule all:
     input:
         multiqc = get_quality_input,
         trimming = get_trimming_input,
-        cleapping = get_cleapping_input,
         consensus = get_consensus_input,
         flagstat = get_flagstat_input,
         covstats = get_covstats_input,
@@ -401,6 +383,10 @@ rule sed_rename_headers:
         "2> {log}"               # Log redirection
 
 ###############################################################################
+########################### VARIANTS CALLING - IVAR ###########################
+###############################################################################
+
+###############################################################################
 rule convert_tsv2vcf:
     message:
         """
@@ -457,7 +443,7 @@ rule ivar_consensus:
         min_qual = IVAR_MIN_QUAL,
         baq = IVAR_MAP_QUAL
     input:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
+        mark_dup = get_bam_input,
         variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
     output:
         prefix = temp("results/05_Consensus/{reference}/{sample}_{aligner}_{min_cov}X_ivar_consensus"),
@@ -516,7 +502,7 @@ rule ivar_variant_calling:
         baq = IVAR_MAP_QUAL
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = get_bam_input
     output:
         variant_call = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
     log:
@@ -541,6 +527,10 @@ rule ivar_variant_calling:
         "-r {input.masked_ref} "          # -r: Reference file used for alignment (translate the nuc. sequences and identify intra host single nuc. variants) 
         #"-g "                            # -g: A GFF file in the GFF3 format can be supplied to specify coordinates of open reading frames (ORFs)
         "&> {log}"                        # Log redirection 
+
+###############################################################################
+########################## VARIANTS CALLING - LOFREQ ##########################
+###############################################################################
 
 ###############################################################################
 rule bcftools_consensus:
@@ -855,8 +845,8 @@ rule lofreq_viterbi:
         LOFREQ
     input:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta",
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
+        mark_dup = get_bam_input,
+        index = get_bai_input
     output:
         viterbi = temp("results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_lofreq_viterbi.bam")
     log:
@@ -869,6 +859,10 @@ rule lofreq_viterbi:
         "--out {output.viterbi} "   # -o: Output BAM file (default: standard output)
         "{input.mark_dup} "         # Markdup BAM input
         "&> {log}"                  # Log redirection 
+
+###############################################################################
+############################ MASKING LOW COVERAGE #############################
+###############################################################################
 
 ###############################################################################
 rule bedtools_masking:
@@ -1091,8 +1085,8 @@ rule bedtools_genome_coverage:
     conda:
         BEDTOOLS
     input:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
+        mark_dup = get_bam_input,
+        index = get_bai_input
     output:
         genome_cov = "results/02_Mapping/{reference}/{sample}_{aligner}_genome-cov.bed"
     log:
@@ -1122,7 +1116,7 @@ rule samtools_coverage_histogram:
        #bins = BINS,
        #depth = DEPTH
     input:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = get_bam_input
     output:
         histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt"
     log:
@@ -1158,7 +1152,7 @@ rule samtools_flagstat_ext:
     resources:
        cpus = CPUS
     input:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam"
+        mark_dup = get_bam_input
     output:
         flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}"
     log:
@@ -1173,17 +1167,22 @@ rule samtools_flagstat_ext:
         "2> {log}"                      # Log redirection
 
 ###############################################################################
-############################## CLEAN-ALIGNMENTS ###############################
+############################## PRIMER CLEAPING  ###############################
 ###############################################################################
 
 ###############################################################################
 rule bamclipper_amplicon_primers:
-    # Aim: soft-clip primer sequences from BAM alignments of PCR amplicons
+    # Aim: soft-clip amplicon PCR primers from BAM alignments
     # Use: bamclipper.sh -n [THREADS] -b [MARKDUP.bam] -p [PRIMER.bed] -u [UPSTREAM] -d [DOWNSTREAM]
     message:
-        "BAMClipper soft-clipping BAM alignments for [[ {wildcards.sample} ]] sample ({wildcards.aligner})"
+        """
+        ~ BAMClipper ∞ soft-clipping amplicon PCR primers from BAM alignments ~
+        Sample: __________ {wildcards.sample}
+        Reference: _______ {wildcards.reference}
+        Aligner: _________ {wildcards.aligner}
+        """
     conda:
-        GEVARLI
+        BAMCLIPPER
     resources:
        cpus = CPUS
     params:
@@ -1192,24 +1191,28 @@ rule bamclipper_amplicon_primers:
         upstream = UPSTREAM,
         downstream = DOWNSTREAM
     input:
-        markdup = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam",
-        index = "results/02_Mapping/{sample}_{aligner}_mark-dup.bam.bai"
+        markdup = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam",
+        index = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.bam.bai"
     output:
-        bamclip = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam",
-        baiclip = "results/02_Mapping/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
+        bamclip = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.primerclipped.bam",
+        baiclip = "results/02_Mapping/{reference}/{sample}_{aligner}_mark-dup.primerclipped.bam.bai"
     log:
-        "results/10_Reports/tools-log/bamclipper/{sample}_{aligner}_primers-clip.log"
+        "results/10_Reports/tools-log/bamclipper/{reference}/{sample}_{aligner}_primers-clip.log"
     shell:
-        "bamclipper.sh "                          # BAMClipper, remove primer sequences from BAM alignments of PCR amplicons by soft-clipping
-        "-b {input.markdup} "                      # Indexed BAM alignment file
-        "-p {params.path}/{params.primers}.bedpe " # BEDPE of primer pair locations
-        "-n {resources.cpus} "                     # Number of threads (default: 1)
-        "-u {params.upstream} "                    # Number of nuc. upstream for assigning alignments to primers (default: 1)
-        "-d {params.downstream} "                  # Number of nuc. downstream for assigning alignments to primers (default: 5)
-        #"-o results/02_Mapping/ "                  # Path to write output (BamClipper v.1.1.3) (todo)
-        "&> {log} "                                # Log redirection
+        "bamclipper.sh "                         # BAMClipper, remove primer sequences from BAM alignments of PCR amplicons by soft-clipping
+        "-b {input.markdup} "                     # Indexed BAM alignment file
+        "-p {params.path}{params.primers}.bedpe " # BEDPE of primer pair locations
+        "-n {resources.cpus} "                    # Number of threads (default: 1)
+        "-u {params.upstream} "                   # Number of nuc. upstream for assigning alignments to primers (default: 5)
+        "-d {params.downstream} "                 # Number of nuc. downstream for assigning alignments to primers (default: 5)
+        #"-o results/02_Mapping/ "                 # Path to write output (if BamClipper v.1.1.2) (todo)
+        "&> {log} "                               # Log redirection
         "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam {output.bamclip} "    # because BamClipper v.1 default output system...
         "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam.bai {output.baiclip}" # because BamClipper v.1 default output system...
+
+###############################################################################
+############################## REMOVE DUPLICATS ###############################
+###############################################################################
 
 ###############################################################################
 rule samtools_index_markdup:
