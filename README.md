@@ -131,7 +131,7 @@ So, if and only if, it's required _(Conda not already installed)_, please, first
  
 **Download** and **install** your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links) (23.5.2+)  
 
-e.g. for **Linux_x86_64-bit** systems:  
+e.g. for **Linux_x86_64-bit** or **Windows Subsystem for Linux (WSL)** *systems:  
 ```shell
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh && \
 bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda3/ && \
@@ -151,6 +151,12 @@ rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 exit
 ```
 
+OS:
+ - **linux**   |   GNU Linux    |                           | [UNIX-like] | (suported)
+ - **osx**     |    Mac OSX     |         Apple (R)         | [UNIX-like] | (suported)
+ - **bsd**     |    Free BSD    |                           | [UNIX-like] | (not tested...)
+ - **solaris** | Oracle Solaris |    Sun Microsystems (R)   | [UNIX-like] | (not tested...)
+ - **windows** |    Windows     | Microsoft Corporation (R) |  [Not UNIX] | (not suported. Use WSL!) 
 
 **Update** Conda:
 ```
@@ -186,9 +192,7 @@ mv ~/GeVarLi-main/ ~/GeVarLi/ && \
 rm -f ~/GeVarLi-main.tar.gz
 ```
 
-## ~ USAGE ~ ##
-
-### -- Quick Start -- ###
+## ~ USAGE (quick start) ~ ##
 
 1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
 _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
@@ -319,6 +323,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 - **GZ**: format used for file compression and decompression, normally used to compress just single files.
 - **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
 
+
 - **CLI**: Command Line Interface
 - **GUI**: Graphical User Interface
 
@@ -328,81 +333,86 @@ You can edit default settings in **config.yaml** file into **./config/** directo
 
 
 ### Resources ###
-
 Edit to match your hardware configuration  
-- **cpus**: for tools that can _(i.e. bwa)_, could be use at most n cpus to run in parallel _(default config: '8')_  
-_**Note**: snakemake (with default Start bash script) will always use all cpus to parallelize jobs_
-- **ram**: for tools that can _(i.e. samtools)_, limit memory usage to max n Gb _(default config: '16' Gb)_
-- **tmpdir**: for tools that can _(i.e. pangolin)_, specify where you want the temp stuff _(default config: '$TMPDIR')_
-
+- **cpus**: for tools that can _(i.e. bwa)_, could be use at most n cpus to run in parallel _(default: '8')_ [INT]
+- **ram**: for tools that can _(i.e. samtools)_, limit memory usage to max n Gb _(default: '16' Gb)_ [INT]
+- **tmpdir**: for tools that can _(i.e. pangolin)_, specify where you want the temp stuff _(default: '$TMPDIR')_
 
 ### Consensus ###
+- **path**: path to genomes references _(default: 'resources/genomes/')_ [PATH]
+- **reference**: your reference, in fasta format _(default: 'SARS-CoV-2\_Wuhan\_MN-908947-3')_ [STR]
+- **mincov**: minimum coverage, mask lower regions with "N" _(default: '30')_ [INT] °with LoFreq 
+- **minaf**: minimum allele frequency allowed for variant calling step _(default: '0.2')_ [FLOAT] °with LoFreq
+- **iupac**: output variants in the form of IUPAC ambiguity codes _(default: deactivate)_ [OPT] °with LoFreq
+- **aligner**: map reads using either **bwa**, **bowtie2** or **minimap2** _(default: 'bwa')_
+- **caller**: call SNV using either **ivar** or **lofreq** _(default: 'ivar')_ 
 
-- **mincov**: minimum coverage for masking to low covered regions in final consensus sequence _(default: '30')_
-- **minaf**: minimum allele frequency allowed for variant calling step _(default: '0.2')_
-- **reference**: reference sequence fasta file format name used for mapping _(default: 'SARS-CoV-2\_Wuhan\_MN-908947-3')_
-- **iupac**: allow output variants in the form of IUPAC ambiguity codes (default: deactivate -> '' )
+### Nextclade ###
+- **path**: path to nextclade datasets _(default: 'resources/nextclade/')_ [PATH]
+- **dataset**: Nextclade dataset : **sars-cov-2** , **MPXV**, **hMPXV** or **hMPXV_B1**
 
+### Ivar ###
+- **max_depth**:
+- **min_bq**:
+- **min_qual**:
+- **map_qual**:
 
-### Aligner ###
+### LoFreq ###
+- **map_qual**:
 
-- **aligner**: Map your reads using either **bwa**, **bowtie2** or **minimap2**  
+### Bamclipper ###
+- **path**: path to primers bedpe files _(default 'resources/primer/bedpe')_ [PATH]
+- **primers**: primer set, in BEDPE format _(default: 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1')_ [STR]
+- **upstream**: _(default: '5')_
+- **downstream**: _(default: '5')_
 
+### BWA ###
+- **path**: path to BWA indexes _(default: 'resources/indexes/bwa/')_ [PATH]
+- **algorithm**: algorithm for constructing BWA index _(default: deactivate)_
 
-### Fastq-Screen ###
+### Bowtie2 ###
+- **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
+- **algorithm**: algorithm for constructing Bowtie2 index _(default: deactivate)_ 
+- **sensitivity**: preset for bowtie2 sensitivity _(default: '--sensitive')_
 
-- **config**: path to the fastq-screen configuration file _(default: 'configuration/fastq-screen/' [*] )_
-- **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default: '1000')_
-
-
-#### [*] configuration/fastq-screen/{aligner}.conf ####
-
-- **DATABASE**: (de)comment (#) or add your own 'DATABASE' to configure multiple genomes screaning
-
-
-### Cutadapt ###
-
-- **length**: discard reads shorter than length, after trimming _(default: '50')_
-- **kits**: sequence of an adapter ligated to the 3' end of the first read _(default: 'truseq', 'nextera' and 'small' Illumina kits)  
-
+### MINIMAP2 ###
+- **path**: path to Minimap2 indexes (default: 'resources/indexes/minimap2/')
+- **algorithm**: algorithm for constructing Minimap2 index:
+  - **k-mer_size**: -k: k-mer size _(default: '21', no larger than '28')_ [INT] 
+  - **minimizer_size**: -w: minimizer window size _(default: '11')_ [INT]
+  - **split_size**: -I: split index for every {NUM} input bases _(default: '8G')_ [INT] 
+  - **homopolymer**: -H: use homopolymer-compressed k-mer _(default: no)_ 
+- **preset**: Minimap2 presets (always applied before other options)
+  - **sr**:
+  - **map-ont**:
+  - **ava-ont**:
+  - **splice**:
+  - **map-pb**:
+  - **map-hifi**:
+  - **ava-pb**:
+  - **splice:hq**:
+  - **asm5**:
+  - **asm10**:
+  - **asm20**:
 
 ### Sickle-trim ###
-
-- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default: '30')_
-- **length**: read length limit, after trimming _(default: '50')_
+- **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default: '30')_ [INT]
+- **length**: read length limit, after trimming _(default: '50')_ [INT]
 - **command**: Pipeline wait for paired-end reads _(default and should be: 'pe')_
 - **encoding**: If your data are from recent Illumina run, let 'sanger' _(default and should be: 'sanger')_
 
-### MINIMAP2 ###
+### Cutadapt ###
+- **length**: discard reads shorter than length, after trimming _(default: '50')_ [INT]
+- **kits**: sequence of an adapter ligated to the 3' end of the first read _(default: 'truseq', 'nextera' and 'small' Illumina kits)  
 
+### Fastq-Screen ###
+- **config**: path to the fastq-screen configuration file _(default: 'configuration/fastq-screen/' [*] )_
+- **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default: '1000')_
 
+#### [*] configuration/fastq-screen/{aligner}.conf ####
+- **DATABASE**: (de)comment (#) or add your own 'DATABASE' to configure multiple genomes screaning
 
-### BWA ###
-
-- **path**: path to BWA indexes (default: 'resources/indexes/bwa/')
-- **algorithm**: algorithm for constructing BWA index (default: deactivate -> '')
-
-
-### Bowtie2 ###
-
-- **sensitivity**: preset for bowtie2 sensitivity _(default config: '--sensitive')_
-- **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
-- **algorithm**: algorithm for constructing Bowtie2 index (default: deactivate -> '' ) 
-
-
-### LoFreq ###
-
-
-### iVar ###
-
-### Nextclade ###
-
-- **path**: path to nextclade datasets
-- **dataset**: Nextclade dataset (not used, set by Start\_GeVarLi.sh depending your reference genome)
-
-
-### GisAid (soon) ###
-
+### GisAid (todo) ###
 - **username**:
 - **threshold**:
 - **name**:
@@ -410,18 +420,11 @@ _**Note**: snakemake (with default Start bash script) will always use all cpus t
 - **identifier**:
 - **year**:
 
-
 ### Environments ###
+- **frontend**: conda frontend, **manba** or **conda** _(default: 'mamba')_
+- **yaml***: conda environments paths/names/version (default: workflow/environments/{tools}\_v.{version}.yaml)
+_**Note**: edit only if you want to change some environments (e.g. test a new version or back to an older version)_
 
-- **frontend**: conda frontend (default: 'mamba')
-- **osx/linux**: conda environments paths/names for osx and linux OS (default: workflow/envs/{tools}\_v.{version}.yaml)
-_**Note**: edit only if you want to change some environments (e.g. test a new version)_
-
-
-### Operating System ###
-
-- **osx**: Operating System (default: 'osx', but will set by Start\_GeVarLi.sh) 
-_**Note**: Only 'osx' or 'linux' supported_
 
 
 ### GeVarLi map ###
@@ -483,18 +486,17 @@ _**Note**: Only 'osx' or 'linux' supported_
  │    │    ├── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
  │    │    └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
  │    └── 📂 visuals/
+ │         ├── 📈 gevarli_rulegraph.png
  │         ├── 📈 gevarli_filegraph.png
- │         └── 📈 {PIPELINE}_rulegraph.png
+ │         ├── 📈 GeVarLi_by_DALL-E_icone.png
+ │         └── 📈 download_button.png
  └── 📂 workflow/
       ├── 📂 environments/
-      │    └── 📂 {OS}/
-      │         ├── 🍜 samtools_v.{VERSION}.yaml 
-      │         ├── 🍜 {TOOL}_v.{VERSION}.yaml
-      │         └── 🍜 workflow-base_v.{VERSION}.yaml
+      │    ├── 🍜 {TOOL}_v.{VERSION}.yaml
+      │    └── 🍜 workflow-base_v.{VERSION}.yaml
       └── 📂 snakefiles/
 	       ├── 📜 gevarli.smk
-	       ├── 📜 indexing_genomes.smk
-	       └── 📜 quality_control.smk
+	       └── 📜 indexing_genomes.smk
 ```
 
 ## ~ REFERENCES ~ ##
@@ -557,6 +559,14 @@ _Nucleic Acids Research, Volume 40, Issue 22 (2012)_
 **Source code**: [https://gitlab.com/treangenlab/lofreq](https://gitlab.com/treangenlab/lofreq) _(v2 used)_  
 **Source code**: [https://github.com/andreas-wilm/lofreq3](https://github.com/andreas-wilm/lofreq3) _(see also v3 in Nim)_  
 **Documentation**: [https://csb5.github.io/lofreq](https://csb5.github.io/lofreq)  
+
+**The nf-core framework for community-curated bioinformatics pipelines**  
+Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen  
+_Nat Biotechnol. 2020 Feb 13_
+**DOI**: [https://doi.org/10.1038/s41587-020-0439-x](https://doi.org/10.1038/s41587-020-0439-x)
+**Publication**: [https://www.nature.com/articles/s41587-020-0439-x](https://www.nature.com/articles/s41587-020-0439-x)
+**Source code**: [https://github.com/nf-core/viralrecon](https://github.com/nf-core/viralrecon)
+**Documentation**: [https://nf-co.re/viralrecon/usage](https://nf-co.re/viralrecon/usage)
 
 **iVar, an Interpretation-Oriented Tool to Manage the Update and Revision of Variant Annotation and Classification**
 Sara Castellano, Federica Cestari, Giovanni Faglioni, Elena Tenedini, Marco Marino, Lucia Artuso, Rossella Manfredini, Mario Luppi, Tommaso Trenti and Enrico Tagliafico
