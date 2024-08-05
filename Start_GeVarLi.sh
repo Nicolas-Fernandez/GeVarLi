@@ -311,8 +311,6 @@ ${blue}Nextclade${nc} ______________ [ ${red}${nextclade}${nc} ]
 ${blue}Pangolin${nc} _______________ [ ${red}${pangolin}${nc} ]
 ${blue}Gisaid${nc} _________________ [ ${red}${gisaid}${nc} ]
 
-${blue}Fastq-Screen subset${nc} ____ ${red}${fastqscreen_subset}${nc} reads per sample
-${blue}Hard-clipping${nc} __________ ${red}${clipping}${nc} (with Cutadapt)
 ${blue}Reference genome${nc} _______ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
 ${blue}Min coverage${nc} ___________ ${red}${min_cov}${nc} X
@@ -738,14 +736,12 @@ Nextclade version _______ ${nextclade_version}
 Quality Ccontrol ________ [ ${quality} ]
 Trimming ________________ [ ${trimming} ]
 Cleapping _______________ [ ${cleapping} ]
-mapping covstat _________ [ ${covstats} ]
 Consensus _______________ [ ${consensus} ]
+Covstats ________________ [ ${covstats} ]
 Nextclade _______________ [ ${nextclade} ]
 Pangolin ________________ [ ${pangolin} ]
 Gisaid __________________ [ ${gisaid} ]
 
-Fastq-Screen subset _____ ${fastqscreen_subset} reads per sample
-Hard-clipping primers ___ ${clipping}
 Reference genome ________ ${reference}
 Aligner _________________ ${aligner}
 Min coverage ____________ ${min_cov} X
