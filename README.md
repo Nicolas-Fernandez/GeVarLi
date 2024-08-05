@@ -41,6 +41,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 - Reads mapping (_using minimap2, bwa or bowtie2_)
   - (_bam files_)
   - (_bed files_)
+  - Bamclipper
   - Visualization (IGV)
 - Variants calling and filtering (_using lofreq or ivar_)
 - Genome coverage (_statistics reports_)
@@ -56,8 +57,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Rulegraph ###
 
-<img src="./resources/visuals/indexing_genomes_rulegraph.png" width="325" height="125">  
-<img src="./resources/visuals/gevarli_rulegraph.png" width="525" height="1200">  
+<img src="./resources/visuals/gevarli_rulegraph.png" width="600" height="1200">  
 
 
 
@@ -99,8 +99,7 @@ Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
 
 ## ~ ROADMAP ~ ##
 
-- Publish GeVarLi paper !
-- Add iVar option (after minimap2)
+- Publish GeVarLi paper !!!
 - Add GisAid submision files generation
 - Add MultiQC config template
 
@@ -152,16 +151,6 @@ rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
 exit
 ```
 
-e.g. for **MacOSX_M1/M2-chips_arm_64-bit (without Rosetta)** systems:  
-```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/Miniconda3-latest-MacOSX-arm64.sh && \
-bash ~/Miniconda3-latest-MacOSX-arm64.sh -b -p ~/miniconda3/ && \
-rm -f ~/Miniconda3-latest-MacOSX-arm64.sh && \
-~/miniconda3/condabin/conda update conda --yes && \
-~/miniconda3/condabin/conda init && \
-exit
-```
-
 
 **Update** Conda:
 ```
@@ -199,6 +188,8 @@ rm -f ~/GeVarLi-main.tar.gz
 
 ## ~ USAGE ~ ##
 
+### -- Quick Start -- ###
+
 1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
 _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
 
@@ -207,7 +198,7 @@ _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
 	- or with a **Right-click** > **Open with** > **Terminal.app**
 	- or with **CLI** from a terminal:
 ```shell
-bash Start_GeVarLi.sh
+./Start_GeVarLi.sh
 ```
 3. Yours analyzes will start, with default configuration settings  
 
@@ -215,9 +206,9 @@ _Option-1: Edit **config.yaml** file in **./configuration/** directory_
 _Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_  
 
 First run will auto-created _(only once)_:
-	- Workflow-Baseconda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
-	- GeVarLi all tTools conda environments _(tools used by GeVarLi rules)_
-	- Indexes for BWA and BOWTIE2 aligners _(for each fasta genomes in resources/ directory)_
+	- Workflow-Base conda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
+	- GeVarLi conda environments _(all tools used by each GeVarLi rules)_
+	- Indexes for BWA, BOWTIE2 and minimap2 aligners _(for each fasta genomes in resources/genomes/ directory)_
 	
 _This may take some time, depending on your internet connection and your computer_
 
@@ -317,7 +308,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 ### Files Glossary ###
 
 - **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
-- **BAI**: BAM Indexes. 
+- **BAI**: BAM Indexes.
 - **FASTA**: Fast-All, text-based format for representing either nucleotide sequences or amino acid (protein) sequences.
 - **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
 - **FAI**: FASTA Indexes. 
@@ -328,6 +319,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 - **GZ**: format used for file compression and decompression, normally used to compress just single files.
 - **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
 
+- **CLI**: Command Line Interface
+- **GUI**: Graphical User Interface
 
 ## ~ CONFIGURATION ~ ##
 
@@ -353,7 +346,7 @@ _**Note**: snakemake (with default Start bash script) will always use all cpus t
 
 ### Aligner ###
 
-- **aligner**: Map your reads using either **bwa** or **bowtie2**  
+- **aligner**: Map your reads using either **bwa**, **bowtie2** or **minimap2**  
 
 
 ### Fastq-Screen ###
