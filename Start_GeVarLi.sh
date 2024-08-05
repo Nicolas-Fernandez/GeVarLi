@@ -10,12 +10,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2024.07
+# Version ________________ v.2024.08
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.07 (Update workflow-base)
+# Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
 # Use ____________________ bash Start_GeVarLi.sh
 
 ###############################################################################
@@ -32,10 +32,11 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2024.07"                              # GeVarLi version
-workflow_base_version="2024.07"                        # Workflow base version
-snakemake_version="8.14.0"                             # Snakemake version
-nextclade_version="3.7.4"                              # Nextclade version
+sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
+gevarli_version="2024.08"                              # GeVarLi version
+workflow_base_version="2024.08"                        # Workflow base version
+snakemake_version="8.16.0"                             # Snakemake version
+nextclade_version="3.8.2"                              # Nextclade version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -48,7 +49,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.07.03 (Update workflow-base)
+${blue}Latest modifications${nc} ___ 2024.08.05 ('Noarch' conda environment yaml files)
 ${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
 "
 
@@ -94,7 +95,7 @@ then
     physical_cpu=$(sysctl -n hw.physicalcpu)         # Get physical cpu
     logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
     mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
-    ram_gb=$(expr ${mem_size} \/ $((1024**3)) )      # mem_size / 1024**3 = Gb
+    ram_gb=$(expr ${mem_size} \/ $((1024**3)))       # mem_size / 1024**3 = Gb
 elif [[ ${os} == "linux" ]]
 then
     model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -E "s/Model name: +//")                           # Get chip model name
@@ -102,7 +103,7 @@ then
     threads_cpu=$(lscpu | grep -o -E "^Thread\(s\) per core: +[0-9]+" | sed -E "s/Thread\(s\) per core: +//") # Get thread(s) per core
     logical_cpu=$(expr ${physical_cpu} \* ${threads_cpu})                                                     # Calcul logical cpu
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -E "s/MemTotal: +//")                       # Get memory size (Kb)
-    ram_gb=$( expr ${mem_size} \/ $((1024**2)) )                                                              # mem_size / 1024**2 = Gb
+    ram_gb=$(expr ${mem_size} \/ $((1024**2)))                                                                # mem_size / 1024**2 = Gb
 else
     echo -e "Please, use '${red}osx${nc}', '${red}linux${nc}' or '${red}WSL${nc}' operating systems"
     exit 1
@@ -146,7 +147,6 @@ ${blue}Network${nc} ________________ ${red}${network}${nc}
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda
 source ~/minigorge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge
 source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server : conda 23.11.0
-#source /usr/local/bioinfo/miniconda3-4.10.3/etc/profile.d/conda.sh 2> /dev/null    # iTROP HPC server : conda 23.1.0 
 
 
 ###############################################################################
@@ -171,13 +171,13 @@ else # Test network conection
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc} (ver. 8.14.0) ${blue} ___ Workflow manager (rules)${nc}
+    # ${red}Snakemake${nc} (ver. 8.16.0) ${blue} ___ Workflow manager (rules)${nc}
     # ${red}Mamba${nc}     (ver. 1.5.8)  ${blue} ___ Packages manager (conda environments)${nc}
     # ${red}Yq${nc}        (ver. 3.4.3)  ${blue} ___ YAML parser (config)${nc}
     # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ File renamer (FASTQ)${nc}
-    # ${red}Graphviz${nc}  (ver. 11.0.0) ${blue} ___ Graph visualization (DAG)${nc}
+    # ${red}Graphviz${nc}  (ver. 12.0.0) ${blue} ___ Graph visualization (DAG)${nc}
 "
-        conda env create -f ${workdir}/workflow/environments/${os}/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
+        conda env create -f ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
     else
 	echo -e "
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
@@ -200,7 +200,8 @@ old_envs="gevarli-base_v.2022.11 \
           snakemake-base_v.2023.04 \
           workflow-base_v.2023.06 \
           workflow-base_v.2024.01 \
-          workflow-base_v.2024.02"
+          workflow-base_v.2024.02 \
+          workflow-base_v.2024.07"
 
 for env in ${old_envs} ; do
     conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
@@ -239,9 +240,9 @@ graphviz_version="11.0.0"                                       # GraphViz versi
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
 if [[ "${fastq}" == "0" ]]                                                         # If no sample,
 then                                                                                # start GeVarLi with at least 1 sample
-    echo -e "${red}¡${nc} No fastq file detected in ${ylo}resources/reads/${nc} ${red}!${nc}
-${red}SARS-CoV-2${nc} ${ylo}resources/data_test/${nc} fastq will be used as sample example"
-    cp ${workdir}/resources/data_test/SARS-CoV-2_Omicron-BA1*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
+    echo -e "${red}¡${nc} No FASTQ files detected in ${ylo}resources/reads/${nc} ${red}!${nc}
+${red}${sample_test}${nc} in ${ylo}resources/data_test/${nc} FASTQ files were be used as sample example"
+    cp ${workdir}/resources/data_test/${sample_test}_R*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
     fastq="2"
 fi
 samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end)
@@ -287,36 +288,36 @@ SECONDS=0                                    # Initialize SECONDS counter
 
 # Print some analyzes settings
 echo -e "
-${blue}Max threads${nc} _____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
-${blue}Max memory${nc} ______________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
-${blue}Jobs memory${nc} _____________ ${red}${memory_per_job}${nc} Gb per job
+${blue}Max threads${nc} ____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
+${blue}Max memory${nc} _____________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
+${blue}Jobs memory${nc} ____________ ${red}${memory_per_job}${nc} Gb per job
 
-${blue}Starting time${nc} ___________ ${time_stamp_start}
-${blue}Working directory${nc} _______ ${workdir}/
-${blue}Samples processed${nc} _______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
+${blue}Starting time${nc} __________ ${time_stamp_start}
+${blue}Working directory${nc} ______ ${workdir}/
+${blue}Samples processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
 
-${blue}Snakemake version${nc} _______ ${ylo}${snakemake_version}${nc}
-${blue}Conda version${nc} ___________ ${ylo}${conda_version}${nc}
-${blue}Conda frontend${nc} __________ ${ylo}${conda_frontend}${nc}
-${blue}Mamba version${nc} ___________ ${ylo}${mamba_version}${nc}  
-${blue}Nextclade version${nc} _______ ${ylo}${nextclade_version}${nc}
+${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
+${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
+${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
+${blue}Mamba version${nc} __________ ${ylo}${mamba_version}${nc}  
+${blue}Nextclade version${nc} ______ ${ylo}${nextclade_version}${nc}
 
-${blue}Quality Ccontrol${nc} ________ [ ${red}${quality}${nc} ]
-${blue}Trimming${nc} ________________ [ ${red}${trimming}${nc} ]
-${blue}Cleapping${nc} _______________ [ ${red}${cleapping}${nc} ]
-${blue}mapping covstat${nc} _________ [ ${red}${covstats}${nc} ]
-${blue}Consensus${nc} _______________ [ ${red}${consensus}${nc} ]
-${blue}Nextclade${nc} _______________ [ ${red}${nextclade}${nc} ]
-${blue}Pangolin${nc} ________________ [ ${red}${pangolin}${nc} ]
-${blue}Gisaid${nc} __________________ [ ${red}${gisaid}${nc} ]
+${blue}Quality Ccontrol${nc} _______ [ ${red}${quality}${nc} ]
+${blue}Trimming${nc} _______________ [ ${red}${trimming}${nc} ]
+${blue}Cleapping${nc} ______________ [ ${red}${cleapping}${nc} ]
+${blue}Consensus${nc} ______________ [ ${red}${consensus}${nc} ]
+${blue}Covstats${nc} _______________ [ ${red}${covstats}${nc} ]
+${blue}Nextclade${nc} ______________ [ ${red}${nextclade}${nc} ]
+${blue}Pangolin${nc} _______________ [ ${red}${pangolin}${nc} ]
+${blue}Gisaid${nc} _________________ [ ${red}${gisaid}${nc} ]
 
-${blue}Fastq-Screen subset${nc} _____ ${red}${fastqscreen_subset}${nc} reads per sample
-${blue}Hard-clipping${nc} ___________ ${red}${clipping}${nc} (with Cutadapt)
-${blue}Reference genome${nc} ________ ${ylo}${reference}${nc}
-${blue}Aligner${nc} _________________ ${ylo}${aligner}${nc}
-${blue}Min coverage${nc} ____________ ${red}${min_cov}${nc} X
-${blue}Min allele frequency${nc} ____ ${red}${min_freq}${nc}
-${blue}Nextclade dataset${nc} _______ ${red}${nextclade_dataset}${nc}
+${blue}Fastq-Screen subset${nc} ____ ${red}${fastqscreen_subset}${nc} reads per sample
+${blue}Hard-clipping${nc} __________ ${red}${clipping}${nc} (with Cutadapt)
+${blue}Reference genome${nc} _______ ${ylo}${reference}${nc}
+${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
+${blue}Min coverage${nc} ___________ ${red}${min_cov}${nc} X
+${blue}Min allele frequency${nc} ___ ${red}${min_freq}${nc}
+${blue}Nextclade dataset${nc} ______ ${red}${nextclade_dataset}${nc}
 "
 
 
@@ -349,7 +350,7 @@ Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now create
 
     #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
 "
-            conda env create -f ${workdir}/workflow/environments/${os}/nextclade_v.${nextclade_version}.yaml &> /dev/null
+            conda env create -f ${workdir}/workflow/environments/nextclade_v.${nextclade_version}.yaml &> /dev/null
         else
 	    echo -e "
 Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
@@ -431,7 +432,6 @@ for snakefile in ${snakefiles_list} ; do
     snakemake \
 	--directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --config os=${os} \
         --rerun-incomplete \
         --unlock ;
 done
@@ -454,7 +454,6 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
 	--resources mem_gb=${max_memory} \
         --cores ${max_threads} \
-        --config os=${os} \
         --rerun-incomplete \
         --list-conda-envs \
         2> /dev/null ;
@@ -478,7 +477,6 @@ done
 #        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
 #	 --resources mem_gb=${max_memory} \
 #        --cores ${max_threads} \
-#        --config os=${os} \
 #        --rerun-incomplete \
 #        --conda-cleanup-envs ;
 #done
@@ -504,7 +502,6 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
 	--resources mem_gb=${max_memory} \
         --cores ${max_threads} \
-        --config os=${os} \
         --rerun-incomplete \
         --use-conda \
         --conda-frontend ${conda_frontend} \
@@ -534,7 +531,6 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
 	--resources mem_gb=${max_memory} \
         --cores ${max_threads}\
-        --config os=${os} \
         --rerun-incomplete \
         --use-conda \
         --conda-frontend ${conda_frontend} \
@@ -567,7 +563,6 @@ for snakefile in ${snakefiles_list} ; do
         --cores ${max_threads} \
         --max-threads ${max_threads} \
 	--resources mem_gb=${max_memory} \
-        --config os=${os} \
         --rerun-incomplete \
         --keep-going \
         --use-conda \
@@ -682,13 +677,13 @@ ${green}------------------------${nc}
 
 # Save and deactive environments
 mkdir -p ${workdir}/results/10_Reports/conda_env/ 2> /dev/null
-cp ${workdir}/workflow/environments/${os}/*.yaml ${workdir}/results/10_Reports/conda_env/
+cp ${workdir}/workflow/environments/*.yaml ${workdir}/results/10_Reports/conda_env/
 conda deactivate
 
 # Cleanup
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 find ${workdir}/results/ -type d -empty -delete # Remove empty directory
-rm -f ${workdir}/resources/reads/SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R*.fastq.gz 2> /dev/null
+rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz 2> /dev/null
 
 # Timer
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
@@ -711,7 +706,7 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.07.03 (Update workflow-base)
+Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
 Run ____________________ bash Start_GeVarLi.sh
 
 Operating System _______ ${os}

@@ -1,5 +1,17 @@
 #!/usr/bin/env python
 
+# From https://github.com/nf-core/viralrecon/
+#
+# https://github.com/nf-core/viralrecon/blob/master/bin/ivar_variants_to_vcf.py
+#
+# The nf-core framework for community-curated bioinformatics pipelines.
+# Philip Ewels, Alexander Peltzer, Sven Fillinger,
+# Harshil Patel, Johannes Alneberg, Andreas Wilm,
+# Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
+#
+# Nat Biotechnol. 2020 Feb 13. doi: 10.1038/s41587-020-0439-x
+
+
 from email.charset import QP
 import os
 import sys

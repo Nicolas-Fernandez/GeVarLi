@@ -1,9 +1,8 @@
 name: sickle-trim_v.1.33
 channels:
-  - bioconda
   - conda-forge
-  - defaults
+  - bioconda
+  - nodefaults
 dependencies:
-  - libzlib=1.2.13
   - sickle-trim=1.33
-  - zlib=1.2.13
+

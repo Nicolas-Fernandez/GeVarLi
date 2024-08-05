@@ -8,12 +8,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ indexing_genomes.smk
-# Version ________________ v.2023.06
+# Version ________________ v.2023.08
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with indexing genomes rules
 # Date ___________________ 2022.09.28
-# Latest modifications ___ 2024.01.31 (edit message format)
+# Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
 # Use ____________________ snakemake -s indexing_genomes.smk --use-conda 
 
 ###############################################################################
@@ -37,16 +37,15 @@ REF_SEQ, = glob_wildcards("resources/genomes/{ref_seq}.fasta")
 ### RESOURCES ###
 #################
 
-OS = config["os"]                  # Operating system
 CPUS = config["resources"]["cpus"] # Threads (maximum)
 
 ###############################################################################
 ### ENVIRONMENTS ###
 ####################
 
-MINIMAP2 = config["conda"][OS]["minimap2"] # MM2 conda env
-BWA = config["conda"][OS]["bwa"]           # BWA conda env
-BOWTIE2 = config["conda"][OS]["bowtie2"]   # BT2 conda env
+MINIMAP2 = config["conda"]["yaml"]["minimap2"] # MM2 conda env
+BWA = config["conda"]["yaml"]["bwa"]           # BWA conda env
+BOWTIE2 = config["conda"]["yaml"]["bowtie2"]   # BT2 conda env
 
 ###############################################################################
 ### PARAMETERS ###
