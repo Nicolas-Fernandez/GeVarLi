@@ -1,0 +1,7 @@
+name: gawk_v.5.3.0
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - gawk=5.3.0

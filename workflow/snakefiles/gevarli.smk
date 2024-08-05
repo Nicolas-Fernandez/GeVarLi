@@ -8,12 +8,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
-# Version ________________ v.2024.03
+# Version ________________ v.2024.08
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.15 (Add 'modules' system and QC)
+# Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
 # Use ____________________ snakemake -s gevarli.smk --use-conda 
 
 ###############################################################################
@@ -164,7 +164,6 @@ SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
 ### RESOURCES ###
 #################
 
-OS = config["os"]                        # Operating system
 CPUS = config["resources"]["cpus"]       # Threads (maximum)
 RAM = config["resources"]["ram"]         # Memory (RAM) in Gb (maximum)
 MEM_GB = get_memory_per_thread           # Memory per thread in GB (maximum)
@@ -174,24 +173,24 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 ### ENVIRONMENTS ###
 ####################
 
-MULTIQC = config["conda"][OS]["multiqc"]           # Multi-QC conda env
-FASTQ_SCREEN = config["conda"][OS]["fastq_screen"] # Fastq-Screen conda env
-FASTQC= config["conda"][OS]["fastqc"]              # FastQC conda env
-CUTADAPT = config["conda"][OS]["cutadapt"]         # Cutadapt conda environment
-SICKLE_TRIM = config["conda"][OS]["sickle_trim"]   # Sickle-Trim conda environment
-MINIMAP2 = config["conda"][OS]["minimap2"]         # BWA conda environment
-BWA = config["conda"][OS]["bwa"]                   # BWA conda environment
-BOWTIE2 = config["conda"][OS]["bowtie2"]           # Bowtie2 conda environment
-SAMTOOLS = config["conda"][OS]["samtools"]         # SamTools conda environment
-BEDTOOLS = config["conda"][OS]["bedtools"]         # BedTools conda environment
-BAMCLIPPER = config["conda"][OS]["bamclipper"]     # BAMClipper
-GAWK = config["conda"][OS]["gawk"]                 # Awk (GNU) conda environment
-LOFREQ = config["conda"][OS]["lofreq"]             # LoFreq conda environment
-IVAR = config["conda"][OS]["ivar"]                 # iVar conda environment
-TSV2VCF = config["conda"][OS]["tsv2vcf"]           # tsv2vcf conda environment
-BCFTOOLS = config["conda"][OS]["bcftools"]         # BcfTools conda environment
-PANGOLIN = config["conda"][OS]["pangolin"]         # Pangolin conda environment
-NEXTCLADE = config["conda"][OS]["nextclade"]       # Nextclade conda environment
+MULTIQC = config["conda"]["yaml"]["multiqc"]           # Multi-QC conda env
+FASTQ_SCREEN = config["conda"]["yaml"]["fastq_screen"] # Fastq-Screen conda env
+FASTQC= config["conda"]["yaml"]["fastqc"]              # FastQC conda env
+CUTADAPT = config["conda"]["yaml"]["cutadapt"]         # Cutadapt conda environment
+SICKLE_TRIM = config["conda"]["yaml"]["sickle_trim"]   # Sickle-Trim conda environment
+MINIMAP2 = config["conda"]["yaml"]["minimap2"]         # BWA conda environment
+BWA = config["conda"]["yaml"]["bwa"]                   # BWA conda environment
+BOWTIE2 = config["conda"]["yaml"]["bowtie2"]           # Bowtie2 conda environment
+SAMTOOLS = config["conda"]["yaml"]["samtools"]         # SamTools conda environment
+BEDTOOLS = config["conda"]["yaml"]["bedtools"]         # BedTools conda environment
+BAMCLIPPER = config["conda"]["yaml"]["bamclipper"]     # BAMClipper
+GAWK = config["conda"]["yaml"]["gawk"]                 # Awk (GNU) conda environment
+LOFREQ = config["conda"]["yaml"]["lofreq"]             # LoFreq conda environment
+IVAR = config["conda"]["yaml"]["ivar"]                 # iVar conda environment
+TSV2VCF = config["conda"]["yaml"]["tsv2vcf"]           # tsv2vcf conda environment
+BCFTOOLS = config["conda"]["yaml"]["bcftools"]         # BcfTools conda environment
+PANGOLIN = config["conda"]["yaml"]["pangolin"]         # Pangolin conda environment
+NEXTCLADE = config["conda"]["yaml"]["nextclade"]       # Nextclade conda environment
 
 ###############################################################################
 ### PARAMETERS ###
@@ -403,7 +402,6 @@ rule convert_tsv2vcf:
         tsv = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-call.tsv"
     output:
         vcf = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-filt.vcf"
-        #vcf_sort = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_ivar_variant-filt.vcf"
     log:
         "results/10_Reports/tools-log/tsv2vcf/{reference}/{sample}_{aligner}_{min_cov}X_ivar_tsv2vcf.log"
     shell:
@@ -412,12 +410,6 @@ rule convert_tsv2vcf:
         "{input.tsv} "                               # TSV input
         "{output.vcf} "                              # VCF output
         "&> {log}"                                   # Log redirection
-        #"&& "                                         # AND
-        #"bcftools "                                 # Bcftools, tools for variant calling and manipulating VCFs and BCFs
-        #"sort "                                      # Sort VCF/BCF file
-        #"--output {output.vcf_sort} "                # Sorted VCF ouput file
-        #"{output.vcf} "                              # Unsorted VCF input file
-        #"&>> {log}"                                  # Log redirection 
 
 ###############################################################################
 rule ivar_consensus:

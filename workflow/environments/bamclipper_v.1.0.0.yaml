@@ -1,0 +1,7 @@
+name: bamclipper_v.1.0.0
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - bamclipper=1.0.0

@@ -10,12 +10,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
-# Version ________________ v.2024.07
+# Version ________________ v.2024.08
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.07.15 (Re-order and simplify config file)
+# Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -34,12 +34,13 @@ resources:
     ### ''         # Custom (set your own)
 
 ###############################################################################
-modules:
+modules: # GeVarLi modules analysis
+  # Available options, set at least one: 
   - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
-  #- 'trimming'  # Perform reads cleanning (default temp) but KEEP files (Cutadapt, Sickle-trim)
+  #- 'trimming'  # Keep trimmed reads files (Cutadapt, Sickle-trim)
   #- 'cleapping' # Perform reads clipping (Bamclipper)
-  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
+  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
   - 'nextclade' # Perform nextclade clade assignation (Nexclade)
   - 'pangolin'  # Perform pangolin lineage assignation (Pangolin)
   ###- 'gisaid'    # Perform gisaid submission (GisAid : TODO)
@@ -117,7 +118,18 @@ nextclade:
     #- 'hMPXV_B1'   # human MPox - only lineage B1*
 
 ###############################################################################
-pangolin:
+pangolin: # na
+
+    
+###############################################################################
+gisaid: ## TODO ##
+  username: 'username'
+  threshold: '30'
+  name: 'hCoV-19'
+  country: 'France'
+  identifier: ''
+  year: '2022'
+
 
 ###############################################################################
 ################################## VARIANTS ###################################
@@ -142,15 +154,6 @@ lofreq:
   # Available options, set only one:
     - '--no-mq' # no, don't merge mapping quality (default)
     #- ''        # yes, merge mapping quality (not recommanded with BWA or Bowtie2)
-
-###############################################################################
-gisaid:
-  username: 'username'
-  threshold: '30'
-  name: 'hCoV-19'
-  country: 'France'
-  identifier: ''
-  year: '2022'
 
 
 ###############################################################################
@@ -253,7 +256,7 @@ cutadapt:
     truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
     nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
     small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
-  clipping: '0' # Cut 'n' first nucleotides reads, used for amplicon primers hard-clipping (default: 0)
+  clipping: '0' # Cut 'n' first nucleotides of each reads (default: 0)
 
 
 ###############################################################################
@@ -261,7 +264,7 @@ cutadapt:
 ###############################################################################
 
 ###############################################################################
-multiqc:
+multiqc: ## TODO ##
   path: 'configuration/multiqc/' # Path to the multiqc configuration file
   config: # Multiqc configuration file (default: default.yaml
   # Available options (not exhaustive), set only one:
@@ -284,54 +287,34 @@ fastq_screen:
 conda:
   frontend: # Conda frontend (default: "mamba")
   # Available options, set only one:
-    - 'mamba' # mamba (faster)
-    #- 'conda' # conda (iTrop)
-  osx: # Conda OSX environement yaml files:
-    bamclipper:    '../environments/osx/bamclipper_v.1.0.0.yaml'        # Bamclipper    ver. 1.0.0
-    bcftools:      '../environments/osx/bcftools_v.1.17.yaml'           # Bcftools      ver. 1.17
-    bedtools:      '../environments/osx/bedtools_v.2.31.0.yaml'         # Bedtools      ver. 2.31.0
-    bowtie2:       '../environments/osx/bowtie2_v.2.5.1.yaml'           # Bowtie2       ver. 2.5.1
-    bwa:           '../environments/osx/bwa_v.0.7.17.yaml'              # BWA           ver. 0.7.17
-    cutadapt:      '../environments/osx/cutadapt_v.4.4.yaml'            # Cutadapt      ver. 4.4
-    fastq_screen:  '../environments/osx/fastq-screen_v.0.15.3.yaml'     # Fastq-Screen  ver. 0.15.3
-    fastqc:        '../environments/osx/fastqc_v.0.12.1.yaml'           # FastQC        ver. 0.12.1
-    gawk:          '../environments/osx/gawk_v.5.1.0.yaml'              # Awk (GNU)     ver. 5.1.0
-    ivar:          '../environments/osx/ivar_v.1.4.2.yaml'              # iVar          ver. 1.4.2
-    lofreq:        '../environments/osx/lofreq_v.2.1.5.yaml'            # Lofreq        ver. 2.1.5
-    multiqc:       '../environments/osx/multiqc_v.1.19.yaml'            # MultiQC       ver. 1.19
-    minimap2:      '../environments/osx/minimap2_v.2.26.yaml'           # Minimap2      ver. 2.26
-    nextclade:     '../environments/osx/nextclade_v.3.7.4.yaml'         # Nextclade     ver. 3.7.4
-    pangolin:      '../environments/osx/pangolin_v.4.3.yaml'            # Pangolin      ver. 4.3
-    samtools:      '../environments/osx/samtools_v.1.17.yaml'           # Samtools      ver. 1.17
-    sickle_trim:   '../environments/osx/sickle-trim_v.1.33.yaml'        # Sickle-trim   ver. 1.33
-    tsv2vcf:       '../environments/osx/tsv2vcf_v.1.0.yaml'             # tsv2vcf       ver. 1.0
-    workflow_base: '../environments/osx/workflow-base_v.2024.07.yaml'   # Workflow-Base ver. 2024.07
-  linux: # Conda Linux environement yaml files:
-    bamclipper:    '../environments/linux/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
-    bcftools:      '../environments/linux/bcftools_v.1.17.yaml'         # Bcftools      ver. 1.17
-    bedtools:      '../environments/linux/bedtools_v.2.31.0.yaml'       # Bedtools      ver. 2.31.0
-    bowtie2:       '../environments/linux/bowtie2_v.2.5.1.yaml'         # Bowtie2       ver. 2.5.1
-    bwa:           '../environments/linux/bwa_v.0.7.17.yaml'            # BWA           ver. 0.7.17
-    cutadapt:      '../environments/linux/cutadapt_v.4.4.yaml'          # Cutadapt      ver. 4.4
-    fastq_screen:  '../environments/linux/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3
-    fastqc:        '../environments/linux/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
-    gawk:          '../environments/linux/gawk_v.5.1.0.yaml'            # Awk (GNU)     ver. 5.1.0
-    ivar:          '../environments/linux/ivar_v.1.4.2.yaml'            # iVar          ver. 1.4.2
-    lofreq:        '../environments/linux/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5
-    minimap2:      '../environments/linux/minimap2_v.2.26.yaml'         # Minimap2      ver. 2.26
-    multiqc:       '../environments/linux/multiqc_v.1.19.yaml'          # MultiQC       ver. 1.19
-    nextclade:     '../environments/linux/nextclade_v.3.7.4.yaml'       # Nextclade     ver. 3.7.4
-    pangolin:      '../environments/linux/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
-    samtools:      '../environments/linux/samtools_v.1.17.yaml'         # Samtools      ver. 1.17
-    sickle_trim:   '../environments/linux/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-    tsv2vcf:       '../environments/linux/tsv2vcf_v.1.0.yaml'           # tsv2vcf       ver. 1.0
-    workflow_base: '../environments/linux/workflow-base_v.2024.07.yaml' # Workflow-Base ver. 2024.07
+    - 'mamba' # mamba (default, faster)
+    #- 'conda' # conda (use it on iTrop HPC)
+  yaml: # Conda environement yaml files:
+    bamclipper:    '../environments/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
+    bcftools:      '../environments/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
+    bedtools:      '../environments/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
+    bowtie2:       '../environments/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
+    bwa:           '../environments/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
+    cutadapt:      '../environments/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
+    fastq_screen:  '../environments/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
+    fastqc:        '../environments/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
+    gawk:          '../environments/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
+    ivar:          '../environments/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
+    lofreq:        '../environments/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5 (with Samtools ver. 1.20)
+    minimap2:      '../environments/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
+    multiqc:       '../environments/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
+    nextclade:     '../environments/nextclade_v.3.8.2.yaml'       # Nextclade     ver. 3.8.2
+    pangolin:      '../environments/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
+    samtools:      '../environments/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
+    sickle_trim:   '../environments/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
+    tsv2vcf:       '../environments/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)
+    workflow_base: '../environments/workflow-base_v.2024.08.yaml' # Workflow-Base ver. 2024.08
 
 ###############################################################################
-os: 'osx' # Operating System (default: "osx", but check and set by Start_GeVarLi.sh)
+os: 'osx' # Operating System (default: "osx", but checked and set by Start_GeVarLi.sh)
 # Available options (just for information)
   ### 'linux'   # GNU Linux      | Free                       [UNIX-like] (suported)
   ### 'osx'     # Mac OSX        | Apple (R)                  [UNIX-like] (suported)
   ### 'bsd'     # Free BSD       | Free                       [UNIX-like] (not tested)
   ### 'solaris' # Oracle Solaris | Sun Microsystems (R)       [UNIX-like] (not tested)
-  ### 'windows' # Windows        | Microsoft Corporation (R)  [Not-UNIX]  (use WSL!)
+  ### 'windows' # Windows        | Microsoft Corporation (R)  [Not-UNIX]  (use WSL, suported)

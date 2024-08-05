@@ -1,0 +1,11 @@
+name: workflow-base_v.2024.08
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - graphviz=12.0.0
+  - mamba=1.5.8
+  - rename=1.601
+  - snakemake=8.16.0
+  - yq=3.4.3
