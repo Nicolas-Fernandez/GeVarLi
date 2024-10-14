@@ -9,14 +9,14 @@
 ###    \/                                                            \/     ###
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ Start_GeVarLi.sh
-# Version ________________ v.2024.08
+# Name ___________________ Run_GeVarLi.sh
+# Version ________________ v.2024.10
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
-# Use ____________________ bash Start_GeVarLi.sh
+# Latest modifications ___ 2024.10.01 (Dedicated installation scripts creation)
+# Use ____________________ ./Run_GeVarLi.sh
 
 ###############################################################################
 ### COLORS ###
@@ -33,7 +33,7 @@ nc="\033[0m"       # no color
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
-gevarli_version="2024.08"                              # GeVarLi version
+gevarli_version="2024.10"                              # GeVarLi version
 workflow_base_version="2024.08"                        # Workflow base version
 snakemake_version="8.16.0"                             # Snakemake version
 nextclade_version="3.8.2"                              # Nextclade version
@@ -43,14 +43,14 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
-${blue}Name${nc} ___________________ Start_GeVarLi.sh
+${blue}Name${nc} ___________________ Run_GeVarLi.sh
 ${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.08.05 ('Noarch' conda environment yaml files)
-${blue}Run${nc} ____________________ bash Start_GeVarLi.sh
+${blue}Latest modifications${nc} ___ 2024.10.01 (Dedicated installation scripts creation)
+${blue}Run${nc} ____________________ ./Run_GeVarLi.sh
 "
 
 
@@ -65,9 +65,9 @@ ${green}----------------------------${nc}
 
 # Get and print operating system 
 case "$OSTYPE" in
-  linux*)   os="linux" ;;
-  bsd*)     os="bsd" ;;
   darwin*)  os="osx" ;;
+  linux*)   os="linux" ;;
+  bsd*)     os="bsd" ;;                       
   solaris*) os="solaris" ;;
   msys*)    os="windows" ;;
   cygwin*)  os="windows" ;;
@@ -96,7 +96,7 @@ then
     logical_cpu=$(sysctl -n hw.logicalcpu)           # Get logical cpu
     mem_size=$(sysctl -n hw.memsize)                 # Get memory size (bit)
     ram_gb=$(expr ${mem_size} \/ $((1024**3)))       # mem_size / 1024**3 = Gb
-elif [[ ${os} == "linux" ]]
+elif [[ ${os} == "linux" || ${os} == "bsd" || ${os} == "solaris" ]]
 then
     model_name=$(lscpu | grep -o -E "Model name: +.+" | sed -E "s/Model name: +//")                           # Get chip model name
     physical_cpu=$(lscpu | grep -o -E "^CPU\(s\): +[0-9]+" | sed -E "s/CPU\(s\): +//")                        # Get physical cpu
@@ -105,7 +105,7 @@ then
     mem_size=$(grep -o -E "MemTotal: +[0-9]+" /proc/meminfo | sed -E "s/MemTotal: +//")                       # Get memory size (Kb)
     ram_gb=$(expr ${mem_size} \/ $((1024**2)))                                                                # mem_size / 1024**2 = Gb
 else
-    echo -e "Please, use '${red}osx${nc}', '${red}linux${nc}' or '${red}WSL${nc}' operating systems"
+    echo -e "Please, use UNIX operating systems like '${red}osx${nc}', '${red}linux${nc}' or '${red}WSL${nc}'"
     exit 1
 fi
 
@@ -127,7 +127,8 @@ ${green}#####${nc} ${red}NETWORK${nc} ${green}#####${nc}
 ${green}-------------------${nc}
 "
 
-if : >/dev/tcp/8.8.8.8/53
+if curl -s --head --request GET http://www.google.com --max-time 5 > /dev/null || \
+   curl -s --head --request GET http://www.cloudflare.com --max-time 5 > /dev/null;
 then
     network="Online"
 else
@@ -144,68 +145,11 @@ ${blue}Network${nc} ________________ ${red}${network}${nc}
 ##################
 
 # Intern shell source conda
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda
-source ~/minigorge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge
-source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server : conda 23.11.0
+source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge3
+source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
+source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
+source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
 
-
-###############################################################################
-### WORKFLOW-BASE INSTALLATION ###
-##################################
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}WORKFLOW-BASE INSTALLATION${nc} ${green}#####${nc}
-${green}---------------------------------------${nc}
-"
-
-# Test if latest 'workflow-base' environment exist
-if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
-then
-    echo -e "
-Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} it's already created!
-"
-else # Test network conection
-    if [[ ${network} = "Online" ]]
-    then
-        echo -e "
-Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
-Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
-
-    # ${red}Snakemake${nc} (ver. 8.16.0) ${blue} ___ Workflow manager (rules)${nc}
-    # ${red}Mamba${nc}     (ver. 1.5.8)  ${blue} ___ Packages manager (conda environments)${nc}
-    # ${red}Yq${nc}        (ver. 3.4.3)  ${blue} ___ YAML parser (config)${nc}
-    # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ File renamer (FASTQ)${nc}
-    # ${red}Graphviz${nc}  (ver. 12.0.0) ${blue} ___ Graph visualization (DAG)${nc}
-"
-        conda env create -f ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
-    else
-	echo -e "
-Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-Please, check your network conection!
-"
-    fi
-fi
-
-# Remove depreciated 'gevarli', 'snakemake' or 'workflow' old environments
-old_envs="gevarli-base_v.2022.11 \
-          gevarli-base_v.2022.12 \
-          gevarli-base_v.2023.01 \
-          gevarli-base_v.2023.02 \
-          gevarli-base_v.2023.03 \
-          gevarli-base_v.2023.04 \
-          snakemake-base_v.2023.01 \
-          snakemake-base_v.2023.02 \
-          snakemake-base_v.2023.03 \
-          snakemake-base_v.2023.04 \
-          workflow-base_v.2023.06 \
-          workflow-base_v.2024.01 \
-          workflow-base_v.2024.02 \
-          workflow-base_v.2024.07"
-
-for env in ${old_envs} ; do
-    conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
-done
 
 ###############################################################################
 ### CONDA ACTIVATION ###
@@ -219,6 +163,7 @@ ${green}----------------------------${nc}
 echo -e "conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
 
 conda activate workflow-base_v.${workflow_base_version}
+
 
 ###############################################################################
 ### SETTINGS ###
@@ -421,7 +366,6 @@ ${blue}---------------------------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
-# Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # Remove a lock on the working directory.
 
@@ -432,108 +376,6 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --rerun-incomplete \
         --unlock ;
-done
-
-echo -e "
-${blue}## Conda Environments List ##${nc}
-${blue}-----------------------------${nc}
-"
-# Specify working directory (relative paths in the snakefile will use this as their origin).
-# The workflow definition in form of a snakefile.
-# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Set or overwrite values in the workflow config object.
-# Re-run all jobs the output of which is recognized as incomplete.
-# List all conda environments and their location on disk.
-
-for snakefile in ${snakefiles_list} ; do
-    echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
-        --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-	--resources mem_gb=${max_memory} \
-        --cores ${max_threads} \
-        --rerun-incomplete \
-        --list-conda-envs \
-        2> /dev/null ;
-done
-
-#echo -e "
-#${blue}## Conda Environments Cleanup ##${nc}
-#${blue}-----------------------------${nc}
-#"
-# Specify working directory (relative paths in the snakefile will use this as their origin).
-# The workflow definition in form of a snakefile.
-# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Set or overwrite values in the workflow config object.
-# Re-run all jobs the output of which is recognized as incomplete.
-# Cleanup unused conda environments.
-#
-#for snakefile in ${snakefiles_list} ; do
-#    echo -e "${blue}-- ${snakefile} --${nc}" ;
-#    snakemake \
-#        --directory ${workdir}/ \
-#        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-#	 --resources mem_gb=${max_memory} \
-#        --cores ${max_threads} \
-#        --rerun-incomplete \
-#        --conda-cleanup-envs ;
-#done
-
-echo -e "
-${blue}## Conda Environments Setup ##${nc}
-${blue}------------------------------${nc}
-"
-# Specify working directory (relative paths in the snakefile will use this as their origin).
-# The workflow definition in form of a snakefile.
-# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Set or overwrite values in the workflow config object.
-# Re-run all jobs the output of which is recognized as incomplete.
-# If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
-## Default "mamba", recommended because much faster !
-# If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
-
-for snakefile in ${snakefiles_list} ; do
-    echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
-        --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-	--resources mem_gb=${max_memory} \
-        --cores ${max_threads} \
-        --rerun-incomplete \
-        --use-conda \
-        --conda-frontend ${conda_frontend} \
-        --conda-create-envs-only ;
-done
-
-echo -e "
-${blue}## Dry Run ##${nc}
-${blue}-------------${nc}
-"
-# Specify working directory (relative paths in the snakefile will use this as their origin).
-# The workflow definition in form of a snakefile.
-# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Set or overwrite values in the workflow config object.
-# Re-run all jobs the output of which is recognized as incomplete.
-# If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
-## Default "mamba", recommended because much faster !
-# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
-# Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
-# Do not output any progress or rule information.
-
-for snakefile in ${snakefiles_list} ; do
-    echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
-        --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-	--resources mem_gb=${max_memory} \
-        --cores ${max_threads}\
-        --rerun-incomplete \
-        --use-conda \
-        --conda-frontend ${conda_frontend} \
-        --dry-run \
-        --quiet all ;
 done
 
 echo -e "
@@ -698,14 +540,14 @@ ${blue}Processing time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${s
 
 # Log analyzes settings
 echo "
-Name ___________________ Start_GeVarLi.sh
+Name ___________________ Run_GeVarLi.sh
 Version ________________ ${gevarli_version}
 Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
-Run ____________________ bash Start_GeVarLi.sh
+Latest modifications ___ 2024.10.01 (Dedicated installation scripts creation)
+Run ____________________ ./Run_GeVarLi.sh
 
 Operating System _______ ${os}
 Shell __________________ ${shell}

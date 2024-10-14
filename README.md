@@ -1,9 +1,8 @@
 # GeVarLi: GEnome Assembly, VARiant calling and LIneage assignation #
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX Intel/M1/M2](<https://badgen.net/badge/icon/Hight Sierra (10.13.6) | Catalina (10.15.7) | Big Sure (11.6.3) | Monterey (12.6.0) | Ventura (13.3.1) | Sonoma( 14.2.1)/E6055C?icon=apple&label&list=|&scale=0.9>)
-![GNU-Linux Ubuntu](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
-![WSL/WSL2](<https://badgen.net/badge/icon/Bionic Beaver (18.04) | Focal Fossa (20.04) | Jammy Jellyfish (22.04)/00BCF2?icon=windows&label&list=|&scale=0.9>)
+![MacOSX - Intel x86-64 / ARM Apple Silicon](<https://badgen.net/badge/icon/from 10.13 (Hight Sierra) to 14.6 (Sonoma)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![GNU-Linux - Ubuntu / WSL](<https://badgen.net/badge/icon/from 18 (Bionic Beaver) to 24 (Noble Numbat)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/2/green?scale=0.9>)
 ![Issues opened](<https://badgen.net/badge/Issues opened/1/yellow?scale=0.9>)
 ![Maintened](<https://badgen.net/badge/Maintened/Yes/red?scale=0.9>)
@@ -12,22 +11,27 @@
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Gitlab](<https://badgen.net/badge/icon/Gitlab/orange?icon=gitlab&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.12.1/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
-![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.4.6/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
-![Conda](<https://badgen.net/badge/icon/Conda >= 23.3.1/black?icon=codacy&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.12/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.16.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Conda](<https://badgen.net/badge/icon/Conda 24.7.1/black?icon=codacy&label&scale=0.9>)
 
 ## ~ ABOUT ~ ##
 
 ### GeVarLi ###
 
 GeVarLi	is a FAIR, open-source, scalable, modulable and traceable snakemake pipeline, used for SARS-CoV-2 (and others viruses) genome assembly and variants monitoring, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
-GeVarLi was initialy developed for **[AFROSCREEN](https://www.afroscreen.org/)** project. 
+
+GeVarLi was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://www.afroscreen.org/)** project, before public release on GitLab (Mar. 2022).
 
 ### Genomic sequencing, a public health tool ###
 
 The establishment of a surveillance and sequencing network is an essential public health tool for detecting and containing pathogens with epidemic potential. Genomic sequencing makes it possible to identify pathogens, monitor the emergence and impact of variants, and adapt public health policies accordingly.
 
 The Covid-19 epidemic has highlighted the disparities that remain between continents in terms of surveillance and sequencing systems. At the end of October 2021, of the 4,600,000 sequences shared on the public and free GISAID tool worldwide, only 49,000 came from the African continent, i.e. less than 1% of the cases of Covid-19 diagnosed on this continent.
+
+### Version ###
+
+*v.2024.08*  
 
 ### Features ###
 
@@ -51,140 +55,64 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
   - Pangolin (_lineages reports_)
 - SLAM: SLURM Lightweight Automated Manager
 
-### Version ###
-
-*v.2024.08*  
-
 ### Rulegraph ###
 
 <img src="./resources/visuals/gevarli_rulegraph.png" width="600" height="1200">  
 
 
-
-## ~ SUPPORT ~ ##
-
-1. Please, read [The Fabulous Manual](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/blob/main/README.md?ref_type=heads)!
-2. Please, read [The Awsome Wiki](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/wikis/home)!
-3. Please, raise issues and bug reports at [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/issues)! 
-4. Please, contact me to [nicolas.fernandez@ird.fr](url)
-
-
-## ~ CITATION ~ ##
-
-If you use this pipeline, *please* cite this *GeVarLi*, GitLab IRDForge repository and authors:
-
-GitLab IRDForge repository: [https://forge.ird.fr/transvihmi/nfernandez/GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi)
-
-GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
-for reference-based Genome assembly and Variants calling and Lineage assignment,
-from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.
-
-Nicolas FERNANDEZ NUÑEZ _(1)_  
-_(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques et émergentes (TransVIHMI), University of Montpellier (UM), French Institute of Health and Medical Research (INSERM), French National Research Institute for Sustainable Development (IRD)_
-
-
-## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
-
-- Nicolas Fernandez - IRD _(Developer and Maintener)_  
-- Christelle Butel - IRD _(Reporter)_  
-- Eddy Kinganda-Lusamaki - INRB _(Source)_  
-- DALL•E mini - OpenAI [Git](https://github.com/borisdayma/dalle-mini) _(Repo. avatar)_  
-
-
-## ~ LICENSE ~ ##
-
-Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
-Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
-
-
-## ~ ROADMAP ~ ##
-
-- Publish GeVarLi paper !!!
-- Add GisAid submision files generation
-- Add MultiQC config template
-
-
-## ~ PROJECT STATUS ~ ##
-
-This project is **regularly update** and **actively maintened**  
-However, you can be volunteer to step in as **developer** or **maintainer**  
-
-
-## ~ CONTRIBUTING ~ ##
-
-Open to contributions!
-
-- Ask for updates
-- Propose new features
-- Report issues
-- Fix issues
-- Share code
-- Cite tool
-
-
 ## ~ INSTALLATIONS ~ ##
 
-### Conda _(dependencies)_ ###
+### Conda ###
+_(Fresh install - No prior Conda installation)_
 
 GeVarLi use the usefull **Conda** environment manager  
-So, if and only if, it's required _(Conda not already installed)_, please, first install **Conda**!  
- 
-**Download** and **install** your OS adapted version of [Latest Miniconda Installer](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links) (23.5.2+)  
+We recommend that you start with the **Miniforge** distribution, coming with **Mamba**  
+If you already know conda, great, you already know mamba!  
 
-e.g. for **Linux_x86_64-bit** or **Windows Subsystem for Linux (WSL)** *systems:  
+You can **download** and **install** your OS adapted [latest Miniforge installer](https://github.com/conda-forge/miniforge) (≥24.7.1)  
+
+Example script for **MacOSX_INTEL-chips_x86_64-bit** or **MacOSX_M1/M2-chips_arm_64-bit (with Rosetta)** systems:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ~/Miniconda3-latest-Linux-x86_64.sh && \
-bash ~/Miniconda3-latest-Linux-x86_64.sh -b -p ~/miniconda3/ && \
-rm -f ~/Miniconda3-latest-Linux-x86_64.sh && \
-~/miniconda3/condabin/conda update conda --yes && \
-~/miniconda3/condabin/conda init && \
+curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh && \
+bash ./Miniforge3-MacOSX-x86_64.sh -b -p ~/miniforge3/ && \
+rm -f ./Miniforge3-MacOSX-x86_64.sh && \
+~/miniforge3/condabin/conda update conda --yes && \
+~/miniforge3/condabin/conda init && \
 exit
 ```
 
-e.g. for **MacOSX_INTEL-chips_x86_64-bit** or **MacOSX_M1/M2-chips_arm_64-bit (with Rosetta)** systems:  
+Example script for **Linux_x86_64-bit** or **Windows Subsystem for Linux (WSL)** *systems:  
 ```shell
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/Miniconda3-latest-MacOSX-x86_64.sh && \
-bash ~/Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda3/ && \
-rm -f ~/Miniconda3-latest-MacOSX-x86_64.sh && \
-~/miniconda3/condabin/conda update conda --yes && \
-~/miniconda3/condabin/conda init && \
+curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && \
+bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/ && \
+rm -f ./Miniforge3-Linux-x86_64.sh && \
+~/miniforge3/condabin/conda update conda --yes && \
+~/miniforge3/condabin/conda init && \
 exit
 ```
 
-OS:
- - **linux**   |   GNU Linux    |                           | [UNIX-like] | (suported)
- - **osx**     |    Mac OSX     |         Apple (R)         | [UNIX-like] | (suported)
- - **bsd**     |    Free BSD    |                           | [UNIX-like] | (not tested...)
- - **solaris** | Oracle Solaris |    Sun Microsystems (R)   | [UNIX-like] | (not tested...)
- - **windows** |    Windows     | Microsoft Corporation (R) |  [Not UNIX] | (not suported. Use WSL!) 
+You can then **update** Mamba like this:
+```shell
+mamba update mamba --yes
+```
 
-**Update** Conda:
-```
-conda update -n base -c defaults conda
-```
+_Operating systems:_
+ - **osx**     |    Mac OSX     |         Apple (R)         | [UNIX] | (suported)
+ - **linux**   |   GNU Linux    |                           | [UNIX] | (suported)
+ - **bsd**     |    Free BSD    |                           | [UNIX] | (not tested)
+ - **solaris** | Oracle Solaris |    Sun Microsystems (R)   | [UNIX] | (not tested)
+ - **windows** |    Windows     | Microsoft Corporation (R) |  [-]   | (not suported, use WSL!) 
+
 
 ### GeVarLi ###
+_(Existing Conda install)_
 
-NB: If you are using a HPC,	please,	refer to your System Administrator for cluster usage policy !
-
-**Clone** _(i.e. to your home/)_ [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) _(128 Mo)_ GitLab IRDForge repository _(ID: 399)_:
-
-```shell
-git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
-```
-
-**Update** GeVarLi: 
-```shell
-cd ~/GeVarLi/ && git reset --hard HEAD && git pull --depth 1 --verbose
-```
-
-Otherwise, you can just **download** GeVarLi (no update through "git pull"):
-_(75 Mo required)_
+You can **download** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) _(75 Mo)_ GitLab IRDForge repository _(ID: 399)_:
+_(no update through "git pull")_
 
 <img src="./resources/visuals/download_button.png" width="436" height="82">  
 
-or
-
+Or **download** to your home/ directory like this:
 ```shell
 curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz && \
 tar -xzvf ~/GeVarLi-main.tar.gz && \
@@ -192,7 +120,42 @@ mv ~/GeVarLi-main/ ~/GeVarLi/ && \
 rm -f ~/GeVarLi-main.tar.gz
 ```
 
-## ~ USAGE (quick start) ~ ##
+Otherwise, you can **clone** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) _(128 Mo)_ GitLab IRDForge repository _(ID: 399)_:
+
+**Clone** to your home/ directory:
+```shell
+git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
+```
+
+And then, you can **update** through "git pull" like this:
+```shell
+cd ~/GeVarLi/ && git reset --hard HEAD && git pull --depth 1 --verbose
+```
+
+
+## ~ USAGE ~ ##
+
+### First step ###
+
+Execute bash script **Start_GeVarLi.sh** to run GeVarLi pipeline for the first time:
+    - or with a **Double-click** on it _(not on WSL)_
+    - or with a **Right-click** > **Open with** > **Terminal.app**
+    - or with **CLI** from a terminal:
+```shell                                                                                                                                                                         
+./Start_GeVarLi.sh                                                                                                                                                               
+```
+
+First run will auto-created _(only once)_:
+	- Workflow-Base conda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
+	- GeVarLi conda environments _(all tools used by each GeVarLi rules)_
+	- Indexes for BWA, BOWTIE2 and minimap2 aligners _(for each fasta genomes in resources/genomes/ directory)_
+	
+_This may take some time, depending on your internet connection and your computer_
+
+
+### Quick start ###
+
+
 
 1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
 _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
@@ -208,13 +171,6 @@ _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
 
 _Option-1: Edit **config.yaml** file in **./configuration/** directory_  
 _Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_  
-
-First run will auto-created _(only once)_:
-	- Workflow-Base conda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
-	- GeVarLi conda environments _(all tools used by each GeVarLi rules)_
-	- Indexes for BWA, BOWTIE2 and minimap2 aligners _(for each fasta genomes in resources/genomes/ directory)_
-	
-_This may take some time, depending on your internet connection and your computer_
 
 
 ## ~ RESULTS ~ ##
@@ -309,7 +265,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 
 <img src="./resources/visuals/gevarli_filegraph.png" width="300" height="1200">  
 
-### Files Glossary ###
+### Glossary ###
 
 - **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
 - **BAI**: BAM Indexes.
@@ -322,8 +278,6 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 - **YAML**: Commonly used for configuration filesand in applications where data is being stored or transmitted.
 - **GZ**: format used for file compression and decompression, normally used to compress just single files.
 - **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
-
-
 - **CLI**: Command Line Interface
 - **GUI**: Graphical User Interface
 
@@ -432,9 +386,10 @@ _**Note**: edit only if you want to change some environments (e.g. test a new ve
 ```shell
  🧩 GeVarLi/
  ├── 🖥️️  Start_GeVarLi.sh
+ ├── 🧮 SLAM.sh
  ├── 📚 README.md
  ├── 🪪 LICENSE
- ├── 🛑 .gitignore
+ ├── 🚫 .gitignore
  ├── 📂 .git/
  ├── 📂 .snakemake/
  ├── 📂 configuration/
@@ -446,11 +401,7 @@ _**Note**: edit only if you want to change some environments (e.g. test a new ve
  │    │    ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
  │    │    ├── 🧬 Monkeypox-virus_Zaire_AF-380138-1.fasta
  │    │    ├── 🧬 {REFERENCE}.fasta
- │    │    ├── 🧬 QC_Echerichia-coli_CP-060121-1.fasta
- │    │    ├── 🧬 QC_Kanamycin-Resistance-Gene.fasta
- │    │    ├── 🧬 QC_NGS-adapters.fasta
  │    │    ├── 🧬 QC_Phi-X174_Coliphage_NC-001422-1.fasta
- │    │    ├── 🧬 QC_UniVec_wo_phiX-kanamycin-NGSseq.fasta
  │    │    └── 🧬 QC_{REFERENCE}.fasta
  │    ├── 📂 indexes/
  │    │    ├── 📂 minimap2/
@@ -498,6 +449,68 @@ _**Note**: edit only if you want to change some environments (e.g. test a new ve
 	       ├── 📜 gevarli.smk
 	       └── 📜 indexing_genomes.smk
 ```
+
+
+## ~ SUPPORT ~ ##
+
+1. Please, read [The Fabulous Manual](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/blob/main/README.md?ref_type=heads)!
+2. Please, read [The Awsome Wiki](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/wikis/home)!
+3. Please, raise issues and bug reports at [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/issues)! 
+4. Please, contact me to [nicolas.fernandez@ird.fr](url)
+
+
+## ~ CITATION ~ ##
+
+If you use this pipeline, *please* cite this *GeVarLi*, GitLab IRDForge repository and authors:
+
+GitLab IRDForge repository: [https://forge.ird.fr/transvihmi/nfernandez/GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi)
+
+GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
+for reference-based Genome assembly and Variants calling and Lineage assignment,
+from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.
+
+Nicolas FERNANDEZ NUÑEZ _(1)_  
+_(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques et émergentes (TransVIHMI), University of Montpellier (UM), French Institute of Health and Medical Research (INSERM), French National Research Institute for Sustainable Development (IRD)_
+
+
+## ~ AUTHORS & ACKNOWLEDGMENTS ~ ##
+
+- Nicolas Fernandez - IRD _(Developer and Maintener)_  
+- Christelle Butel - IRD _(Reporter)_  
+- Eddy Kinganda-Lusamaki - INRB _(Source)_  
+- DALL•E mini - OpenAI [Git](https://github.com/borisdayma/dalle-mini) _(Repo. avatar)_  
+
+
+## ~ LICENSE ~ ##
+
+Licencied under [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)  
+Intellectual property belongs to [IRD](https://www.ird.fr/) and authors.
+
+
+## ~ ROADMAP ~ ##
+
+- Publish GeVarLi paper !!!
+- Add GisAid submision files generation
+- Add MultiQC config template
+
+
+## ~ PROJECT STATUS ~ ##
+
+This project is **regularly update** and **actively maintened**  
+However, you can be volunteer to step in as **developer** or **maintainer**  
+
+
+## ~ CONTRIBUTING ~ ##
+
+Open to contributions!
+
+- Ask for updates
+- Propose new features
+- Report issues
+- Fix issues
+- Share code
+- Cite tool
+
 
 ## ~ REFERENCES ~ ##
 
