@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Miniforge3 distribution for Conda-Mamba installation
 # Date ___________________ 2024.09.27
-# Latest modifications ___ 2024.09.27 (Init)
+# Latest modifications ___ 2024.09.27 (change old paths from miniconda3 to miniforge3)
 # Use ____________________ ./Install_Miniforge3_Conda-Mamba.sh
 
 ###############################################################################
