@@ -171,9 +171,9 @@ ${green}Miniforge3${nc} distribution for ${ylo}Conda${nc} and ${ylo}Mamba${nc} w
             bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/ 
             rm -f ./Miniforge3-Linux-x86_64.sh
 	fi
-        ~/miniconda3/condabin/conda update conda --yes
-        ~/miniconda3/condabin/conda init
-        ~/miniconda3/condabin/mamba --version
+        ~/miniforge3/condabin/conda update conda --yes
+        ~/miniforge3/condabin/mamba init
+        ~/miniforge3/condabin/mamba --version
         exit
     else
 	echo -e "

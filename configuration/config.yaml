@@ -37,8 +37,8 @@ resources:
 modules: # GeVarLi modules analysis
   # Available options, set at least one: 
   - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
-  #- 'trimming'  # Keep trimmed reads files (Cutadapt, Sickle-trim)
-  #- 'cleapping' # Perform reads clipping (Bamclipper)
+  - 'trimming'  # Keep trimmed reads files (Cutadapt, Sickle-trim)
+  - 'cleapping' # Perform reads clipping (Bamclipper)
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
   - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
   - 'nextclade' # Perform nextclade clade assignation (Nexclade)
