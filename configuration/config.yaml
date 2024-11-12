@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.11.12 (Update workflow-base and nextclade)
+# Latest modifications ___ 2024.11.12 (Remove Conda frontend (depreciated))
 # Use ____________________ Edit default settings
 
 ###############################################################################
@@ -285,9 +285,9 @@ fastq_screen:
 
 ###############################################################################
 conda:
-  frontend: # Conda frontend (default: "mamba")
+  #frontend: # Conda frontend (default: "mamba") ## DEPRECIATED ##
   # Available options, set only one:
-    - 'mamba' # mamba (default, faster)
+    #- 'mamba' # mamba (default, faster)
     #- 'conda' # conda (use it on iTrop HPC)
   yaml: # Conda environement yaml files:
     bamclipper:    '../environments/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0

@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Install Snakemake and conda envirorments
 # Date ___________________ 2024.10.01
-# Latest modifications ___ 2024.11.12 (Update workflow-base)
+# Latest modifications ___ 2024.11.12 (Remove Conda frontend (depreciated))
 # Use ____________________ source ./Install_GeVarLi.sh
 
 ###############################################################################
@@ -48,7 +48,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Install Snakemake and conda environments
 ${blue}Date${nc} ___________________ 2024.10.01
-${blue}Latest modifications${nc} ___ 2024.11.12 ((Update workflow-base)
+${blue}Latest modifications${nc} ___ 2024.11.12 (Remove Conda frontend (depreciated))
 ${blue}Run${nc} ____________________ bash ./Install_GeVarLi.sh
 "
 
@@ -322,7 +322,6 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --rerun-incomplete \
         --use-conda \
-        --conda-frontend ${conda_frontend} \
         --conda-create-envs-only ;
 done
 
@@ -349,7 +348,6 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --rerun-incomplete \
         --use-conda \
-        --conda-frontend ${conda_frontend} \
 	--quiet \
         --dry-run ;
 done
