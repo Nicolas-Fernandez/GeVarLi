@@ -10,13 +10,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Install_GeVarLi.sh
-# Version ________________ v.2024.10
+# Version ________________ v.2024.11
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ GeVarLi Conda environments pre-installion
+# Aim ____________________ Install Snakemake and conda envirorments
 # Date ___________________ 2024.10.01
-# Latest modifications ___ 2024.10.01 (Init)
-# Use ____________________ ./Install_GeVarLi.sh
+# Latest modifications ___ 2024.11.12 (Update workflow-base)
+# Use ____________________ source ./Install_GeVarLi.sh
 
 ###############################################################################
 ### COLORS ###
@@ -33,10 +33,9 @@ nc="\033[0m"       # no color
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
-gevarli_version="2024.10"                              # GeVarLi version
-workflow_base_version="2024.08"                        # Workflow base version
-snakemake_version="8.16.0"                             # Snakemake version
-nextclade_version="3.8.2"                              # Nextclade version
+gevarli_version="2024.11"                              # GeVarLi version
+workflow_base_version="2024.11"                        # Workflow base version
+snakemake_version="8.25.3"                             # Snakemake version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -47,10 +46,10 @@ ${blue}Name${nc} ___________________ Install_GeVarLi.sh
 ${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ____________________ GeVarLi Conda environments pre-installation
+${blue}Aim${nc} ____________________ Install Snakemake and conda environments
 ${blue}Date${nc} ___________________ 2024.10.01
-${blue}Latest modifications${nc} ___ 2024.10.01 (Init)
-${blue}Run${nc} ____________________ ./Install_GeVarLi.sh
+${blue}Latest modifications${nc} ___ 2024.11.12 ((Update workflow-base)
+${blue}Run${nc} ____________________ bash ./Install_GeVarLi.sh
 "
 
 
@@ -117,6 +116,47 @@ ${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
 ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 "
 
+###############################################################################
+### CONDA INIT ###
+##################
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONDA${nc} ${green}#####${nc}
+${green}-----------------${nc}
+"
+
+# Test if a conda distribution already exist
+if [[ ! $(which conda) ]]
+then # If no, invit to install it and EXIT
+    echo -e "
+${red}No Conda installation found...${nc}
+
+${green}GeVarLi${nc} use the free and open-source package manager ${blue}Conda${nc}.
+You can install it with ${blue}Miniforge3${nc} using: '${ylo}source ./Install_Miniforge3_Conda-Mamba.sh${nc}'
+"
+    exit 1
+else # If yes, print informations
+    which conda                  # which Conda
+    mamba --version              # versions Conda / Mamba
+    conda config --show channels # channels
+fi
+
+# Test if the script is sourced (vs executed)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
+then # If no (executed), invit to source it and EXIT
+    echo -e "
+${red}This script was not correctly sourced!${nc}
+
+==> To use 'conda activate' in interne shell <==
+You need to source the script insteed executed: ${ylo}'source ./Install_GeVarLi.sh'${nc}
+"
+    exit 1
+else # If yes, print ok
+    echo -e "
+${green}The script was correctly sourced!${nc}
+"
+fi
+
 
 ###############################################################################
 ### NETWORK ###
@@ -127,28 +167,24 @@ ${green}#####${nc} ${red}NETWORK${nc} ${green}#####${nc}
 ${green}-------------------${nc}
 "
 
-if curl -s --head --request GET http://www.google.com --max-time 5 > /dev/null || \
-   curl -s --head --request GET http://www.cloudflare.com --max-time 5 > /dev/null;
+# Test to ping Google or Cloudflare
+if ping -c 1 -W 5 google.com > /dev/null 2>&1 || \
+   ping -c 1 -W 5 cloudflare.com > /dev/null 2>&1
 then
     network="Online"
-else
-    network="Offline"
-fi
-
-echo -e "
+    echo -e "
 ${blue}Network${nc} ________________ ${red}${network}${nc}
 "
 
+else
+    network="Offline"
+    echo -e "
+${blue}Network${nc} ________________ ${red}${network}${nc}
 
-###############################################################################
-### CONDA INIT ###
-##################
-
-# Intern shell source conda
-source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge3
-source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
-source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
-source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
+Please, check your network conection before installation
+"
+    exit 1
+fi
 
 
 ###############################################################################
@@ -162,31 +198,21 @@ ${green}---------------------------------------${nc}
 
 # Test if latest 'workflow-base' environment exist
 if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
-then
+then # If yes, do nothing
     echo -e "
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} it's already created!
 "
-else # Test network conection
-    if [[ ${network} = "Online" ]]
-    then
-        echo -e "
+else # If no, install it
+    echo -e "
 Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
 Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
 
-    # ${red}Snakemake${nc} (ver. 8.16.0) ${blue} ___ Workflow manager (rules)${nc}
-    # ${red}Mamba${nc}     (ver. 1.5.8)  ${blue} ___ Packages manager (conda environments)${nc}
+    # ${red}Snakemake${nc} (ver. 8.25.3) ${blue} ___ Workflow manager (rules)${nc}
     # ${red}Yq${nc}        (ver. 3.4.3)  ${blue} ___ YAML parser (config)${nc}
     # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ File renamer (FASTQ)${nc}
     # ${red}Graphviz${nc}  (ver. 12.0.0) ${blue} ___ Graph visualization (DAG)${nc}
 "
-        conda env create -f ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml &> /dev/null
-    else
-	echo -e "
-Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-Please, check your network conection!
-"
-    fi
+    conda env create -f ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml > /dev/null 2>&1
 fi
 
 # Remove depreciated 'gevarli', 'snakemake' or 'workflow' old environments
@@ -203,10 +229,11 @@ old_envs="gevarli-base_v.2022.11 \
           workflow-base_v.2023.06 \
           workflow-base_v.2024.01 \
           workflow-base_v.2024.02 \
-          workflow-base_v.2024.07"
+          workflow-base_v.2024.07 \
+          workflow-base_v.2024.08"
 
 for env in ${old_envs} ; do
-    conda remove --name ${env} --all --yes --quiet 2> /dev/null ;
+    conda remove --name ${env} --all --yes --quiet > /dev/null 2>&1 ;
 done
 
 
@@ -233,26 +260,8 @@ ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
-snakemake_version=$(snakemake --version)                        # Snakemake version (ver. 8.14.0)
-conda_version=$(conda --version | sed 's/conda //')             # Conda version     (ver. 24.5.07)
-mamba_version=$(mamba --version | head -n 1 | sed 's/mamba //') # Mamba version     (ver. 1.5.8)
-yq_version=$(yq --version | sed 's/yq //')                      # Yq version        (ver. 3.4.3)
-rename_version="1.601"                                          # Rename version    (ver. 1.601)
-graphviz_version="11.0.0"                                       # GraphViz version  (ver. 11.0.0)
-#graphviz_version=$#(dot -V | sed 's/dot - graphviz version //') # GraphViz version  (ver. 11.0.0)
-
-fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
-if [[ "${fastq}" == "0" ]]                                                        # If no sample,
-then                                                                              # Need at least 1 sample
-    cp ${workdir}/resources/data_test/${sample_test}_R*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
-fi
-
 config_file="${workdir}/configuration/config.yaml" # Get configuration file
-
 conda_frontend=$(yq -Mc '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
-max_threads=$(yq -Mr '.resources.cpus' ${config_file}) # Get user config: max threads
-max_memory=$(yq -Mr '.resources.ram' ${config_file})   # Get user config: max memory (Gb)
-memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
 
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
 time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M") # Convert time for archive (wo space)
@@ -260,19 +269,9 @@ SECONDS=0                                    # Initialize SECONDS counter
 
 # Print some analyzes settings
 echo -e "
-${blue}Max threads${nc} ____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
-${blue}Max memory${nc} _____________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
-${blue}Jobs memory${nc} ____________ ${red}${memory_per_job}${nc} Gb per job
-
 ${blue}Starting time${nc} __________ ${time_stamp_start}
 ${blue}Working directory${nc} ______ ${workdir}/
-
-${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
-${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
-${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
-${blue}Mamba version${nc} __________ ${ylo}${mamba_version}${nc}  
 "
-
 
 ###############################################################################
 ### SNAKEMAKE INSTALL ###
@@ -282,6 +281,8 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}SNAKEMAKE PIPELINES${nc} ${green}#####${nc}
 ${green}-------------------------------${nc}
 "
+
+cp ${workdir}/resources/data_test/${sample_test}_R*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
 
 # MODULES
 snakefiles_list="indexing_genomes gevarli"
@@ -339,18 +340,17 @@ ${blue}-------------${nc}
 ## Default "mamba", recommended because much faster !
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
-# Do not output any progress or rule information.
+# Do not output ≈©≈any progress or rule information.
 
 for snakefile in ${snakefiles_list} ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-	--resources mem_gb=${max_memory} \
-        --cores ${max_threads}\
         --rerun-incomplete \
         --use-conda \
         --conda-frontend ${conda_frontend} \
+	--quiet \
         --dry-run ;
 done
 
@@ -364,11 +364,11 @@ ${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
 ${green}------------------------${nc}
 "
 
-# Save and deactive environments
+# Deactive environment
 conda deactivate
 
 # Cleanup
-rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz 2> /dev/null
+rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz > /dev/null 2>&1
 
 # Timer
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
@@ -381,12 +381,7 @@ echo -e "
 ${blue}Start time${nc} _____________ ${time_stamp_start}
 ${blue}End time${nc} _______________ ${time_stamp_end}
 ${blue}Processing time${nc} ________ ${ylo}${minutes}${nc} minutes and ${ylo}${seconds}${nc} seconds elapsed
-"
 
-rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz 2> /dev/null
-
-
-echo -e "
 ${green}------------------------------------------------------------------------${nc}
 "
 

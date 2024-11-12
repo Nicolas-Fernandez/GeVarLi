@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Miniforge3 distribution for Conda-Mamba installation
 # Date ___________________ 2024.09.27
-# Latest modifications ___ 2024.10.29 (add channels priority)
+# Latest modifications ___ 2024.10.30 (add channels priority)
 # Use ____________________ ./Install_Miniforge3_Conda-Mamba.sh
 
 ###############################################################################
@@ -45,7 +45,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ ${green}Miniforge3${nc} distribution for ${ylo}Conda/Mamba${nc} installation
 ${blue}Date${nc} ___________________ 2024.09.27
-${blue}Latest modifications${nc} ___ 2024.10.29 (add channels priority)
+${blue}Latest modifications${nc} ___ 2024.10.30 (add channels priority)
 ${blue}Run${nc} ____________________ ./Install_Miniforge3_Conda-Mamba.sh
 "
 
@@ -151,9 +151,9 @@ then # If exist, do nothing
     echo -e "
 ${blue}You already have a Conda/Mamba installation:${nc}
 "
-    which conda
-    mamba --version
-    conda config --show channels
+    which conda                  # which Conda
+    mamba --version              # versions Conda / Mamba
+    conda config --show channels # channels
     echo -e ""
 else # If not, check network status
     if [[ ${network} = "Offline" ]]
@@ -167,7 +167,9 @@ ${red}No Conda/Mamba installation found...${nc}
 
 ${green}Miniforge3${nc} for ${ylo}Conda/Mamba${nc} will now be installed, with:
 
-Channel priority: '${ylo}conda-forge bioconda nodefaults${nc}' and '${ylo}Strict channel priority${nc}'
+Channels: ${ylo}'conda-forge' 'bioconda' 'nodefaults'${nc}
+Channel priority: ${ylo}'Strict'${nc}
+
 It ensures that the channel priority configured upper is respected when solving dependencies.
 "
 	if [[ ${os} == "osx" ]]
@@ -195,7 +197,7 @@ ${blue}>>> Install Miniforge3-Linux-x86_64${nc}
 	fi
 	# Then update, show version, init and source
         echo -e "
-${blue}>>> Add channels 'conda-forge', bioconda' and 'nodefaults', with channel_priority: 'strict' in your '~/.condarc' file:${nc}
+${blue}>>> Add channels 'conda-forge', 'bioconda' and 'nodefaults', with channel_priority: 'strict' in your '~/.condarc' file:${nc}
 "
 	~/miniforge3/condabin/conda config --add channels nodefaults  # add conda-forge
 	~/miniforge3/condabin/conda config --add channels bioconda    # add bioconda
@@ -209,8 +211,8 @@ ${blue}>>> Update Conda and Mamba:${nc}
         echo -e "
 ${blue}>>> Conda and Mamba versions and channels:${nc}
 "
-	~/miniforge3/condabin/mamba --version # version conda/mamba
-	~/miniforge3/condabin/conda config --show channels
+	~/miniforge3/condabin/mamba --version              # versions Conda / Mamba
+	~/miniforge3/condabin/conda config --show channels # channels
         echo -e "
 ${blue}>>> Init shell:${nc}
 "
@@ -229,13 +231,13 @@ Source your shell configuration file: ${ylo}'source ~/.bashrc'${nc} or ${ylo}'so
 Or close and re-open your current shell.
 "
         else
-            echo -e "
-${green}The script was correctly sourced!${nc}
-"
             shell_list="bashrc zshrc bash_profile" # source shell
 	    for shell in ${shell_list} ; do
 	        source ~/\.${shell} > /dev/null 2>&1 ;
 	    done
+            echo -e "${green}The script was correctly sourced!${nc}
+
+"
 	fi
     fi
 fi
