@@ -15,8 +15,8 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Install Snakemake and conda envirorments
 # Date ___________________ 2024.10.01
-# Latest modifications ___ 2024.11.13 (Simplify step --conda-create-envs-only)
-# Use ____________________ source ./Install_GeVarLi.sh
+# Latest modifications ___ 2024.11.13 (Fix: issues with zash shell)
+# Use ____________________ ./Install_GeVarLi.sh
 
 ###############################################################################
 ### COLORS ###
@@ -48,8 +48,8 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Install Snakemake and conda environments
 ${blue}Date${nc} ___________________ 2024.10.01
-${blue}Latest modifications${nc} ___ 2024.11.13 (Simplify step --conda-create-envs-only)
-${blue}Run${nc} ____________________ bash ./Install_GeVarLi.sh
+${blue}Latest modifications${nc} ___ 2024.11.13 (Fix: issues with zash shell)
+${blue}Run${nc} ____________________ ./Install_GeVarLi.sh
 "
 
 
@@ -116,47 +116,6 @@ ${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
 ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 "
 
-###############################################################################
-### CONDA INIT ###
-##################
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONDA${nc} ${green}#####${nc}
-${green}-----------------${nc}
-"
-
-# Test if a conda distribution already exist
-if [[ ! $(which conda) ]]
-then # If no, invit to install it and EXIT
-    echo -e "
-${red}No Conda installation found...${nc}
-
-${green}GeVarLi${nc} use the free and open-source package manager ${blue}Conda${nc}.
-You can install it with ${blue}Miniforge3${nc} using: '${ylo}source ./Install_Miniforge3_Conda-Mamba.sh${nc}'
-"
-    exit 1
-else # If yes, print informations
-    which conda                  # which Conda
-    mamba --version              # versions Conda / Mamba
-    conda config --show channels # channels
-fi
-
-# Test if the script is sourced (vs executed)
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then # If no (executed), invit to source it and EXIT
-    echo -e "
-${red}This script was not correctly sourced!${nc}
-
-==> To use 'conda activate' in interne shell <==
-You need to source the script insteed executed: ${ylo}'source ./Install_GeVarLi.sh'${nc}
-"
-    exit 1
-else # If yes, print ok
-    echo -e "
-${green}The script was correctly sourced!${nc}
-"
-fi
-
 
 ###############################################################################
 ### NETWORK ###
@@ -188,6 +147,32 @@ fi
 
 
 ###############################################################################
+### CONDA ###
+#############
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONDA${nc} ${green}#####${nc}
+${green}-----------------${nc}
+"
+
+# Test if a conda distribution already exist
+if [[ ! $(command -v conda) ]]
+then # If no, invit to install it and EXIT
+    echo -e "
+${red}No Conda installation found...${nc}
+
+${green}GeVarLi${nc} use the free and open-source package manager ${blue}Conda${nc}.
+You can install it with ${blue}Miniforge3${nc} using: '${ylo}source ./Install_Miniforge3_Conda-Mamba.sh${nc}'
+"
+    exit 1
+else # If yes, print informations
+    which conda                  # which Conda
+    mamba --version              # versions Conda / Mamba
+    conda config --show channels # channels
+fi
+
+
+###############################################################################
 ### WORKFLOW-BASE INSTALLATION ###
 ##################################
 echo -e "
@@ -212,7 +197,7 @@ Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be no
     # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ File renamer (FASTQ)${nc}
     # ${red}Graphviz${nc}  (ver. 12.0.0) ${blue} ___ Graph visualization (DAG)${nc}
 "
-    conda env create -f ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml > /dev/null 2>&1
+    conda env create --file ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml > /dev/null 2>&1
 fi
 
 # Remove depreciated 'gevarli', 'snakemake' or 'workflow' old environments
@@ -237,19 +222,6 @@ for env in ${old_envs} ; do
 done
 
 
-###############################################################################
-### CONDA ACTIVATION ###
-########################
-echo -e "
-${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
-${green}----------------------------${nc}
-"
-
-echo -e "conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
-
-conda activate workflow-base_v.${workflow_base_version}
-
 
 ###############################################################################
 ### SETTINGS ###
@@ -261,7 +233,6 @@ ${green}--------------------${nc}
 "
 
 config_file="${workdir}/configuration/config.yaml" # Get configuration file
-conda_frontend=$(yq -Mc '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
 
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
 time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M") # Convert time for archive (wo space)
@@ -285,7 +256,7 @@ ${green}-------------------------------${nc}
 cp ${workdir}/resources/data_test/${sample_test}_R*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
 
 # MODULES
-snakefiles_list="indexing_genomes gevarli"
+snakefiles_list=("indexing_genomes" "gevarli")
 
 echo -e "
 ${blue}## Conda Environments List ##${nc}
@@ -295,9 +266,9 @@ ${blue}-----------------------------${nc}
 # The workflow definition in form of a snakefile.
 # List all conda environments and their location on disk.
 
-for snakefile in ${snakefiles_list} ; do
+for snakefile in "${snakefiles_list[@]}" ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
+    conda run --name workflow-base_v.${workflow_base_version} snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --list-conda-envs ;
@@ -309,16 +280,17 @@ ${blue}------------------------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
+# If specified, only creates the job-specific conda environments then exits.
+## The --use-conda flag must also be set.
 # If defined in the rule, run job in a conda environment.
-# If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 
-for snakefile in ${snakefiles_list} ; do
+for snakefile in "${snakefiles_list[@]}" ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
+    conda run --name workflow-base_v.${workflow_base_version} snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --use-conda \
-        --conda-create-envs-only ;
+        --conda-create-envs-only \
+	--use-conda ;
 done
 
 echo -e "
@@ -327,23 +299,20 @@ ${blue}-------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
-# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Set or overwrite values in the workflow config object.
-# Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
-## Default "mamba", recommended because much faster !
-# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
-# Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
-# Do not output ≈©≈any progress or rule information.
+# Do not execute anything, and display what would be done.
+## If very large workflow, use --dry-run --quiet to just print a summary of the DAG of jobs.
+# Do not output any progress or rule information.
 
-for snakefile in ${snakefiles_list} ; do
+for snakefile in "${snakefiles_list[@]}" ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
+    conda run --name workflow-base_v.${workflow_base_version} snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --use-conda \
-	--quiet \
-        --dry-run ;
+        --dry-run \
+	--quiet rules \
+	--quiet host ;
 done
 
 
@@ -355,9 +324,6 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
 ${green}------------------------${nc}
 "
-
-# Deactive environment
-conda deactivate
 
 # Cleanup
 rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz > /dev/null 2>&1
