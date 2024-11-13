@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Install Snakemake and conda envirorments
 # Date ___________________ 2024.10.01
-# Latest modifications ___ 2024.11.12 (Remove Conda frontend (depreciated))
+# Latest modifications ___ 2024.11.13 (Simplify step --conda-create-envs-only)
 # Use ____________________ source ./Install_GeVarLi.sh
 
 ###############################################################################
@@ -48,7 +48,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Install Snakemake and conda environments
 ${blue}Date${nc} ___________________ 2024.10.01
-${blue}Latest modifications${nc} ___ 2024.11.12 (Remove Conda frontend (depreciated))
+${blue}Latest modifications${nc} ___ 2024.11.13 (Simplify step --conda-create-envs-only)
 ${blue}Run${nc} ____________________ bash ./Install_GeVarLi.sh
 "
 
@@ -309,10 +309,7 @@ ${blue}------------------------------${nc}
 "
 # Specify working directory (relative paths in the snakefile will use this as their origin).
 # The workflow definition in form of a snakefile.
-# Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
-## Default "mamba", recommended because much faster !
 # If specified, only creates the job-specific conda environments then exits. The –use-conda flag must also be set.
 
 for snakefile in ${snakefiles_list} ; do
@@ -320,7 +317,6 @@ for snakefile in ${snakefiles_list} ; do
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --rerun-incomplete \
         --use-conda \
         --conda-create-envs-only ;
 done
@@ -335,7 +331,6 @@ ${blue}-------------${nc}
 # Set or overwrite values in the workflow config object.
 # Re-run all jobs the output of which is recognized as incomplete.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
 ## Default "mamba", recommended because much faster !
 # Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Do not execute anything, and display what would be done. If very large workflow, use –dry-run –quiet to just print a summary of the DAG of jobs.
@@ -346,7 +341,6 @@ for snakefile in ${snakefiles_list} ; do
     snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --rerun-incomplete \
         --use-conda \
 	--quiet \
         --dry-run ;
