@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Miniforge3 distribution for Conda-Mamba installation
 # Date ___________________ 2024.09.27
-# Latest modifications ___ 2024.10.30 (add channels priority)
+# Latest modifications ___ 2024.11.13 (Remove 'nodefaults' from .condarc)
 # Use ____________________ ./Install_Miniforge3_Conda-Mamba.sh
 
 ###############################################################################
@@ -32,7 +32,7 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2024.10"                              # GeVarLi version
+gevarli_version="2024.11"                              # GeVarLi version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -45,7 +45,7 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ ${green}Miniforge3${nc} distribution for ${ylo}Conda/Mamba${nc} installation
 ${blue}Date${nc} ___________________ 2024.09.27
-${blue}Latest modifications${nc} ___ 2024.10.30 (add channels priority)
+${blue}Latest modifications${nc} ___ 2024.11.13 (Remove 'nodefaults' from .condarc)
 ${blue}Run${nc} ____________________ ./Install_Miniforge3_Conda-Mamba.sh
 "
 
@@ -146,7 +146,7 @@ ${green}-------------------------------------------------${nc}
 "
 
 # Test if a conda distribution already exist
-if [[ $(which conda) ]]
+if [[ $(command -v conda) ]]
 then # If exist, do nothing
     echo -e "
 ${blue}You already have a Conda/Mamba installation:${nc}
@@ -167,7 +167,7 @@ ${red}No Conda/Mamba installation found...${nc}
 
 ${green}Miniforge3${nc} for ${ylo}Conda/Mamba${nc} will now be installed, with:
 
-Channels: ${ylo}'conda-forge' 'bioconda' 'nodefaults'${nc}
+Channels: ${ylo}'conda-forge' 'bioconda'${nc}
 Channel priority: ${ylo}'Strict'${nc}
 
 It ensures that the channel priority configured upper is respected when solving dependencies.
@@ -197,12 +197,13 @@ ${blue}>>> Install Miniforge3-Linux-x86_64${nc}
 	fi
 	# Then update, show version, init and source
         echo -e "
-${blue}>>> Add channels 'conda-forge', 'bioconda' and 'nodefaults', with channel_priority: 'strict' in your '~/.condarc' file:${nc}
+${blue}>>> Add channels 'conda-forge' and 'bioconda' with channel_priority: 'strict' in your '~/.condarc' file:${nc}
 "
-	~/miniforge3/condabin/conda config --add channels nodefaults  # add conda-forge
-	~/miniforge3/condabin/conda config --add channels bioconda    # add bioconda
-	~/miniforge3/condabin/conda config --add channels conda-forge # add conda-forge
-	~/miniforge3/condabin/conda config --set channel_priority strict # strict channel priority
+	~/miniforge3/condabin/conda config --add channels bioconda         # add bioconda channel
+	~/miniforge3/condabin/conda config --add channels conda-forge      # add conda-forge channel
+	~/miniforge3/condabin/conda config --set channel_priority strict   # strict channel priority
+	~/miniforge3/condabin/conda config --set auto_activate_base true   # conda will be activated to every new terminal you will open
+	#~/miniforge3/condabin/conda config --set auto_activate_base false # deactivate this default conda behaviour
         echo -e "
 ${blue}>>> Update Conda and Mamba:${nc}
 "
@@ -216,29 +217,11 @@ ${blue}>>> Conda and Mamba versions and channels:${nc}
         echo -e "
 ${blue}>>> Init shell:${nc}
 "
-	~/miniforge3/condabin/mamba init # init shell
+	~/miniforge3/condabin/mamba init 2> /dev/null # init shell
+        shell=$(~/miniforge3/condabin/mamba init 2> /dev/null | grep "modified" | sed 's/modified      //')
         echo -e "
-${blue}>>> Source shell:${nc}
+==> ${red}For changes to take effect, run:${nc} '${ylo}source ${shell}${nc}' <==
 "
-        # Check if the script is sourced or executed
-        if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-	then
-            echo -e "
-${red}This script was not correctly sourced!${nc}
-
-==> For changes to take effect <==
-Source your shell configuration file: ${ylo}'source ~/.bashrc'${nc} or ${ylo}'source ~/.bash_profile'${nc}
-Or close and re-open your current shell.
-"
-        else
-            shell_list="bashrc zshrc bash_profile" # source shell
-	    for shell in ${shell_list} ; do
-	        source ~/\.${shell} > /dev/null 2>&1 ;
-	    done
-            echo -e "${green}The script was correctly sourced!${nc}
-
-"
-	fi
     fi
 fi
 
