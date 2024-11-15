@@ -9,14 +9,14 @@
 ###    \/                                                            \/     ###
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ Install_GeVarLi.sh
+# Name ___________________ Install_Workflow-with-Conda.sh
 # Version ________________ v.2024.11
+# Creation _______________ 2024.10.01
+# Latest modifications ___ 2024.11.15 (Add documentation about Miniforge3)
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Install Snakemake and conda envirorments
-# Date ___________________ 2024.10.01
-# Latest modifications ___ 2024.11.13 (Fix: issues with zash shell)
-# Use ____________________ ./Install_GeVarLi.sh
+# Aim ____________________ Install Snakemake and tools envirorments with Conda
+# Use ____________________ 'bash ./Install_Workflow-with-Conda.sh'
 
 ###############################################################################
 ### COLORS ###
@@ -27,31 +27,34 @@ ylo="\033[1;33m"   # yellow
 blue="\033[1;34m"  # blue
 nc="\033[0m"       # no color
 
-
 ###############################################################################
 ### ABOUT ###
 #############
+version="2024.11"                                      # Version
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
+config_file="${workdir}/configuration/config.yaml"     # Get configuration file
+
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
-gevarli_version="2024.11"                              # GeVarLi version
-workflow_base_version="2024.11"                        # Workflow base version
-snakemake_version="8.25.3"                             # Snakemake version
+
+# Timer
+time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
+SECONDS=0                                    # Initialize SECONDS counter
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
-${blue}Name${nc} ___________________ Install_GeVarLi.sh
-${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
+${blue}Name${nc} ___________________ Install_Workflow-with-Conda.sh
+${blue}Version${nc} ________________ ${ylo}v.${version}${nc}
+${blue}Creation${nc} _______________ 2024.10.01
+${blue}Latest modifications${nc} ___ 2024.11.15 (Add documentation about Miniforge3)
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ____________________ Install Snakemake and conda environments
-${blue}Date${nc} ___________________ 2024.10.01
-${blue}Latest modifications${nc} ___ 2024.11.13 (Fix: issues with zash shell)
-${blue}Run${nc} ____________________ ./Install_GeVarLi.sh
-"
 
+${blue}Aim${nc} ____________________ Install Snakemake and environments with Conda
+${blue}Use${nc} ____________________ '${ylo}bash ./Install_Workflow-with-Conda.sh${nc}'
+"
 
 ###############################################################################
 ### OPERATING SYSTEM ###
@@ -77,7 +80,6 @@ echo -e "${blue}Operating system${nc} _______ ${red}${os}${nc}"
 # Get and print shell
 shell=$SHELL
 echo -e "${blue}Shell${nc} __________________ ${ylo}${shell}${nc}"
-
 
 ###############################################################################
 ### HARDWARE ###
@@ -111,11 +113,9 @@ fi
 # Print some hardware specifications (maybe wrong with WSL...)
 echo -e "                         ${ylo}Brand(R)${nc} | ${ylo}Type(R)${nc} | ${ylo}Model${nc} | ${ylo}@ Speed GHz${nc}
 ${blue}Chip Model Name${nc} ________ ${model_name}
-${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc}
-${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
+${blue}Physical CPUs${nc} __________ ${red}${physical_cpu}${nc} cores
 ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
-"
-
+${blue}Working directory${nc} ______ ${ylo}${workdir}/${nc}"
 
 ###############################################################################
 ### NETWORK ###
@@ -131,20 +131,13 @@ if ping -c 1 -W 5 google.com > /dev/null 2>&1 || \
    ping -c 1 -W 5 cloudflare.com > /dev/null 2>&1
 then
     network="Online"
-    echo -e "
-${blue}Network${nc} ________________ ${red}${network}${nc}
-"
-
 else
     network="Offline"
-    echo -e "
-${blue}Network${nc} ________________ ${red}${network}${nc}
-
-Please, check your network conection before installation
-"
-    exit 1
 fi
 
+echo -e "
+${blue}Network${nc} ________________ ${red}${network}${nc}
+"
 
 ###############################################################################
 ### CONDA ###
@@ -159,19 +152,22 @@ ${green}-----------------${nc}
 if [[ ! $(command -v conda) ]]
 then # If no, invit to install it and EXIT
     echo -e "
-${red}No Conda installation found...${nc}
+${red}No Conda distribution found.${nc}
 
 ${green}GeVarLi${nc} use the free and open-source package manager ${blue}Conda${nc}.
-You can install it with ${blue}Miniforge3${nc} using: '${ylo}source ./Install_Miniforge3-for-Conda.sh${nc}'
+We highly recommand to install ${blue}Conda${nc} with ${green}Miniforge3${nc} distribution.
+
+You can use script:'${ylo}bash ./Install_Conda-with-Miniforge3.sh${nc}'
+
+Learn more about Miniforge at: ${blue}https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/${nc}
 "
     exit 1
 else # If yes, print informations
-    echo -e "Your Conda setup:"
+    echo -e "Your Conda configuration:"
     which conda                  # which Conda
     conda --version              # version
     conda config --show channels # channels
 fi
-
 
 ###############################################################################
 ### WORKFLOW-BASE INSTALLATION ###
@@ -183,45 +179,28 @@ ${green}---------------------------------------${nc}
 "
 
 # Test if latest 'workflow-base' environment exist
-if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${workflow_base_version}") ]]
+if [[ $(conda info --envs | grep -o -E "^workflow-base_v.${version}") ]]
 then # If yes, do nothing
     echo -e "
-Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} it's already created!
+Conda environment ${ylo}workflow-base_v.${version}${nc} it's already created!
 "
 else # If no, install it
     echo -e "
-Conda environment ${red}workflow-base_v.${workflow_base_version}${nc} not found...
-Conda environment ${ylo}workflow-base_v.${workflow_base_version}${nc} will be now created, with:
+The Conda environment ${ylo}workflow-base_v.${version}${nc} will be create, with:
 
-    # ${red}Snakemake${nc} (ver. 8.25.3) ${blue} ___ Workflow manager (rules)${nc}
-    # ${red}Yq${nc}        (ver. 3.4.3)  ${blue} ___ YAML parser (config)${nc}
-    # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ File renamer (FASTQ)${nc}
-    # ${red}Graphviz${nc}  (ver. 12.0.0) ${blue} ___ Graph visualization (DAG)${nc}
+    # ${red}Snakemake${nc} (ver. 8.25.3) ${blue} ___ a workflow manager use for rules${nc}
+    # ${red}Yq${nc}        (ver. 3.4.3)  ${blue} ___ a yaml parser use for config file${nc}
+    # ${red}Rename${nc}    (ver. 1.601)  ${blue} ___ a file renamer for FASTQ files${nc}
+    # ${red}Graphviz${nc}  (ver. 12.0.0) ${blue} ___ a graph visualization for DAG${nc}
 "
-    conda env create --file ${workdir}/workflow/environments/workflow-base_v.${workflow_base_version}.yaml > /dev/null 2>&1
+    conda env create --file ${workdir}/workflow/environments/workflow-base_v.${version}.yaml > /dev/null 2>&1
 fi
 
-# Remove depreciated 'gevarli', 'snakemake' or 'workflow' old environments
-old_envs="gevarli-base_v.2022.11 \
-          gevarli-base_v.2022.12 \
-          gevarli-base_v.2023.01 \
-          gevarli-base_v.2023.02 \
-          gevarli-base_v.2023.03 \
-          gevarli-base_v.2023.04 \
-          snakemake-base_v.2023.01 \
-          snakemake-base_v.2023.02 \
-          snakemake-base_v.2023.03 \
-          snakemake-base_v.2023.04 \
-          workflow-base_v.2023.06 \
-          workflow-base_v.2024.01 \
-          workflow-base_v.2024.02 \
-          workflow-base_v.2024.07 \
-          workflow-base_v.2024.08"
-
-for env in ${old_envs} ; do
-    conda remove --name ${env} --all --yes --quiet > /dev/null 2>&1 ;
-done
-
+echo -e "
+You can remove old depreciated environements ('gevarli-base' ; 'snakemake-base' ; 'workflow-base')
+To list conda environments, you can run: '${ylo}conda info --envs${nc}'
+To remove conda environment, you can run: '${ylo}conda remove --all --yes --name <ENV-NAME_VERSION>${nc}'
+"
 
 ###############################################################################
 ### CONDA ACTIVATION ###
@@ -239,8 +218,8 @@ source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                         
 #source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
 
 # Conda activate
-echo -e "Conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
-conda activate workflow-base_v.${workflow_base_version}
+echo -e "Conda activate ${ylo}workflow-base_v.${version}${nc}"
+conda activate workflow-base_v.${version}
 
 
 ###############################################################################
@@ -250,18 +229,6 @@ echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
 ${green}--------------------${nc}
-"
-
-config_file="${workdir}/configuration/config.yaml" # Get configuration file
-
-time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
-time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M") # Convert time for archive (wo space)
-SECONDS=0                                    # Initialize SECONDS counter
-
-# Print some analyzes settings
-echo -e "
-${blue}Starting time${nc} __________ ${time_stamp_start}
-${blue}Working directory${nc} ______ ${workdir}/
 "
 
 ###############################################################################
@@ -337,18 +304,18 @@ done
 
 
 ###############################################################################
-### CLEAN and SAVE ###
-######################
+### END ###
+###########
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
-${green}------------------------${nc}
+${green}#####${nc} ${red}END${nc} ${green}#####${nc}
+${green}---------------${nc}
 "
 
 # Deactivate conda environment
 conda deactivate
 
-# Cleanup
+# Clean
 rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz > /dev/null 2>&1
 
 # Timer
