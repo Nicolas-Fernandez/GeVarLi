@@ -9,14 +9,14 @@
 ###    \/                                                            \/     ###
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ Install_Miniforge3_Conda-Mamba.sh
-# Version ________________ v.2024.10
+# Name ___________________ Install_Conda-with-Miniforge3.sh
+# Version ________________ v.2024.11
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Miniforge3 distribution for Conda-Mamba installation
+# Aim ____________________ Install Conda with Miniforge3 distribution
 # Date ___________________ 2024.09.27
-# Latest modifications ___ 2024.11.13 (Remove 'nodefaults' from .condarc)
-# Use ____________________ ./Install_Miniforge3_Conda-Mamba.sh
+# Latest modifications ___ 2024.11.15 (Lighter)
+# Use ____________________ bash ./Install_Conda-with-Miniforge3.sh
 
 ###############################################################################
 ### COLORS ###
@@ -32,21 +32,20 @@ nc="\033[0m"       # no color
 ### ABOUT ###
 #############
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-gevarli_version="2024.11"                              # GeVarLi version
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
-${blue}Name${nc} ___________________ Install_Miniforge3_Conda-Mamba.sh
-${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
+${blue}Name${nc} ___________________ Install_Conda-with-Miniforge3.sh
+${blue}Version${nc} ________________ ${ylo}v.2024.11${nc}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
-${blue}Aim${nc} ____________________ ${green}Miniforge3${nc} distribution for ${ylo}Conda/Mamba${nc} installation
+${blue}Aim${nc} ____________________ Install ${red}Conda${nc} with ${green}Miniforge3${nc} distribution
 ${blue}Date${nc} ___________________ 2024.09.27
-${blue}Latest modifications${nc} ___ 2024.11.13 (Remove 'nodefaults' from .condarc)
-${blue}Run${nc} ____________________ ./Install_Miniforge3_Conda-Mamba.sh
+${blue}Latest modifications${nc} ___ 2024.11.13 (Lighter)
+${blue}Run${nc} ____________________ bash ./Install_Conda-with-Miniforge3.sh
 "
 
 
@@ -137,90 +136,90 @@ ${blue}Network${nc} ________________ ${red}${network}${nc}
 
 
 ###############################################################################
-### MINIFORGE3 - CONDA/MAMBA INSTALLATION ###
-#############################################
+### INSTALL CONDA WITH MINIFORGE3 DISTRIBUTION ###
+##################################################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}Miniforge3 (Conda/Mamba) installation${nc} ${green}#####${nc}
-${green}-------------------------------------------------${nc}
+${green}#####${nc} ${red}Install Conda with Miniforge3 distribution${nc} ${green}#####${nc}
+${green}------------------------------------------------------${nc}
 "
 
 # Test if a conda distribution already exist
 if [[ $(command -v conda) ]]
 then # If exist, do nothing
     echo -e "
-${blue}You already have a Conda/Mamba installation:${nc}
+${blue}You already have a Conda distribution.
+Your Conda configuration:${nc}
 "
     which conda                  # which Conda
-    mamba --version              # versions Conda / Mamba
+    conda --version              # versions
     conda config --show channels # channels
     echo -e ""
 else # If not, check network status
     if [[ ${network} = "Offline" ]]
     then # If offline, do nothing
 	echo -e "
-${red}No internet available, please check your network conection.${nc}
+${red}No Conda distribution found.${nc}
+
+${red}If you want install Conda, please check your network conection.${nc}
 "
-    else # If online, install miniforge3 (silence mode "> /dev/null 2>&1")
+        exit 1
+    else # If online, install miniforge3 (silent mode)
         echo -e "
-${red}No Conda/Mamba installation found...${nc}
+${red}No Conda distribution found.${nc}
 
-${green}Miniforge3${nc} for ${ylo}Conda/Mamba${nc} will now be installed, with:
-
-Channels: ${ylo}'conda-forge' 'bioconda'${nc}
-Channel priority: ${ylo}'Strict'${nc}
+${green}Miniforge3${nc} distribution for ${ylo}Conda${nc} will now be installed, with:
+    Channels ___________ '${ylo}conda-forge${nc}' ; '${ylo}bioconda${nc}'
+    Channel priority ___ '${ylo}Strict${nc}'
 
 It ensures that the channel priority configured upper is respected when solving dependencies.
 "
 	if [[ ${os} == "osx" ]]
 	then # If OSX
             echo -e "
-${blue}>>> Download Miniforge3-MacOSX-x86_64.sh${nc}
+${blue}>>> Download and install Miniforge3-MacOSX-x86_64.sh${nc}
 "
 	    curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh
-            echo -e "
-${blue}>>> Install Miniforge3-MacOSX-x86_64${nc}
-"
-	    bash ./Miniforge3-MacOSX-x86_64.sh -b -p ~/miniforge3/
-            rm -f ./Miniforge3-MacOSX-x86_64.sh
+	    bash ./Miniforge3-MacOSX-x86_64.sh -b -p ~/miniforge3/ > /dev/null 2>&1
+            rm -f ./Miniforge3-MacOSX-x86_64.sh > /dev/null 2>&1
 	elif [[ ${os} == "linux" || ${os} == "bsd" || ${os} == "solaris" ]]
         then # If LINUX, BSD or SOLARIS 
             echo -e "
-${blue}>>> Download Miniforge3-Linux-x86_64.sh${nc}
+${blue}>>> Download and install Miniforge3-Linux-x86_64.sh${nc}
 "
 	    curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
-            echo -e "
-${blue}>>> Install Miniforge3-Linux-x86_64${nc}
-"
-	    bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/
-            rm -f ./Miniforge3-Linux-x86_64.sh
+	    bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/ > /dev/null 2>&1
+            rm -f ./Miniforge3-Linux-x86_64.sh > /dev/null 2>&1
 	fi
 	# Then update, show version, init and source
         echo -e "
-${blue}>>> Add channels 'conda-forge' and 'bioconda' with channel_priority: 'strict' in your '~/.condarc' file:${nc}
+${blue}>>> Edit your${nc} '${ylo}~/.condarc${nc}' ${blue}file:${nc}
+${blue}        Add channels:${nc} '${ylo}conda-forge${nc}' ; '${ylo}bioconda${nc}'
+${blue}        Set channel priority:${nc} '${ylo}strict${nc}'
 "
-	~/miniforge3/condabin/conda config --add channels bioconda         # add bioconda channel
-	~/miniforge3/condabin/conda config --add channels conda-forge      # add conda-forge channel
-	~/miniforge3/condabin/conda config --set channel_priority strict   # strict channel priority
-	~/miniforge3/condabin/conda config --set auto_activate_base true   # conda will be activated to every new terminal you will open
-	#~/miniforge3/condabin/conda config --set auto_activate_base false # deactivate this default conda behaviour
-        echo -e "
-${blue}>>> Update Conda and Mamba:${nc}
+	~/miniforge3/condabin/conda config --add channels bioconda        # add 'bioconda' channel
+	~/miniforge3/condabin/conda config --add channels conda-forge     # add 'conda-forge' channel
+	~/miniforge3/condabin/conda config --set channel_priority strict  # add 'strict' channel priority
+	#~/miniforge3/condabin/conda config --set auto_activate_base false  # no conda activation to every new terminal open
+	echo -e "
+${blue}>>> Update Conda:${nc}
 "
 	~/miniforge3/condabin/conda update conda --yes # update conda
-	~/miniforge3/condabin/conda update mamba --yes # update mamba
         echo -e "
-${blue}>>> Conda and Mamba versions and channels:${nc}
+${blue}>>> Conda version and channels:${nc}
 "
-	~/miniforge3/condabin/mamba --version              # versions Conda / Mamba
+	~/miniforge3/condabin/conda --version              # version
 	~/miniforge3/condabin/conda config --show channels # channels
         echo -e "
 ${blue}>>> Init shell:${nc}
 "
-	~/miniforge3/condabin/mamba init 2> /dev/null # init shell
-        shell=$(~/miniforge3/condabin/mamba init 2> /dev/null | grep "modified" | sed 's/modified      //')
+        shell=$(~/miniforge3/condabin/conda init 2> /dev/null | grep "modified" | sed 's/modified      //')
+	~/miniforge3/condabin/conda init > /dev/null 2>&1 # init shell
         echo -e "
-==> ${red}For changes to take effect, run:${nc} '${ylo}source ${shell}${nc}' <==
+
+${blue}>>> For changes to take effect, you can either:
+               - close and re-open your current shell
+               - run:${nc} '${ylo}source ${shell}${nc}'
 "
     fi
 fi
