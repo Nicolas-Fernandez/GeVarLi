@@ -162,12 +162,13 @@ then # If no, invit to install it and EXIT
 ${red}No Conda installation found...${nc}
 
 ${green}GeVarLi${nc} use the free and open-source package manager ${blue}Conda${nc}.
-You can install it with ${blue}Miniforge3${nc} using: '${ylo}source ./Install_Miniforge3_Conda-Mamba.sh${nc}'
+You can install it with ${blue}Miniforge3${nc} using: '${ylo}source ./Install_Miniforge3-for-Conda.sh${nc}'
 "
     exit 1
 else # If yes, print informations
+    echo -e "Your Conda setup:"
     which conda                  # which Conda
-    mamba --version              # versions Conda / Mamba
+    conda --version              # version
     conda config --show channels # channels
 fi
 
@@ -222,6 +223,25 @@ for env in ${old_envs} ; do
 done
 
 
+###############################################################################
+### CONDA ACTIVATION ###
+########################
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
+${green}----------------------------${nc}
+"
+
+# Intern shell source conda
+source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge3
+#source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
+#source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
+#source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
+
+# Conda activate
+echo -e "Conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
+conda activate workflow-base_v.${workflow_base_version}
+
 
 ###############################################################################
 ### SETTINGS ###
@@ -268,7 +288,7 @@ ${blue}-----------------------------${nc}
 
 for snakefile in "${snakefiles_list[@]}" ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
-    conda run --name workflow-base_v.${workflow_base_version} snakemake \
+    snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --list-conda-envs ;
@@ -286,7 +306,7 @@ ${blue}------------------------------${nc}
 
 for snakefile in "${snakefiles_list[@]}" ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
-    conda run --name workflow-base_v.${workflow_base_version} snakemake \
+    snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --conda-create-envs-only \
@@ -302,11 +322,11 @@ ${blue}-------------${nc}
 # If defined in the rule, run job in a conda environment.
 # Do not execute anything, and display what would be done.
 ## If very large workflow, use --dry-run --quiet to just print a summary of the DAG of jobs.
-# Do not output any progress or rule information.
+# Do not output rules, host or all (any progress or rule information).
 
 for snakefile in "${snakefiles_list[@]}" ; do
     echo -e "${blue}-- ${snakefile} --${nc}" ;
-    conda run --name workflow-base_v.${workflow_base_version} snakemake \
+    snakemake \
         --directory ${workdir}/ \
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --use-conda \
@@ -324,6 +344,9 @@ ${green}------------------------------------------------------------------------
 ${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
 ${green}------------------------${nc}
 "
+
+# Deactivate conda environment
+conda deactivate
 
 # Cleanup
 rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz > /dev/null 2>&1

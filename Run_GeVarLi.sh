@@ -15,7 +15,7 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.10.01 (Dedicated installation scripts creation)
+# Latest modifications ___ 2024.11.13 (Update Snakemake)
 # Use ____________________ ./Run_GeVarLi.sh
 
 ###############################################################################
@@ -34,7 +34,7 @@ nc="\033[0m"       # no color
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
 gevarli_version="2024.10"                              # GeVarLi version
-workflow_base_version="2024.08"                        # Workflow base version
+workflow_base_version="2024.11"                        # Workflow base version
 snakemake_version="8.16.0"                             # Snakemake version
 nextclade_version="3.8.2"                              # Nextclade version
 
@@ -127,8 +127,8 @@ ${green}#####${nc} ${red}NETWORK${nc} ${green}#####${nc}
 ${green}-------------------${nc}
 "
 
-if curl -s --head --request GET http://www.google.com --max-time 5 > /dev/null || \
-   curl -s --head --request GET http://www.cloudflare.com --max-time 5 > /dev/null;
+if ping -c 1 -W 5 google.com > /dev/null 2>&1 || \
+   ping -c 1 -W 5 cloudflare.com > /dev/null 2>&1
 then
     network="Online"
 else
@@ -390,9 +390,6 @@ ${blue}----------------${nc}
 # Re-run all jobs the output of which is recognized as incomplete.
 # Go on with independent jobs if a job fails.
 # If defined in the rule, run job in a conda environment.
-# If mamba package manager is not available, or if you still prefer to use conda, you can enforce that with this setting.
-## Default "mamba", recommended because much faster !
-# Tell the scheduler to assign creation of given targets (and all their dependencies) highest priority.
 # Print out the shell commands that will be executed.
 
 for snakefile in ${snakefiles_list} ; do
@@ -406,8 +403,7 @@ for snakefile in ${snakefiles_list} ; do
         --rerun-incomplete \
         --keep-going \
         --use-conda \
-        --conda-frontend ${conda_frontend} \
-        --printshellcmds ;
+        --quiet all ;
 done
 
 
