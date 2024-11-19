@@ -36,50 +36,51 @@ resources:
 ###############################################################################
 modules: # GeVarLi modules analysis
   # Available options, set at least one: 
-  - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC) 
-  #- 'trimming'  # Keep trimmed reads files (Cutadapt, Sickle-trim)
-  #- 'cleapping' # Perform reads clipping (Bamclipper)
-  - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)
-  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)
-  - 'nextclade' # Perform nextclade clade assignation (Nexclade)
-  #- 'pangolin'  # Perform pangolin lineage assignation (Pangolin)
-  ###- 'gisaid'    # Perform gisaid submission (GisAid : TODO)
+  - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC)      default: ON
+  #- 'trimming'  # Keep trimmed reads files after alignment (Cutadapt / Sickle-trim) default: OFF
+  #- 'cleapping' # Perform reads clipping (Bamclipper)                               default: OFF
+  - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)        default: ON
+  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)                    default: ON
+  - 'nextclade' # Perform nextclade clade assignation (Nexclade)                     default: ON
+  #- 'pangolin'  # Perform pangolin lineage assignation (Pangolin)                   default: OFF
+  ###- 'gisaid'    # Perform gisaid submission (GisAid : TODO)                       default: OFF
   
 ###############################################################################
 consensus:
   path: 'resources/genomes/' # Path to genomes references (default: "resources/genomes/")
   reference: # Your reference, in fasta format (default: "SARS-CoV-2_Wuhan_MN-908947-3")
   # Available options (not exhaustive), set one:
-    - 'SARS-CoV-2_Wuhan_MN-908947-3'            # SARS-CoV-2 (Nextclade and Pangolin)
-    #- 'Monkeypox-virus_Zaire_AF-380138-1'       # Monkeypox  (Nextclade and Pangolin)
-    #- 'Monkeypox-virus_UK_MT-903345-1'          # Monkeypox  (Nextclade and Pangolin)
-    #- 'Swinepox-virus_India_MW-036632-1'        # Swinepox   (Nextclade)
-    #- 'Ebola-virus_Zaire_AF-272001-1'           # Ebola      (na)
-    #- 'Ebola-virus_Sudan_MH-121162-1'           # Ebola      (na)
+    - 'SARS-CoV-2_Wuhan_MN-908947-3'            # SARS-CoV-2  (Nextclade and Pangolin)
+    #- 'Monkeypox-virus_Zaire_AF-380138-1'       # Monkeypox   (Nextclade and Pangolin)
+    #- 'Monkeypox-virus_UK_MT-903345-1'          # Monkeypox   (Nextclade and Pangolin)
+    #- 'Swinepox-virus_India_MW-036632-1'        # Swinepox    (Nextclade)
+    #- 'Ebola-virus_Zaire_AF-272001-1'           # Ebola       (na)
+    #- 'Ebola-virus_Sudan_MH-121162-1'           # Ebola       (na)
     #- 'Measles-virus_NC-001498-1'                         # Measles (na)
     #- 'Measles-virus_B3_Khartoum-Sudan_MG-912590-1'       # Measles (na)
     #- 'Measles-virus_B3_Kole-Uganda_ON-642796-1'          # Measles (na)
     #- 'Measles-virus_B3_Bura-Kenya_MZ-615446-1_partial'   # Measles (na)
     #- 'Measles-virus_C2_Netherland-Bilthoven_MG-912589-1' # Measles (na)
     #- 'Measles-virus_H1_Netherland-Amsterdam_MG-912594-1' # Measles (na)
-    #- 'Lassa-virus_NC-004297-1_Seg-L'           # Lassa-L NC (na)
-    #- 'Lassa-virus_NC-004297-1_Seg-S'           # Lassa-S NC (na)
-    #- 'Lassa-virus_MT-193282-1_BEN-16131_Seg-L' # Lassa-L MT (na)
-    #- 'Lassa-virus_MT-193282-1_BEN-16131_Seg-S' # Lassa-S MT (na)
-    #- 'Marburg-virus_NC_001608-3'               # Marburg    (na)
-    #- 'Dengue-virus-1_NC-001477-1'              # Dengue 1   (na)
-    #- 'Dengue-virus-2_NC-001474-2'              # Dengue 2   (na)
-    #- 'Dengue-virus-3_NC-001475-2'              # Dengue 3   (na)
-    #- 'Dengue-virus-4_NC-002640-1'              # Dengue 4   (na)
-    #- 'Nipah-virus_Malaysia_AJ-564622-1'        # Nipah      (na)
-    #- 'HIV-1_HXB2_K-03455-1'                    # HIV-1      (na)
-    #- 'Human-herpesvirus-5_NC-006273-2'         # Herpes     (na)
-    #- 'Human-herpesvirus-3_NC-001348-1'         # Varicella  (na)
-    #- 'Human-adenovirus-A_NC-001460-1'          # Adeno      (na)
-    #- 'Human-enterovirus-68_AY-426531-1'        # Entero     (na)
-    #- 'Loa-loa_JH-712066-1_GCA_000183805-3'     # Loa loa V3 (na)
-    #- '12S_sequences_Human-Bat-Rat.fasta'       # 12S        (na)
+    #- 'Lassa-virus_NC-004297-1_Seg-L'           # Lassa-L NC  (na)
+    #- 'Lassa-virus_NC-004297-1_Seg-S'           # Lassa-S NC  (na)
+    #- 'Lassa-virus_MT-193282-1_BEN-16131_Seg-L' # Lassa-L MT  (na)
+    #- 'Lassa-virus_MT-193282-1_BEN-16131_Seg-S' # Lassa-S MT  (na)
+    #- 'Marburg-virus_NC_001608-3'               # Marburg     (na)
+    #- 'Dengue-virus-1_NC-001477-1'              # Dengue 1    (na)
+    #- 'Dengue-virus-2_NC-001474-2'              # Dengue 2    (na)
+    #- 'Dengue-virus-3_NC-001475-2'              # Dengue 3    (na)
+    #- 'Dengue-virus-4_NC-002640-1'              # Dengue 4    (na)
+    #- 'Nipah-virus_Malaysia_AJ-564622-1'        # Nipah       (na)
+    #- 'HIV-1_HXB2_K-03455-1'                    # HIV-1       (na)
+    #- 'Human-herpesvirus-5_NC-006273-2'         # Herpes      (na)
+    #- 'Human-herpesvirus-3_NC-001348-1'         # Varicella   (na)
+    #- 'Human-adenovirus-A_NC-001460-1'          # Adeno       (na)
+    #- 'Human-enterovirus-68_AY-426531-1'        # Entero      (na)
+    #- 'Loa-loa_JH-712066-1_GCA_000183805-3'     # Loa loa V3  (na)
+    #- '12S_sequences_Human-Bat-Rat.fasta'       # 12S         (na)
     #- 'Chikungunya-virus_HM-045817-1'           # Chikungunya (na)
+    #- 'Add_your_favorite_genome'                # Other       (na)
   min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT] *** LoFreq ***
   # Available options (not exhaustive), set one:
     #- '60'                         # 60 x : for great coverage
@@ -97,11 +98,7 @@ consensus:
     - 'bwa'      # Better, Faster, (Stronger, Harder...)
     #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
     #- 'minimap2' # A versatile sequence alignment program
-  caller: # Select your favorite variants caller (default: 'ivar')
-  # Available options, set one:
-    - 'ivar'   # (default)
-    #- 'lofreq' # (depreciated)
-
+  caller: 'ivar'
 
 ###############################################################################
 ################################## LINEAGES ###################################
@@ -148,13 +145,6 @@ ivar:
   - '--no-BAQ' # no, don't merge mapping quality (default)
   #- ''         # yes, merge mapping quality (not recommanded with Samtools)
 
-################################################################################
-lofreq:
-  map_qual:     # Don't merge mapping quality in LoFreq's model (default: "--no-mq")
-  # Available options, set only one:
-    - '--no-mq' # no, don't merge mapping quality (default)
-    #- ''        # yes, merge mapping quality (not recommanded with BWA or Bowtie2)
-
 
 ###############################################################################
 ############################## PRIMER CLEAPING  ###############################
@@ -163,10 +153,10 @@ lofreq:
 ###############################################################################
 bamclipper:
   path: 'resources/primers/bedpe/' # Path to primers bedpe files (default "resources/primer/bedpe")
-  primers: # Your primer set, in BEDPE format (default: "SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1")
+  primers: # Your primer set, in BEDPE format (no default: you need to know which kit / ref you used)
   # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
   # Available options (not exhaustive), set only one:
-    - 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1'         # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+    #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1'         # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
     #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4'           # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
     #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3'           # SARS-CoV-2 Artic V3
     #- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2'           # SARS-CoV-2 Artic V2
@@ -252,7 +242,7 @@ sickle_trim:
 ###############################################################################
 cutadapt:
   length: '50' # Discard reads shorter than 'length' after trim (default: "50")
-  kits: # Sequence of an adapter ligated to the 3' end of the first read
+  kits: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina)
     truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
     nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
     small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
@@ -266,7 +256,7 @@ cutadapt:
 ###############################################################################
 multiqc: ## TODO ##
   path: 'configuration/multiqc/' # Path to the multiqc configuration file
-  config: # Multiqc configuration file (default: default.yaml
+  config: # Multiqc configuration file (default: default.yaml)
   # Available options (not exhaustive), set only one:
     - 'default.yaml' # default
     #- ''             #
@@ -296,7 +286,6 @@ conda:
     fastqc:        '../environments/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
     gawk:          '../environments/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
     ivar:          '../environments/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
-    lofreq:        '../environments/lofreq_v.2.1.5.yaml'          # Lofreq        ver. 2.1.5 (with Samtools ver. 1.20)
     minimap2:      '../environments/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
     multiqc:       '../environments/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
     nextclade:     '../environments/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1

@@ -1,8 +1,0 @@
-name: lofreq_v.2.1.5
-channels:
-  - conda-forge
-  - bioconda
-  - nodefaults
-dependencies:
-  - lofreq=2.1.5
-  - samtools=1.17 # 
