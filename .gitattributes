@@ -1,3 +1,5 @@
+*.smk linguist-language=Python
+Snakefile linguist-language=Python
 *.fasta filter=lfs diff=lfs merge=lfs -text
 *.fai filter=lfs diff=lfs merge=lfs -text
 *.fastq filter=lfs diff=lfs merge=lfs -text
