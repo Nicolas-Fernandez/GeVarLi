@@ -15,8 +15,8 @@
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.11.13 (Update Snakemake)
-# Use ____________________ ./Run_GeVarLi.sh
+# Latest modifications ___ 2024.11.15 (Update Snakemake)
+# Use ____________________ 'bash ./Run_GeVarLi.sh'
 
 ###############################################################################
 ### COLORS ###
@@ -31,12 +31,10 @@ nc="\033[0m"       # no color
 ###############################################################################
 ### ABOUT ###
 #############
+version="2024.11"                                      # Version
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
-gevarli_version="2024.10"                              # GeVarLi version
-workflow_base_version="2024.11"                        # Workflow base version
-snakemake_version="8.16.0"                             # Snakemake version
-nextclade_version="3.8.2"                              # Nextclade version
+
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -44,13 +42,13 @@ ${green}#####${nc} ${red}ABOUT${nc} ${green}#####${nc}
 ${green}-----------------${nc}
 
 ${blue}Name${nc} ___________________ Run_GeVarLi.sh
-${blue}Version${nc} ________________ ${ylo}${gevarli_version}${nc}
+${blue}Version${nc} ________________ ${ylo}${version}${nc}
 ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
 ${blue}Latest modifications${nc} ___ 2024.10.01 (Dedicated installation scripts creation)
-${blue}Run${nc} ____________________ ./Run_GeVarLi.sh
+${blue}Use${nc} ____________________ '${ylo}./Run_GeVarLi.sh${nc}'
 "
 
 
@@ -160,9 +158,9 @@ ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
-echo -e "conda activate ${ylo}workflow-base_v.${workflow_base_version}${nc}"
+echo -e "conda activate ${ylo}workflow-base_v.${version}${nc}"
 
-conda activate workflow-base_v.${workflow_base_version}
+conda activate workflow-base_v.${version}
 
 
 ###############################################################################
@@ -344,7 +342,7 @@ echo -e "Removing ${red}'_001'${nc} illumina tag ID"
 rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
 
 echo -e "
-If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Start_GeVarLi.sh${nc} script (l.235).
+If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Run_GeVarLi.sh${nc} script (l.335).
 "
 
 
@@ -399,11 +397,13 @@ for snakefile in ${snakefiles_list} ; do
         --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
         --cores ${max_threads} \
         --max-threads ${max_threads} \
-	--resources mem_gb=${max_memory} \
+        --resources mem_gb=${max_memory} \
         --rerun-incomplete \
         --keep-going \
-        --use-conda \
-        --quiet all ;
+        --use-conda ;
+#        --quiet host \
+#        --quiet progress \
+#        --quiet rules ;
 done
 
 
