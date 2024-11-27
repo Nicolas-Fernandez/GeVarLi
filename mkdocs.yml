@@ -4,7 +4,6 @@ site_author: 'Nicolas Fernandez et al.'
 site_url: https://transvihmi.pages.ird.fr/fernandez/GeVarLi
 site_description: GeVarLi documentations
 site_dir: public # When you build your site, all of the files are written to the directory assigned to the site_dir configuration option (defaults to "site")
-docs_dir: '../documentations'
 
 # Repository
 repo_name: GeVarLi
