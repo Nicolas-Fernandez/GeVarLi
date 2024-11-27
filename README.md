@@ -57,7 +57,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Rulegraph ###
 
-<img src="./resources/visuals/gevarli_rulegraph.png" width="600" height="1200">  
+<img src="./documentations/images/gevarli_rulegraph.png" width="600" height="1200">  
 
 
 ## ~ INSTALLATIONS ~ ##
@@ -115,7 +115,7 @@ _(Given that Conda is installed)_
 You can just **download** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi):
 
 As a zip file:
-<img src="./resources/visuals/download_button.png" width="436" height="82">  
+<img src="./documentations/images/download_button.png" width="436" height="82">  
 
 Exemple script to **download** to your home/ directory:
 ```shell
@@ -258,7 +258,7 @@ _Some [temp] tagged files are removed by default, to save disk usage_
                  ├── 📂 {TOOL}/
 ```
 
-<img src="./resources/visuals/gevarli_filegraph.png" width="300" height="1200">  
+<img src="./documentations/images/gevarli_filegraph.png" width="300" height="1200">  
 
 ### Glossary ###
 
