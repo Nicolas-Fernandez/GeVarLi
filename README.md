@@ -1,7 +1,7 @@
 # GeVarLi: GEnome Assembly, VARiant calling and LIneage assignation #
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX - Intel x86-64 / ARM Apple Silicon](<https://badgen.net/badge/icon/from 10.13 (Hight Sierra) to 14.6 (Sonoma)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![MacOSX - Intel x86-64 / ARM Apple Silicon](<https://badgen.net/badge/icon/from 10.13 (Hight Sierra) to 15.0 (Sequoia)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU-Linux - Ubuntu / WSL](<https://badgen.net/badge/icon/from 18 (Bionic Beaver) to 24 (Noble Numbat)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/2/green?scale=0.9>)
 ![Issues opened](<https://badgen.net/badge/Issues opened/1/yellow?scale=0.9>)
@@ -31,7 +31,7 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 
 ### Version ###
 
-*v.2024.08*  
+*v.2024.11*  
 
 ### Features ###
 
@@ -40,20 +40,20 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
   - FastQC (_quality metrics_)
   - MultiQC (_html reports_)
 - Reads cleaning
-  - Cutadapt (_adapters trimming & amplicon primers hard-clipping_)
+  - Cutadapt (_adapters trimming & amplicon primers 'hard-clipping'_)
   - Sickle-trim (_quality trimming_)
-- Reads mapping (_using minimap2, bwa or bowtie2_)
-  - (_bam files_)
-  - (_bed files_)
-  - Bamclipper
-  - Visualization (IGV)
-- Variants calling and filtering (_using lofreq or ivar_)
-- Genome coverage (_statistics reports_)
-- Consensus sequences (_fasta file_)
+- Reads mapping
+  - Index genomes
+  - BWA aligments (bowtie2 / minimap2 also available)
+  - Bamclipper (_amplicon primers 'soft-clipping'_)
+  - Visualization (_output bam and bed for IGV_)
+  - Genome coverage (_statistics reports_)
+- Variants calling
+  - ivar (_filtering on qualities_)
+- Consensus sequences (_ivar output fasta file_)
 - Genomes classification
   - Nextclade (_consensus quality and lineages reports_)
   - Pangolin (_lineages reports_)
-- SLAM: SLURM Lightweight Automated Manager
 
 ### Rulegraph ###
 
@@ -63,71 +63,76 @@ The Covid-19 epidemic has highlighted the disparities that remain between contin
 ## ~ INSTALLATIONS ~ ##
 
 ### Conda ###
-_(Fresh install - No prior Conda installation)_
+_(Dependency required)_
 
-GeVarLi use the usefull **Conda** environment manager  
-We recommend that you start with the **Miniforge** distribution, coming with **Mamba**  
-If you already know conda, great, you already know mamba!  
+GeVarLi use the use the free and open-source package manager **Conda**.  
+If you don't have Conda, it can be installed with **Miniforge**.
 
-You can **download** and **install** your OS adapted [latest Miniforge installer](https://github.com/conda-forge/miniforge) (≥24.7.1)  
+You can **download** and **install** it for your specific OS here: [Latest Miniforge installer](https://github.com/conda-forge/miniforge/releases) (≥ 24.9.2)  
 
 Example script for **MacOSX_INTEL-chips_x86_64-bit** or **MacOSX_M1/M2-chips_arm_64-bit (with Rosetta)** systems:  
 ```shell
-curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh && \
-bash ./Miniforge3-MacOSX-x86_64.sh -b -p ~/miniforge3/ && \
-rm -f ./Miniforge3-MacOSX-x86_64.sh && \
-~/miniforge3/condabin/conda update conda --yes && \
-~/miniforge3/condabin/conda init && \
-exit
+curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-x86_64.sh
+bash ./Miniforge3-MacOSX-x86_64.sh -b -p ~/miniforge3/
+rm -f ./Miniforge3-MacOSX-x86_64.sh
+
+~/miniforge3/condabin/conda init
+shell=$(~/miniforge3/condabin/conda init 2> /dev/null | grep "modified" | sed 's/modified      //')
+source ${shell}
 ```
 
 Example script for **Linux_x86_64-bit** or **Windows Subsystem for Linux (WSL)** *systems:  
 ```shell
-curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh && \
-bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/ && \
-rm -f ./Miniforge3-Linux-x86_64.sh && \
-~/miniforge3/condabin/conda update conda --yes && \
-~/miniforge3/condabin/conda init && \
-exit
+curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/
+rm -f ./Miniforge3-Linux-x86_64.sh
+
+~/miniforge3/condabin/conda init
+shell=$(~/miniforge3/condabin/conda init 2> /dev/null | grep "modified" | sed 's/modified      //')
+source ${shell}
 ```
 
-You can then **update** Mamba like this:
-```shell
-mamba update mamba --yes
-```
+We also higly recommand to **set channels** and **update** it !
+Read: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/)
 
-_Operating systems:_
- - **osx**     |    Mac OSX     |         Apple (R)         | [UNIX] | (suported)
- - **linux**   |   GNU Linux    |                           | [UNIX] | (suported)
- - **bsd**     |    Free BSD    |                           | [UNIX] | (not tested)
- - **solaris** | Oracle Solaris |    Sun Microsystems (R)   | [UNIX] | (not tested)
- - **windows** |    Windows     | Microsoft Corporation (R) |  [-]   | (not suported, use WSL!) 
+Example script:
+```shell  
+~/miniforge3/condabin/conda config --add channels bioconda
+~/miniforge3/condabin/conda config --add channels conda-forge
+~/miniforge3/condabin/conda config --set channel_priority strict
+~/miniforge3/condabin/conda config --set auto_activate_base false
+
+~/miniforge3/condabin/conda update conda --yes
+
+~/miniforge3/condabin/conda --version
+~/miniforge3/condabin/conda config --show channels
+```
 
 
 ### GeVarLi ###
-_(Existing Conda install)_
+_(Given that Conda is installed)_
 
-You can **download** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) _(75 Mo)_ GitLab IRDForge repository _(ID: 399)_:
-_(no update through "git pull")_
+You can just **download** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi):
 
+As a zip file:
 <img src="./resources/visuals/download_button.png" width="436" height="82">  
 
-Or **download** to your home/ directory like this:
+Exemple script to **download** to your home/ directory:
 ```shell
-curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz && \
-tar -xzvf ~/GeVarLi-main.tar.gz && \
-mv ~/GeVarLi-main/ ~/GeVarLi/ && \
+curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz
+tar -xzvf ~/GeVarLi-main.tar.gz
+mv ~/GeVarLi-main/ ~/GeVarLi/
 rm -f ~/GeVarLi-main.tar.gz
 ```
 
-Otherwise, you can **clone** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi) _(128 Mo)_ GitLab IRDForge repository _(ID: 399)_:
+Otherwise, you can **clone** and **update** [GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi)
 
-**Clone** to your home/ directory:
+Exemple script to **clone** to your home/ directory:
 ```shell
 git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
 ```
 
-And then, you can **update** through "git pull" like this:
+Exemple script to **update** through "git pull":
 ```shell
 cd ~/GeVarLi/ && git reset --hard HEAD && git pull --depth 1 --verbose
 ```
@@ -135,38 +140,28 @@ cd ~/GeVarLi/ && git reset --hard HEAD && git pull --depth 1 --verbose
 
 ## ~ USAGE ~ ##
 
-### First step ###
-
-Execute bash script **Start_GeVarLi.sh** to run GeVarLi pipeline for the first time:
-    - or with a **Double-click** on it _(not on WSL)_
-    - or with a **Right-click** > **Open with** > **Terminal.app**
-    - or with **CLI** from a terminal:
-```shell                                                                                                                                                                         
-./Start_GeVarLi.sh                                                                                                                                                               
-```
-
-First run will auto-created _(only once)_:
-	- Workflow-Base conda environment _(with: Snakemake, Mamba, Yq, Rename and GraphViz)_
-	- GeVarLi conda environments _(all tools used by each GeVarLi rules)_
-	- Indexes for BWA, BOWTIE2 and minimap2 aligners _(for each fasta genomes in resources/genomes/ directory)_
-	
-_This may take some time, depending on your internet connection and your computer_
-
-
 ### Quick start ###
 
-
+To start your first analysis:
 
 1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
 _Without reads, SARS-CoV-2 from ./resources/test\_data/ directory will be used_
 
-2. Execute **Start_GeVarLi.sh** bash script to run GeVarLi pipeline:
+2. Execute **Run_GeVarLi.sh** bash script to run GeVarLi pipeline:
     - or with a **Double-click** on it _(if you make .sh files executable files with Terminal.app)_
 	- or with a **Right-click** > **Open with** > **Terminal.app**
 	- or with **CLI** from a terminal:
+
+Exemple script:
 ```shell
-./Start_GeVarLi.sh
+./Run_GeVarLi.sh
 ```
+
+**NB**: If your reads were generated with an **amplicon protocol**,   
+you will also need to provide the amplicon primer coordinates in **BEDPE** format,  
+so the **primers are trimmed appropriately**.
+
+
 3. Yours analyzes will start, with default configuration settings  
 
 _Option-1: Edit **config.yaml** file in **./configuration/** directory_  
@@ -269,6 +264,8 @@ _Some [temp] tagged files are removed by default, to save disk usage_
 
 - **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
 - **BAI**: BAM Indexes.
+- **BED**: Browser Extensible Data, text-based format used to store genomic regions as coordinates and associated annotations. 
+- **BEDPED**: An extension of the BED file format, used for describing disjointed genomic features, such as paired-end sequence alignments.
 - **FASTA**: Fast-All, text-based format for representing either nucleotide sequences or amino acid (protein) sequences.
 - **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
 - **FAI**: FASTA Indexes. 
