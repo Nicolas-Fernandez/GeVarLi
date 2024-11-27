@@ -21,7 +21,7 @@ before_script:
 test:
   stage: test
   script:
-    - mkdocs build --strict --verbose --site-dir test --config-file documentations/mkdocs.yml
+    - mkdocs build --strict --verbose --site-dir test --config-file documentations/mkdocs.yaml
   artifacts:
     paths:
       - test
@@ -31,7 +31,7 @@ test:
 pages:
   stage: deploy
   script:
-    - mkdocs build --verbose --config-file documentations/mkdocs.yml
+    - mkdocs build --verbose --config-file documentations/mkdocs.yaml
   artifacts:
     paths:
       - public
