@@ -14,7 +14,7 @@ edit_uri: edit/main/docs/ # Allow to replace edit/master/docs use by default
 theme:
   language: en  # default language
   name: material
-  logo: documentations/images/GeVarLi_by_DALL-E_icone.png # logo top left page
+  logo: docs/images/GeVarLi_by_DALL-E_icone.png # logo top left page
   search_index_only: true
   include_search_page: true
   features:
@@ -23,17 +23,17 @@ theme:
     - content.action.view
     - content.code.annotate
     - content.code.copy
-  # - content.tabs.link
+    #- content.tabs.link
     - content.tooltips
     - header.autohide
-    # - navigation.expand
+    #- navigation.expand
     - navigation.footer
     - navigation.indexes
-    # - navigation.instant
-    # - navigation.prune
-    # - navigation.sections # collapse subsections
+    #- navigation.instant
+    #- navigation.prune
+    #- navigation.sections # collapse subsections
     - navigation.tabs
-    # - navigation.tabs.sticky
+    #- navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
     - search.highlight
