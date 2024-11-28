@@ -7,7 +7,7 @@ site_dir: public # When you build your site, all of the files are written to the
 
 # Repository
 repo_name: GeVarLi
-repo_url: https://forge.ird.fr/transvihmi/fernandez/GeVarLi/
+repo_url: https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/
 edit_uri: edit/main/docs/ # Allow to replace edit/master/docs use by default
 
 # Configuration
@@ -87,7 +87,7 @@ extra:
   contact: 'nicolas.fernandez@ird.fr'
   institute: 'IRD'
   unit: 'TransVIHMI'
-  repo: 'https://transvihmi.pages.ird.fr/fernandez/GeVarLi'
+  repo: 'https://transvihmi.pages.ird.fr/nfernandez/GeVarLi'
   color_table_header: "#333a99"
   anaconda_channels:  "defaults, main, anaconda, free, r, mro, pro, archive, mro-archive, msys2"
 
