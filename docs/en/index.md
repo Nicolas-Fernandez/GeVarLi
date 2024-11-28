@@ -19,7 +19,7 @@
 
 ### GeVarLi ###
 
-	GeVarLiis a FAIR, open-source, scalable, modulable and traceable snakemake pipeline, used for SARS-CoV-2 (and others viruses) genome assembly and variants monitoring, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
+	GeVarLis a FAIR, open-source, scalable, modulable and traceable snakemake pipeline, used for SARS-CoV-2 (and others viruses) genome assembly and variants monitoring, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
 	
 	GeVarLi was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://www.afroscreen.org/)** project, before public release on GitLab (Mar. 2022).
 	
