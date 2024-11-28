@@ -1,4 +1,5 @@
-# GeVarLi: GEnome Assembly, VARiant calling and LIneage assignation #
+# GeVarLi #
+## GEnome Assembly, VARiant calling and LIneage assignation ##
 
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
 ![MacOSX - Intel x86-64 / ARM Apple Silicon](<https://badgen.net/badge/icon/from 10.13 (Hight Sierra) to 15.0 (Sequoia)/E6055C?icon=apple&label&list=|&scale=0.9>)
@@ -14,8 +15,6 @@
 ![Python](<https://badgen.net/badge/icon/Python 3.12/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
 ![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.16.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 24.7.1/black?icon=codacy&label&scale=0.9>)
-
-## ~ ABOUT ~ ##
 
 ### GeVarLi ###
 
