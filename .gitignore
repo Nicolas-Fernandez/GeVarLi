@@ -19,7 +19,7 @@ Thumbs.db
 # Ignore fasta indexes
 *.fai
 
-# Ignore resources, as indexes and reads directory
+# Ignore resources, as indexes/ and reads/ directories
 /resources/indexes
 /resources/reads/*.fastq.gz
 !/resources/data_test/
@@ -41,7 +41,10 @@ resources/genomes/HOST_*
 *.bt2
 *.bt2l
 
-# Ignore results
+# Ignore results/ directory
 /results
 /archives
 *.tar.gz
+
+# Ignore public/ directory
+/public
