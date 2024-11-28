@@ -9,6 +9,7 @@
 }
 
 .md-header__button.md-logo {
-    width: 150px; /* Ajuste la largeur selon tes besoins */
-    height: auto; /* Garde les proportions */
+    height: 500px; /* Garde les proportions */
+    width: auto;   /* Ajuste la largeur selon tes besoins */
+
 }
