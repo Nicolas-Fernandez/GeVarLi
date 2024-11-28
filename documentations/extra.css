@@ -8,8 +8,3 @@
     font-size: 12px
 }
 
-.md-header__button.md-logo {
-    height: 500px; /* Garde les proportions */
-    width: auto;   /* Ajuste la largeur selon tes besoins */
-
-}
