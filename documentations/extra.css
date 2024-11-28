@@ -7,3 +7,8 @@
     font-family: monospace;
     font-size: 12px
 }
+
+.md-header__button.md-logo {
+    width: 150px; /* Ajuste la largeur selon tes besoins */
+    height: auto; /* Garde les proportions */
+}
