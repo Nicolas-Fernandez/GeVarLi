@@ -107,7 +107,7 @@ extra_css:
 
 # page tree
 nav:
-  - Home:
+  - Home (en):
       - About: en/index.md
       - Features: en/pages/features.md
       - Installations: en/pages/installations.md
@@ -119,7 +119,7 @@ nav:
       - Contributions: en/pages/contributions.md
       - Afroscreen: en/pages/afroscreen.md
       - Acknowledgements: en/pages/acknowledgements.md
-  - Accueil:
+  - Accueil (fr):
       - À propos: fr/index.md
       - Caractéristiques: fr/pages/features.md
       - Installations: fr/pages/installations.md
