@@ -11,7 +11,7 @@ La mise en place d’un réseau de surveillance et de séquençage est un outil 
 
 L’épidémie de Covid-19 a mis en exergue les disparités qui subsistent entre les continents en termes de dispositifs de surveillance et de séquençage. Fin octobre 2021, sur les **4 600 000 séquences** partagées sur l’outil public et gratuit [GISAID](https://gisaid.org) au niveau mondial, seules 49 000 provenaient du continent africain, soit moins d’1% des cas de Covid-19 diagnostiqués sur ce continent.
 
-## Objectives
+## Objectifs
 
   - Détecter les variants du SARS-CoV-2 et autres pathogènes émergents.
   - Investiguer les caractéristiques épidémiologiques et l’impact clinique des variants.
