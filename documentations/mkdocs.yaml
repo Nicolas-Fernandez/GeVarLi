@@ -109,7 +109,9 @@ extra_css:
 nav:
   - Home (English):
       - Home: en/index.md
+      - Afroscreen program: en/afroscreen.md
       - References: en/references.md
   - Accueil (Français):
       - Accueil: fr/index.md
+      - Programme Afroscreen: fr/afroscreen.md
       - Références: fr/references.md
