@@ -1,4 +1,4 @@
-![](images/afroscreen.jpg){: style="height:100px"}
+![](../../images/afroscreen.jpg){: style="height:100px"}
 
 # AFROSCREEN, sequencing capacity building sequencing in Africa
 
