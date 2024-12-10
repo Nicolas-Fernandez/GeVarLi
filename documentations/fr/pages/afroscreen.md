@@ -1,4 +1,4 @@
-![](images/afroscreen.jpg){: style="height:100px"}
+![](../../images/afroscreen.jpg){: style="height:100px"}
 
 # AFROSCREEN, renforcement des capacités de séquençage en Afrique
 
