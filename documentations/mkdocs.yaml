@@ -107,11 +107,27 @@ extra_css:
 
 # page tree
 nav:
-  - Home (English):
-      - Home: en/index.md
-      - Afroscreen program: en/pages/afroscreen.md
+  - Home:
+      - About: en/index.md
+      - Features: en/pages/features.md
+      - Installations: en/pages/installations.md
+      - Configuration: en/pages/configuration.md
+      - Usage: en/pages/usage.md
+      - Results: en/pages/results.md
+      - Glossary: en/pages/glossary.md
       - References: en/pages/references.md
-  - Accueil (Français):
-      - Accueil: fr/index.md
-      - Programme Afroscreen: fr/pages/afroscreen.md
+      - Contributions: en/pages/contributions.md
+      - Afroscreen: en/pages/afroscreen.md
+      - Acknowledgements: en/pages/acknowledgements.md
+  - Accueil:
+      - À propos: fr/index.md
+      - Caractéristiques: fr/pages/features.md
+      - Installations: fr/pages/installations.md
+      - Configuration: fr/pages/setup.md
+      - Utilisation: fr/pages/usage.md
+      - Résultats: fr/pages/results.md
+      - Glossaire: fr/pages/glossary.md
       - Références: fr/pages/references.md
+      - Contributions: fr/pages/contributions.md
+      - Afroscreen: fr/pages/afroscreen.md
+      - Remerciements: en/pages/acknowledgements.md
