@@ -20,5 +20,6 @@
   - Nextclade (_consensus quality and lineages reports_)
   - Pangolin (_lineages reports_)
 
-<img src="./documentations/images/gevarli_rulegraph.png" width="600" height="1200">  
-<img src="./documentations/images/gevarli_filegraph.png" width="300" height="1200">
+<img src="./images/gevarli_rulegraph.png" width="600" height="1200">
+
+<img src="./images/gevarli_filegraph.png" width="300" height="1200">
