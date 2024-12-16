@@ -1,5 +1,5 @@
 ![Author](<https://badgen.net/badge/Maintener/Nicolas Fernandez/blue?scale=0.9>)
-![MacOSX - Intel x86-64 / ARM Apple Silicon](<https://badgen.net/badge/icon/from 10.13 (Hight Sierra) to 15.0 (Sequoia)/E6055C?icon=apple&label&list=|&scale=0.9>)
+![MacOSX - Intel x86-64 / ARM Apple Silicon](<https://badgen.net/badge/icon/from 10.13 (Hight Sierra) to 15.1 (Sequoia)/E6055C?icon=apple&label&list=|&scale=0.9>)
 ![GNU-Linux - Ubuntu / WSL](<https://badgen.net/badge/icon/from 18 (Bionic Beaver) to 24 (Noble Numbat)/772953?icon=https://www.svgrepo.com/show/25424/ubuntu-logo.svg&label&list=|&scale=0.9>)
 ![Issues closed](<https://badgen.net/badge/Issues closed/2/green?scale=0.9>)
 ![Issues opened](<https://badgen.net/badge/Issues opened/1/yellow?scale=0.9>)
