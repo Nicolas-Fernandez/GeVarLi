@@ -13,19 +13,13 @@
 ![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.25.3/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 24.11.0/black?icon=codacy&label&scale=0.9>)
 
-# GeVarLi: GEnome Assembly, VARiant calling and LIneage assignation
-
-
-GeVarLi is a FAIR, open-source, scalable, modulable and traceable snakemake pipeline, used for SARS-CoV-2 (and others viruses) genome assembly and variants monitoring, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
-	
-GeVarLi was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://www.afroscreen.org/)** project, before public release on GitLab (Mar. 2022).
-
+# GeVarLi: **Ge**nome assembly, **Var**iant calling and **Li**neage assignation
 
 ## About
 
-GeVarLi	is a FAIR, open-source, scalable, modulable and traceable snakemake pipeline, used for SARS-CoV-2 (and others viruses) genome assembly and variants monitoring, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
+**GeVarLi**	is a **FAIR**, **open-source**, **scalable**, **modulable** and **traceable** snakemake pipeline, used for **SARS-CoV-2**, and **others viruses**, **genome assembly**, **variants monitoring**, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
 
-GeVarLi was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://www.afroscreen.org/)** project, before public release on GitLab (Mar. 2022).
+**GeVarLi** was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://www.afroscreen.org/)** project, before public release on GitLab (Mar. 2022).
 
 
 ## Support
@@ -37,11 +31,22 @@ GeVarLi was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://
 
 ## Citation
 
-GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
+**GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
 for reference-based Genome assembly and Variants calling and Lineage assignment,
-from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.
+from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.**
 
 GitLab IRDForge repository: [https://forge.ird.fr/transvihmi/nfernandez/GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi)
 
-Nicolas FERNANDEZ NUÑEZ _(1)_  
-_(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques et émergentes (TransVIHMI), University of Montpellier (UM), French Institute of Health and Medical Research (INSERM), French National Research Institute for Sustainable Development (IRD)_
+Nicolas FERNANDEZ NUÑEZ _(1)_, Eddy KINGADA LUSAMAKI _(1, 2, 3)_, Thibaut Armel CHÉRIF GNIMADI _(4)_, Nicole VIDALE _(1)_, Christelle BUTEL _(1)_, Laeticia SERRANO _(1)_, Célestin GODWE _(5, 6)_, Martine PEETERS _(1)_ and Ahidjo AYOUBA _(1)_  
+
+_(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques et émergentes (TransVIHMI), University of Montpellier (UM), French National Research Institute for Sustainable Development (IRD), French Institute of Health and Medical Research (INSERM), Moontpellier, France_
+
+_(2) Institut National de Recherche Biomédicale (INRB), Kinshasa, Democratic Republic of the Congo_
+
+_(3) Service de Microbiologie, Département de Biologie Médicale, Cliniques Universitaires de Kinshasa, Université de Kinshasa, Kinshasa, Democratic Republic of the Congo_
+
+_(4) Centre de Recherche et de Formation en Infectiologie de Guinée (CERFIG), Université Gamal Abder Nasser de Conakry, Conakry, Guinea_
+
+_(5) Center of Research for Emerging and Re-Emerging Diseases (CREMER), Institute of Medical Research and Study of Medicinal Plants (IMPM), Yaoundé, Cameroon_
+
+_(6) Department of Biochemistry, University of Douala, Douala, Cameroon_

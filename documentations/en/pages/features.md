@@ -1,37 +1,37 @@
-# Fonctionnalités et outils
+# Features and tools
 
-## Gestionnaire de pipeline
-  - Workflow ................................. Snakemake
-  - Environnements ........................... Miniforge _(Conda)_
+## Workflow management
+  - Workflow ......................... Snakemake
+  - Environments ..................... Miniforge _(Conda)_
   
-## Qualité contrôle des lectures
-  - Contrôle des contaminations .............. Fastq-Screen	
-  - Mesures qualités des lectures ............ FastQC
-  - Rapport qualité HTML ..................... MultiQC
+## Reads quality control
+  - Contamination checking ........... Fastq-Screen
+  - Reads qualities metrics .......... FastQC
+  - HTML reporting ................... MultiQC
   
-## Nettoyage des lectures
-  - Nettoyage des adaptateurs Illumina ....... Cutadapt
-  - Nettoyage des primers d'amplicons ........ Cutadapt _('hard-clipping')_
-  - Nettoyage des lectures basses qualités ... Sickle-trim
+## Reads cleaning
+  - Illumina adpters trimming ........ Cutadapt
+  - Amplicon primers trimming ........ Cutadapt _('hard-clipping')_
+  - Reads quality trimming ........... Sickle-trim
   
-## Allignement des lectures
-  - Indexation des genomes ................... BWA _(ou minimap2, ou bowtie2)_
-  - Allignement des lectures ................. BWA _(ou minimap2, ou bowtie2)_
-  - Nettoyage des primers d'amplicons ........ Bamclipper _('soft-clipping')_
-  - Visualisation _(avec IGV)_ ................. fichiers BAM, BAI et BED
-  - Rapport de couverture génomique .......... Bedtools _(tableur)_
+## Reads mapping
+  - Indexing genomes ................. BWA _(or minimap2, or bowtie2)_
+  - Reads mapping .................... BWA _(or minimap2, or bowtie2)_
+  - Amplicon primers trimming ........ Bamclipper _('soft-clipping')_
+  - Visualization _(with IGV)_ ......... BAM, BAI and BED files
+  - Genome coverage reports .......... Bedtools _(table file)_
   
-## Appel de variants
-  - Filtrage des variants ..................... Ivar
-  - Appel de variants ......................... Ivar
+## Variants calling
+  - Variants filtering ............... Ivar
+  - Variants calling ................. Ivar
   
-## Sequences consensus
-  - Appel du consensus ........................ Ivar _(fichier FASTA)_
+## Consensus sequences
+  - Consensus calling ................ Ivar _(FASTA file)_
   
-## Classification génomiques
-  - Qualité des génomes SARS-CoV-2 ............ Nextclade
-  - Assignation lignées Nextclade ............. Nextclade
-  - Assignation lignées Pangolin .............. Nextclade _(ou Pangolin)_
+## Genomes classification
+  - SARS-CoV-2 genome quality ........ Nextclade
+  - Nextclade lineages assignation ... Nextclade 
+  - Pangolin lineages assignation .... Nextclade _(or Pangolin)_
   
 ## Rulegraph
 <img src="../../../images/gevarli_rulegraph.png" width="1200" height="2400">
