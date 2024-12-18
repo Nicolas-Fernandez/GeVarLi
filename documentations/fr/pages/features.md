@@ -1,25 +1,40 @@
-# Features
+# Features and tools
 
+## Workflow management
+  - Workflow ......................... Snakemake
+  - Environments ..................... Miniforge _(Conda)_
+  
 ## Reads quality control
-  - Fastq-Screen (_contamination check_)
-  - FastQC (_quality metrics_)
-  - MultiQC (_html reports_)
+  - Contamination checking ........... Fastq-Screen
+  - Reads qualities metrics .......... FastQC
+  - HTML reporting ................... MultiQC
+  
 ## Reads cleaning
-  - Cutadapt (_adapters trimming & amplicon primers 'hard-clipping'_)
-  - Sickle-trim (_quality trimming_)
+  - Illumina adpters trimming ........ Cutadapt
+  - Amplicon primers trimming ........ Cutadapt _('hard-clipping')_
+  - Reads quality trimming ........... Sickle-trim
+  
 ## Reads mapping
-  - Index genomes
-  - BWA aligments (bowtie2 / minimap2 also available)
-  - Bamclipper (_amplicon primers 'soft-clipping'_)
-  - Visualization (_output bam and bed for IGV_)
-  - Genome coverage (_statistics reports_)
+  - Indexing genomes ................. BWA _(or minimap2, or bowtie2)_
+  - Reads mapping .................... BWA _(or minimap2, or bowtie2)_
+  - Amplicon primers trimming ........ Bamclipper _('soft-clipping')_
+  - Visualization _(with IGV)_ ......... BAM, BAI and BED files
+  - Genome coverage reports .......... Bedtools _(table file)_
+  
 ## Variants calling
-  - ivar (_filtering on qualities_)
-## Consensus sequences (_ivar output fasta file_)
+  - Variants filtering ............... Ivar
+  - Variants calling ................. Ivar
+  
+## Consensus sequences
+  - Consensus calling ................ Ivar _(FASTA file)_
+  
 ## Genomes classification
-  - Nextclade (_consensus quality and lineages reports_)
-  - Pangolin (_lineages reports_)
+  - SARS-CoV-2 genome quality ........ Nextclade
+  - Nextclade lineages assignation ... Nextclade 
+  - Pangolin lineages assignation .... Nextclade _(or Pangolin)_
+  
+## Rulegraph
+<img src="../../../images/gevarli_rulegraph.png" width="1200" height="2400">
 
-<img src="../../../images/gevarli_rulegraph.png" width="600" height="1200">
-
-<img src="../../../images/gevarli_filegraph.png" width="300" height="1200">
+## Filegraph 
+<img src="../../../images/gevarli_filegraph.png" width="1200" height="2400">
