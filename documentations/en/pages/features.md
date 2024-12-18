@@ -1,25 +1,40 @@
-# Features
+# Fonctionnalités et outils
 
-## Reads quality control
-  - Fastq-Screen (_contamination check_)
-  - FastQC (_quality metrics_)
-  - MultiQC (_html reports_)
-## Reads cleaning
-  - Cutadapt (_adapters trimming & amplicon primers 'hard-clipping'_)
-  - Sickle-trim (_quality trimming_)
-## Reads mapping
-  - Index genomes
-  - BWA aligments (bowtie2 / minimap2 also available)
-  - Bamclipper (_amplicon primers 'soft-clipping'_)
-  - Visualization (_output bam and bed for IGV_)
-  - Genome coverage (_statistics reports_)
-## Variants calling
-  - ivar (_filtering on qualities_)
-## Consensus sequences (_ivar output fasta file_)
-## Genomes classification
-  - Nextclade (_consensus quality and lineages reports_)
-  - Pangolin (_lineages reports_)
+## Gestionnaire de pipeline
+  - Workflow ................................. Snakemake
+  - Environnements ........................... Miniforge _(Conda)_
+  
+## Qualité contrôle des lectures
+  - Contrôle des contaminations .............. Fastq-Screen	
+  - Mesures qualités des lectures ............ FastQC
+  - Rapport qualité HTML ..................... MultiQC
+  
+## Nettoyage des lectures
+  - Nettoyage des adaptateurs Illumina ....... Cutadapt
+  - Nettoyage des primers d'amplicons ........ Cutadapt _('hard-clipping')_
+  - Nettoyage des lectures basses qualités ... Sickle-trim
+  
+## Allignement des lectures
+  - Indexation des genomes ................... BWA _(ou minimap2, ou bowtie2)_
+  - Allignement des lectures ................. BWA _(ou minimap2, ou bowtie2)_
+  - Nettoyage des primers d'amplicons ........ Bamclipper _('soft-clipping')_
+  - Visualisation _(avec IGV)_ ................. fichiers BAM, BAI et BED
+  - Rapport de couverture génomique .......... Bedtools _(tableur)_
+  
+## Appel de variants
+  - Filtrage des variants ..................... Ivar
+  - Appel de variants ......................... Ivar
+  
+## Sequences consensus
+  - Appel du consensus ........................ Ivar _(fichier FASTA)_
+  
+## Classification génomiques
+  - Qualité des génomes SARS-CoV-2 ............ Nextclade
+  - Assignation lignées Nextclade ............. Nextclade
+  - Assignation lignées Pangolin .............. Nextclade _(ou Pangolin)_
+  
+## Rulegraph
+<img src="../../../images/gevarli_rulegraph.png" width="1200" height="2400">
 
-<img src="../../../images/gevarli_rulegraph.png" width="600" height="1200">
-
-<img src="../../../images/gevarli_filegraph.png" width="300" height="1200">
+## Filegraph 
+<img src="../../../images/gevarli_filegraph.png" width="1200" height="2400">
