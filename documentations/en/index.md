@@ -13,7 +13,8 @@
 ![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.25.3/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 24.11.0/black?icon=codacy&label&scale=0.9>)
 
-# GeVarLi: **Ge**nome assembly, **Var**iant calling and **Li**neage assignation
+# **GeVarLi**
+# **Ge**nome assembly, **Var**iant calling and **Li**neage assignation
 
 ## About
 

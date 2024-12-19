@@ -13,10 +13,11 @@
 ![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.16.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 24.7.1/black?icon=codacy&label&scale=0.9>)
 
-# GeVarLi #
+# GeVarLi
 
-## Assemblage de GEnomes, Détection de VARiants et Assignation de LIgnées
+# Assemblage de **ge**nomes, Détection de **var**iants et Assignation de **li**gnées
 
+## A propos
 GeVarLi est un pipeline Snakemake FAIR, open-source, évolutif, modulable et traçable. Il est utilisé pour l’assemblage de génomes et le suivi des variants du SARS-CoV-2 (et d’autres virus), en exploitant les séquences de lectures courtes générées par les bibliothèques COVIDSeq&trade; d’Illumina Inc.
 
 GeVarLi a été initialement développé en interne (octobre 2021) pour le projet **[AFROSCREEN](https://www.afroscreen.org/)**, avant d’être rendu public sur GitLab (mars 2022).
