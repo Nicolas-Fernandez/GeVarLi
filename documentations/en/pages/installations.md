@@ -12,8 +12,11 @@ If you need help, you can use the side script: [Install_Conda-with-Miniforge3.sh
 
 Otherwise, you can **download** and **install** the [latest version of Miniforge](https://github.com/conda-forge/miniforge/releases) for your specific OS.
 
-!!! Warning We higly recommand to **set channels** and **update** it !
-!!! Note Read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/)
+!!! warning
+    We higly recommand to **set channels** and **update** it !
+
+!!! note
+    Read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/)
 
 Example script for **Linux_x86_64-bit** or **Windows Subsystem for Linux (WSL)** *systems:  
 ```shell
