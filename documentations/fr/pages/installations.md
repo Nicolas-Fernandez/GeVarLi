@@ -1,8 +1,8 @@
 # **Installations**
 
 ## **Conda**
-!!! caution
-    Dépendance requise!
+!!! important
+    ¡ Dépendance requise !
 
 GeVarLi utilise le gestionnaire de paquets gratuit et open-source **Conda**.  
 
@@ -50,9 +50,10 @@ rm -f ./Miniforge3-Linux-x86_64.sh
 
 ## **GeVarLi**
 !!! important
-    Présumant que vous avez Conda installé!
+    ¡ Présumant que vous avez Conda installé !
 
 Vous pouvez **télécharger** GeVarLi depuis le [dépôt git sur IRD-Forge](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi), en tant que fichier zip :
+
 <img src="../../../images/download_button.png" width="300" height="60">
 
 _Exemple de script pour télécharger GeVarLi dans votre répertoire home/_
