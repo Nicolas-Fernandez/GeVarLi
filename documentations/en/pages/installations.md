@@ -1,8 +1,8 @@
 # **Installations**
 
 ## **Conda**
-!!! important
-    ¡ Dependency required !
+!!! warning
+    Dependency required
 
 GeVarLi use the use the free and open-source package manager **Conda**.
 
@@ -48,8 +48,8 @@ rm -f ./Miniforge3-Linux-x86_64.sh
     Read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/danat/malbec-fix-conda-licensing-issues/en/)
 
 ## **GeVarLi**
-!!! important
-    ¡ Given that Conda is installed !
+!!! warning
+    Given that Conda is installed
 
 You can **download** GeVarLi from [IRD-Forge git repository](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi), as zip file:
 
