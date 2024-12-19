@@ -12,9 +12,8 @@ Si vous avez besoin d'aide, vous pouvez utiliser le script annexe : [Install_Con
 
 Sinon, vous pouvez **télécharger** et **installer** la [dernière version de Miniforge](https://github.com/conda-forge/miniforge/releases) spécifique à votre système d'exploitation.
 
-> [!WARNING]  
-> Nous vous recommandons fortement de **définir des canaux** et de le **mettre à jour** !  
-> _(lire pourquoi: [Éviter les Pièges de la Licence Anaconda : Guide Pratique](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/fr/))_  
+!!! Warning Nous vous recommandons fortement de **définir des canaux** et de le **mettre à jour** !
+!!! Note Lire pourquoi: [Éviter les Pièges de la Licence Anaconda : Guide Pratique](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/fr/)
 
 Exemple de script pour les systèmes **Linux_x86_64 bits** ou **Sous-système Windows pour Linux (WSL)** *:
 
