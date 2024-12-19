@@ -42,7 +42,7 @@ rm -f ./Miniforge3-Linux-x86_64.sh
 # Init
 ~/miniforge3/condabin/conda init
 ```
-!!! caution
+!!! warning
     Nous vous recommandons fortement de **définir des canaux** et de **mettre à jour** !
 !!! note
     Lire pourquoi: [Éviter les Pièges de la Licence Anaconda : Guide Pratique](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/fr/)
