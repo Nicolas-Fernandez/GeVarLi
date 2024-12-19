@@ -5,15 +5,15 @@ _(Dependency required)_
 
 GeVarLi use the use the free and open-source package manager **Conda**.  
 
-If you don't have Conda, we hihly recommad to installed it with **Miniforge**.
+If you don't have Conda, we hihly recommad to installed it with **Miniforge**.  
 _(read why: [Avoiding the Pitfalls of the Anaconda License: A Practical Guide](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/))_  
 
 If you need help, you can use the side script: [Install_Conda-with-Miniforge3.sh](https://forge.ird.fr/transvihmi/nfernandez/install_conda-with-miniforge3)  
 
-Otherwise, you can just **download** and **install** it for your specific OS here: [Latest Miniforge installer](https://github.com/conda-forge/miniforge/releases) (≥ 24.11)  
+Otherwise, you can **download** and **install** the [latest version of Miniforge](https://github.com/conda-forge/miniforge/releases) for your specific OS.
 
-> [!WARNING]
-> We higly recommand to **set channels** and **update** it !
+> [!WARNING]  
+> We higly recommand to **set channels** and **update** it !  
 > _(read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/))_  
 
 Example script for **Linux_x86_64-bit** or **Windows Subsystem for Linux (WSL)** *systems:  
