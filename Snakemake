@@ -1,4 +1,0 @@
-include: "workflow/rules/quality_control.smk"
-include: "workflow/rules/indexing_genomes.smk"
-include: "workflow/rules/gevarli.smk"
-conda_prefix: "workflow/environments/"
