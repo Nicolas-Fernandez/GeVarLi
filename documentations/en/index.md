@@ -14,23 +14,21 @@
 ![Conda](<https://badgen.net/badge/icon/Conda 24.11.0/black?icon=codacy&label&scale=0.9>)
 
 # **GeVarLi**
-# **Ge**nome assembly, **Var**iant calling and **Li**neage assignation
 
-## About
+## **Ge**nome assembly, **Var**iant calling and **Li**neage assignation
 
-**GeVarLi**	is a **FAIR**, **open-source**, **scalable**, **modulable** and **traceable** snakemake pipeline, used for **SARS-CoV-2**, and **others viruses**, **genome assembly**, **variants monitoring**, using Illumina Inc. short reads COVIDSeq&trade; libraries sequencing.  
+## **About**
 
-**GeVarLi** was initialy developed in intern (Oct. 2021) for **[AFROSCREEN](https://www.afroscreen.org/)** project, before public release on GitLab (Mar. 2022).
+**GeVarLi**	is a **FAIR**, **open-source**, **scalable**, **modulable** and **traceable** snakemake pipeline, used for **SARS-CoV-2** and now **others viruses**, **genome assembly**, **variants monitoring**, using Illumina _Inc_. short reads _COVIDSeq&trade;_ libraries sequencing, initialy developed in intern since October 2021 for [AFROSCREEN](https://www.afroscreen.org/) project, before public release on GitLab IRD-Forge on March 2022.
 
-
-## Support
+## **Support**
 
   - Documentations: [Read The Fabulous Manual](https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/)
   - Raise issues and report bugs: [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/issues)! 
   - Contact: [nicolas.fernandez@ird.fr](nicolas.fernandez@ird.fr)
 
 
-## Citation
+## **Citation**
 
 **GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,
 for reference-based Genome assembly and Variants calling and Lineage assignment,
@@ -38,7 +36,7 @@ from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.
 
 GitLab IRDForge repository: [https://forge.ird.fr/transvihmi/nfernandez/GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi)
 
-Nicolas FERNANDEZ NUÑEZ _(1)_, Eddy KINGADA LUSAMAKI _(1, 2, 3)_, Thibaut Armel CHÉRIF GNIMADI _(4)_, Nicole VIDALE _(1)_, Christelle BUTEL _(1)_, Laeticia SERRANO _(1)_, Célestin GODWE _(5, 6)_, Martine PEETERS _(1)_ and Ahidjo AYOUBA _(1)_  
+Nicolas FERNANDEZ NUÑEZ _(1)_, Eddy KINGADA LUSAMAKI _(1, 2, 3)_, Thibaut Armel CHÉRIF GNIMADI _(4)_, Nicole VIDALE _(1)_, Christelle BUTEL _(1)_, Laeticia SERRANO _(1)_, Célestin GODWE _(5, 6)_, Martine PEETERS _(1)_ and Ahidjo AYOUBA _(1)_
 
 _(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques et émergentes (TransVIHMI), University of Montpellier (UM), French National Research Institute for Sustainable Development (IRD), French Institute of Health and Medical Research (INSERM), Moontpellier, France_
 

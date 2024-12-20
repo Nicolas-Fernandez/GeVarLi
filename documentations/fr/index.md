@@ -13,17 +13,49 @@
 ![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.16.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 24.7.1/black?icon=codacy&label&scale=0.9>)
 
-# GeVarLi
+# **GeVarLi**
 
-# Assemblage de **ge**nomes, Détection de **var**iants et Assignation de **li**gnées
+## Assemblage **Gé**nomique, appel de **Var**iants et assignation de **Li**gnées
 
-## A propos
-GeVarLi est un pipeline Snakemake FAIR, open-source, évolutif, modulable et traçable. Il est utilisé pour l’assemblage de génomes et le suivi des variants du SARS-CoV-2 (et d’autres virus), en exploitant les séquences de lectures courtes générées par les bibliothèques COVIDSeq&trade; d’Illumina Inc.
+## **À propos**
+**GeVarLi** est un pipeline **snakemake**, **FAIR**, **open-source**, **évolutif**, **modulable** et **traçable**. Il est utilisé pour l’**assemblage de génomes** et le **suivi de variants** du **SARS-CoV-2** et aujourd'hui d’**autres virus**, en exploitant les séquences de lectures courtes générées par les bibliothèques _COVIDSeq&trade;_ d’Illumina _Inc_, initialement développé en interne depuis octobre 2021 pour le projet **[AFROSCREEN](https://www.afroscreen.org/)**, avant d’être rendu public sur GitLab IRD-Forge mars 2022.
 
-GeVarLi a été initialement développé en interne (octobre 2021) pour le projet **[AFROSCREEN](https://www.afroscreen.org/)**, avant d’être rendu public sur GitLab (mars 2022).
+## **Support**
 
-## Le séquençage génomique, un outil de santé publique
+  - Documentations: [Read The Fabulous Manual](https://transvihmi.pages.ird.fr/nfernandez/GeVa\
+rLi/en/)
+  - Raise issues and report bugs: [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfern\
+andez/GeVarLi/-/issues)!
+  - Contact: [nicolas.fernandez@ird.fr](nicolas.fernandez@ird.fr)
 
-La mise en place d’un réseau de surveillance et de séquençage est un outil de santé publique essentiel pour détecter et contenir les agents pathogènes à potentiel épidémique. Le séquençage génomique permet d’identifier les agents pathogènes, de surveiller l’émergence et l’impact des variants, et d’adapter les politiques de santé publique en conséquence.
+## **Citation**
 
-L’épidémie de Covid-19 a mis en lumière les disparités qui subsistent entre les continents en termes de systèmes de surveillance et de séquençage. Fin octobre 2021, sur les 4 600 000 séquences partagées via l’outil public et gratuit GISAID dans le monde, seulement 49 000 provenaient du continent africain, soit moins de 1% des cas de Covid-19 diagnostiqués sur ce continent.
+**GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,          
+for reference-based Genome assembly and Variants calling and Lineage assignment,               
+from SARS-CoV-2 to others (re)emergent viruses, Illumina short reads sequencing.**
+
+GitLab IRDForge repository: [https://forge.ird.fr/transvihmi/nfernandez/GeVarLi](https://forge\
+.ird.fr/transvihmi/nfernandez/GeVarLi)
+
+Nicolas FERNANDEZ NUÑEZ _(1)_, Eddy KINGADA LUSAMAKI _(1, 2, 3)_, Thibaut Armel CHÉRIF GNIMADI\
+ _(4)_, Nicole VIDALE _(1)_, Christelle BUTEL _(1)_, Laeticia SERRANO _(1)_, Célestin GODWE _(\
+5, 6)_, Martine PEETERS _(1)_ and Ahidjo AYOUBA _(1)_
+
+_(1) UMI 233 - Recherches Translationnelles sur le VIH et les Maladies Infectieuses endémiques\
+ et émergentes (TransVIHMI), University of Montpellier (UM), French National Research Institut\
+e for Sustainable Development (IRD), French Institute of Health and Medical Research (INSERM),\
+ Moontpellier, France_
+
+_(2) Institut National de Recherche Biomédicale (INRB), Kinshasa, Democratic Republic of the C\
+ongo_
+
+_(3) Service de Microbiologie, Département de Biologie Médicale, Cliniques Universitaires de K\
+inshasa, Université de Kinshasa, Kinshasa, Democratic Republic of the Congo_
+
+_(4) Centre de Recherche et de Formation en Infectiologie de Guinée (CERFIG), Université Gamal\
+ Abder Nasser de Conakry, Conakry, Guinea_
+ 
+_(5) Center of Research for Emerging and Re-Emerging Diseases (CREMER), Institute of Medical R\
+esearch and Study of Medicinal Plants (IMPM), Yaoundé, Cameroon_
+
+_(6) Department of Biochemistry, University of Douala, Douala, Cameroon_
