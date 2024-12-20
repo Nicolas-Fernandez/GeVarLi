@@ -1,4 +1,7 @@
-name: GeVarLi
+name: "GeVarLi"
 description: "A workflow for bioinformatic analysis"
+version: "2024.11"
 authors:
   - name: Nicolas Fernandez
+  - email: nicolas.fernandez@ird.fr
+  - affiliation: IRD TransVIHMI
