@@ -1,4 +1,4 @@
-# Results
+# **Results**
 
 Results are available in **./results/** directory.
 
@@ -12,9 +12,8 @@ Results are available in **./results/** directory.
     Files tagged as **[temp]** are removed by default, to save disk usage.  
 	If you want to keep them, please edit the **configuration** file.
 
+## **Files tree**
 ```shell
-## Files tree
-
 🧩 GeVarLi/
 │
 └── 📂 results/

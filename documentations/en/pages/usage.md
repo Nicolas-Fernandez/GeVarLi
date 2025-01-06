@@ -1,6 +1,6 @@
-# Usage
+# **Usage**
 
-## Quick start
+## **Quick start**
 
 To start your first analysis:
 
@@ -28,7 +28,7 @@ _Option-1: Edit **config.yaml** file in **./configuration/** directory_
 _Option-2: Edit **fastq-screen.conf** file in **./configuration/** directory_  
 
 
-## Files map
+## **Files tree**
 
 ```shell
  🧩 GeVarLi/

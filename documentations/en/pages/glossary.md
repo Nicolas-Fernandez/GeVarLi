@@ -1,4 +1,4 @@
-# Glossary
+# **Glossary**
 
 - **BAM** : _Binary Alignment Map_, représentation binaire compressée des fichiers SAM.
 - **BAI** : _BAM Indexes_, index des fichiers BAM.

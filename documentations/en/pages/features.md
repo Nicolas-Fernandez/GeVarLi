@@ -1,37 +1,37 @@
-# Features and tools
+# **Features and tools**
 
-## Workflow management
-  - Workflow _ _ _ _ _ _ _ _ _ _ _ _ _ Snakemake
-  - Environments _ _ _ _ _ _ _ _ _ _ _ Miniforge _(Conda)_
+## **Workflow management**
+  - Workflow: Snakemake
+  - Environments: Miniforge _(Conda)_
   
-## Reads quality control
-  - Contamination checking _ _ _ _ _ _ Fastq-Screen
-  - Reads qualities metrics  _ _ _ _ _ FastQC
-  - HTML reporting _ _ _ _ _ _ _ _ _ _ MultiQC
+## **Reads quality control**
+  - Contamination checking: Fastq-Screen
+  - Reads qualities metrics: FastQC
+  - HTML reporting: MultiQC
   
-## Reads cleaning
-  - Illumina adpters trimming  _ _ _ _ Cutadapt
-  - Amplicon primers trimming  _ _ _ _ Cutadapt _('hard-clipping')_
-  - Reads quality trimming _ _ _ _ _ _ Sickle-trim
+## **Reads cleaning**
+  - Illumina adpters trimming: Cutadapt
+  - Amplicon primers trimming: Cutadapt _('hard-clipping')_
+  - Reads quality trimming: Sickle-trim
   
-## Reads mapping
-  - Indexing genomes ................. BWA _(or minimap2, or bowtie2)_
-  - Reads mapping .................... BWA _(or minimap2, or bowtie2)_
-  - Amplicon primers trimming ........ Bamclipper _('soft-clipping')_
-  - Visualization _(with IGV)_ ......... BAM, BAI and BED files
-  - Genome coverage reports .......... Bedtools _(table file)_
+## **Reads mapping**
+  - Indexing genomes: BWA _(or minimap2, or bowtie2)_
+  - Reads mapping: BWA _(or minimap2, or bowtie2)_
+  - Amplicon primers trimming: Bamclipper _('soft-clipping')_
+  - Visualization _(with IGV)_: BAM, BAI and BED files
+  - Genome coverage reports: Bedtools _(table file)_
   
-## Variants calling
-  - Variants filtering ............... Ivar
-  - Variants calling ................. Ivar
+## **Variants calling**
+  - Variants filtering: Ivar
+  - Variants calling: Ivar
   
-## Consensus sequences
-  - Consensus calling ................ Ivar _(FASTA file)_
+## **Consensus sequences**
+  - Consensus calling: Ivar _(FASTA file)_
   
-## Genomes classification
-  - SARS-CoV-2 genome quality ........ Nextclade
-  - Nextclade lineages assignation ... Nextclade 
-  - Pangolin lineages assignation .... Nextclade _(or Pangolin)_
+## **Genomes classification**
+  - SARS-CoV-2 genome quality: Nextclade
+  - Nextclade lineages assignation: Nextclade 
+  - Pangolin lineages assignation: Nextclade _(or Pangolin)_
   
 ## Rulegraph
 <img src="../../../images/gevarli_rulegraph.png" width="1200" height="2400">
