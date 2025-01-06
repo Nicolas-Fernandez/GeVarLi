@@ -23,8 +23,8 @@ Exemple de script:
    Si vos lectures ont été générées avec un **protocole d’amplification**, vous devrez également fournir les **coordonnées des amorces d’amplification** au format **BEDPE**, afin que les **amorces soient correctement retirées** en utilisant **bamclipper**.
 
 !!! tip 
-   Si vous ne connais
-   
+   Si vous ne connaissez pas les coordonnées des amorces d'amplification ou si vous n'avez pas de coordonnées au format **BEDPE**, vous pouvez utiliser **cutadapt** pour retirer de force les N premiers nucléotides de vos lectures (N = longueur de vos amorces d'amplification).
+
 3. Vos analyses démarreront avec les paramètres de configuration par défaut.
 
 !!! note
