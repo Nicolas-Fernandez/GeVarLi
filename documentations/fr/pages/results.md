@@ -1,23 +1,24 @@
 # Résultats
 
-Les résultats sont disponible dans le répertoire **./results/** , organisés comme ceci 
+Les résultats sont disponible dans le répertoire **./results/** .
 
-!!! note
+!!! tip
     Les fichiers étiqueté comme **[temp]** sont supprimés par défaut, afin de préserver l'espace disque.  
 	Si vous souhaiter les conserver, veuiller éditer le fichier de **configuration**.
 
 
 
+
 !!! note
     **Arborescence des fichiers**  
-     🧩 GeVarLi/
-      └── 📂 results/
-           ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
-           ├── 📊 All_{REFERENCE}_genome_coverages.tsv
-           ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv
-           ├── 📊 All_{REFERENCE}_pangolin_lineages.tsv
-           ├── 🌐 All_readsQC_reports.html
-           ├── 📂 00_Quality_Control/
+     🧩 GeVarLi/  
+      └── 📂 results/  
+           ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta  
+           ├── 📊 All_{REFERENCE}_genome_coverages.tsv  
+           ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv  
+           ├── 📊 All_{REFERENCE}_pangolin_lineages.tsv  
+           ├── 🌐 All_readsQC_reports.html  
+           ├── 📂 00_Quality_Control/  
            │    ├── 📂 fastq-screen/
            │    │    ├── 🌐 {SAMPLE}_R{1/2}_screen.html
            │    │    ├── 📈 {SAMPLE}_R{1/2}_screen.png
