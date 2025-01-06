@@ -1,25 +1,28 @@
 # Glossary
 
-- **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
-- **BAI**: BAM Indexes.
+- **BAM** : _Binary Alignment Map_, représentation binaire compressée des fichiers SAM.
+- **BAI** : _BAM Indexes_, index des fichiers BAM.
 
-- **BED**: Browser Extensible Data, text-based format used to store genomic regions as coordinates and associated annotations. 
-- **BEDPED**: An extension of the BED file format, used for describing disjointed genomic features, such as paired-end sequence alignments.
+- **BED** : _Browser Extensible Data_, format texte utilisé pour stocker des régions génomiques sous forme de coordonnées et d’annotations associées.
 
-- **FASTA**: Fast-All, text-based format for representing either nucleotide sequences or amino acid (protein) sequences.
-- **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
-- **FAI**: FASTA Indexes. 
+- **BEDPE** : _BED Paired-End_, extension du format BED, utilisée pour décrire des caractéristiques génomiques disjointes, comme les alignements de séquences en lecture paire (paired-end).
 
-- **SAM**: Sequence Alignment Map, text-based format consists of a header and an alignment section.
+- **FASTA** : _Fast-All_, format texte utilisé pour représenter des séquences de nucléotides ou d’acides aminés (protéines).
 
-- **VCF**: Variant Call Format, text-base format used in bioinformatics for storing gene sequence variations. 
-- **TSV**: Tab-Separated Values, text-based format for storing tabular data.
+- **FASTQ** : _FASTA with Quality_, format texte combinant une séquence biologique et ses scores de qualité correspondants.
+- **FAI** : _FASTA Indexes_, index des fichiers FASTA.
 
-- **YAML**: Commonly used for configuration filesand in applications where data is being stored or transmitted.
+- **SAM** : _Sequence Alignment Map_, format texte comprenant un en-tête et une section d’alignement pour les données de séquençage.
 
-- **GZ**: format used for file compression and decompression, normally used to compress just single files.
-- **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
+- **VCF** : _Variant Call Format_, format utilisé en bioinformatique pour stocker les variations de séquences génétiques.
 
-- **CLI**: Command Line Interface
-- **GUI**: Graphical User Interface
+- **TSV** : _Tab-Separated Values_, format texte pour stocker des données tabulaires, chaque champ étant séparé par une tabulation.
 
+- **YAML** : _YAML Ain't Markup Language_, format souvent utilisé pour les fichiers de configuration ou pour le stockage et la transmission de données.
+
+- **GZ** : _Gnu Zip_, format utilisé pour compresser et décompresser des fichiers uniques.
+
+- **TAR** : _Tarball_, format pour regrouper plusieurs fichiers dans une seule archive, que l’on extrait avec la commande tar -xzvf archive.tar.gz.
+
+- **CLI** : _Command Line Interface_, interface en ligne de commande.
+- **GUI** : _Graphical User Interface_, interface graphique utilisateur.
