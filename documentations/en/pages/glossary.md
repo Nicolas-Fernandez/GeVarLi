@@ -1,25 +1,32 @@
-# Glossary
+# Glossaire
 
-- **BAM**: Binary Alignment Map, compressed binary representation of the SAM files.
-- **BAI**: BAM Indexes.
+- **BAM**: _Binary Alignment Map_, compressed binary representation of the SAM files.
+- **BAI**: _BAM Indexes_.
 
-- **BED**: Browser Extensible Data, text-based format used to store genomic regions as coordinates and associated annotations. 
-- **BEDPED**: An extension of the BED file format, used for describing disjointed genomic features, such as paired-end sequence alignments.
+- **BED**: _Browser Extensible Data_, text-based format used to store genomic regions as coordinates and associ\
+ated annotations.
+- **BEDPE**: _BED Paired-End_, an extension of the BED file format, used for describing disjointed genomic feat\
+ures, such as paired-end sequence alignments.
 
-- **FASTA**: Fast-All, text-based format for representing either nucleotide sequences or amino acid (protein) sequences.
-- **FASTQ**: FASTA with Quality, text-based format storing both a biological sequence and its corresponding quality scores.
-- **FAI**: FASTA Indexes. 
+- **FASTA**: _Fast-All_, text-based format for representing either nucleotide sequences or amino acid (protein)\
+ sequences.
+- **FASTQ**: _FASTA with Quality_, text-based format storing both a biological sequence and its corresponding q\
+uality scores.
+- **FAI**: _FASTA Indexes_.
 
-- **SAM**: Sequence Alignment Map, text-based format consists of a header and an alignment section.
+- **SAM**: _Sequence Alignment Map_, text-based format consists of a header and an alignment section.
 
-- **VCF**: Variant Call Format, text-base format used in bioinformatics for storing gene sequence variations. 
-- **TSV**: Tab-Separated Values, text-based format for storing tabular data.
+- **VCF**: _Variant Call Format_, text-base format used in bioinformatics for storing gene sequence variations.\
 
-- **YAML**: Commonly used for configuration filesand in applications where data is being stored or transmitted.
+- **TSV**: _Tab-Separated Values_, text-based format for storing tabular data.
 
-- **GZ**: format used for file compression and decompression, normally used to compress just single files.
-- **TAR**: Tarball, format collecting many files into one archive file`, extract with ```tar -xzvf archive.tar.gz````.
+- **YAML**: _YAML Ain't Markup Language_, commonly used for configuration filesand in applications where data i\
+s being stored or transmitted.
 
-- **CLI**: Command Line Interface
-- **GUI**: Graphical User Interface
+- **GZ**: _Gnu Zip_, format used for file compression and decompression, normally used to compress just single \
+files.
+- **TAR**: _Tarball_, format collecting many files into one archive file`, extract with ```tar -xzvf archive.ta\
+r.gz````.
 
+- **CLI**: _Command Line Interface_.
+- **GUI**: _Graphical User Interface_.
