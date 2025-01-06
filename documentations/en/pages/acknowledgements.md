@@ -1,4 +1,4 @@
-# Acknowledgements
+# **Acknowledgements**
 
   - Eddy Kinganda Lusamaki - INRB / RDC : Initiator
   - Christelle Butel - UMI-233 TransVIHMI, IRD / France : Pilote user

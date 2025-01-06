@@ -1,4 +1,4 @@
-# Résultats
+# **Résultats**
 
 Les résultats sont disponible dans le répertoire **./results/** .
 
@@ -9,9 +9,8 @@ Les résultats sont disponible dans le répertoire **./results/** .
     Les fichiers étiqueté comme **[TEMP]** sont supprimés par défaut, afin de préserver l'espace disque.  
 	Si vous souhaiter les conserver, veuiller éditer le fichier de **configuration**.
 
+## **Arborescence des fichiers**
 ```shell
-## Arborescence des fichiers
-
 🧩 GeVarLi/
 │
 └── 📂 results/
