@@ -1,37 +1,37 @@
-# **Usage**
+# **Utilisation**
 
-## **Quick start**
+## **Démarrage rapide**
 
-To start your first analysis:
+Pour lancer votre première analyse :
 
-1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
+1. Copiez vos fichiers de lectures paired-end, au format .fastq.gz, dans le répertoire ./resources/reads/.
 
 !!! note
-   Without reads, SARS-CoV-2 from ```./resources/test\_data/``` directory will be used
-
-2. Execute **Run_GeVarLi.sh** bash script to run GeVarLi pipeline:
-    - or with a **Double-click** on it _(if you make .sh files executable files with Terminal.app)_
-	- or with a **Right-click** > **Open with** > **Terminal.app**
-	- or with **CLI** from a terminal:
-
-Exemple script:
+   Sans fichiers de lectures, les données de test SARS-CoV-2 du répertoire ```./resources/test_data/``` seront utilisées.
+   
+2. Exécutez le script bash Run_GeVarLi.sh pour lancer le pipeline GeVarLi :
+	- soit avec un double-clic dessus (si vous avez rendu les fichiers .sh exécutables avec Terminal.app),
+	- soit avec un clic droit > Ouvrir avec > Terminal.app,
+	- soit avec l’interface CLI depuis un terminal :
+	
+Exemple de script:
 ```shell
 ./Run_GeVarLi.sh
 ```
 
 !!! warning
-   If your reads were generated with an **amplicon protocol**, you will also need to provide the **amplicon primer coordinates** in **BEDPE** format, so the **primers are trimmed appropriately** using **bamclipper**.
+   Si vos lectures ont été générées avec un **protocole d’amplification**, vous devrez également fournir les **coordonnées des amorces d’amplification** au format **BEDPE**, afin que les **amorces soient correctement retirées** en utilisant **bamclipper**.
 
-!!! tip
-   If you don't know the amplicon primer coordinates or don't have coordinates in **BEDPE** format, you can use **cutadapt** to hard-trim the first N nucleotides of your reads (N = yours amplicon primers length). 
-
-3. Yours analyzes will start, with default configuration settings  
+!!! tip 
+   Si vous ne connais
+   
+3. Vos analyses démarreront avec les paramètres de configuration par défaut.
 
 !!! note
-   Edit **config.yaml** file in ```./configuration/``` directory.  
-   Edit **fastq-screen.conf** file in```./configuration/``` directory.
-
-## **Files tree**
+   - Modifiez le fichier config.yaml dans le répertoire ```./configuration/```.  
+   - Modifiez le fichier fastq-screen.conf dans le répertoire ```./configuration/```.
+   
+## **Arborescence des fichiers**
 
 ```shell
 🧩 GeVarLi/

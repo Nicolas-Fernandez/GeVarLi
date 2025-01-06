@@ -1,15 +1,16 @@
-# Configuration
+# **Configuration**
 
-You can edit default settings in **config.yaml** file into **./config/** directory:  
+!!! tip
+   You can edit default settings in **config.yaml** file into **./config/** directory.
 
 
-## Resources
+## **Resources**
 Edit to match your hardware configuration  
 - **cpus**: for tools that can _(i.e. bwa)_, could be use at most n cpus to run in parallel _(default: '8')_ [INT]
 - **ram**: for tools that can _(i.e. samtools)_, limit memory usage to max n Gb _(default: '16' Gb)_ [INT]
 - **tmpdir**: for tools that can _(i.e. pangolin)_, specify where you want the temp stuff _(default: '$TMPDIR')_
 
-## Consensus
+## **Consensus**
 - **path**: path to genomes references _(default: 'resources/genomes/')_ [PATH]
 - **reference**: your reference, in fasta format _(default: 'SARS-CoV-2\_Wuhan\_MN-908947-3')_ [STR]
 - **mincov**: minimum coverage, mask lower regions with "N" _(default: '30')_ [INT] °with LoFreq 
@@ -18,35 +19,35 @@ Edit to match your hardware configuration
 - **aligner**: map reads using either **bwa**, **bowtie2** or **minimap2** _(default: 'bwa')_
 - **caller**: call SNV using either **ivar** or **lofreq** _(default: 'ivar')_ 
 
-## Nextclade
+## **Nextclade**
 - **path**: path to nextclade datasets _(default: 'resources/nextclade/')_ [PATH]
 - **dataset**: Nextclade dataset : **sars-cov-2** , **MPXV**, **hMPXV** or **hMPXV_B1**
 
-## Ivar
+## **Ivar**
 - **max_depth**:
 - **min_bq**:
 - **min_qual**:
 - **map_qual**:
 
-## LoFreq
+## **LoFreq**
 - **map_qual**:
 
-## Bamclipper
+## **Bamclipper**
 - **path**: path to primers bedpe files _(default 'resources/primer/bedpe')_ [PATH]
 - **primers**: primer set, in BEDPE format _(default: 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1')_ [STR]
 - **upstream**: _(default: '5')_
 - **downstream**: _(default: '5')_
 
-## BWA
+## **BWA**
 - **path**: path to BWA indexes _(default: 'resources/indexes/bwa/')_ [PATH]
 - **algorithm**: algorithm for constructing BWA index _(default: deactivate)_
 
-## Bowtie2
+## **Bowtie2**
 - **path**: path to Bowtie2 indexes (default: 'resources/indexes/bowtie2/')
 - **algorithm**: algorithm for constructing Bowtie2 index _(default: deactivate)_ 
 - **sensitivity**: preset for bowtie2 sensitivity _(default: '--sensitive')_
 
-## Minimap2
+## **Minimap2**
 - **path**: path to Minimap2 indexes (default: 'resources/indexes/minimap2/')
 - **algorithm**: algorithm for constructing Minimap2 index:
   - **k-mer_size**: -k: k-mer size _(default: '21', no larger than '28')_ [INT] 
@@ -66,24 +67,24 @@ Edit to match your hardware configuration
   - **asm10**:
   - **asm20**:
 
-## Sickle-trim
+## **Sickle-trim**
 - **quality**: [Q-phred score](https://en.wikipedia.org/wiki/Phred_quality_score) limit _(default: '30')_ [INT]
 - **length**: read length limit, after trimming _(default: '50')_ [INT]
 - **command**: Pipeline wait for paired-end reads _(default and should be: 'pe')_
 - **encoding**: If your data are from recent Illumina run, let 'sanger' _(default and should be: 'sanger')_
 
-## Cutadapt
+## **Cutadapt**
 - **length**: discard reads shorter than length, after trimming _(default: '50')_ [INT]
 - **kits**: sequence of an adapter ligated to the 3' end of the first read _(default: 'truseq', 'nextera' and 'small' Illumina kits)  
 
-## Fastq-Screen
+## **Fastq-Screen**
 - **config**: path to the fastq-screen configuration file _(default: 'configuration/fastq-screen/' [*] )_
 - **subset**: do not use the whole sequence file, but create a temporary dataset of this specified number of read _(default: '1000')_
 
 ### [*] configuration/fastq-screen/{aligner}.conf
 - **DATABASE**: (de)comment (#) or add your own 'DATABASE' to configure multiple genomes screaning
 
-## GisAid (todo)
+## **GisAid (todo)**
 - **username**:
 - **threshold**:
 - **name**:
@@ -91,7 +92,9 @@ Edit to match your hardware configuration
 - **identifier**:
 - **year**:
 
-## Environments
+## **Environments**
 - **frontend**: conda frontend, **manba** or **conda** _(default: 'mamba')_
 - **yaml***: conda environments paths/names/version (default: workflow/environments/{tools}\_v.{version}.yaml)
-_**Note**: edit only if you want to change some environments (e.g. test a new version or back to an older version)_
+
+!!! note
+   Edit only if you want to change some environments (e.g. test a new version or back to an older version)
