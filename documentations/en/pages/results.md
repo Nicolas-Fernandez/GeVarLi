@@ -3,18 +3,16 @@
 Results are available in **./results/** directry.
 
 !!! tip
-    Files tagged as [temp] are removed by default, to save disk usage.
-	If you want to keep it, please edit configuration file.
-
+    Files tagged as **[temp]** are removed by default, to save disk usage.  
+	If you want to keep them, please edit the **configuration** file.
 
 !!! note
-    Files tree:
-```shell
- 🧩 GeVarLi/
-  └── 📂 results/
-       ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
-       ├── 📊 All_{REFERENCE}_genome_coverages.tsv
-       ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv
+    **Files tree**  
+    🧩 GeVarLi/
+    └── 📂 results/
+         ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
+         ├── 📊 All_{REFERENCE}_genome_coverages.tsv
+         ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv
        ├── 📊 All_{REFERENCE}_pangolin_lineages.tsv
        ├── 🌐 All_readsQC_reports.html
        ├── 📂 00_Quality_Control/
@@ -92,4 +90,3 @@ Results are available in **./results/** directry.
             └── 📂 tools-log/
                  ├── 📂 awk/
                  ├── 📂 {TOOL}/
-```
