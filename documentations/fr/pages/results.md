@@ -1,26 +1,28 @@
-# Results
+# Résultats
 
-Results are available in **./results/** directry.
+Les résultats sont disponible dans le répertoire **./results/** , organisés comme ceci 
 
-!!! tip
-    Files tagged as [temp] are removed by default, to save disk usage.
-	If you want to keep it, please edit configuration file.
+!!! note
+    Les fichiers étiqueté comme [temp] sont supprimés par défaut, afin de préserver l'espace disque.
+	Si vous souhaiter les conserver, veuiller éditer le fichier de configuration.
+
 
 
 !!! note
-    Files tree:
-```shell
- 🧩 GeVarLi/
-  └── 📂 results/
-       ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
-       ├── 📊 All_{REFERENCE}_genome_coverages.tsv
-       ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv
-       ├── 📊 All_{REFERENCE}_pangolin_lineages.tsv
-       ├── 🌐 All_readsQC_reports.html
-       ├── 📂 00_Quality_Control/
-       │    ├── 📂 fastq-screen/
-       │    │    ├── 🌐 {SAMPLE}_R{1/2}_screen.html
-       │    │    ├── 📈 {SAMPLE}_R{1/2}_screen.png
+    Arborescence des fichiers:
+	
+    ```shell
+     🧩 GeVarLi/
+      └── 📂 results/
+           ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
+           ├── 📊 All_{REFERENCE}_genome_coverages.tsv
+           ├── 📊 All_{REFERENCE}_nextclade_lineages.tsv
+           ├── 📊 All_{REFERENCE}_pangolin_lineages.tsv
+           ├── 🌐 All_readsQC_reports.html
+           ├── 📂 00_Quality_Control/
+           │    ├── 📂 fastq-screen/
+           │    │    ├── 🌐 {SAMPLE}_R{1/2}_screen.html
+           │    │    ├── 📈 {SAMPLE}_R{1/2}_screen.png
        │    │    └── 📄 {SAMPLE}_R{1/2}_screen.txt
        │    ├── 📂 fastqc/
        │    │    ├── 🌐 {SAMPLE}_R{1/2}_fastqc.html
