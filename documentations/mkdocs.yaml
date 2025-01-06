@@ -121,9 +121,9 @@ nav:
       - Acknowledgements: en/pages/acknowledgements.md
   - Accueil (fr):
       - À propos: fr/index.md
-      - Caractéristiques: fr/pages/features.md
+      - Fonctionnalités: fr/pages/features.md
       - Installations: fr/pages/installations.md
-      - Configuration: fr/pages/setup.md
+      - Configuration: fr/pages/configuration.md
       - Utilisation: fr/pages/usage.md
       - Résultats: fr/pages/results.md
       - Glossaire: fr/pages/glossary.md

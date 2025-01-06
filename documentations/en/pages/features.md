@@ -1,18 +1,18 @@
 # Features and tools
 
 ## Workflow management
-  - Workflow ......................... Snakemake
-  - Environments ..................... Miniforge _(Conda)_
+  - Workflow _ _ _ _ _ _ _ _ _ _ _ _ _ Snakemake
+  - Environments _ _ _ _ _ _ _ _ _ _ _ Miniforge _(Conda)_
   
 ## Reads quality control
-  - Contamination checking ........... Fastq-Screen
-  - Reads qualities metrics .......... FastQC
-  - HTML reporting ................... MultiQC
+  - Contamination checking _ _ _ _ _ _ Fastq-Screen
+  - Reads qualities metrics  _ _ _ _ _ FastQC
+  - HTML reporting _ _ _ _ _ _ _ _ _ _ MultiQC
   
 ## Reads cleaning
-  - Illumina adpters trimming ........ Cutadapt
-  - Amplicon primers trimming ........ Cutadapt _('hard-clipping')_
-  - Reads quality trimming ........... Sickle-trim
+  - Illumina adpters trimming  _ _ _ _ Cutadapt
+  - Amplicon primers trimming  _ _ _ _ Cutadapt _('hard-clipping')_
+  - Reads quality trimming _ _ _ _ _ _ Sickle-trim
   
 ## Reads mapping
   - Indexing genomes ................. BWA _(or minimap2, or bowtie2)_

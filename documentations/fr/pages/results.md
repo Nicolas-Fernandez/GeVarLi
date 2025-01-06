@@ -3,15 +3,13 @@
 Les résultats sont disponible dans le répertoire **./results/** , organisés comme ceci 
 
 !!! note
-    Les fichiers étiqueté comme [temp] sont supprimés par défaut, afin de préserver l'espace disque.
-	Si vous souhaiter les conserver, veuiller éditer le fichier de configuration.
+    Les fichiers étiqueté comme **[temp]** sont supprimés par défaut, afin de préserver l'espace disque.  
+	Si vous souhaiter les conserver, veuiller éditer le fichier de **configuration**.
 
 
 
 !!! note
-    Arborescence des fichiers:
-	
-    ```shell
+    **Arborescence des fichiers**  
      🧩 GeVarLi/
       └── 📂 results/
            ├── 🧬 All_{REFERENCE}_consensus_sequences.fasta
