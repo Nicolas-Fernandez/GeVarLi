@@ -22,7 +22,7 @@
 !!! important
     Ceci est important
 
-!!! warning: test
+!!! warning
     Ceci est un warning
 
 !!! caution
@@ -34,7 +34,8 @@
 !!! code
     Ceci est du ```code```
 
-!!! bloc
+!!! bloc de code
+    TEST
     ```shell
 	Ceci est un bloc
 	```
