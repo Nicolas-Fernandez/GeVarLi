@@ -1,22 +1,24 @@
-# **Installations**
+# **In stallations**
 
 ## **Conda**
+
 !!! warning
-    Dependency required
+    **Dependency required**
 
 GeVarLi use the use the free and open-source package manager **Conda**.
 
 **If you don't have Conda**, we hihly recommad to installed it with **Miniforge**.
+
+You can **download** and **install** the latest version of **Miniforge** for your specific OS from the git repository: [Conda-forge / Miniforge](https://github.com/conda-forge/miniforge/releases).
+
+!!! warning
+    We higly recommand to **reset default channels** of yours conda distribution and to **update** it regulary!
+
 !!! note
-    Read why: [Avoiding the Pitfalls of the Anaconda License: A Practical Guide](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/en/)
-
-!!! tip
-    If you need help, you can use the script: [Install_Conda-with-Miniforge3.sh](https://forge.ird.fr/transvihmi/nfernandez/install_conda-with-miniforge3)
-
-Otherwise, you can **download** and **install** the [latest version of Miniforge](https://github.com/conda-forge/miniforge/releases) for your specific OS.
+    Read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/danat/malbec-fix-conda-licensing-issues/en/).
 
 !!! shell
-    Example bash script for Linux\_x86\_64-bit** or Windows Subsystem for Linux (WSL) systems
+    _Example script for Linux\_x86\_64-bit** or Windows Subsystem for Linux (WSL) systems_
     ```shell
     # Download
     curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
@@ -44,38 +46,41 @@ Otherwise, you can **download** and **install** the [latest version of Miniforge
     ~/miniforge3/condabin/conda init
     ```
 
-!!! warning
-    We higly recommand to **set channels** and **update**!
-!!! note
-    Read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/danat/malbec-fix-conda-licensing-issues/en/)
+!!! tip
+    If you need help, you can use this side script: [Install_Conda-with-Miniforge3.sh](https://forge.ird.fr/transvihmi/nfernandez/install_conda-with-miniforge3)
+
 
 ## **GeVarLi**
+
 !!! warning
-    Given that Conda is installed
+    **Given that Conda is installed**
 
-You can **download** GeVarLi from [IRD-Forge git repository](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi), as zip file:
+You can **download** GeVarLi as zip file from the git repository: [IRD-Forge / GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi).
 
-<img src="../../../images/download_button.png" width="300" height="60">
+<div style="text-align: center;">
+  <img src="../../../images/download_button.png" width="100" height="200">
+</div>
 
-_Exemple script to download GeVarLi to your home/ directory_
-```shell
-# Download
-curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz
-
-# Untar
-tar -xzvf ~/GeVarLi-main.tar.gz
-
-# Clear
-rm -f ~/GeVarLi-main.tar.gz
-
-# Rename
-mv ~/GeVarLi-main/ ~/GeVarLi/
+!!! shell
+    _Exemple script to download GeVarLi to your ```/home/``` directory_
+    ```shell
+    # Download
+    curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz
+    
+    # Untar
+    tar -xzvf ~/GeVarLi-main.tar.gz
+    
+     # Clear
+     rm -f ~/GeVarLi-main.tar.gz
+     
+     # Rename
+     mv ~/GeVarLi-main/ ~/GeVarLi/
 ```
 
 !!! tip
-    Otherwise, you can also **clone** and **update** GeVarLi:
+    Otherwise, you can also **clone** and **update** GeVarLi.
 	
-    _Exemple script to clone and update it, to your home/ directory_
+    _Exemple script to clone and update it, to your ```/home/``` directory_
     ```shell
     # Clone
     git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
