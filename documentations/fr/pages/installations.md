@@ -15,33 +15,35 @@ GeVarLi utilise le gestionnaire de paquets gratuit et open-source **Conda**.
 
 Sinon, vous pouvez **télécharger** et **installer** la [dernière version de Miniforge](https://github.com/conda-forge/miniforge/releases) spécifique à votre système d'exploitation.
 
-_Exemple de script pour les systèmes Linux\_x86\_64 bits ou Sous-système Windows pour Linux (WSL)_
-```shell
-# Download
-curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+!!! shell
+    Exemple de script bash pour les systèmes Linux\_x86\_64 bits ou Sous-système Windows pour Linux (WSL)
+    ```shell
+    # Download
+    curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+    
+    # Install
+    bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/
+    
+    # Clean
+    rm -f ./Miniforge3-Linux-x86_64.sh
+    
+    # Configure
+    ~/miniforge3/condabin/conda config --add channels bioconda
+    /miniforge3/condabin/conda config --add channels conda-forge
+    ~/miniforge3/condabin/conda config --set channel_priority strict
+    ~/miniforge3/condabin/conda config --set auto_activate_base false
+    
+    # Update
+    ~/miniforge3/condabin/conda update conda --yes
+    
+    # Check install
+    ~/miniforge3/condabin/conda --version
+    ~/miniforge3/condabin/conda config --show channels
+    
+    # Init
+    ~/miniforge3/condabin/conda init
+    ```
 
-# Install
-bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/
-
-# Clean
-rm -f ./Miniforge3-Linux-x86_64.sh
-
-# Configure
-~/miniforge3/condabin/conda config --add channels bioconda
-/miniforge3/condabin/conda config --add channels conda-forge
-~/miniforge3/condabin/conda config --set channel_priority strict
-~/miniforge3/condabin/conda config --set auto_activate_base false
-
-# Update
-~/miniforge3/condabin/conda update conda --yes
-
-# Check install
-~/miniforge3/condabin/conda --version
-~/miniforge3/condabin/conda config --show channels
-
-# Init
-~/miniforge3/condabin/conda init
-```
 !!! warning
     Nous vous recommandons fortement de **définir des canaux** et de **mettre à jour** !
 !!! note

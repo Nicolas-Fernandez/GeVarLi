@@ -15,7 +15,8 @@ GeVarLi use the use the free and open-source package manager **Conda**.
 
 Otherwise, you can **download** and **install** the [latest version of Miniforge](https://github.com/conda-forge/miniforge/releases) for your specific OS.
 
-!!! Example script for Linux\_x86\_64-bit** or Windows Subsystem for Linux (WSL) systems
+!!! shell
+    Example bash script for Linux\_x86\_64-bit** or Windows Subsystem for Linux (WSL) systems
     ```shell
     # Download
     curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
