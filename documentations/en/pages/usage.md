@@ -14,10 +14,11 @@ To start your first analysis:
 	- or with a **Right-click** > **Open with** > **Terminal.app**
 	- or with **CLI** from a terminal:
 
-Exemple script:
-```shell
-./Run_GeVarLi.sh
-```
+!!! shell
+    _Exemple script to rin GeVarLi_
+    ```shell
+    ./Run_GeVarLi.sh
+    ```
 
 !!! warning
    If your reads were generated with an **amplicon protocol**, you will also need to provide the **amplicon primer coordinates** in **BEDPE** format, so the **primers are trimmed appropriately** using **bamclipper**.
@@ -133,8 +134,9 @@ Exemple script:
 │       └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
 │
 └── 📂 documentation/
-    ├── mkdocs.yaml
-    ├── extra.css
+    │
+    ├── ⚙️ mkdocs.yaml
+    ├── 🌐 extra.css
     │
     ├── 📂 images/
     │   │
@@ -146,13 +148,35 @@ Exemple script:
     │
     ├── 📂 en/
     │   │
-    │   ├── index.md
+    │   ├── 📚 index.md
     │   │
     │   └── 📂 pages/
+    │       │
+    │       ├── 📚 acknowledgedments.md
+    │       ├── 📚 afroscreen
+    │       ├── 📚 configurations.md
+    │       ├── 📚 contributions.md
+    │       ├── 📚 features.md
+    │       ├── 📚 glossary.md
+    │       ├── 📚 installations.md
+    │       ├── 📚 references.md
+    │       ├── 📚 results.md
+    │       └── 📚 usage.md
     │
     └── 📂 fr/
         │
-        ├── index.md
+        ├── 📚 index.md
         │
-        └── pages/
+        └── 📂 pages/
+            │
+            ├── 📚 acknowledgedments.md
+            ├── 📚 afroscreen
+            ├── 📚 configurations.md
+            ├── 📚 contributions.md
+            ├── 📚 features.md
+            ├── 📚 glossary.md
+            ├── 📚 installations.md
+            ├── 📚 references.md
+            ├── 📚 results.md
+            └── 📚 usage.md
 ```

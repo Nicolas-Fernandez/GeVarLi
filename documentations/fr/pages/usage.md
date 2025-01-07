@@ -14,10 +14,11 @@ Pour lancer votre première analyse :
 	- soit avec un clic droit > Ouvrir avec > Terminal.app,
 	- soit avec l’interface CLI depuis un terminal :
 	
-Exemple de script:
-```shell
-./Run_GeVarLi.sh
-```
+!!! shell
+    _Exemple de script lançant GeVarLi_
+    ```shell
+    ./Run_GeVarLi.sh
+    ```
 
 !!! warning
    Si vos lectures ont été générées avec un **protocole d’amplification**, vous devrez également fournir les **coordonnées des amorces d’amplification** au format **BEDPE**, afin que les **amorces soient correctement retirées** en utilisant **bamclipper**.
@@ -133,8 +134,9 @@ Exemple de script:
 │       └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
 │
 └── 📂 documentation/
-    ├── mkdocs.yaml
-    ├── extra.css
+    │
+    ├── ⚙️ mkdocs.yaml
+    ├── 🌐 extra.css
     │
     ├── 📂 images/
     │   │
@@ -146,13 +148,35 @@ Exemple de script:
     │
     ├── 📂 en/
     │   │
-    │   ├── index.md
+    │   ├── 📚 index.md
     │   │
     │   └── 📂 pages/
+    │       │
+    │       ├── 📚 acknowledgedments.md
+    │       ├── 📚 afroscreen
+    │       ├── 📚 configurations.md
+    │       ├── 📚 contributions.md
+    │       ├── 📚 features.md
+    │       ├── 📚 glossary.md
+    │       ├── 📚 installations.md
+    │       ├── 📚 references.md
+    │       ├── 📚 results.md
+    │       └── 📚 usage.md
     │
     └── 📂 fr/
         │
-        ├── index.md
+        ├── 📚 index.md
         │
-        └── pages/
+        └── 📂 pages/
+            │
+            ├── 📚 acknowledgedments.md
+            ├── 📚 afroscreen
+            ├── 📚 configurations.md
+            ├── 📚 contributions.md
+            ├── 📚 features.md
+            ├── 📚 glossary.md
+            ├── 📚 installations.md
+            ├── 📚 references.md
+            ├── 📚 results.md
+            └── 📚 usage.md
 ```
