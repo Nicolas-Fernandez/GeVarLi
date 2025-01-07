@@ -12,9 +12,7 @@ GeVarLi utilise le gestionnaire de paquets gratuit et open-source **Conda**.
 Vous pouvez **télécharger** et **installer** la dernière version de **Miniforge** spécifique à votre système d'exploitation depuis le dépôt git : [Conda-forge / Miniforge](https://github.com/conda-forge/miniforge).
 
 !!! warning
-    Nous vous recommandons fortement de **redéfinir les canaux par défaut** de votre distribution conda et de la **mettre à jour** régulièrement !
-
-!!! note
+    Nous vous recommandons fortement de **redéfinir les canaux par défaut** de votre distribution conda et de la **mettre à jour** régulièrement !  
     Lire pourquoi: [Éviter les Pièges de la Licence Anaconda : Guide Pratique](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/fr/).
 
 !!! shell
@@ -58,7 +56,7 @@ Vous pouvez **télécharger** et **installer** la dernière version de **Minifor
 Vous pouvez **télécharger** GeVarLi en tant que fichier zip depuis le dépôt git : [IRD-Forge / GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi).
 
 <div style="text-align: center;">
-  <img src="../../../images/download_button.png" width="100" height="200">
+  <img src="../../../images/download_button.png" width="500" height="1000">
 </div>
 
 !!! shell
