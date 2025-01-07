@@ -34,7 +34,7 @@
   - Pangolin lineages assignation: Nextclade _(or Pangolin)_
   
 ## Rulegraph
-<img src="../../../images/gevarli_rulegraph.png" width="1000" height="2000">
+<img src="../../../images/gevarli_rulegraph.png" width="2043" height="3216">
 
 ## Filegraph 
-<img src="../../../images/gevarli_filegraph.png" width="1400" height="2800">
+<img src="../../../images/gevarli_filegraph.png" width="2043" height="3882">

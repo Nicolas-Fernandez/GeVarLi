@@ -1,12 +1,14 @@
 # **Acknowledgements**
 
-  - Eddy Kinganda Lusamaki - INRB / RDC : Initiator [RG](https://www.researchgate.net/profile/Eddy-Lusamaki)
-  - Christelle Butel - UMI-233 TransVIHMI, IRD / France : Pilote user [Webpage](https://transvihmi.ird.\
-fr/agent/butel-christelle)
-  - Laeticia Serano - UMI-233 TransVIHMI, IRD / France : Pilote user [Webpage](https://transvihmi.ird.f\
-r/agent/serano-laeticia)1
-  - Thibaut Armel Chérif Gnimadi - CERFIG / Guinea : Developer [Git](https://github.com/armel001)
-  - Afroscreen program : Stakeholder [Website](https://www.afroscreen.org)
-  - DALL•E mini - OpenAI : Illustrator [Git](https://github.com/borisdayma/dalle-mini)
+  - Eddy Kinganda Lusamaki - INRB / RDC : Initiator _([RG](https://www.researchgate.net/profile/Eddy-Lusamaki))_
+  - Christelle Butel - UMI-233 TransVIHMI, IRD / France : Pilote user _([Webpage](https://transvihmi.ird.\
+fr/agent/butel-christelle))_
+  - Laeticia Serano - UMI-233 TransVIHMI, IRD / France : Pilote user _([Webpage](https://transvihmi.ird.f\
+r/agent/serano-laeticia))_
+  - Thibaut Armel Chérif Gnimadi - CERFIG / Guinea : Developer _([Git](https://github.com/armel001))_
+  - Afroscreen program : Stakeholder _([Website](https://www.afroscreen.org))_
+  - DALL•E mini - OpenAI : Illustrator _([Git](https://github.com/borisdayma/dalle-mini))_
 
-<img src="../../../images/GeVarLi_by_DALL-E_icone.png" width="100" height="100">
+<div style="text-align: center;">
+  <img src="../../../images/GeVarLi_by_DALL-E_icone.png" width="100" height="100">
+</div>
