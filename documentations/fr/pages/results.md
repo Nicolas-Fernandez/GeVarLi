@@ -2,8 +2,15 @@
 
 Les résultats sont disponible dans le répertoire **./results/** .
 
+Ils sont organisés comme ceci :
 
+- Racine : Les fichiers concaternés pour tout les échantillons, 1 par référence utilisées
+  - les consensus (FASTA)
+  - les statistiques de couverture (TSV)
+  - les lignées Nextclade et la qualité des consensus (TSV)
+  - les lignées Pangolin, si appelé (TSV)
 
+- 00 - Contrôle Qualité : les fichiers de qualités sur les lectures brutes (FASTQ)
 
 !!! tip
     Les fichiers étiqueté comme **[TEMP]** sont supprimés par défaut, afin de préserver l'espace disque.  
