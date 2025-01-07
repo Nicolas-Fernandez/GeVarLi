@@ -73,6 +73,9 @@ You can **download** GeVarLi as zip file from the git repository: [IRD-Forge / G
      
      # Rename
      mv ~/GeVarLi-main/ ~/GeVarLi/
+	 
+	 # Move
+	 cd ~/GeVarLi/
 ```
 
 !!! tip
@@ -84,6 +87,6 @@ You can **download** GeVarLi as zip file from the git repository: [IRD-Forge / G
     git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
     cd ~/GeVarLi/
     
-    # Update/Pull (given you are into GeVarLi/ repository)
+    # Update using 'git pull' (given you are into GeVarLi/ repository)
     git reset --hard HEAD && git pull --depth 1 --verbose
     ```

@@ -1,7 +1,7 @@
 # **Configuration**
 
 !!! tip
-   Vous pouvez modifier les paramètres par défaut dans le fichier **config.yaml** situé dans le répertoire **./config/**.
+    Vous pouvez modifier les paramètres par défaut dans le fichier **config.yaml** situé dans le répertoire **./config/**.
 
 ## **Ressources**
 Modifiez pour correspondre à votre configuration matérielle  
@@ -96,4 +96,4 @@ Modifiez pour correspondre à votre configuration matérielle
 - **yaml*** : chemins/noms/versions des environnements conda _(par défaut : workflow/environments/{tools}_v.{version}.yaml)_
 
 !!! note
-   Modifiez uniquement si vous souhaitez changer certains environnements (ex : tester une nouvelle version ou revenir à une ancienne).
+    Modifiez uniquement si vous souhaitez changer certains environnements (ex : tester une nouvelle version ou revenir à une ancienne).

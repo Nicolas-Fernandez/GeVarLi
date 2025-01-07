@@ -1,7 +1,7 @@
 # **Configuration**
 
 !!! tip
-   You can edit default settings in **config.yaml** file into **./config/** directory.
+    You can edit default settings in **config.yaml** file into **./config/** directory.
 
 
 ## **Resources**
@@ -97,4 +97,4 @@ Edit to match your hardware configuration
 - **yaml***: conda environments paths/names/version (default: workflow/environments/{tools}\_v.{version}.yaml)
 
 !!! note
-   Edit only if you want to change some environments (e.g. test a new version or back to an older version)
+    Edit only if you want to change some environments (e.g. test a new version or back to an older version)

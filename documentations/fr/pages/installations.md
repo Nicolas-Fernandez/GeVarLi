@@ -18,29 +18,29 @@ Vous pouvez **télécharger** et **installer** la dernière version de **Minifor
 !!! shell
     _Exemple de script pour les systèmes Linux\_x86\_64 bits ou Sous-système Windows pour Linux (WSL)_
     ```shell
-    # Download
+    # Téléchargement
     curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
     
-    # Install
+    # Installation
     bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/
     
-    # Clean
+    # Nettoyage
     rm -f ./Miniforge3-Linux-x86_64.sh
     
-    # Configure
+    # Configuration
     ~/miniforge3/condabin/conda config --add channels bioconda
     /miniforge3/condabin/conda config --add channels conda-forge
     ~/miniforge3/condabin/conda config --set channel_priority strict
     ~/miniforge3/condabin/conda config --set auto_activate_base false
     
-    # Update
+    # Mise à jour
     ~/miniforge3/condabin/conda update conda --yes
     
-    # Check install
+    # Contrôle l'installation
     ~/miniforge3/condabin/conda --version
     ~/miniforge3/condabin/conda config --show channels
     
-    # Init
+    # Initialisation
     ~/miniforge3/condabin/conda init
     ```
 	
@@ -62,17 +62,20 @@ Vous pouvez **télécharger** GeVarLi en tant que fichier zip depuis le dépôt 
 !!! shell
     _Exemple de script pour télécharger GeVarLi dans votre répertoire ```/home/```_
     ```shell
-    # Download
+    # Téléchargement
     curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz
     
     # Untar
     tar -xzvf ~/GeVarLi-main.tar.gz
     
-    # Clean
+    # Nettoyer l'archive
     rm -f ~/GeVarLi-main.tar.gz
     
-    # Rename
+    # Renomer le répertoire
     mv ~/GeVarLi-main/ ~/GeVarLi/
+	
+	# Se déplacer dans le répertoire GeVarLi
+	cd ~/GeVarLi/
     ```
 
 !!! tip
@@ -80,10 +83,10 @@ Vous pouvez **télécharger** GeVarLi en tant que fichier zip depuis le dépôt 
     
 	_Exemple de script pour le cloner et le mettre à jour, dans votre répertoire ```/home/```_
     ```shell
-    # Clone
+    # Cloner
     git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
     cd ~/GeVarLi/
     
-    # Update/Pull (présumant que vous êtes dans le répertoire GeVarLi/)
+    # Mise à jour avec un 'git pull' (présumant que vous êtes dans le répertoire GeVarLi/)
     git reset --hard HEAD && git pull --depth 1 --verbose
     ```
