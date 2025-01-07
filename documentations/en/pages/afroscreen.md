@@ -1,4 +1,6 @@
-<img src="../../../images/afroscreen.png" width="1200" height="600">
+<div style="text-align: center;">
+  <img src="../../../images/afroscreen.png" width="600" height="300">
+</div>
 
 # **AFROSCREEN, sequencing capacity building sequencing in Africa**
 
