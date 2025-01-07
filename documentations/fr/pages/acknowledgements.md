@@ -22,7 +22,7 @@
 !!! important
     Ceci est important
 
-!!! warning
+!!! warning: test
     Ceci est un warning
 
 !!! caution
