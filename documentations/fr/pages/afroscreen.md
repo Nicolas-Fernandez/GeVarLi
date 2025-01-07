@@ -1,4 +1,4 @@
-![](../../../images/afroscreen.jpg){: style="height:100px"}
+<img src="../../../images/afroscreen.jpg" width="1000" height="500">
 
 # **AFROSCREEN, renforcement des capacités de séquençage en Afrique**
 
