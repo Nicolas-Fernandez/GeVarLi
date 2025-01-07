@@ -56,7 +56,7 @@ Vous pouvez **télécharger** et **installer** la dernière version de **Minifor
 Vous pouvez **télécharger** GeVarLi en tant que fichier zip depuis le dépôt git : [IRD-Forge / GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi).
 
 <div style="text-align: center;">
-  <img src="../../../images/download_button.png" width="500" height="1000">
+  <img src="../../../images/download_button.png" width="400" height="800">
 </div>
 
 !!! shell
