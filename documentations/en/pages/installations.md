@@ -12,9 +12,7 @@ GeVarLi use the use the free and open-source package manager **Conda**.
 You can **download** and **install** the latest version of **Miniforge** for your specific OS from the git repository: [Conda-forge / Miniforge](https://github.com/conda-forge/miniforge/releases).
 
 !!! warning
-    We higly recommand to **reset default channels** of yours conda distribution and to **update** it regulary!
-
-!!! note
+    We higly recommand to **reset default channels** of yours conda distribution and to **update** it regulary!  
     Read why: [Avoiding the Pitfalls of the Anaconda License](https://mivegec.pages.ird.fr/danat/malbec-fix-conda-licensing-issues/en/).
 
 !!! shell
@@ -58,7 +56,7 @@ You can **download** and **install** the latest version of **Miniforge** for you
 You can **download** GeVarLi as zip file from the git repository: [IRD-Forge / GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi).
 
 <div style="text-align: center;">
-  <img src="../../../images/download_button.png" width="100" height="200">
+  <img src="../../../images/download_button.png" width="400" height="800">
 </div>
 
 !!! shell
