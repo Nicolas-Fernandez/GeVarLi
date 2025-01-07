@@ -10,33 +10,3 @@
 <div style="text-align: center;">
   <img src="../../../images/GeVarLi_by_DALL-E_icone.png" width="100" height="100">
 </div>
-
-## Tests en cours...
-
-!!! note
-    Ceci est une note
-
-!!! tip
-    Ceci est une astuce
-
-!!! important
-    Ceci est important
-
-!!! warning
-    Ceci est un warning
-
-!!! caution
-    Ceci est une mise en garde
-
-!!! test
-    Ceci est un **test**
-
-!!! code
-    Ceci est du ```code```
-
-!!! bloc de code
-    TEST
-    ```shell
-	Ceci est un bloc
-	```
-
