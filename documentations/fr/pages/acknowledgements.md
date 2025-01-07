@@ -14,16 +14,28 @@
 ## Tests en cours...
 
 !!! note
-   Ceci est une note
-   
+    Ceci est une note
+
 !!! tip
-   Ceci est une astuce
-   
+    Ceci est une astuce
+
 !!! important
-   Ceci est important
-   
+    Ceci est important
+
 !!! warning
-   Ceci est un warning
-   
+    Ceci est un warning
+
 !!! caution
-   Ceci est une mise en garde
+    Ceci est une mise en garde
+
+!!! test
+    Ceci est un **test**
+
+!!! code
+    Ceci est du ```code```
+
+!!! bloc
+    ```shell
+	Ceci est un bloc
+	```
+
