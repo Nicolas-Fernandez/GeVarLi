@@ -203,6 +203,13 @@ FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
 #MQC_CONF = config["multiqc"]["config"]        # MultiQC --conf
 #TAG = config["multiqc"]["tag"]                # MultiQC --tag
 
+KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # MM2 k-mer size
+MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # MM2 minimizer window size
+SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # MM2 split index
+#HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # MM2 if PacBio
+BWA_ALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
+BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
+
 REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
 REF_PATH = config["consensus"]["path"]       # Path to genomes references
 MIN_COV = config["consensus"]["min_cov"]     # Minimum coverage, mask lower regions with 'N'
@@ -1046,10 +1053,10 @@ rule minimap2_mapping:
     resources:
         cpus = CPUS
     params:
-        mm2_path = MM2_PATH,
         preset = MM2_PRESET
         #length = LENGTH
     input:
+        mm2_indexes = "resources/indexes/minimap2/{reference}.mmi"
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
@@ -1057,21 +1064,22 @@ rule minimap2_mapping:
     log:
         "results/10_Reports/tools-log/minimap2/{sample}_{reference}.log"
     shell:
-        "minimap2 "                                  # Minimap2, a versatile sequence alignment program
-        "-x {params.preset} "                         # -x: presets (always applied before other options)
-        "-t {resources.cpus} "                        # -t: Number of threads (default: 3)
-        "-a "                                         # -a: output in the SAM format (PAF by default)
-        #"-F {params.length} "                         # -F: max fragment length, effective with -x sr mode (default: 800)
-        "{params.mm2_path}{wildcards.reference}.mmi " # Reference index filename prefix.mmi (-k, -w, -I and -H can't be changed during mapping)
+        "minimap2 "           # Minimap2, a versatile sequence alignment program
+        "-x {params.preset} "  # -x: presets (always applied before other options)
+        "-t {resources.cpus} " # -t: Number of threads (default: 3)
+        "-a "                  # -a: output in the SAM format (PAF by default)
+        #"-F {params.length} "  # -F: max fragment length, effective with -x sr mode (default: 800)
+        "{input.mm2_indexes} " # Reference index filename prefix.mmi
+                               # (-k, -w, -I and -H can't be changed during mapping)
         #"resources/genomes/{wildcards.reference}.fasta " # Reference genome fasta format (for custom -kwIH)
-        #"-k {params.kmer_size} "                          # -k: k-mer size (default: "21", no larger than "28") [INT]
-        #"-w {params.minimizer_size} "                     # -w: minimizer window size (default: "11") [INT]
-        #"-I {params.split_size} "                         # -I: split index for every {NUM} input bases (default: "8G") [INT]
-        #"{params.homopolymer} "                           # -H: use homopolymer-compressed k-mer (preferrable for PacBio)
-        "{input.fwd_reads} "                          # Forward input reads
-        "{input.rev_reads} "                          # Reverse input reads
-        "1> {output.mapped} "                         # SAM output
-        "2> {log}"                                    # Log redirection 
+        #"-k {params.kmer_size} "      # -k: k-mer size (default: "21", no larger than "28") [INT]
+        #"-w {params.minimizer_size} " # -w: minimizer window size (default: "11") [INT]
+        #"-I {params.split_size} "     # -I: split index for every {NUM} input bases (default: "8G") [INT]
+        #"{params.homopolymer} "       # -H: use homopolymer-compressed k-mer (preferrable for PacBio)
+        "{input.fwd_reads} "   # Forward input reads
+        "{input.rev_reads} "   # Reverse input reads
+        "1> {output.mapped} "  # SAM output
+        "2> {log}"             # Log redirection 
 
 ###############################################################################
 rule bwa_mapping:
@@ -1088,9 +1096,8 @@ rule bwa_mapping:
         BWA
     resources:
         cpus = CPUS
-    params:
-        bwa_path = BWA_PATH
     input:
+        bwa_indexes = "resources/indexes/bwa/{reference}"
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
@@ -1098,14 +1105,14 @@ rule bwa_mapping:
     log:
         "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
     shell:
-        "bwa mem "                               # BWA-MEM algorithm, performs local alignment
-        "-t {resources.cpus} "                    # -t: Number of threads (default: 12)
-        "-v 1 "                                   # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
-        "{params.bwa_path}{wildcards.reference} " # Reference index filename prefix
-        "{input.fwd_reads} "                      # Forward input reads
-        "{input.rev_reads} "                      # Reverse input reads
-        "1> {output.mapped} "                     # SAM output
-        "2> {log}"                                # Log redirection 
+        "bwa mem "            # BWA-MEM algorithm, performs local alignment
+        "-t {resources.cpus} " # -t: Number of threads (default: 12)
+        "-v 1 "                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
+        "{input.bwa_indexes} " # Reference index filename prefix
+        "{input.fwd_reads} "   # Forward input reads
+        "{input.rev_reads} "   # Reverse input reads
+        "1> {output.mapped} "  # SAM output
+        "2> {log}"             # Log redirection 
 
 ###############################################################################
 rule bowtie2_mapping:
@@ -1123,9 +1130,9 @@ rule bowtie2_mapping:
     resources:
         cpus = CPUS
     params:
-        bt2_path = BT2_PATH,
         sensitivity = BT2_SENSITIVITY
     input:
+        bt2_indexes = "resources/indexes/bowtie2/{reference}",
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
@@ -1136,13 +1143,117 @@ rule bowtie2_mapping:
         "bowtie2 "                   # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences
         "--threads {resources.cpus} " # -p: Number of alignment threads to launch (default: 1)
         "--reorder "                  # Keep the original read order (if multi-processor option -p is used)
-        "-x {params.bt2_path}{wildcards.reference} " # -x: Reference index filename prefix (minus trailing .X.bt2) [Bowtie-1 indexes are not compatible]
-        "{params.sensitivity} "       # Preset (default: "--sensitive", same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]) 
+        "-x {input.indexes} "         # -x: Reference index filename prefix (minus trailing .X.bt2)
+        "{params.sensitivity} "       # Preset (default: "--sensitive")
+                                       # sensitive: same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]
         "-q "                         # -q: Query input files are FASTQ .fq/.fastq (default)
         "-1 {input.fwd_reads} "       # Forward input reads
         "-2 {input.rev_reads} "       # Reverse input reads
         "1> {output.mapped} "         # -S: File for SAM output (default: stdout) 
         "2> {log}"                    # Log redirection 
+
+###############################################################################
+################################## INDEXING ###################################
+###############################################################################
+
+###############################################################################
+rule minimap2_genome_indexing:
+    # Aim: index sequences in the FASTA format
+    # Use: minimap2 [OPTIONS] -d [INDEX.mmi] <query.fasta>
+    message:
+        """
+        ~ Minimap2 ∞ Index Genome ~
+        Reference: _______ {wildcards.reference}
+        """
+    conda:
+        MINIMAP2
+    params:
+        kmer_size = KMER_SIZE,
+        minimizer_size = MINIMIZER_SIZE,
+        split_size = SPLIT_SIZE
+        #homopolymer = HOMOPOLYMER
+    input:
+        fasta = "resources/genomes/{reference}.fasta"
+    output:
+        mm2_indexes = multiext("resources/indexes/minimap2/{reference}",
+                           ".mmi")
+    log:
+        "results/10_Reports/tools-log/minimap2-indexes/{reference}.log"
+    shell:
+        "minimap2 "                  # Minimap2, index sequences
+        "-k {params.kmer_size} "      # -k: k-mer size (default: "21", no larger than "28") [INT]
+        "-w {params.minimizer_size} " # -w: minimizer window size (default: "11") [INT]
+        "-I {params.split_size} "     # -I: split index for every {NUM} input bases (default: "8G") [INT]
+        #"{params.homopolymer} "       # use homopolymer-compressed k-mer (preferrable for PacBio)
+        "-d {output.indexes} "        # -d: dump index to FILE []
+        "{input.fasta} "              # Reference sequences in the FASTA format
+        "&> {log}"                    # Log redirection
+
+###############################################################################
+rule bwa_genome_indexing:
+    # Aim: index sequences in the FASTA format
+    # Use: bwa index -a [ALGO] -p [PREFIX] <genome.fasta>
+    message:
+        """
+        ~ BWA-SW ∞ Index Genome ~
+        Reference: _______ {wildcards.reference}
+        """
+    conda:
+        BWA
+    params:
+        algorithm = BWA_ALGO
+    input:
+        fasta = "resources/genomes/{reference}.fasta"
+    output:
+        prefix = temp("resources/indexes/bwa/{reference}"),
+        indexes = multiext("resources/indexes/bwa/{ref_seq}",
+                           ".amb", ".ann", ".bwt", ".pac", ".sa")
+    log:
+        "results/10_Reports/tools-log/bwa-indexes/{reference}.log"
+    shell:
+        "bwa index "              # BWA-SW algorithm, index sequences
+        "{params.algorithm} "      # -a: Algorithm for constructing BWT index (default: auto)                                  
+        "-p {output.prefix} "      # -p: Prefix of the output database
+        "{input.fasta} "           # Reference sequences in the FASTA format
+        "&> {log} "                # Log redirection
+        "&& touch {output.prefix}" # Touch done
+
+###############################################################################
+rule bowtie2_genome_indexing:
+    # Aim: index sequences in the FASTA format
+    # Use: bowtie2-build [OPTIONS] <reference_in> <bt2_index_base>
+    message:
+        """
+        ~ Bowtie2-build ∞ Index Genome ~
+        Reference: _______ {wildcards.reference}
+        """
+    conda:
+        BOWTIE2
+    resources:
+        cpus = CPUS
+    params:
+        algorithm = BT2_ALGO
+    input:
+        fasta = "resources/genomes/{reference}.fasta"
+    output:
+        prefix = temp("resources/indexes/bowtie2/{reference}"),
+        indexes = multiext("resources/indexes/bowtie2/{ref_seq}",
+                           ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2",
+                           ".rev.1.bt2", ".rev.2.bt2")
+    log:
+        "results/10_Reports/tools-log/bowtie2-indexes/{reference}.log"
+    shell:
+        "bowtie2-build "             # Bowtie2-build, index sequences
+        "--quiet "                    # -q: quiet
+        "--threads {resources.cpus} " # Number of threads
+        "{params.algorithm} "         # Force (or no by default) generated index to be 'large',
+                                       # even if ref has fewer than 4 billion nucleotides
+        "-f "                         # Reference files are FASTA (default)
+        "{input.fasta} "              # Reference sequences files (comma-separated list) in the FASTA format
+        "{output.prefix} "            # Write bt2 data to files with this dir/basename
+        "&> {log} "                   # Log redirection
+        "&& touch {output.prefix}"    # Touch done
+
 
 ###############################################################################
 ################################## TRIMMING ###################################

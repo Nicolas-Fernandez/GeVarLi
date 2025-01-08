@@ -10,13 +10,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Run_GeVarLi.sh
-# Version ________________ v.2024.10
+# Version ________________ v.2025.01
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.11.15 (Update Snakemake)
-# Use ____________________ 'bash ./Run_GeVarLi.sh'
+# Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
+# Use ____________________ 'bash Run_GeVarLi.sh'
 
 ###############################################################################
 ### COLORS ###
@@ -31,7 +31,7 @@ nc="\033[0m"       # no color
 ###############################################################################
 ### ABOUT ###
 #############
-version="2024.11"                                      # Version
+version="2025.01"                                      # Version
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
 
@@ -47,8 +47,8 @@ ${blue}Author${nc} _________________ Nicolas Fernandez
 ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
-${blue}Latest modifications${nc} ___ 2024.10.01 (Dedicated installation scripts creation)
-${blue}Use${nc} ____________________ '${ylo}./Run_GeVarLi.sh${nc}'
+${blue}Latest modifications${nc} ___ 2025.01.08 (Prepare for Snakedeploy)
+${blue}Use${nc} ____________________ '${ylo}bash Run_GeVarLi.sh${nc}'
 "
 
 
@@ -158,9 +158,9 @@ ${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
-echo -e "conda activate ${ylo}workflow-base_v.${version}${nc}"
-
-conda activate workflow-base_v.${version}
+workflowbase_version="2024.11"
+echo -e "conda activate ${ylo}workflow-base_v.${workflowbase_version}${nc}"
+conda activate workflow-base_v.${workflowbase_version}
 
 
 ###############################################################################
@@ -179,6 +179,7 @@ yq_version=$(yq --version | sed 's/yq //')                      # Yq version    
 rename_version="1.601"                                          # Rename version    (ver. 1.601  from 2024-02)
 graphviz_version="11.0.0"                                       # GraphViz version  (ver. 11.0.0 from 2024-02)
 #graphviz_version=$#(dot -V | sed 's/dot - graphviz version //')  # GraphViz version  (ver. 11.0.0 from 2024-02)
+nextclade_version=""
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
 if [[ "${fastq}" == "0" ]]                                                         # If no sample,
@@ -241,9 +242,7 @@ ${blue}Samples processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fast
 
 ${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
 ${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
-${blue}Conda frontend${nc} _________ ${ylo}${conda_frontend}${nc}
 ${blue}Mamba version${nc} __________ ${ylo}${mamba_version}${nc}  
-${blue}Nextclade version${nc} ______ ${ylo}${nextclade_version}${nc}
 
 ${blue}Quality Ccontrol${nc} _______ [ ${red}${quality}${nc} ]
 ${blue}Trimming${nc} _______________ [ ${red}${trimming}${nc} ]
@@ -258,6 +257,7 @@ ${blue}Reference genome${nc} _______ ${ylo}${reference}${nc}
 ${blue}Aligner${nc} ________________ ${ylo}${aligner}${nc}
 ${blue}Min coverage${nc} ___________ ${red}${min_cov}${nc} X
 ${blue}Min allele frequency${nc} ___ ${red}${min_freq}${nc}
+
 ${blue}Nextclade dataset${nc} ______ ${red}${nextclade_dataset}${nc}
 "
 
@@ -324,22 +324,26 @@ fi
  
 
 ###############################################################################
-### RENAME SAMPLES ###
-######################
+### RENAME SYMLINKS ###
+#######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}RENAME FASTQ FILES${nc} ${green}#####${nc}
-${green}------------------------------${nc}
+${green}#####${nc} ${red}RENAME FASTQ SYMLINKS${nc} ${green}#####${nc}
+${green}---------------------------------${nc}
 "
 
-# Rename fastq files to remove "_001" Illumina pattern (mandatory)
-## De/comment line (#) if you want keep Illumina barcode-ID and/or Illumina line-ID
-echo -e "Removing ${red}'_S'${nc} index tag ID"
-rename "s/_S\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove barcode-ID like {_S001_}
-echo -e "Removing ${red}'_L'${nc} line tag ID"
-rename "s/_L\d+_/_/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null                # Remove line-ID ID like {_L001_}
-echo -e "Removing ${red}'_001'${nc} illumina tag ID"
-rename "s/_001.fastq.gz/.fastq.gz/" ${workdir}/resources/reads/*.fastq.gz 2> /dev/null # Remove end-name ID like {_001}.fastq.gz
+# Remove tags from symlinks:
+## barcode-ID like {_S001_}
+## line-ID ID like {_L001_}
+## end-name ID like {_001}.fastq.gz
+mkdir -p ${workdir}/resources/symlinks/
+for fastq in ${workdir}/resources/reads/*.fastq.gz; do
+    symlinks=$(echo $(basename "${fastq}") | \
+		   sed -E "s/_S\d+_//" | \
+		   sed -E "s/_L\d+_//" | \
+		   sed -E "s/_001.fastq.gz/.fastq.gz/")
+    ln -s "${fastq}" "${workdir}/resources/symlinks/${symlinks}"
+done
 
 echo -e "
 If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Run_GeVarLi.sh${nc} script (l.335).
@@ -355,9 +359,6 @@ ${green}#####${nc} ${red}SNAKEMAKE PIPELINES${nc} ${green}#####${nc}
 ${green}-------------------------------${nc}
 "
 
-# MODULES
-snakefiles_list="indexing_genomes gevarli"
-
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
 ${blue}---------------------------------${nc}
@@ -367,14 +368,11 @@ ${blue}---------------------------------${nc}
 # Re-run all jobs the output of which is recognized as incomplete.
 # Remove a lock on the working directory.
 
-for snakefile in ${snakefiles_list} ; do
-    echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
-	--directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --rerun-incomplete \
-        --unlock ;
-done
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/Snakefile \
+    --rerun-incomplete \
+    --unlock
 
 echo -e "
 ${blue}## Let's Run! ##${nc}
@@ -390,22 +388,17 @@ ${blue}----------------${nc}
 # If defined in the rule, run job in a conda environment.
 # Print out the shell commands that will be executed.
 
-for snakefile in ${snakefiles_list} ; do
-    echo -e "${blue}-- ${snakefile} --${nc}" ;
-    snakemake \
-        --directory ${workdir}/ \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --cores ${max_threads} \
-        --max-threads ${max_threads} \
-        --resources mem_gb=${max_memory} \
-        --rerun-incomplete \
-        --keep-going \
-        --use-conda ;
-#        --quiet host \
-#        --quiet progress \
-#        --quiet rules ;
-done
-
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/Snakefile\
+    --cores ${max_threads} \
+    --max-threads ${max_threads} \
+    --resources mem_gb=${max_memory} \
+    --rerun-incomplete \
+    --keep-going \
+    --use-conda \
+    --quiet host
+# Possible choices: all, host, progress, rules
 
 ###############################################################################
 ### CONCATENATE RESULTS ###
@@ -477,27 +470,23 @@ mkdir -p ${workdir}/results/10_Reports/files-summaries/ 2> /dev/null
 graph_list="dag rulegraph filegraph"
 extention_list="pdf png"
 
-for snakefile in ${snakefiles_list} ; do
-    for graph in ${graph_list} ; do
-	for extention in ${extention_list} ; do
-	    snakemake \
-		--directory ${workdir}/ \
-                --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-                --${graph} \
-	    | dot -T${extention} \
-            2> /dev/null \
-	    1> ${workdir}/results/10_Reports/graphs/${snakefile}_${graph}.${extention} ;
-	done ;
+for graph in ${graph_list} ; do
+    for extention in ${extention_list} ; do
+        snakemake \
+            --directory ${workdir}/ \
+            --snakefile ${workdir}/workflow/Snakefile \
+            --${graph} \
+	| dot -T${extention} \
+        2> /dev/null \
+	1> ${workdir}/results/10_Reports/graphs/${graph}.${extention} ;
     done ;
 done
 
-for snakefile in ${snakefiles_list} ; do
-    snakemake \
-        --directory ${workdir} \
-        --snakefile ${workdir}/workflow/snakefiles/${snakefile}.smk \
-        --summary > ${workdir}/results/10_Reports/files-summaries/${snakefile}_files-summary.txt \
-    2> /dev/null ;
-done
+snakemake \
+    --directory ${workdir} \
+    --snakefile ${workdir}/workflow/Snakefile \
+    --summary > ${workdir}/results/10_Reports/files-summaries/files-summary.txt \
+    2> /dev/null
 
 cp ${config_file} ${workdir}/results/10_Reports/config.log 2> /dev/null
 
@@ -512,14 +501,15 @@ ${green}------------------------${nc}
 "
 
 # Save and deactive environments
-mkdir -p ${workdir}/results/10_Reports/conda_env/ 2> /dev/null
-cp ${workdir}/workflow/environments/*.yaml ${workdir}/results/10_Reports/conda_env/
+mkdir -p ${workdir}/results/10_Reports/conda_envs/ 2> /dev/null
+cp ${workdir}/workflow/envs/*.yaml ${workdir}/results/10_Reports/conda_envs/
 conda deactivate
 
 # Cleanup
 find ${workdir}/results/ -type f -empty -delete # Remove empty file (like empty log)
 find ${workdir}/results/ -type d -empty -delete # Remove empty directory
 rm -f ${workdir}/resources/reads/${sample_test}_R*.fastq.gz 2> /dev/null
+rm -rf ${workdir}/resources/symlinks/ 2> /dev/null
 
 # Timer
 time_stamp_end=$(date +"%Y-%m-%d %H:%M") # Get date / hour ending analyzes
@@ -542,8 +532,8 @@ Author _________________ Nicolas Fernandez
 Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
-Latest modifications ___ 2024.10.01 (Dedicated installation scripts creation)
-Run ____________________ ./Run_GeVarLi.sh
+Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
+Run ____________________ 'bash Run_GeVarLi.sh'
 
 Operating System _______ ${os}
 Shell __________________ ${shell}
@@ -567,9 +557,8 @@ Samples processed _______ ${samples} samples (${ylo}${fastq} fastq files)
 
 Snakemake version _______ ${snakemake_version}
 Conda version ___________ ${conda_version}
-Conda frontend __________ ${conda_frontend}
 Mamba version ___________ ${mamba_version}  
-Nextclade version _______ ${nextclade_version}
+
 
 Quality Ccontrol ________ [ ${quality} ]
 Trimming ________________ [ ${trimming} ]
@@ -584,16 +573,17 @@ Reference genome ________ ${reference}
 Aligner _________________ ${aligner}
 Min coverage ____________ ${min_cov} X
 Min allele frequency ____ ${min_freq}
+
 Nextclade dataset _______ ${nextclade_dataset}
 " > ${workdir}/results/10_Reports/settings.log
 
 # Gzip reports directory
 cd ${workdir}/results/
 tar -zcf 10_Reports_archive.tar.gz 10_Reports
+cd ${workdir}
 
 # Gzip results directory
 #mkdir -p ${workdir}/archives/ 2> /dev/null
-#cd ${workdir}/
 #tar -zcf archives/Results_${time_stamp_archive}_${reference}_${aligner}-${min_cov}X_${samples}sp_archive.tar.gz results/
 
 echo -e "
