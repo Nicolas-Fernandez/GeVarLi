@@ -5,7 +5,7 @@
 !!! warning
     **Dépendance requise**
 
-GeVarLi utilise le gestionnaire de paquets gratuit et open-source <font color="orange">**Conda**</font>.
+GeVarLi utilise le gestionnaire de paquets gratuit et open-source **Conda**.
 
 **Si vous n'avez pas Conda**, nous vous recommandons vivement de l'installer avec **Miniforge**.
 

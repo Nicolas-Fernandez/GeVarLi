@@ -25,7 +25,7 @@
   - Documentations: [Read The Fabulous Manual](https://transvihmi.pages.ird.fr/nfernandez/GeVa\
 rLi/en/)
   - Raise issues and report bugs: [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfern\
-andez/GeVarLi/-/issues)!
+andez/GeVarLi/-/issues)
   - Contact: [nicolas.fernandez@ird.fr](nicolas.fernandez@ird.fr)
 
 ## **Citation**
