@@ -36,12 +36,12 @@ resources:
 ###############################################################################
 modules: # GeVarLi modules analysis
   # Available options, set at least one: 
-  - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC)      default: ON
+  #- 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC)      default: ON
   #- 'trimming'  # Keep trimmed reads files after alignment (Cutadapt / Sickle-trim) default: OFF
   #- 'cleapping' # Perform reads clipping (Bamclipper)                               default: OFF
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)        default: ON
-  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)                    default: ON
-  - 'nextclade' # Perform nextclade clade assignation (Nexclade)                     default: ON
+  #- 'covstats'  # Perform coverage statistics (Fagstat, Covstats)                    default: ON
+  #- 'nextclade' # Perform nextclade clade assignation (Nexclade)                     default: ON
   #- 'pangolin'  # Perform pangolin lineage assignation (Pangolin)                   default: OFF
   ###- 'gisaid'    # Perform gisaid submission (GisAid : TODO)                       default: OFF
   
@@ -51,7 +51,7 @@ consensus:
   reference: # Your reference, in fasta format (default: "SARS-CoV-2_Wuhan_MN-908947-3")
   # Available options (not exhaustive), set one:
     - 'SARS-CoV-2_Wuhan_MN-908947-3'            # SARS-CoV-2  (Nextclade and Pangolin)
-    #- 'Monkeypox-virus_Zaire_AF-380138-1'       # Monkeypox   (Nextclade and Pangolin)
+    - 'Monkeypox-virus_Zaire_AF-380138-1'       # Monkeypox   (Nextclade and Pangolin)
     #- 'Monkeypox-virus_UK_MT-903345-1'          # Monkeypox   (Nextclade and Pangolin)
     #- 'Swinepox-virus_India_MW-036632-1'        # Swinepox    (Nextclade)
     #- 'Ebola-virus_Zaire_AF-272001-1'           # Ebola       (na)
@@ -96,8 +96,8 @@ consensus:
   aligner: # Select your favorite aligner (default: 'bwa')
   # Available options, set one:
     - 'bwa'      # Better, Faster, (Stronger, Harder...)
-    #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
-    #- 'minimap2' # A versatile sequence alignment program
+    - 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    - 'minimap2' # A versatile sequence alignment program
   caller: 'ivar'
 
 ###############################################################################
@@ -275,24 +275,24 @@ fastq_screen:
 
 ###############################################################################
 conda:
-  yaml: # Conda environement yaml files:
-    bamclipper:    '../environments/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
-    bcftools:      '../environments/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
-    bedtools:      '../environments/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
-    bowtie2:       '../environments/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
-    bwa:           '../environments/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
-    cutadapt:      '../environments/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
-    fastq_screen:  '../environments/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
-    fastqc:        '../environments/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
-    gawk:          '../environments/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
-    ivar:          '../environments/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
-    minimap2:      '../environments/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
-    multiqc:       '../environments/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
-    nextclade:     '../environments/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
-    pangolin:      '../environments/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
-    samtools:      '../environments/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
-    sickle_trim:   '../environments/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-    tsv2vcf:       '../environments/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)
-    workflow_base: '../environments/workflow-base_v.2024.11.yaml' # Workflow-Base ver. 2024.11
+  envs: # Conda environement yaml files:
+    bamclipper:    'envs/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
+    bcftools:      'envs/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
+    bedtools:      'envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
+    bowtie2:       'envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
+    bwa:           'envs/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
+    cutadapt:      'envs/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
+    fastq_screen:  'envs/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
+    fastqc:        'envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
+    gawk:          'envs/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
+    ivar:          'envs/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
+    minimap2:      'envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
+    multiqc:       'envs/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
+    nextclade:     'envs/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
+    pangolin:      'envs/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
+    samtools:      'envs/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
+    sickle_trim:   'envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
+    tsv2vcf:       'envs/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)
+    workflow_base: 'envs/workflow-base_v.2024.11.yaml' # Workflow-Base ver. 2024.11
 
 ###############################################################################
