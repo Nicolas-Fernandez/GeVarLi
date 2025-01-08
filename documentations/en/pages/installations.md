@@ -1,11 +1,11 @@
-# **In stallations**
+# **Installations**
 
 ## **Conda**
 
 !!! warning
     **Dependency required**
 
-GeVarLi use the use the free and open-source package manager **Conda**.
+GeVarLi use the use the free and open-source package manager <font color="orange">**Conda**</font>.
 
 **If you don't have Conda**, we hihly recommad to installed it with **Miniforge**.
 
