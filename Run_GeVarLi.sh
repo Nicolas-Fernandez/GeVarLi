@@ -183,8 +183,8 @@ else # If not, create it.
 ${ylo}Workflow-Core${nc} conda environment will be create, with:
 
     > ${red}Snakemake${nc} (workflow manager)
-    > ${red}Yq${nc}(yaml parser)
-    > ${red}GraphViz${nc} (drawing graph)
+    > ${red}Yq${nc}        (yaml parser)
+    > ${red}GraphViz${nc}  (drawing graph)
 "
     conda env create --file ${workdir}/workflow/envs/workflow-core.yaml > /dev/null 2>&1
 fi
@@ -374,7 +374,8 @@ for fastq in ${workdir}/resources/reads/*.fastq.gz; do
 done
 
 echo -e "
-If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc}, please edit ${ylo}Run_GeVarLi.sh${nc} script (l.335).
+If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-ID${nc},
+please edit ${ylo}Run_GeVarLi.sh${nc} script (section symlinks, l.370).
 "
 
 
