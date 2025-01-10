@@ -182,9 +182,9 @@ else # If not, create it.
     echo -e "
 ${ylo}Workflow-Core${nc} conda environment will be create, with:
 
-    > ${red}Snakemake${nc}${blue} ___ workflow manager${nc}
-    > ${red}Yq${nc}${blue} __________ yaml parser${nc}
-    > ${red}GraphViz${nc}${blue} ____ drawing graph${nc}
+    > ${red}Snakemake${nc} (workflow manager)
+    > ${red}Yq${nc}(yaml parser)
+    > ${red}GraphViz${nc} (drawing graph)
 "
     conda env create --file ${workdir}/workflow/envs/workflow-core.yaml > /dev/null 2>&1
 fi
@@ -192,7 +192,7 @@ fi
 echo -e "
 You can remove old depreciated environements such as: 'gevarli-base', 'snakemake-base' or 'workflow-base'.
 To list all your conda environments, you can run: '${ylo}conda env list${nc}'.
-To remove old conda environments, you can run: '${ylo}conda remove --all --yes --name <ENV_NAME>${nc}'.
+To remove old conda environments, you can run: '${ylo}conda remove --all --yes --name${nc} ${red}<ENV_NAME>${nc}'.
 "
 
 # Active workflow-core conda environment.
@@ -440,7 +440,6 @@ snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/Snakefile\
     --cores ${max_threads} \
-    --max-threads ${max_threads} \
     --resources mem_gb=${max_memory} \
     --rerun-incomplete \
     --keep-going \
