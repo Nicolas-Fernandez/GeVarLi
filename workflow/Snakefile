@@ -540,20 +540,19 @@ rule bedtools_masking:
         """
     conda:
         BEDTOOLS
-    params:
-        path = REF_PATH
     input:
+        reference = "resources/genomes/{reference}.fasta",
         low_cov_mask = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed"
     output:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta"
     log:
         "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_{min_cov}X_masking.log"
     shell:
-        "bedtools maskfasta "                          # Bedtools maskfasta, mask a fasta file based on feature coordinates
-        "-fi {params.path}{wildcards.reference}.fasta " # Input FASTA file 
-        "-bed {input.low_cov_mask} "                    # BED/GFF/VCF file of ranges to mask in -fi
-        "-fo {output.masked_ref} "                      # Output masked FASTA file
-        "&> {log}"                                      # Log redirection 
+        "bedtools maskfasta "       # Bedtools maskfasta, mask a fasta file based on feature coordinates
+        "-fi {input.reference} "     # Input FASTA file 
+        "-bed {input.low_cov_mask} " # BED/GFF/VCF file of ranges to mask in -fi
+        "-fo {output.masked_ref} "   # Output masked FASTA file
+        "&> {log}"                   # Log redirection 
 
 ###############################################################################
 rule bedtools_merged_mask:
