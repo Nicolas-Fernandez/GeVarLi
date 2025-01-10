@@ -27,14 +27,12 @@ ylo="\033[1;33m"   # yellow
 blue="\033[1;34m"  # blue
 nc="\033[0m"       # no color
 
-
 ###############################################################################
 ### ABOUT ###
 #############
 version="2025.01"                                      # Version
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
 sample_test="SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads"
-
 
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
@@ -51,13 +49,12 @@ ${blue}Latest modifications${nc} ___ 2025.01.08 (Prepare for Snakedeploy)
 ${blue}Use${nc} ____________________ '${ylo}bash Run_GeVarLi.sh${nc}'
 "
 
-
 ###############################################################################
-### OPERATING SYSTEM ###
-########################
+### CHECK OPERATING SYSTEM ###
+##############################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}OPERATING SYSTEM${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Operating System${nc} ${green}#####${nc}
 ${green}----------------------------${nc}
 "
 
@@ -77,13 +74,12 @@ echo -e "${blue}Operating system${nc} _______ ${red}${os}${nc}"
 shell=$SHELL
 echo -e "${blue}Shell${nc} __________________ ${ylo}${shell}${nc}"
 
-
 ###############################################################################
-### HARDWARE ###
-################
+### CHECK HARDWARE ###
+######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}HARDWARE${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Hardware${nc} ${green}#####${nc}
 ${green}--------------------${nc}
 "
 
@@ -115,13 +111,12 @@ ${blue}Logical CPUs${nc} ___________ ${red}${logical_cpu}${nc} threads
 ${blue}System Memory${nc} __________ ${red}${ram_gb}${nc} Gb of RAM
 "
 
-
 ###############################################################################
-### NETWORK ###
-###############
+### CHECK INTERNET ###
+######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}NETWORK${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Internet${nc} ${green}#####${nc}
 ${green}-------------------${nc}
 "
 
@@ -137,6 +132,30 @@ echo -e "
 ${blue}Network${nc} ________________ ${red}${network}${nc}
 "
 
+###############################################################################
+### CHECK CONDA ###
+###################
+echo -e "
+${green}------------------------------------------------------------------------${nc}
+${green}#####${nc} ${red}Conda${nc} ${green}#####${nc}
+${green}-----------------${nc}
+"
+
+# Test if a conda distribution already exist
+if [[ ! $(command -v conda) ]]
+then # If no, invit to install it and EXIT
+    echo -e "
+${red}No Conda distribution found.${nc}
+${green}GeVarLi${nc} use the free and open-source package manager ${ylo}Conda${nc}.
+Read documentation at: ${blue}https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/pages/installations/${nc}
+"
+    exit 1
+else # If yes, print informations
+    echo -e "Your Conda configuration:"
+    which conda                  # which Conda
+    conda --version              # version
+    conda config --show channels # channels
+fi
 
 ###############################################################################
 ### CONDA INIT ###
@@ -148,38 +167,53 @@ source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                         
 source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
 source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
 
-
 ###############################################################################
-### CONDA ACTIVATION ###
-########################
+### WORKFLOW-CORE ###
+#####################
+
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONDA ACTIVATION${nc} ${green}#####${nc}
-${green}----------------------------${nc}
+${green}#####${nc} ${red}Workflow-Core${nc} ${green}#####${nc}
+${green}-------------------------${nc}
 "
 
-workflowbase_version="2024.11"
-echo -e "conda activate ${ylo}workflow-base_v.${workflowbase_version}${nc}"
-conda activate workflow-base_v.${workflowbase_version}
+# Test if 'workflow-core' environment exist.
+if [[ $(conda env list | grep -q "^workflow-core}") ]]
+then # If yes, update it.
+    echo -e "${ylo}Workflow-Core${nc} conda environment already created. Updating."
+    conda env update --prune --name workflow-core --file ${workdir}/workflow/envs/workflow-core.yaml
+else # If not, create it.
+    echo -e "
+${ylo}Workflow-Core${nc} conda environment will be create, with:
 
+    > ${red}Snakemake${nc}${blue} ___ workflow manager${nc}
+    > ${red}Yq${nc}${blue} __________ yaml parser${nc}
+    > ${red}GraphViz${nc}${blue} ____ drawing graph${nc}
+"
+    conda env create --file ${workdir}/workflow/envs/workflow-core.yaml > /dev/null 2>&1
+
+echo -e "
+You can remove old depreciated environements such as: 'gevarli-base', 'snakemake-base' or 'workflow-base'.
+To list all your conda environments, you can run: '${ylo}conda env list${nc}'.
+To remove old conda environments, you can run: '${ylo}conda remove --all --yes --name <ENV_NAME>${nc}'.
+"
+
+# Active workflow-core conda environment
+echo -e "Activate ${ylo}Workflow-Core${nc} conda environment."
+conda activate workflow-core
 
 ###############################################################################
-### SETTINGS ###
-################
+### CHECK CONFIGURATION ###
+###########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SETTINGS${nc} ${green}#####${nc}
-${green}--------------------${nc}
+${green}#####${nc} ${red}Configuration${nc} ${green}#####${nc}
+${green}-------------------------${nc}
 "
 
-snakemake_version=$(snakemake --version)                        # Snakemake version (ver. 8.14.0 from 2024-07)
-conda_version=$(conda --version | sed 's/conda //')             # Conda version     (ver. 24.5.0 from 2024-07)
-mamba_version=$(mamba --version | head -n 1 | sed 's/mamba //') # Mamba version     (ver. 1.5.8  from 2024-07)
-yq_version=$(yq --version | sed 's/yq //')                      # Yq version        (ver. 3.4.3  from 2024-07)
-rename_version="1.601"                                          # Rename version    (ver. 1.601  from 2024-02)
-graphviz_version="11.0.0"                                       # GraphViz version  (ver. 11.0.0 from 2024-02)
-#graphviz_version=$#(dot -V | sed 's/dot - graphviz version //')  # GraphViz version  (ver. 11.0.0 from 2024-02)
-nextclade_version=""
+conda_version=$(conda --version | sed 's/conda //')             # Conda version
+mamba_version=$(mamba --version | head -n 1 | sed 's/mamba //') # Mamba version
+snakemake_version=$(snakemake --version)                        # Snakemake version
 
 fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)) # Get fastq.gz files count
 if [[ "${fastq}" == "0" ]]                                                         # If no sample,
@@ -193,7 +227,6 @@ samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end
 
 config_file="${workdir}/configuration/config.yaml" # Get configuration file
 
-conda_frontend=$(yq -Mc '.conda.frontend' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//') # Get user config: conda frontend
 max_threads=$(yq -Mr '.resources.cpus' ${config_file}) # Get user config: max threads
 max_memory=$(yq -Mr '.resources.ram' ${config_file})   # Get user config: max memory (Gb)
 memory_per_job=$(expr ${max_memory} \/ ${max_threads}) # Calcul maximum memory usage per job
@@ -207,7 +240,6 @@ consensus="   / off" # Consensus
 nextclade="   / off" # Nextclade
 pangolin="   / off"  # Pangolin
 gisaid="   / off"    # Gisaid
-#MODULE="   / off"    # Default module = 'OFF'
 if [[ ${module_list} =~ "quality" ]] ; then quality="ON /    " ; fi
 if [[ ${module_list} =~ "trimming" ]] ; then trimming="ON /    " ; fi
 if [[ ${module_list} =~ "cleapping" ]] ; then cleapping="ON /    " ; fi
@@ -216,15 +248,23 @@ if [[ ${module_list} =~ "consensus" ]] ; then consensus="ON /    " ; fi
 if [[ ${module_list} =~ "nextclade" ]] ; then nextclade="ON /    " ; fi
 if [[ ${module_list} =~ "pangolin" ]] ; then pangolin="ON /    " ; fi
 if [[ ${module_list} =~ "gisaid" ]] ; then gisaid="ON /    " ; fi
-#if [[ ${module_list} =~ "MODULE" ]] ; then MODULE="ON /    " ; fi
 
-reference=$(yq -Mc '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g') # Get user config: genome reference
-aligner=$(yq -Mc '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')     # Get user config: aligner 
-min_cov=$(yq  -Mc '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')    # Get user config: minimum coverage
-min_freq=$(yq -Mr '.consensus.min_freq' ${config_file})                                                            # Get user config: minimum allele frequency
-hard_clipping=$(yq -Mr '.cutadapt.clipping' ${config_file})                                                        # Get user config: hard clipping option
-nextclade_dataset=$(yq -Mc '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')                  # Get user config: dataset for nextclade
-fastqscreen_subset=$(yq -Mr '.fastq_screen.subset' ${config_file})                                                 # Get user config: fastq_screen subsetption
+# Get user config: genome reference
+reference=$(yq -Mc '.consensus.reference' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')
+# Get user config: aligner
+aligner=$(yq -Mc '.consensus.aligner' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')
+# Get user config: minimum coverage
+min_cov=$(yq  -Mc '.consensus.min_cov' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//' | sed 's/\"\,\"/ ; /g')
+# Get user config: minimum allele frequency
+min_freq=$(yq -Mr '.consensus.min_freq' ${config_file})
+# Get user config: hard clipping option
+hard_clipping=$(yq -Mr '.cutadapt.clipping' ${config_file})
+# Get user config: dataset for nextclade
+nextclade_dataset=$(yq -Mc '.nextclade.dataset' ${config_file} | sed 's/\[\"//' | sed 's/\"\]//')
+# Get user config: fastq_screen subsetption
+fastqscreen_subset=$(yq -Mr '.fastq_screen.subset' ${config_file})
+# Get user config: cutadapt clipping
+cutadapt_clipping=$(yq -Mr '.cutadapt.clipping' ${config_file})
 
 time_stamp_start=$(date +"%Y-%m-%d %H:%M")   # Get system: analyzes starting time
 time_stamp_archive=$(date +"%Y-%m-%d_%Hh%M") # Convert time for archive (wo space)
@@ -232,6 +272,10 @@ SECONDS=0                                    # Initialize SECONDS counter
 
 # Print some analyzes settings
 echo -e "
+${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
+${blue}Mamba version${nc} __________ ${ylo}${mamba_version}${nc}  
+${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
+
 ${blue}Max threads${nc} ____________ ${red}${max_threads}${nc} of ${ylo}${logical_cpu}${nc} threads available
 ${blue}Max memory${nc} _____________ ${red}${max_memory}${nc} of ${ylo}${ram_gb}${nc} Gb available
 ${blue}Jobs memory${nc} ____________ ${red}${memory_per_job}${nc} Gb per job
@@ -239,10 +283,6 @@ ${blue}Jobs memory${nc} ____________ ${red}${memory_per_job}${nc} Gb per job
 ${blue}Starting time${nc} __________ ${time_stamp_start}
 ${blue}Working directory${nc} ______ ${workdir}/
 ${blue}Samples processed${nc} ______ ${red}${samples}${nc} samples (${ylo}${fastq}${nc} fastq files)
-
-${blue}Snakemake version${nc} ______ ${ylo}${snakemake_version}${nc}
-${blue}Conda version${nc} __________ ${ylo}${conda_version}${nc}
-${blue}Mamba version${nc} __________ ${ylo}${mamba_version}${nc}  
 
 ${blue}Quality Ccontrol${nc} _______ [ ${red}${quality}${nc} ]
 ${blue}Trimming${nc} _______________ [ ${red}${trimming}${nc} ]
@@ -259,44 +299,36 @@ ${blue}Min coverage${nc} ___________ ${red}${min_cov}${nc} X
 ${blue}Min allele frequency${nc} ___ ${red}${min_freq}${nc}
 
 ${blue}Nextclade dataset${nc} ______ ${red}${nextclade_dataset}${nc}
+${blue}Fastq-Screen subset${nc} ____ ${red}${fastqscreen_subset}${nc}
+${blue}Cutadapt clipping${nc} ______ ${red}${cutadapt_clipping}${nc}
 "
 
 
 ###############################################################################
-### NEXTCLADE DATASETS UPDATES ###
-##################################
+### UPDATE NEXTCLADE DATASETS ###
+#################################
 if [[ ${nextclade} = "ON" ]]
 then
  
     echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}NEXTCLADE DATASETS UPDATES${nc} ${green}#####${nc}
-${green}--------------------------------------${nc}
+${green}#####${nc} ${red}Update Nextclade Dataset Updates${nc} ${green}#####${nc}
+${green}-------------------------------------${nc}
 "
 
     ## Nextclade installation
     # Check if a 'nextclade' environment exist
-    if [[ $(conda info --envs | grep -o -E "^nextclade_v.${nextclade_version}") ]]
+    if [[ ! $(conda env list | grep -q "^nextclade_v.") ]]
     then
-        echo -e "
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} it's already created!
-"
-    else
-        # Check network conection
+	# Check network conection
         if [[ ${network} = "Online" ]]
         then
-	    echo -e "
-Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...                                                                                                
-Conda environment ${ylo}nextclade_v.${nextclade_version}${nc} will be now created, with:
-
-    #  ${red}Nextclade${nc}: Update Nextclade databases (ver. ${nextclade_version})
-"
-            conda env create -f ${workdir}/workflow/environments/nextclade_v.${nextclade_version}.yaml &> /dev/null
+            conda env create -f ${workdir}/workflow/envs/${}.yaml &> /dev/null
         else
 	    echo -e "
-Conda environment ${red}nextclade_v.${nextclade_version}${nc} not found...
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-Please, check your network conection!
+Network: ${red}${network}${nc}.
+Nextclade conda environment: ${red}not found${nc}.
+Nextclade dataset updates: ${red}not available${nc}.
 "
         fi
     fi
@@ -305,9 +337,8 @@ Please, check your network conection!
     # Check network conection
     if [[ ${network} = "Online" ]]
     then
-        echo -e "conda activate ${ylo}nextclade_v.${nextclade_version}${nc}
-"
-        conda activate nextclade_v.${nextclade_version}
+        nextclade_version=$(conda env list | grep "nextclade_v" | sed -E 's/.*nextclade_v\.([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+	conda activate nextclade_v.${nextclade_version}
         for dataset in resources/nextclade/* ; do
 	    name=$(basename ${dataset})
 	    echo "Updating: ${name}"
@@ -316,19 +347,19 @@ Please, check your network conection!
         conda deactivate
     else
         echo -e "
-${blue}GeVarLi${nc} is running in ${red}${network}${nc} mode.
-${blue}Nextclade${nc} datasets updatde ${red}not available${nc}!
+Network: ${red}${network}${nc}.
+Nextclade dataset updates: ${red}not available${nc}.
 "
     fi
 fi
  
 
 ###############################################################################
-### RENAME SYMLINKS ###
-#######################
+### RENAME FASTQ SYMLINKS ###
+#############################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}RENAME FASTQ SYMLINKS${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Rename FASTQ Symlinks${nc} ${green}#####${nc}
 ${green}---------------------------------${nc}
 "
 
@@ -351,22 +382,18 @@ If you want to keep Illumina ${blue}barcode-ID${nc} and/or Illumina ${blue}line-
 
 
 ###############################################################################
-### SNAKEMAKE PIPELINES ###
-###########################
+### RUN SNAKEMAKE ###
+######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}SNAKEMAKE PIPELINES${nc} ${green}#####${nc}
-${green}-------------------------------${nc}
+${green}#####${nc} ${red}Run Snakemake${nc} ${green}#####${nc}
+${green}-------------------------${nc}
 "
 
 echo -e "
 ${blue}## Unlocking Working Directory ##${nc}
 ${blue}---------------------------------${nc}
 "
-# Specify working directory (relative paths in the snakefile will use this as their origin).
-# The workflow definition in form of a snakefile.
-# Re-run all jobs the output of which is recognized as incomplete.
-# Remove a lock on the working directory.
 
 snakemake \
     --directory ${workdir}/ \
@@ -375,18 +402,42 @@ snakemake \
     --unlock
 
 echo -e "
+${blue}## Conda Environments List ##${nc}
+${blue}-----------------------------${nc}
+"
+
+ snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/Snakefile \
+    --list-conda-envs
+
+echo -e "
+${blue}## Conda Environments Setup ##${nc}
+${blue}------------------------------${nc}
+"
+
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/Snakefile \
+    --conda-create-envs-only \
+    --use-conda
+
+echo -e "
+${blue}## Dry Run ##${nc}
+${blue}-------------${nc}
+"
+
+snakemake \
+    --directory ${workdir}/ \
+    --snakefile ${workdir}/workflow/Snakefile \
+    --use-conda \
+    --dry-run \
+    --quiet host rules
+
+echo -e "
 ${blue}## Let's Run! ##${nc}
 ${blue}----------------${nc}
 "
-# Specify working directory (relative paths in the snakefile will use this as their origin).
-# The workflow definition in form of a snakefile.
-# Use at most N CPU cores/jobs in parallel. If N is omitted or ‘all’, the limit is set to the number of available CPU cores.
-# Define a global maximum number of threads available to any rule. Snakefiles requesting more threads will have their values reduced to the maximum. 
-# Set or overwrite values in the workflow config object.
-# Re-run all jobs the output of which is recognized as incomplete.
-# Go on with independent jobs if a job fails.
-# If defined in the rule, run job in a conda environment.
-# Print out the shell commands that will be executed.
 
 snakemake \
     --directory ${workdir}/ \
@@ -397,15 +448,14 @@ snakemake \
     --rerun-incomplete \
     --keep-going \
     --use-conda \
-    --quiet host
-# Possible choices: all, host, progress, rules
+    --quiet host progress
 
 ###############################################################################
 ### CONCATENATE RESULTS ###
 ###########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CONCATENATE RESULTS${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Concatenate Results${nc} ${green}#####${nc}
 ${green}-------------------------------${nc}
 "
 
@@ -455,11 +505,11 @@ done
 
 
 ###############################################################################
-### GRAPHS, SUMMARY and LOGS ###
-#############################
+### GRAPHS SUMMARY LOGS ###
+###########################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}GRAPHS, SUMMARY and LOGS${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Graphs, Summary and Logs${nc} ${green}#####${nc}
 ${green}------------------------------------${nc}
 "
 
@@ -496,7 +546,7 @@ cp ${config_file} ${workdir}/results/10_Reports/config.log 2> /dev/null
 ######################
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
-${green}#####${nc} ${red}CLEAN & SAVE${nc} ${green}#####${nc}
+${green}#####${nc} ${red}Clean & Save${nc} ${green}#####${nc}
 ${green}------------------------${nc}
 "
 
@@ -548,6 +598,10 @@ Max threads ____________ ${max_threads} of ${logical_cpu} threads available
 Max memory _____________ ${max_memory} of ${ram_size} Gb available
 Jobs memory ____________ ${memory_per_job} Gb per job maximum
 
+Snakemake version _______ ${snakemake_version}
+Conda version ___________ ${conda_version}
+Mamba version ___________ ${mamba_version}  
+
 Start time _____________ ${time_stamp_start}
 End time _______________ ${time_stamp_end}
 Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
@@ -555,13 +609,8 @@ Processing time ________ ${minutes} minutes and ${seconds} seconds elapsed
 Working directory _______ ${workdir}/
 Samples processed _______ ${samples} samples (${ylo}${fastq} fastq files)
 
-Snakemake version _______ ${snakemake_version}
-Conda version ___________ ${conda_version}
-Mamba version ___________ ${mamba_version}  
-
-
 Quality Ccontrol ________ [ ${quality} ]
-Trimming ________________ [ ${trimming} ]
+KeepTrim ________________ [ ${trimming} ]
 Cleapping _______________ [ ${cleapping} ]
 Consensus _______________ [ ${consensus} ]
 Covstats ________________ [ ${covstats} ]
@@ -575,6 +624,8 @@ Min coverage ____________ ${min_cov} X
 Min allele frequency ____ ${min_freq}
 
 Nextclade dataset _______ ${nextclade_dataset}
+Fastq-Screen subset _____ ${fastqscreen_subset}
+Cutadapt clipping$ ______ ${cutadapt_clipping}
 " > ${workdir}/results/10_Reports/settings.log
 
 # Gzip reports directory

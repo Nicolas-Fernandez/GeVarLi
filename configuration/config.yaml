@@ -22,32 +22,18 @@
 ################################## GENERAL ####################################
 ###############################################################################
 
-###############################################################################
-resources:
-  cpus: '8' # Set maximum cpus usage (for multithreading, default: "8") [INT]
-  ram: '16' # Set maximum memory usage (in Gb, default: "16") [INT]
-  tmp_dir: '$TMPDIR' # Temporary directory
-  # Available options (just for information, not exhaustive)
-    ### '$TMPDIR'  # System variable $TMPDIR (default)
-    ### '.'        # Local (i.e. GeVarLi directory)
-    ### '/scratch' # HPC (set it to match your HPC usage)
-    ### ''         # Custom (set your own)
-
-###############################################################################
 modules: # GeVarLi modules analysis
   # Available options, set at least one: 
   - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC)      default: ON
-  #- 'trimming'  # Keep trimmed reads files after alignment (Cutadapt / Sickle-trim) default: OFF
-  #- 'cleapping' # Perform reads clipping (Bamclipper)                               default: OFF
+  #- 'keeptrim'  # Keep trimmed reads files after alignment (Cutadapt / Sickle-trim) default: OFF
+  #- 'cleapping' # Perform reads clipping (with Bamclipper)                          default: OFF
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)        default: ON
   - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)                    default: ON
   - 'nextclade' # Perform nextclade clade assignation (Nexclade)                     default: ON
   #- 'pangolin'  # Perform pangolin lineage assignation (Pangolin)                   default: OFF
   ###- 'gisaid'    # Perform gisaid submission (GisAid : TODO)                       default: OFF
   
-###############################################################################
 consensus:
-  path: 'resources/genomes/' # Path to genomes references (default: "resources/genomes/")
   reference: # Your reference, in fasta format (default: "SARS-CoV-2_Wuhan_MN-908947-3")
   # Available options (not exhaustive), set one:
     - 'SARS-CoV-2_Wuhan_MN-908947-3'            # SARS-CoV-2  (Nextclade and Pangolin)
@@ -81,7 +67,7 @@ consensus:
     #- '12S_sequences_Human-Bat-Rat.fasta'       # 12S         (na)
     #- 'Chikungunya-virus_HM-045817-1'           # Chikungunya (na)
     #- 'Add_your_favorite_genome'                # Other       (na)
-  min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT] *** LoFreq ***
+  min_cov: # Minimum coverage, mask lower regions with "N" (default: "30") [INT]
   # Available options (not exhaustive), set one:
     #- '60'                         # 60 x : for great coverage
     - '30'                         # 30 X : AFROSCREEN SARS-CoV-2 with Illumina amplicons sequencing (default)
@@ -104,7 +90,6 @@ consensus:
 ################################## LINEAGES ###################################
 ###############################################################################
 
-###############################################################################
 nextclade:
   path: 'resources/nextclade/' # Path to nextclade datasets (default "resources/nextclade/")
   dataset: # Nextclade dataset
@@ -114,11 +99,8 @@ nextclade:
     #- 'hMPXV'      # human MPox
     #- 'hMPXV_B1'   # human MPox - only lineage B1*
 
-###############################################################################
 pangolin: # na
-
-    
-###############################################################################
+   
 gisaid: ## TODO ##
   username: 'username'
   threshold: '30'
@@ -127,12 +109,10 @@ gisaid: ## TODO ##
   identifier: ''
   year: '2022'
 
-
 ###############################################################################
 ################################## VARIANTS ###################################
 ###############################################################################
 
-################################################################################
 ivar:
   #min_depth: '0'    # Minimum read depth to call variants (Default: "0") [INT] *** iVar ***
   #min_freq: '0.03'  # Minimum frequency threshold to call variants (Default: "0.03") [FLOAT] *** iVar ***
@@ -150,7 +130,6 @@ ivar:
 ############################## PRIMER CLEAPING  ###############################
 ###############################################################################
 
-###############################################################################
 bamclipper:
   path: 'resources/primers/bedpe/' # Path to primers bedpe files (default "resources/primer/bedpe")
   primers: # Your primer set, in BEDPE format (no default: you need to know which kit / ref you used)
@@ -170,27 +149,23 @@ bamclipper:
   upstream: '5'   # (default: "5")
   downstream: '5' # (default: "5")
 
-
 ###############################################################################
 ################################### MAPPING ###################################
 ###############################################################################
 
-###############################################################################
 bwa:
-  path: 'resources/indexes/bwa/' # Path to BWA indexes (default: "resources/indexes/bwa/")
   algorithm: # Algorithm for constructing BWA index (default: auto --> '')
   # Available options, set only one:
     - ''         # Auto-select (default)
     #- '-a is'    # Moderately fast, but does not work with database larger than 2GB
     #- '-a bwtsw' # This method works with the whole human genome
 
-###############################################################################
 bowtie2:
-  path: 'resources/indexes/bowtie2/' # Path to Bowtie2 indexes (default: "resources/indexes/bowtie2/")
   algorithm: # Algorithm for constructing BT2 index (default: small --> '')
   # Available options, set only one:
     - ''              # (default)
-    #- '--large-index' # Force generated index to be "large", even if reference has fewer than 4 billion nucleotides
+    #- '--large-index' # Force generated index to be "large"
+                        # even if reference has fewer than 4 billion nucleotides
   sensitivity: # Bowtie2 'sensitivity' preset (default: "--very-sensitive")
   # Available preset options, set only one:
     - '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
@@ -198,9 +173,7 @@ bowtie2:
     #- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"    
     #- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
 
-###############################################################################
 minimap2:
-  path: 'resources/indexes/minimap2/' # Path to Minimap2 indexes (default: "resources/indexes/minimap2/")
   algorithm:
     k-mer_size: '21'     # -k: k-mer size (default: "21", no larger than "28") [INT]
     minimizer_size: '11' # -w: minimizer window size (default: "11") [INT]
@@ -223,12 +196,10 @@ minimap2:
     #- 'asm10'     # asm-to-ref mapping, for ~1.0% sequence divergence
     #- 'asm20'     # asm-to-ref mapping, for ~5.0% sequence divergence
 
-
 ###############################################################################
 ################################## TRIMMING ###################################
 ###############################################################################
 
-###############################################################################
 sickle_trim:
   quality: '30'      # Phred score limit (default: "30")
   length: '50'       # Read length limit after trim (default: "50")
@@ -239,21 +210,18 @@ sickle_trim:
     ###- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
     ###- 'solexa'   # for CASAVA < 1.3 for Solexa
 
-###############################################################################
 cutadapt:
+  clipping: '0' # Cut 'n' first nucleotides of each reads (default: 0)
   length: '50' # Discard reads shorter than 'length' after trim (default: "50")
   kits: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina)
     truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
     nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
     small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
-  clipping: '0' # Cut 'n' first nucleotides of each reads (default: 0)
-
 
 ###############################################################################
 ############################### QUALITY CONTROL ###############################
 ###############################################################################
 
-###############################################################################
 multiqc: ## TODO ##
   path: 'configuration/multiqc/' # Path to the multiqc configuration file
   config: # Multiqc configuration file (default: default.yaml)
@@ -263,36 +231,38 @@ multiqc: ## TODO ##
     #- ''             #
   tag: '' # Use only modules which tagged with this keyword
 
-###############################################################################
 fastq_screen:
   config: 'configuration/fastq-screen.conf' # Path to the fastq-screen configuration file
   subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
+###############################################################################
+################################### WORKFLOW ##################################
+###############################################################################
 
-###############################################################################
-#################################### SYSTEM ###################################
-###############################################################################
+resources:
+  cpus: '8' # Set maximum cpus usage (for multithreading, default: "8") [INT]
+  ram: '16' # Set maximum memory usage (in Gb, default: "16") [INT]
+  tmp_dir:  # Temporary directory, available options (not exhaustive), set only one:
+     -'$TMPDIR'  # System variable $TMPDIR (default)
+    # -'.'        # Local (i.e. GeVarLi directory)
+    # -'/scratch' # HPC (set it to match your HPC usage)
+    # -''         # Custom (set your own)
 
-###############################################################################
-conda:
-  envs: # Conda environement yaml files:
-    bamclipper:    'envs/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
-    bcftools:      'envs/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
-    bedtools:      'envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
-    bowtie2:       'envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
-    bwa:           'envs/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
-    cutadapt:      'envs/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
-    fastq_screen:  'envs/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
-    fastqc:        'envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
-    gawk:          'envs/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
-    ivar:          'envs/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
-    minimap2:      'envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
-    multiqc:       'envs/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
-    nextclade:     'envs/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
-    pangolin:      'envs/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
-    samtools:      'envs/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
-    sickle_trim:   'envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-    tsv2vcf:       'envs/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)
-    workflow_base: 'envs/workflow-base_v.2024.11.yaml' # Workflow-Base ver. 2024.11
-
-###############################################################################
+envs: # Conda environement yaml files:
+  bamclipper:    'envs/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
+  bcftools:      'envs/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
+  bedtools:      'envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
+  bowtie2:       'envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
+  bwa:           'envs/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
+  cutadapt:      'envs/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
+  fastq_screen:  'envs/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
+  fastqc:        'envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
+  gawk:          'envs/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
+  ivar:          'envs/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
+  minimap2:      'envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
+  multiqc:       'envs/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
+  nextclade:     'envs/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
+  pangolin:      'envs/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
+  samtools:      'envs/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
+  sickle_trim:   'envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
+  tsv2vcf:       'envs/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)
