@@ -14,7 +14,7 @@
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
 # Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
-# Use ____________________ snakemake -s Snakemake --use-conda 
+# Use ____________________ snakemake -s Snakemake --use-conda -j
 
 ###############################################################################
 ### CONFIGURATION ###
@@ -207,11 +207,11 @@ KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # MM2 k-mer s
 MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # MM2 minimizer window size
 SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # MM2 split index
 #HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # MM2 if PacBio
+
 BWA_ALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
 BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
 REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
-REF_PATH = config["consensus"]["path"]       # Path to genomes references
 MIN_COV = config["consensus"]["min_cov"]     # Minimum coverage, mask lower regions with 'N'
 IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
 ALIGNER = config["consensus"]["aligner"]     # Aligner ('minimap2', 'bwa' or 'bowtie2')
@@ -228,7 +228,6 @@ SIC_ENCODING = config["sickle_trim"]["encoding"] # Sickle-trim --qual-type
 SIC_QUALITY = config["sickle_trim"]["quality"]   # Sickle-trim --qual-threshold
 SIC_LENGTH = config["sickle_trim"]["length"]     # Sickle-trim --length-treshold
 
-MM2_PATH = config["minimap2"]["path"]     # Minimpa2 path to indexes
 MM2_PRESET = config["minimap2"]["preset"] # Minimap2 preset
 #MM2_LENGTH = config["minimap2"]["length"]                              # Minimap2 length
 #MM2_KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # Minimap2 k-mer size
@@ -236,10 +235,8 @@ MM2_PRESET = config["minimap2"]["preset"] # Minimap2 preset
 #MM2_SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # Minimap2 split index
 #MM2_HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # Minimap2 for PacBio
 
-BWA_PATH = config["bwa"]["path"]      # BWA path to indexes
 BWA_ALGO = config["bwa"]["algorithm"] # BWA indexing algorithm
 
-BT2_PATH = config["bowtie2"]["path"]               # Bowtie2 path to indexes
 BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
 BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
