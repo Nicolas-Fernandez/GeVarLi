@@ -36,12 +36,12 @@ resources:
 ###############################################################################
 modules: # GeVarLi modules analysis
   # Available options, set at least one: 
-  #- 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC)      default: ON
+  - 'quality'   # Perform reads quality control (FastQC, Fastq-Screen, MultiQC)      default: ON
   #- 'trimming'  # Keep trimmed reads files after alignment (Cutadapt / Sickle-trim) default: OFF
   #- 'cleapping' # Perform reads clipping (Bamclipper)                               default: OFF
   - 'consensus' # Perform reads mapping to reference (BWA, Bowtie2, Minimap2)        default: ON
-  #- 'covstats'  # Perform coverage statistics (Fagstat, Covstats)                    default: ON
-  #- 'nextclade' # Perform nextclade clade assignation (Nexclade)                     default: ON
+  - 'covstats'  # Perform coverage statistics (Fagstat, Covstats)                    default: ON
+  - 'nextclade' # Perform nextclade clade assignation (Nexclade)                     default: ON
   #- 'pangolin'  # Perform pangolin lineage assignation (Pangolin)                   default: OFF
   ###- 'gisaid'    # Perform gisaid submission (GisAid : TODO)                       default: OFF
   
@@ -51,7 +51,7 @@ consensus:
   reference: # Your reference, in fasta format (default: "SARS-CoV-2_Wuhan_MN-908947-3")
   # Available options (not exhaustive), set one:
     - 'SARS-CoV-2_Wuhan_MN-908947-3'            # SARS-CoV-2  (Nextclade and Pangolin)
-    - 'Monkeypox-virus_Zaire_AF-380138-1'       # Monkeypox   (Nextclade and Pangolin)
+    #- 'Monkeypox-virus_Zaire_AF-380138-1'       # Monkeypox   (Nextclade and Pangolin)
     #- 'Monkeypox-virus_UK_MT-903345-1'          # Monkeypox   (Nextclade and Pangolin)
     #- 'Swinepox-virus_India_MW-036632-1'        # Swinepox    (Nextclade)
     #- 'Ebola-virus_Zaire_AF-272001-1'           # Ebola       (na)
@@ -96,8 +96,8 @@ consensus:
   aligner: # Select your favorite aligner (default: 'bwa')
   # Available options, set one:
     - 'bwa'      # Better, Faster, (Stronger, Harder...)
-    - 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
-    - 'minimap2' # A versatile sequence alignment program
+    #- 'bowtie2'  # Depreciated (slower),"sensitivity" requiried (see below "Bowtie2" options)
+    #- 'minimap2' # A versatile sequence alignment program
   caller: 'ivar'
 
 ###############################################################################
