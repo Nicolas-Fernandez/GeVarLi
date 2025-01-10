@@ -16,7 +16,7 @@
 # Aim ____________________ Bash script running gevarli.smk snakefile
 # Date ___________________ 2021.10.12
 # Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
-# Use ____________________ 'bash Run_GeVarLi.sh'
+# Use ____________________ '. Run_GeVarLi.sh'
 
 ###############################################################################
 ### COLORS ###
@@ -46,7 +46,7 @@ ${blue}Affiliation${nc} ____________ IRD_U233_TransVIHMI
 ${blue}Aim${nc} ____________________ Bash script for ${red}Ge${nc}nome assembling, ${red}Var${nc}iant calling and ${red}Li${nc}neage assignation
 ${blue}Date${nc} ___________________ 2021.10.12
 ${blue}Latest modifications${nc} ___ 2025.01.08 (Prepare for Snakedeploy)
-${blue}Use${nc} ____________________ '${ylo}bash Run_GeVarLi.sh${nc}'
+${blue}Use${nc} ____________________ '${ylo}. Run_GeVarLi.sh${nc}'
 "
 
 ###############################################################################
@@ -157,10 +157,6 @@ else # If yes, print informations
     conda config --show channels # channels
 fi
 
-###############################################################################
-### CONDA INIT ###
-##################
-
 # Intern shell source conda
 source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge3
 source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
@@ -191,6 +187,7 @@ ${ylo}Workflow-Core${nc} conda environment will be create, with:
     > ${red}GraphViz${nc}${blue} ____ drawing graph${nc}
 "
     conda env create --file ${workdir}/workflow/envs/workflow-core.yaml > /dev/null 2>&1
+fi
 
 echo -e "
 You can remove old depreciated environements such as: 'gevarli-base', 'snakemake-base' or 'workflow-base'.
@@ -198,7 +195,7 @@ To list all your conda environments, you can run: '${ylo}conda env list${nc}'.
 To remove old conda environments, you can run: '${ylo}conda remove --all --yes --name <ENV_NAME>${nc}'.
 "
 
-# Active workflow-core conda environment
+# Active workflow-core conda environment.
 echo -e "Activate ${ylo}Workflow-Core${nc} conda environment."
 conda activate workflow-core
 
@@ -583,7 +580,7 @@ Affiliation ____________ IRD_U233_TransVIHMI
 Aim ____________________ Bash script for GeVarLi
 Date ___________________ 2021.10.12
 Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
-Run ____________________ 'bash Run_GeVarLi.sh'
+Run ____________________ '. Run_GeVarLi.sh'
 
 Operating System _______ ${os}
 Shell __________________ ${shell}
@@ -640,6 +637,5 @@ cd ${workdir}
 echo -e "
 ${green}------------------------------------------------------------------------${nc}
 "
-
 
 ###############################################################################
