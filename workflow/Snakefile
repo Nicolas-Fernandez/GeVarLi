@@ -46,7 +46,7 @@ def get_trimming_input(wildcards):
     return trimming_list
 
 def stash_or_trash(path):
-    if "trimming" in MODULES:
+    if "keeptrim" in MODULES:
         return path
     else:
         return temp(path)
@@ -173,23 +173,23 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 ### ENVIRONMENTS ###
 ####################
 
-MULTIQC = config["conda"]["envs"]["multiqc"]           # Multi-QC conda env
-FASTQ_SCREEN = config["conda"]["envs"]["fastq_screen"] # Fastq-Screen conda env
-FASTQC= config["conda"]["envs"]["fastqc"]              # FastQC conda env
-CUTADAPT = config["conda"]["envs"]["cutadapt"]         # Cutadapt conda environment
-SICKLE_TRIM = config["conda"]["envs"]["sickle_trim"]   # Sickle-Trim conda environment
-MINIMAP2 = config["conda"]["envs"]["minimap2"]         # BWA conda environment
-BWA = config["conda"]["envs"]["bwa"]                   # BWA conda environment
-BOWTIE2 = config["conda"]["envs"]["bowtie2"]           # Bowtie2 conda environment
-SAMTOOLS = config["conda"]["envs"]["samtools"]         # SamTools conda environment
-BEDTOOLS = config["conda"]["envs"]["bedtools"]         # BedTools conda environment
-BAMCLIPPER = config["conda"]["envs"]["bamclipper"]     # BAMClipper
-GAWK = config["conda"]["envs"]["gawk"]                 # Awk (GNU) conda environment
-IVAR = config["conda"]["envs"]["ivar"]                 # iVar conda environment
-TSV2VCF = config["conda"]["envs"]["tsv2vcf"]           # tsv2vcf conda environment
-BCFTOOLS = config["conda"]["envs"]["bcftools"]         # BcfTools conda environment
-PANGOLIN = config["conda"]["envs"]["pangolin"]         # Pangolin conda environment
-NEXTCLADE = config["conda"]["envs"]["nextclade"]       # Nextclade conda environment
+MULTIQC = config["envs"]["multiqc"]           # Multi-QC conda env
+FASTQ_SCREEN = config["envs"]["fastq_screen"] # Fastq-Screen conda env
+FASTQC= config["envs"]["fastqc"]              # FastQC conda env
+CUTADAPT = config["envs"]["cutadapt"]         # Cutadapt conda environment
+SICKLE_TRIM = config["envs"]["sickle_trim"]   # Sickle-Trim conda environment
+MINIMAP2 = config["envs"]["minimap2"]         # BWA conda environment
+BWA = config["envs"]["bwa"]                   # BWA conda environment
+BOWTIE2 = config["envs"]["bowtie2"]           # Bowtie2 conda environment
+SAMTOOLS = config["envs"]["samtools"]         # SamTools conda environment
+BEDTOOLS = config["envs"]["bedtools"]         # BedTools conda environment
+BAMCLIPPER = config["envs"]["bamclipper"]     # BAMClipper
+GAWK = config["envs"]["gawk"]                 # Awk (GNU) conda environment
+IVAR = config["envs"]["ivar"]                 # iVar conda environment
+TSV2VCF = config["envs"]["tsv2vcf"]           # tsv2vcf conda environment
+BCFTOOLS = config["envs"]["bcftools"]         # BcfTools conda environment
+PANGOLIN = config["envs"]["pangolin"]         # Pangolin conda environment
+NEXTCLADE = config["envs"]["nextclade"]       # Nextclade conda environment
 
 ###############################################################################
 ### PARAMETERS ###
@@ -1321,10 +1321,8 @@ rule cutadapt_adapters_removing:
         small = CUT_SMALL,
         cut = CUT_CLIPPING
     input:
-        fwd_reads = "resources/reads/{sample}_R1.fastq.gz",
-        rev_reads = "resources/reads/{sample}_R2.fastq.gz"
-        #fwd_reads = "/users/illumina/local/data/run_1/FATSQ/{sample}_R1.fastq.gz",
-        #rev_reads = "/users/illumina/local/data/run_1/FATSQ/{sample}_R2.fastq.gz"
+        fwd_reads = "resources/symlinks/{sample}_R1.fastq.gz",
+        rev_reads = "resources/symlinks/{sample}_R2.fastq.gz"
     output:
         fwd_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz"),
         rev_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz")
@@ -1406,7 +1404,7 @@ rule fastqscreen_contamination_checking:
         config = FQC_CONFIG,
         subset = SUBSET
     input:
-        fastq = "resources/reads/{fastq}.fastq.gz"
+        fastq = "resources/symlinks/{fastq}.fastq.gz"
     output:
         fastq_screen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
     log:
@@ -1436,7 +1434,7 @@ rule fastqc_quality_control:
     resources:
         cpus = CPUS
     input:
-        fastq = "resources/reads/{fastq}.fastq.gz"
+        fastq = "resources/symlinks/{fastq}.fastq.gz"
     output:
         fastqc = directory("results/00_Quality_Control/fastqc/{fastq}/")
     log:
