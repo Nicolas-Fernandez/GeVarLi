@@ -249,20 +249,20 @@ resources:
     # -''         # Custom (set your own)
 
 envs: # Conda environement yaml files:
-  bamclipper:    'envs/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
-  bcftools:      'envs/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
-  bedtools:      'envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
-  bowtie2:       'envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
-  bwa:           'envs/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
-  cutadapt:      'envs/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
-  fastq_screen:  'envs/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
-  fastqc:        'envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
-  gawk:          'envs/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
-  ivar:          'envs/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
-  minimap2:      'envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
-  multiqc:       'envs/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
-  nextclade:     'envs/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
-  pangolin:      'envs/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
-  samtools:      'envs/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
-  sickle_trim:   'envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-  tsv2vcf:       'envs/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)
+  bamclipper:    '../envs/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
+  bcftools:      '../envs/bcftools_v.1.20.yaml'         # Bcftools      ver. 1.20
+  bedtools:      '../envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
+  bowtie2:       '../envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
+  bwa:           '../envs/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
+  cutadapt:      '../envs/cutadapt_v.4.9.yaml'          # Cutadapt      ver. 4.9
+  fastq_screen:  '../envs/fastq-screen_v.0.15.3.yaml'   # Fastq-Screen  ver. 0.15.3 (with BWA ver. 0.7.18)
+  fastqc:        '../envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
+  gawk:          '../envs/gawk_v.5.3.0.yaml'            # Awk (GNU)     ver. 5.3.0
+  ivar:          '../envs/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3 (with Samtools ver. 1.20)
+  minimap2:      '../envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
+  multiqc:       '../envs/multiqc_v.1.23.yaml'          # MultiQC       ver. 1.23 (with Pandoc ver. 3.3)
+  nextclade:     '../envs/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
+  pangolin:      '../envs/pangolin_v.4.3.yaml'          # Pangolin      ver. 4.3
+  samtools:      '../envs/samtools_v.1.20.yaml'         # Samtools      ver. 1.20
+  sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
+  tsv2vcf:       '../envs/tsv2vcf_v.1.1.yaml'           # tsv2vcf       ver. 1.1 (bcftools biopython numpy)

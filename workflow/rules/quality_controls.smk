@@ -1,73 +1,12 @@
-###I###RA###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-###                                                                         ###
-###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
-###    ||  \ \ \ \    / __( ___( \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
-###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
-###    ||  /_/_/_/    \___(____) \(__)(__(_)\_(____(____)   \_\_\_\  ||     ###
-###    \/                                                            \/     ###
-###                                                                         ###
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ quality_control.smk
-# Version ________________ v.2023.06
-# Author _________________ Nicolas Fernandez
-# Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Snakefile with quality control rules
-# Date ___________________ 2021.09.28
-# Latest modifications ___ 2024.02.08 (add multiqc plot graphs export)
-# Run ____________________ snakemake -s quality_control.smk --use-conda 
-
 ###############################################################################
-### CONFIGURATION ###
-#####################
-
-configfile: "configuration/config.yaml"
-
+############################### QUALITY CONTROL ###############################
 ###############################################################################
-### FUNCTIONS ###
-#################
-
-###############################################################################
-### WILDCARDS ###
-#################
-
-FASTQ, = glob_wildcards("resources/reads/{fastq}.fastq.gz")
-
-###############################################################################
-### RESOURCES ###
-#################
-
-OS = config["os"]                  # Operating system
-CPUS = config["resources"]["cpus"] # Threads (maximum)
-
-###############################################################################
-### ENVIRONMENTS ###
-####################
-
-MULTIQC = config["conda"][OS]["multiqc"]           # Multi-QC conda env
-FASTQ_SCREEN = config["conda"][OS]["fastq_screen"] # Fastq-Screen conda env
-FASTQC= config["conda"][OS]["fastqc"]              # FastQC conda env
-
-###############################################################################
-### PARAMETERS ###
-##################
-
-SUBSET = config["fastq_screen"]["subset"]     # Fastq-Screen --subset
-FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
-#MQC_CONFIG = config["multiqc"]["config"]      # MultiQC --conf
-#TAG = config["multiqc"]["tag"]                # MultiQC --tag
-
-###############################################################################
-### RULES ###
-#############
-
-rule all:
-    input:
-        multiqc = "results/00_Quality_Control/multiqc/"
 
 ###############################################################################
 rule multiqc_reports_aggregation:
     # Aim: aggregates bioinformatics analyses results into a single report
     # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
+    priority: 999 # Explicit high priority
     message:
         """
         ~ MultiQC ∞ Aggregat HTML Qualities Reports ~
@@ -116,7 +55,7 @@ rule fastqscreen_contamination_checking:
         config = FQC_CONFIG,
         subset = SUBSET
     input:
-        fastq = "resources/reads/{fastq}.fastq.gz"
+        fastq = "resources/symlinks/{fastq}.fastq.gz"
     output:
         fastq_screen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
     log:
@@ -146,7 +85,7 @@ rule fastqc_quality_control:
     resources:
         cpus = CPUS
     input:
-        fastq = "resources/reads/{fastq}.fastq.gz"
+        fastq = "resources/symlinks/{fastq}.fastq.gz"
     output:
         fastqc = directory("results/00_Quality_Control/fastqc/{fastq}/")
     log:

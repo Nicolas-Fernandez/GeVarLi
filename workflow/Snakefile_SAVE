@@ -8,17 +8,20 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
-# Version ________________ v.2024.08
+# Version ________________ v.2025.01
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile with GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2024.08.05 ('Noarch' conda environment yaml files)
-# Use ____________________ snakemake -s gevarli.smk --use-conda 
+# Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
+# Use ____________________ snakemake -s Snakemake --use-conda -j
 
 ###############################################################################
 ### CONFIGURATION ###
 #####################
+
+from snakemake.utils import min_version
+min_version("8.27.0")
 
 configfile: "configuration/config.yaml"
 
@@ -46,7 +49,7 @@ def get_trimming_input(wildcards):
     return trimming_list
 
 def stash_or_trash(path):
-    if "trimming" in MODULES:
+    if "keeptrim" in MODULES:
         return path
     else:
         return temp(path)
@@ -157,8 +160,8 @@ def get_gisaid_input(wildcards):
 ### WILDCARDS ###
 #################
 
-FASTQ, = glob_wildcards("resources/reads/{fastq}.fastq.gz")
-SAMPLE, = glob_wildcards("resources/reads/{sample}_R1.fastq.gz")
+FASTQ, = glob_wildcards("resources/symlinks/{fastq}.fastq.gz")
+SAMPLE, = glob_wildcards("resources/symlinks/{sample}_R1.fastq.gz")
 
 ###############################################################################
 ### RESOURCES ###
@@ -173,23 +176,23 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 ### ENVIRONMENTS ###
 ####################
 
-MULTIQC = config["conda"]["yaml"]["multiqc"]           # Multi-QC conda env
-FASTQ_SCREEN = config["conda"]["yaml"]["fastq_screen"] # Fastq-Screen conda env
-FASTQC= config["conda"]["yaml"]["fastqc"]              # FastQC conda env
-CUTADAPT = config["conda"]["yaml"]["cutadapt"]         # Cutadapt conda environment
-SICKLE_TRIM = config["conda"]["yaml"]["sickle_trim"]   # Sickle-Trim conda environment
-MINIMAP2 = config["conda"]["yaml"]["minimap2"]         # BWA conda environment
-BWA = config["conda"]["yaml"]["bwa"]                   # BWA conda environment
-BOWTIE2 = config["conda"]["yaml"]["bowtie2"]           # Bowtie2 conda environment
-SAMTOOLS = config["conda"]["yaml"]["samtools"]         # SamTools conda environment
-BEDTOOLS = config["conda"]["yaml"]["bedtools"]         # BedTools conda environment
-BAMCLIPPER = config["conda"]["yaml"]["bamclipper"]     # BAMClipper
-GAWK = config["conda"]["yaml"]["gawk"]                 # Awk (GNU) conda environment
-IVAR = config["conda"]["yaml"]["ivar"]                 # iVar conda environment
-TSV2VCF = config["conda"]["yaml"]["tsv2vcf"]           # tsv2vcf conda environment
-BCFTOOLS = config["conda"]["yaml"]["bcftools"]         # BcfTools conda environment
-PANGOLIN = config["conda"]["yaml"]["pangolin"]         # Pangolin conda environment
-NEXTCLADE = config["conda"]["yaml"]["nextclade"]       # Nextclade conda environment
+MULTIQC = config["envs"]["multiqc"]           # Multi-QC conda env
+FASTQ_SCREEN = config["envs"]["fastq_screen"] # Fastq-Screen conda env
+FASTQC= config["envs"]["fastqc"]              # FastQC conda env
+CUTADAPT = config["envs"]["cutadapt"]         # Cutadapt conda environment
+SICKLE_TRIM = config["envs"]["sickle_trim"]   # Sickle-Trim conda environment
+MINIMAP2 = config["envs"]["minimap2"]         # BWA conda environment
+BWA = config["envs"]["bwa"]                   # BWA conda environment
+BOWTIE2 = config["envs"]["bowtie2"]           # Bowtie2 conda environment
+SAMTOOLS = config["envs"]["samtools"]         # SamTools conda environment
+BEDTOOLS = config["envs"]["bedtools"]         # BedTools conda environment
+BAMCLIPPER = config["envs"]["bamclipper"]     # BAMClipper
+GAWK = config["envs"]["gawk"]                 # Awk (GNU) conda environment
+IVAR = config["envs"]["ivar"]                 # iVar conda environment
+TSV2VCF = config["envs"]["tsv2vcf"]           # tsv2vcf conda environment
+BCFTOOLS = config["envs"]["bcftools"]         # BcfTools conda environment
+PANGOLIN = config["envs"]["pangolin"]         # Pangolin conda environment
+NEXTCLADE = config["envs"]["nextclade"]       # Nextclade conda environment
 
 ###############################################################################
 ### PARAMETERS ###
@@ -207,11 +210,11 @@ KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # MM2 k-mer s
 MINIMIZER_SIZE = config["minimap2"]["algorithm"]["minimizer_size"] # MM2 minimizer window size
 SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # MM2 split index
 #HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # MM2 if PacBio
+
 BWA_ALGO = config["bwa"]["algorithm"]     # BWA indexing algorithm
 BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 
 REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
-REF_PATH = config["consensus"]["path"]       # Path to genomes references
 MIN_COV = config["consensus"]["min_cov"]     # Minimum coverage, mask lower regions with 'N'
 IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
 ALIGNER = config["consensus"]["aligner"]     # Aligner ('minimap2', 'bwa' or 'bowtie2')
@@ -228,7 +231,6 @@ SIC_ENCODING = config["sickle_trim"]["encoding"] # Sickle-trim --qual-type
 SIC_QUALITY = config["sickle_trim"]["quality"]   # Sickle-trim --qual-threshold
 SIC_LENGTH = config["sickle_trim"]["length"]     # Sickle-trim --length-treshold
 
-MM2_PATH = config["minimap2"]["path"]     # Minimpa2 path to indexes
 MM2_PRESET = config["minimap2"]["preset"] # Minimap2 preset
 #MM2_LENGTH = config["minimap2"]["length"]                              # Minimap2 length
 #MM2_KMER_SIZE = config["minimap2"]["algorithm"]["k-mer_size"]          # Minimap2 k-mer size
@@ -236,10 +238,8 @@ MM2_PRESET = config["minimap2"]["preset"] # Minimap2 preset
 #MM2_SPLIT_SIZE = config["minimap2"]["algorithm"]["split_size"]         # Minimap2 split index
 #MM2_HOMOPOLYMER = config["minimap2"]["algorithm"]["homopolymer"]       # Minimap2 for PacBio
 
-BWA_PATH = config["bwa"]["path"]      # BWA path to indexes
 BWA_ALGO = config["bwa"]["algorithm"] # BWA indexing algorithm
 
-BT2_PATH = config["bowtie2"]["path"]               # Bowtie2 path to indexes
 BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
 BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
@@ -456,6 +456,7 @@ rule ivar_consensus:
         "--min-BQ {params.min_bq} "       # -Q: skip bases with baseQ/BAQ smaller than [INT] (default: 13)
         #"--reference {input.masked_ref} " # Reference sequence FASTA FILE
         "{input.mark_dup} "               # Markdup BAM input
+        "2>&1 | grep -v '[mpileup] 1 samples in 1 input files' " # Remove this stdout
         "| "                               ### PIPE to iVar
         "ivar consensus "                # iVar, with command 'consensus': Call consensus from aligned BAM file
         "-p {output.prefix} "             # -p: prefix
@@ -512,6 +513,7 @@ rule ivar_variant_calling:
         "--min-BQ {params.min_bq} "       # -Q: skip bases with baseQ/BAQ smaller than (default: 13) [INT]
         "--reference {input.masked_ref} " # Reference sequence FASTA FILE
         "{input.mark_dup} "               # Markdup BAM input
+        "2>&1 | grep -v '[mpileup] 1 samples in 1 input files' " # Remove this stdout
         "| "                               ### pipe to iVar
         "ivar variants "                 # iVar, with command 'variants': Call variants from aligned BAM file
         "-p {output.variant_call} "       # -p: prefix
@@ -541,20 +543,19 @@ rule bedtools_masking:
         """
     conda:
         BEDTOOLS
-    params:
-        path = REF_PATH
     input:
+        reference = "resources/genomes/{reference}.fasta",
         low_cov_mask = "results/03_Coverage/{reference}/bed/{sample}_{aligner}_{min_cov}X_low-cov-mask.bed"
     output:
         masked_ref = "results/04_Variants/{reference}/{sample}_{aligner}_{min_cov}X_masked-ref.fasta"
     log:
         "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_{min_cov}X_masking.log"
     shell:
-        "bedtools maskfasta "                          # Bedtools maskfasta, mask a fasta file based on feature coordinates
-        "-fi {params.path}{wildcards.reference}.fasta " # Input FASTA file 
-        "-bed {input.low_cov_mask} "                    # BED/GFF/VCF file of ranges to mask in -fi
-        "-fo {output.masked_ref} "                      # Output masked FASTA file
-        "&> {log}"                                      # Log redirection 
+        "bedtools maskfasta "       # Bedtools maskfasta, mask a fasta file based on feature coordinates
+        "-fi {input.reference} "     # Input FASTA file 
+        "-bed {input.low_cov_mask} " # BED/GFF/VCF file of ranges to mask in -fi
+        "-fo {output.masked_ref} "   # Output masked FASTA file
+        "&> {log}"                   # Log redirection 
 
 ###############################################################################
 rule bedtools_merged_mask:
@@ -874,7 +875,7 @@ rule bamclipper_amplicon_primers:
         "&& mv {wildcards.sample}_{wildcards.aligner}_mark-dup.primerclipped.bam.bai {output.baiclip}" # because BamClipper v.1 default output system...
 
 ###############################################################################
-############################## REMOVE DUPLICATS ###############################
+############################# REMOVE DUPLICATES ###############################
 ###############################################################################
 
 ###############################################################################
@@ -1056,7 +1057,7 @@ rule minimap2_mapping:
         preset = MM2_PRESET
         #length = LENGTH
     input:
-        mm2_indexes = "resources/indexes/minimap2/{reference}.mmi"
+        mm2_indexes = "resources/indexes/minimap2/{reference}.mmi",
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
@@ -1097,7 +1098,7 @@ rule bwa_mapping:
     resources:
         cpus = CPUS
     input:
-        bwa_indexes = "resources/indexes/bwa/{reference}"
+        bwa_indexes = "resources/indexes/bwa/{reference}",
         fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
     output:
@@ -1143,7 +1144,7 @@ rule bowtie2_mapping:
         "bowtie2 "                   # Bowtie2, an ultrafast and memory-efficient tool for aligning sequencing reads to long reference sequences
         "--threads {resources.cpus} " # -p: Number of alignment threads to launch (default: 1)
         "--reorder "                  # Keep the original read order (if multi-processor option -p is used)
-        "-x {input.indexes} "         # -x: Reference index filename prefix (minus trailing .X.bt2)
+        "-x {input.bt2_indexes} "     # -x: Reference index filename prefix (minus trailing .X.bt2)
         "{params.sensitivity} "       # Preset (default: "--sensitive")
                                        # sensitive: same as [-D 15 -R 2 -N 0 -L 22 -i S,1,1.15]
         "-q "                         # -q: Query input files are FASTQ .fq/.fastq (default)
@@ -1176,7 +1177,7 @@ rule minimap2_genome_indexing:
         fasta = "resources/genomes/{reference}.fasta"
     output:
         mm2_indexes = multiext("resources/indexes/minimap2/{reference}",
-                           ".mmi")
+                               ".mmi")
     log:
         "results/10_Reports/tools-log/minimap2-indexes/{reference}.log"
     shell:
@@ -1185,7 +1186,7 @@ rule minimap2_genome_indexing:
         "-w {params.minimizer_size} " # -w: minimizer window size (default: "11") [INT]
         "-I {params.split_size} "     # -I: split index for every {NUM} input bases (default: "8G") [INT]
         #"{params.homopolymer} "       # use homopolymer-compressed k-mer (preferrable for PacBio)
-        "-d {output.indexes} "        # -d: dump index to FILE []
+        "-d {output.mm2_indexes} "    # -d: dump index to FILE []
         "{input.fasta} "              # Reference sequences in the FASTA format
         "&> {log}"                    # Log redirection
 
@@ -1205,14 +1206,14 @@ rule bwa_genome_indexing:
     input:
         fasta = "resources/genomes/{reference}.fasta"
     output:
-        prefix = temp("resources/indexes/bwa/{reference}"),
-        indexes = multiext("resources/indexes/bwa/{ref_seq}",
-                           ".amb", ".ann", ".bwt", ".pac", ".sa")
+        prefix = "resources/indexes/bwa/{reference}",
+        bwa_indexes = multiext("resources/indexes/bwa/{reference}",
+                               ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
         "results/10_Reports/tools-log/bwa-indexes/{reference}.log"
     shell:
         "bwa index "              # BWA-SW algorithm, index sequences
-        "{params.algorithm} "      # -a: Algorithm for constructing BWT index (default: auto)                                  
+        "{params.algorithm} "      # -a: Algorithm for constructing BWT index (default: auto)
         "-p {output.prefix} "      # -p: Prefix of the output database
         "{input.fasta} "           # Reference sequences in the FASTA format
         "&> {log} "                # Log redirection
@@ -1236,10 +1237,10 @@ rule bowtie2_genome_indexing:
     input:
         fasta = "resources/genomes/{reference}.fasta"
     output:
-        prefix = temp("resources/indexes/bowtie2/{reference}"),
-        indexes = multiext("resources/indexes/bowtie2/{ref_seq}",
-                           ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2",
-                           ".rev.1.bt2", ".rev.2.bt2")
+        prefix = "resources/indexes/bowtie2/{reference}",
+        bt2_indexes = multiext("resources/indexes/bowtie2/{reference}",
+                               ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2",
+                               ".rev.1.bt2", ".rev.2.bt2")
     log:
         "results/10_Reports/tools-log/bowtie2-indexes/{reference}.log"
     shell:
@@ -1319,10 +1320,8 @@ rule cutadapt_adapters_removing:
         small = CUT_SMALL,
         cut = CUT_CLIPPING
     input:
-        fwd_reads = "resources/reads/{sample}_R1.fastq.gz",
-        rev_reads = "resources/reads/{sample}_R2.fastq.gz"
-        #fwd_reads = "/users/illumina/local/data/run_1/FATSQ/{sample}_R1.fastq.gz",
-        #rev_reads = "/users/illumina/local/data/run_1/FATSQ/{sample}_R2.fastq.gz"
+        fwd_reads = "resources/symlinks/{sample}_R1.fastq.gz",
+        rev_reads = "resources/symlinks/{sample}_R2.fastq.gz"
     output:
         fwd_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz"),
         rev_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz")
@@ -1404,7 +1403,7 @@ rule fastqscreen_contamination_checking:
         config = FQC_CONFIG,
         subset = SUBSET
     input:
-        fastq = "resources/reads/{fastq}.fastq.gz"
+        fastq = "resources/symlinks/{fastq}.fastq.gz"
     output:
         fastq_screen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
     log:
@@ -1434,7 +1433,7 @@ rule fastqc_quality_control:
     resources:
         cpus = CPUS
     input:
-        fastq = "resources/reads/{fastq}.fastq.gz"
+        fastq = "resources/symlinks/{fastq}.fastq.gz"
     output:
         fastqc = directory("results/00_Quality_Control/fastqc/{fastq}/")
     log:

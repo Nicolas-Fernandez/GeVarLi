@@ -216,8 +216,8 @@ fastq=$(expr $(ls -l ${workdir}/resources/reads/*.fastq.gz 2> /dev/null | wc -l)
 if [[ "${fastq}" == "0" ]]                                                         # If no sample,
 then                                                                                # start GeVarLi with at least 1 sample
     echo -e "${red}¡${nc} No FASTQ files detected in ${ylo}resources/reads/${nc} ${red}!${nc}
-${red}${sample_test}${nc} in ${ylo}resources/data_test/${nc} FASTQ files were be used as sample example"
-    cp ${workdir}/resources/data_test/${sample_test}_R*.fastq.gz ${workdir}/resources/reads/ # use data_test fastq
+${red}${sample_test}${nc} FASTQ files were be used as sample test"
+    cp ${workdir}/.test/${sample_test}_R*.fastq.gz ${workdir}/resources/reads/ # use .test/fastq files
     fastq="2"
 fi
 samples=$(expr ${fastq} \/ 2) # {fastq.gz count} / 2 = samples count (paired-end)
