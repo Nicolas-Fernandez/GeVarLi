@@ -11,60 +11,63 @@
 # Version ________________ v.2025.01
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Snakefile with GeVarLi rules
+# Aim ____________________ Snakefile running GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.01.08 (Prepare for Snakedeploy)
-# Use ____________________ snakemake -s Snakemake --use-conda -j
+# Latest modifications ___ 2025.03.12
+# Use ____________________ snakemake -s Snakefile --use-conda -j
 ###############################################################################
 
 ###############################################################################
 ### CONFIGURATION ###
 #####################
 
-configfile: "configuration/config.yaml"
+configfile: "config/config.yaml"
 
 ###############################################################################
 ### FUNCTIONS ###
 #################
 
 # Imports
-import sys
-import glob
-import pandas as pandas
-import scripts.functions as functions
-from scripts.functions import stash_or_trash
+from snakemake.utils import min_version
+from snakemake.utils import validate
+
+from scripts.functions import get_valid_fastq
+from scripts.functions import get_final_outputs
 from scripts.functions import get_bam_input
 from scripts.functions import get_bai_input
-import snakemake.utils as snakutils 
+
+# Local
+FASTQ_DIR = config["fastq_dir"]
+VALID_FASTQ = get_valid_fastq(FASTQ_DIR)
+SAMPLE = list(VALID_FASTQ.keys())
+MATE = ["1", "2"]
 
 # Exports
-sys.path.append("/Users/2021nf001/git/GeVarLi")
-
-functions.CPUS = config["resources"]["cpus"] # Threads (maximum)
-functions.RAM = config["resources"]["ram"]   # Memory (RAM) in Gb (maximum)
-
+import scripts.functions as functions
+functions.SAMPLE = SAMPLE
+functions.MATE = MATE
 functions.MODULES = config["modules"] # Modules
+functions.REFERENCE = config["consensus"]["reference"]   # Genome reference sequence, in fasta format
+functions.QC_REF = config["fastq_screen"]["reference"]   # FastqScreen config file genomes to index
+functions.MAPPER = config["consensus"]["mapper"]       # Mapper ('bwa' 'minimap2' 'bowtie2')
+functions.MIN_COV = config["consensus"]["min_cov"]       # Minimum coverage, mask lower regions with 'N'
+functions.CALLER = config["consensus"]["caller"]         # Variants caller ('ivar')
+functions.ASSIGNER = config["consensus"]["assigner"] # Tools ('nextclade' 'pangolin')
 
-functions.SAMPLE, = glob_wildcards("resources/symlinks/{sample}_R1.fastq.gz") # Samples
-
-functions.REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
-functions.ALIGNER = config["consensus"]["aligner"]     # Aligner ('minimap2', 'bwa' or 'bowtie2')
-functions.MIN_COV = config["consensus"]["min_cov"]     # Minimum coverage, mask lower regions with 'N'
-functions.CALLER = config["consensus"]["caller"]       # Variant Caller ('lofreq' or 'ivar')
-#functions.IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
+functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extentions ('txt' 'tsv' 'json')
 
 # Snakemake version
-snakutils.min_version("8.27.0")
+min_version("8.27.0")
 
 # Schemas
-#snakutils.validate(config, schema="schemas/config.schema.yaml")
+#validate(config, schema="schemas/config.schema.yaml")
 
 ###############################################################################
 ### WILDCARDS ###
 #################
 
-FASTQ, = glob_wildcards("resources/symlinks/{fastq}.fastq.gz")
-SAMPLE, = glob_wildcards("resources/symlinks/{sample}_R1.fastq.gz")
+#FASTQ, = glob_wildcards("resources/symlinks/{fastq}.fastq.gz")
+#SAMPLE, = glob_wildcards("resources/symlinks/{sample}_R1.fastq.gz")
 
 ###############################################################################
 ### RESOURCES ###
@@ -72,7 +75,6 @@ SAMPLE, = glob_wildcards("resources/symlinks/{sample}_R1.fastq.gz")
 
 CPUS = config["resources"]["cpus"]       # Threads (maximum)
 RAM = config["resources"]["ram"]         # Memory (RAM) in Gb (maximum)
-MEM_GB = functions.get_memory_per_thread  # Memory per thread in GB (maximum)
 TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 
 ###############################################################################
@@ -96,6 +98,7 @@ TSV2VCF = config["envs"]["tsv2vcf"]           # tsv2vcf conda environment
 BCFTOOLS = config["envs"]["bcftools"]         # BcfTools conda environment
 PANGOLIN = config["envs"]["pangolin"]         # Pangolin conda environment
 NEXTCLADE = config["envs"]["nextclade"]       # Nextclade conda environment
+WORKFLOW = config["envs"]["workflow"]         # Workflow conda environment  
 
 ###############################################################################
 ### PARAMETERS ###
@@ -118,8 +121,9 @@ BT2_ALGO = config["bowtie2"]["algorithm"] # BT2 indexing algorithm
 #REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
 MIN_COV = config["consensus"]["min_cov"]     # Minimum coverage, mask lower regions with 'N'
 IUPAC = config["consensus"]["iupac"]         # Output variants in the form of IUPAC ambiguity codes
-ALIGNER = config["consensus"]["aligner"]     # Aligner ('minimap2', 'bwa' or 'bowtie2')
+MAPPER = config["consensus"]["mapper"]     # Mapper ('minimap2', 'bwa' or 'bowtie2')
 CALLER = config["consensus"]["caller"]       # Variant Caller ('lofreq' or 'ivar')
+ASSIGNER = config["consensus"]["assigner"]   # Lineage assigner ('nextclade' or 'pangolin')
 
 CUT_LENGTH = config["cutadapt"]["length"]           # Cutadapt --minimum-length
 CUT_TRUSEQ = config["cutadapt"]["kits"]["truseq"]   # Cutadapt --adapter Illumina TruSeq
@@ -163,21 +167,28 @@ IVAR_MAP_QUAL = config["ivar"]["map_qual"]        # iVar mapping quality
 NEXT_PATH = config["nextclade"]["path"]       # Path to nextclade dataset
 NEXT_DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 
+GRAPH_TYPE = config["report"]["graph"]["type"]
+GRAPH_EXT = config["report"]["graph"]["extention"]
+
 ###############################################################################
 ### LOAD RULES ###
 ##################
 
+include: "rules/symlinks_renamming.smk"
 include: "rules/quality_controls.smk"
-include: "rules/reads_cleaning.smk"
-include: "rules/indexing_genomes.smk"
+include: "rules/reads_cleanning.smk"
+include: "rules/genomes_indexing.smk"
 include: "rules/reads_mapping.smk"
-include: "rules/primer_cleaping.smk"
-include: "rules/remove_duplicates.smk"
+include: "rules/primers_clipping.smk"
+include: "rules/duplicates_removing.smk"
 include: "rules/coverage_stats.smk"
-include: "rules/mask_lowcov.smk"
-include: "rules/variant_calling.smk"
+include: "rules/lowcov_masking.smk"
+include: "rules/variants_calling.smk"
 include: "rules/consensus_calling.smk"
 include: "rules/lineages_calling.smk"
+include: "rules/gisaid_submission.smk"
+include: "rules/results_merging.smk"
+include: "rules/workflow_reporting.smk"
 
 ###############################################################################
 ### TARGET RULES ###
@@ -185,14 +196,6 @@ include: "rules/lineages_calling.smk"
 
 rule all:
     input:
-        multiqc = functions.get_quality_input,
-        trimming = functions.get_trimming_input,
-        consensus = functions.get_consensus_input,
-        flagstat = functions.get_flagstat_input,
-        covstats = functions.get_covstats_input,
-        vcf = functions.get_vcf_input,
-        pangolin = functions.get_pangolin_input,
-        nextclade = functions.get_nextclade_input,
-        gisaid = functions.get_gisaid_input
+        report = "results/10_Reports/snakemake/workflow-report.html"
 
-
+###############################################################################

@@ -1,0 +1,12 @@
+name: fastq-screen_v.0.16
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - fastq-screen=0.16.0
+  - bwa=0.7.18 # default config for GeVarLi
+  - perl=5.32.1          # for PNG graphs
+  - perl-gd=2.76         # for PNG graphs
+  - perl-gdgraph=1.54    # for PNG graphs
+  - perl-gdtextutil=0.86 # for PNG graphs

@@ -1,0 +1,3 @@
+sample_name	sample_id	read_1	read_2	indexes	primers	comment
+SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads	sample_test .test/SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq	.test/SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq	na	artic_v4	nd
+SampleName	OTHER	SampleName_S1_L001_R1_001.fastq.gz	SampleName_S1_L001_R2_001.fastq.gz	na	na	nd

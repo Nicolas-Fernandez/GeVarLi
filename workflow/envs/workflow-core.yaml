@@ -5,7 +5,9 @@ channels:
   - nodefaults
 dependencies:
   - snakemake=8.27.1
-  - snakedeploy
+  - snakedeploy=0.10.3
   - snakemake-executor-plugin-slurm
+  - snakemake-interface-report-plugins
+  - snakemake-interface-storage-plugins
   - graphviz=12.0.0
   - yq=3.4.3

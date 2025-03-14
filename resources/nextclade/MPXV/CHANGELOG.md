@@ -1,3 +1,13 @@
+## 2024-11-19T14:18:53Z
+
+- 11 newly designated B.1 sublineages are now included. See <https://github.com/mpxv-lineages/lineage-designation/pull/45> for details.
+- Newly shared sequences are now included
+
+## 2024-08-27T21:28:04Z
+
+- Clade Ia and clade Ib are now distinguished
+- Sequences shared via Genbank since 2024 have been added
+
 ## 2024-04-19T07:50:39Z
 
 - New hMPXV-1 lineages B.1.21, B.1.22, and C.1.1 are now included in the dataset. For more information on these lineages, see the [hMPXV-1 lineage definitions PR](https://github.com/mpxv-lineages/lineage-designation/pull/37)

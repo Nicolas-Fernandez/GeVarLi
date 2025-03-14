@@ -1,51 +1,31 @@
-###############################################################################
-############################### QUALITY CONTROL ###############################
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __( ___( \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__(_)\_(____(____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name ___________________ quality_controls.smk
+# Version ________________ v.2025.01
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Perform Illumina reads quality controls
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2025.03.12
+# Use ____________________ snakemake -s Snakefile --use-conda -j
 ###############################################################################
 
 ###############################################################################
-rule multiqc_reports_aggregation:
-    # Aim: aggregates bioinformatics analyses results into a single report
-    # Use: multiqc [OPTIONS] --output [MULTIQC/] [FASTQC/] [MULTIQC/]
-    priority: 999 # Explicit high priority
-    message:
-        """
-        ~ MultiQC ∞ Aggregat HTML Qualities Reports ~
-        """
-    conda:
-        MULTIQC
-    params:
-        #config = MQC_CONFIG,
-        #tag = TAG
-    input:
-        fastqc = expand("results/00_Quality_Control/fastqc/{fastq}/",
-                        fastq = FASTQ),
-        fastq_screen = expand("results/00_Quality_Control/fastq-screen/{fastq}/",
-                             fastq = FASTQ)
-    output:
-        multiqc = directory("results/00_Quality_Control/multiqc/")
-    log:
-        "results/10_Reports/tools-log/multiqc.log"
-    shell:
-        "multiqc "                  # Multiqc, searches in given directories for analysis & compiles a HTML report
-        "--quiet "                   # -q: Only show log warning
-        "--no-ansi "                 # Disable coloured log
-        #"--config {params.config} "  # Specific config file to load
-        #"--tag {params.tag} "        # Use only modules which tagged with this keyword
-        #"--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
-        "--export "                  # Export plots as static images in addition to the report
-        "--outdir {output.multiqc} " # -o: Create report in the specified output directory
-        "{input.fastqc} "            # Input FastQC files
-        "{input.fastq_screen} "      # Input Fastq-Screen
-        "&> {log}"                   # Log redirection
-
-###############################################################################
-rule fastqscreen_contamination_checking:
+rule fastqscreen_contamination_check:
     # Aim: screen if the composition of the library matches with  what you expect
     # Use fastq_screen [OPTIONS] --outdir [DIR/] [FASTQ.GZ]
     message:
         """
         ~ Fasts-Screen ∞ Screen Contamination ~
-        Fastq: __________ {wildcards.fastq}
+        Sample: __________ {wildcards.sample}
+        Reads: ___________ R{wildcards.mate} 
         """
     conda:
         FASTQ_SCREEN
@@ -55,11 +35,11 @@ rule fastqscreen_contamination_checking:
         config = FQC_CONFIG,
         subset = SUBSET
     input:
-        fastq = "resources/symlinks/{fastq}.fastq.gz"
+        fastq = "results/symlinks/{sample}_R{mate}.fastq.gz"
     output:
-        fastq_screen = directory("results/00_Quality_Control/fastq-screen/{fastq}/")
+        fastq_screen = directory("results/00_Quality_Control/fastq-screen/{sample}_R{mate}/")
     log:
-        "results/10_Reports/tools-log/fastq-screen/{fastq}.log"
+        "results/10_Reports/tools-log/fastq-screen/{sample}_R{mate}.log"
     shell:
         "fastq_screen "                  # FastqScreen, what did you expect ?
         "-q "                             # --quiet: Only show log warning
@@ -78,18 +58,19 @@ rule fastqc_quality_control:
     message:
         """
         ~ FastQC ∞ Quality Control ~
-        Fastq: __________ {wildcards.fastq}
+        Sample: __________ {wildcards.sample}
+        Reads: ___________ R{wildcards.mate}
         """
     conda:
         FASTQC
     resources:
         cpus = CPUS
     input:
-        fastq = "resources/symlinks/{fastq}.fastq.gz"
+        fastq = "results/symlinks/{sample}_R{mate}.fastq.gz"
     output:
-        fastqc = directory("results/00_Quality_Control/fastqc/{fastq}/")
+        fastqc = directory("results/00_Quality_Control/fastqc/{sample}_R{mate}/")
     log:
-        "results/10_Reports/tools-log/fastqc/{fastq}.log"
+        "results/10_Reports/tools-log/fastqc/{sample}_R{mate}.log"
     shell:
         "mkdir -p {output.fastqc} "    # (*) this directory must exist as the program will not create it
         "2> /dev/null && "             # in silence and then... 

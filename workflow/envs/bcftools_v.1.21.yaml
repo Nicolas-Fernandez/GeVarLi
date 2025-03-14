@@ -1,0 +1,7 @@
+name: bcftools_v.1.21
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - bcftools=1.21
