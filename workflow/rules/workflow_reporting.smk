@@ -30,7 +30,10 @@ rule snakemake_report:
     params:
         #style_sheet = STYLE_SHEET
     input:
-        final_outputs = get_final_outputs()
+        final_outputs = get_final_outputs(),
+        summary = "results/10_Reports/snakemake/files-summary.txt",
+        #graph = "results/10_Reports/snakemake/{graph_type}.{ext}",
+        multiqc = "results/10_Reports/multiqc/",
     output:
         report = "results/10_Reports/snakemake/workflow-report.html"
     log:
