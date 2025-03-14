@@ -1,5 +1,20 @@
-###############################################################################
-################################## STATISTICS #################################
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __( ___( \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__(_)\_(____(____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name ___________________ coverage_stats.smk
+# Version ________________ v.2025.01
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Compute Genome Coverage Statistics from BED file
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2025.03.12
+# Use ____________________ snakemake -s Snakefile --use-conda -j
 ###############################################################################
 
 ###############################################################################
@@ -11,21 +26,21 @@ rule awk_coverage_statistics:
         ~ Awk ∞ Compute Genome Coverage Statistics from BED file ~
         Sample: __________ {wildcards.sample}
         Reference: _______ {wildcards.reference}
-        Aligner: _________ {wildcards.aligner}
+        Mapper: __________ {wildcards.mapper}
         """
     conda:
         GAWK
     input:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
-        samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_mark-dup.log",
-        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.json",
-        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt",
-        genome_cov = "results/02_Mapping/{reference}/{sample}_{aligner}_genome-cov.bed"
+        samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_mark-dup.log",
+        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{mapper}_flagstat.json",
+        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{mapper}_coverage-histogram.txt",
+        genome_cov = "results/02_Mapping/{reference}/{sample}_{mapper}_genome-cov.bed"
     output:
-        cov_stats = "results/03_Coverage/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.tsv"
+        cov_stats = "results/03_Coverage/{reference}/{sample}_{mapper}_{min_cov}X_coverage-stats.tsv"
     log:
-        "results/10_Reports/tools-log/awk/{reference}/{sample}_{aligner}_{min_cov}X_coverage-stats.log"
+        "results/10_Reports/tools-log/awk/{reference}/{sample}_{mapper}_{min_cov}X_coverage-stats.log"
     shell:
         r""" rawReads=$(grep -o -E  """                                  # Get raw reads 
         r""" 'Total read pairs processed:.+' {input.cutadapt}  """       #
@@ -91,7 +106,7 @@ rule awk_coverage_statistics:
         r""" "duplicated_percent_%","\t", """                            # header:
         r""" "estimated_library_size*", "\t", """                        # header:
         r""" "samtools_pairs_PF", "\t", """                              # header:
-        r""" "mapped_with", "\t",  """                                   # header: aligner
+        r""" "mapped_with", "\t",  """                                   # header: mapper
         r""" "mapped_on", "\t",  """                                     # header: reference
         r""" "mapped_reads", "\t", """                                   # header:
         r""" "mapped_percent_%", "\t", """                               # header:
@@ -109,7 +124,7 @@ rule awk_coverage_statistics:
         r""" int(((totalDuplicate)/(rawReads*2))*100), "%", "\t", """    # value: (divided by 2 to estimated pairs)
         r""" estimatedLibrarySize, "\t", """                             # value:
         r""" samtoolsPF, "\t", """                                       # value:
-        r""" "{wildcards.aligner}", "\t",  """                           # value: aligner
+        r""" "{wildcards.mapper}", "\t",  """                           # value: mapper
         r""" "{wildcards.reference}", "\t",  """                         # value: reference
         r""" mappedReads, "\t", """                                      # value:
         r""" mappedPercentReads, "%", "\t", """                          # value:
@@ -132,7 +147,7 @@ rule bedtools_genome_coverage:
         ~ BedTools ∞ Compute Genome Coverage ~
         Sample: __________ {wildcards.sample}
         Reference: _______ {wildcards.reference}
-        Aligner: _________ {wildcards.aligner}
+        Mapper: _________ {wildcards.mapper}
         """
     conda:
         BEDTOOLS
@@ -140,9 +155,9 @@ rule bedtools_genome_coverage:
         mark_dup = get_bam_input,
         index = get_bai_input
     output:
-        genome_cov = "results/02_Mapping/{reference}/{sample}_{aligner}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{reference}/{sample}_{mapper}_genome-cov.bed"
     log:
-        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{aligner}_genome-cov.log"
+        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{mapper}_genome-cov.log"
     shell:
         "bedtools genomecov "    # Bedtools genomecov, compute the coverage of a feature file among a genome
         "-bga "                   # Report depth in BedGraph format, regions with zero coverage are also reported
@@ -159,7 +174,7 @@ rule samtools_coverage_histogram:
         ~ SamTools ∞ Calcul Depth and Coverage from BAM file ~
         Sample: __________ {wildcards.sample}
         Reference: _______ {wildcards.reference}
-        Aligner: _________ {wildcards.aligner}
+        Mapper: _________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -170,9 +185,9 @@ rule samtools_coverage_histogram:
     input:
         mark_dup = get_bam_input
     output:
-        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{aligner}_coverage-histogram.txt"
+        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{mapper}_coverage-histogram.txt"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_coverage-histogram.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_coverage-histogram.log"
     shell:
         "samtools coverage "          # Samtools coverage, tools for alignments in the SAM format with command to alignment depth and percent coverage
         "--histogram "                 # -m: show histogram instead of tabular output
@@ -197,7 +212,7 @@ rule samtools_flagstat_ext:
         ~ SamTools ∞ Calcul simple Stats from BAM file ~
         Sample: __________ {wildcards.sample}
         Reference: _______ {wildcards.reference}
-        Aligner: _________ {wildcards.aligner}
+        Mapper: _________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -206,9 +221,9 @@ rule samtools_flagstat_ext:
     input:
         mark_dup = get_bam_input
     output:
-        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{aligner}_flagstat.{ext}"
+        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{mapper}_flagstat.{ext}"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{aligner}_flagstat-{ext}.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_flagstat-{ext}.log"
     shell:
         "samtools flagstat "           # Samtools flagstat, tools for alignments in the SAM format with command to simple stat
         "--threads {resources.cpus} "   # -@: Number of additional threads to use (default: 1)

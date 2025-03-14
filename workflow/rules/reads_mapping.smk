@@ -1,5 +1,20 @@
-###############################################################################
-################################### MAPPING ###################################
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __( ___( \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__(_)\_(____(____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name ___________________ reads_mapping.smk
+# Version ________________ v.2025.01
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Map Illumina reads on virus reference genomes
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2025.03.12
+# Use ____________________ snakemake -s Snakefile --use-conda -j
 ###############################################################################
 
 ###############################################################################
@@ -11,7 +26,7 @@ rule minimap2_mapping:
         ~ Minimap2 ∞ Map Reads ~
         Sample: __________ {wildcards.sample}
         Reference: _______ {wildcards.reference}
-        Aligner: _________ MiniMap2
+        Mapper: __________ MiniMap2
         """
     conda:
         MINIMAP2
@@ -22,8 +37,8 @@ rule minimap2_mapping:
         #length = LENGTH
     input:
         mm2_indexes = "resources/indexes/minimap2/{reference}.mmi",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"
     output:
         mapped = temp("results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam")
     log:
@@ -63,8 +78,8 @@ rule bwa_mapping:
         cpus = CPUS
     input:
         bwa_indexes = "resources/indexes/bwa/{reference}",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"
     output:
         mapped = temp("results/02_Mapping/{reference}/{sample}_bwa-mapped.sam")
     log:
@@ -98,8 +113,8 @@ rule bowtie2_mapping:
         sensitivity = BT2_SENSITIVITY
     input:
         bt2_indexes = "resources/indexes/bowtie2/{reference}",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_sickle-trimmed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"
     output:
         mapped = temp("results/02_Mapping/{reference}/{sample}_bowtie2-mapped.sam")
     log:

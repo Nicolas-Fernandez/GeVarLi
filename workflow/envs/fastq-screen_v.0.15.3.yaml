@@ -1,8 +1,0 @@
-name: fastq-screen_v.0.15.3
-channels:
-  - conda-forge
-  - bioconda
-  - nodefaults
-dependencies:
-  - fastq-screen=0.15.3
-  - bwa=0.7.18 # default fastq-screen conf in GeVarLi

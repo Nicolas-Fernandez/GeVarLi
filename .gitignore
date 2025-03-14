@@ -16,6 +16,9 @@ Thumbs.db
 # Ignore local snakemake (include .snakemake/conda/)
 .snakemake
 
+# Ignore .pyc
+__pycache__
+
 # Ignore fasta indexes
 *.fai
 
