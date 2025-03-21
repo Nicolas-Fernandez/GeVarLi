@@ -50,14 +50,14 @@ rule snakemake_report:
         """
         ~ Report ∞ Generate a workflow report in HTML format ~
         """
-    conda:
-        WORKFLOW
+    #conda:
+    #    WORKFLOW
     params:
         #style_sheet = STYLE_SHEET
     input:
         multiqc = "results/10_Reports/multiqc/",
         time = "results/10_Reports/time.log",
-        summary = "results/10_Reports/files-summary.txt",
+        summary = "results/10_Reports/files-summary.tsv",
         graph = expand("results/10_Reports/graphs/{graph_type}.{ext}",
             graph_type = GRAPH_TYPE,
             ext = GRAPH_EXT),
@@ -85,7 +85,7 @@ rule snakemake_summary:
     input:
         final_outputs = get_final_outputs()
     output:
-        summary = "results/10_Reports/files-summary.txt"
+        summary = "results/10_Reports/files-summary.tsv"
     log:
         "results/10_Reports/tools-log/files-summary.log"
     shell:
@@ -166,51 +166,26 @@ rule log_time:
     output:
         time_log = "results/10_Reports/time.log"
     run:
-        time_stamp_start = time.strftime("%Y-%m-%d %H:%M", time.localtime(start_time)) # Get system: analyzes starting time
-        time_stamp_end = time.strftime("%Y-%m-%d %H:%M", time.localtime())             # Get date / hour ending analyzes
-        elapsed_time = int(time.time() - start_time) # Get SECONDS counter
-        hours = elapsed_time // 3600                 # /3600 = hours
-        minutes = (elapsed_time % 3600) // 60        # %3600 /60 = minutes
-        seconds = elapsed_time % 60                  # %60 = seconds
-        formatted_time = f"{hours:02d}:{minutes:02d}:{seconds:02d}" # Format
-        green = "\033[32m" # ANSI green color code
-        ylo = "\033[33m"   # ANSI yellow color code
-        nc = "\033[0m"     # ANSI no-color code
+        time_stamp_start = time.strftime("%Y-%m-%d %H:%M", time.localtime(START_TIME))
+        time_stamp_end = time.strftime("%Y-%m-%d %H:%M", time.localtime())
+        elapsed_time = int(time.time() - START_TIME)
+        hours = elapsed_time // 3600
+        minutes = (elapsed_time % 3600) // 60
+        seconds = elapsed_time % 60
+        formatted_time = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+        green = "\033[32m"
+        ylo = "\033[33m"
+        nc = "\033[0m"
         message_time = f"""
 {green}Start time{nc} _____________ {time_stamp_start}
 {green}End time{nc} _______________ {time_stamp_end}
 {green}Processing time{nc} ________ {ylo}{formatted_time}{nc}
 """
-        print(message_time) # Print time message
-        ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]') # ANSI escape code
-        message_clean = ansi_escape.sub('', message_time) # Clean ANSI escape code
-        with open(output.time_log, "w") as f: # Log time message
+        print(message_time)
+        ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+        message_clean = ansi_escape.sub('', message_time)
+        with open(output.time_log, "w") as f:
             f.write(message_clean)
-
-###############################################################################
-rule log_setup:
-    # Aim: log user setup
-    # Use:
-    message:
-        """
-        ~ Log ∞ User setup ~
-        """
-    input:
-        setup = "config/config.yaml",
-    output:
-        setup_log = "results/10_Reports/setup.log"
-    run:
-        import subprocess
-        uname = subprocess.check_output(["uname", "-a"]).decode().strip()
-        fastq_dir = subprocess.check_output(["yq", "-Mr", ".fastq_dir", input.setup]).decode().strip()
-        try:
-            fastq_files = subprocess.check_output(["bash", "-c", "ls -1 {}/*.fastq.gz 2>/dev/null | wc -l".format(fastq_dir)]).decode().strip()
-        except Exception:
-            fastq_files = "0"
-        with open(output.setup_log, "w") as f:
-            f.write("OS info: " + uname + "\n")
-            f.write("Fastq directory: " + fastq_dir + "\n")
-            f.write("Number of fastq files: " + fastq_files + "\n")
 
 ###############################################################################
 rule log_environments:
