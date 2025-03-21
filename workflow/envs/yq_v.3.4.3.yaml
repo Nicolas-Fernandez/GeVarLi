@@ -1,0 +1,7 @@
+name: yq
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - yq=3.4.3

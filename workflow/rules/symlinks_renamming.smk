@@ -18,6 +18,25 @@
 ###############################################################################
 
 ###############################################################################
+rule config:
+    # Aim: Load configuration file
+    # Use: yq -r . <CONFIG_FILE>
+    message:
+        """
+        ~ Configuration ∞ Show analyses settings ~
+        """
+    conda:
+        WORKFLOW
+    input:
+        config_file = "config/config.yaml"
+    output:
+        done = temp("done.temp")
+    shell:
+        "bash workflow/scripts/settings.sh "
+        "&& "
+        "touch {output.done}"
+
+###############################################################################
 rule symlinks:
     # Aim: Create fastq files symlinks
     # Use: ln -s <SOURCE> <LINK>
@@ -28,7 +47,8 @@ rule symlinks:
         Reads: ___________ R{wildcards.mate}
         """
     input:
-        valid_fastq = lambda wildcards: os.path.abspath(VALID_FASTQ[wildcards.sample][wildcards.mate])
+        valid_fastq = lambda wildcards: os.path.abspath(VALID_FASTQ[wildcards.sample][wildcards.mate]),
+        done = "done.temp"
     output:
         symlink = temp("results/symlinks/{sample}_R{mate}.fastq.gz")
     log:
