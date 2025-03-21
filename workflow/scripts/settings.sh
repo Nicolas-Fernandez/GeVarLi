@@ -24,7 +24,7 @@
 #############
 
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )"/../../ && pwd) # Get working directory
-version=$(<${workdir}/VERSION_temp.txt)                # Get version
+version=$(<${workdir}/VERSION.txt)                # Get version
 
 blue="\033[1;34m"  # blue
 green="\033[1;32m" # green
