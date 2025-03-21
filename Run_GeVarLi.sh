@@ -63,6 +63,7 @@ else # If yes, intern shell source conda
     source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
     source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
     source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
+fi
 
 ###############################################################################
 ### SPINNER ###
@@ -195,7 +196,7 @@ snakemake \
 echo -e "\n ${green} > Snakemake: run${nc} \n"
 snakemake \
     --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/Snakefile\
+    --snakefile ${workdir}/workflow/Snakefile \
     --cores ${max_threads} \
     --resources mem_gb=${max_memory} \
     --rerun-incomplete \

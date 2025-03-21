@@ -172,7 +172,8 @@ def get_final_outputs():
                                 caller = CALLER,
                                 assigner = ASSIGNER))
     # logs
-    final_outputs.append("results/10_Reports/setup.log")
+    #final_outputs.append("results/10_Reports/setup.log")
+    final_outputs.append("results/10_Reports/settings.log")
     final_outputs.append("results/10_Reports/config.log")
     final_outputs.append("results/10_Reports/envs/")
     # return final_outpus
