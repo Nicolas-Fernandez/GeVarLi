@@ -28,6 +28,8 @@ configfile: "config/config.yaml"
 #################
 
 # Imports
+import time, re
+
 from snakemake.utils import min_version
 from snakemake.utils import validate
 
@@ -41,6 +43,7 @@ FASTQ_DIR = config["fastq_dir"]
 VALID_FASTQ = get_valid_fastq(FASTQ_DIR)
 SAMPLE = list(VALID_FASTQ.keys())
 MATE = ["1", "2"]
+START_TIME = time.time()
 
 # Exports
 import scripts.functions as functions
@@ -60,7 +63,7 @@ functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extent
 min_version("8.27.0")
 
 # Schemas
-#validate(config, schema="schemas/config.schema.yaml")
+validate(config, schema="schemas/config.schema.yaml")
 
 ###############################################################################
 ### WILDCARDS ###
@@ -81,9 +84,9 @@ TMP_DIR = config["resources"]["tmp_dir"] # Temporary directory
 ### ENVIRONMENTS ###
 ####################
 
-MULTIQC = config["envs"]["multiqc"]           # Multi-QC conda env
-FASTQ_SCREEN = config["envs"]["fastq_screen"] # Fastq-Screen conda env
-FASTQC= config["envs"]["fastqc"]              # FastQC conda env
+YQ = config["envs"]["yq"]                     # YQ conda environment
+FASTQ_SCREEN = config["envs"]["fastq_screen"] # Fastq-Screen conda environment
+FASTQC= config["envs"]["fastqc"]              # FastQC conda environment
 CUTADAPT = config["envs"]["cutadapt"]         # Cutadapt conda environment
 SICKLE_TRIM = config["envs"]["sickle_trim"]   # Sickle-Trim conda environment
 MINIMAP2 = config["envs"]["minimap2"]         # BWA conda environment
@@ -91,14 +94,15 @@ BWA = config["envs"]["bwa"]                   # BWA conda environment
 BOWTIE2 = config["envs"]["bowtie2"]           # Bowtie2 conda environment
 SAMTOOLS = config["envs"]["samtools"]         # SamTools conda environment
 BEDTOOLS = config["envs"]["bedtools"]         # BedTools conda environment
-BAMCLIPPER = config["envs"]["bamclipper"]     # BAMClipper
+BAMCLIPPER = config["envs"]["bamclipper"]     # BAMClipper onda environment
 GAWK = config["envs"]["gawk"]                 # Awk (GNU) conda environment
 IVAR = config["envs"]["ivar"]                 # iVar conda environment
 TSV2VCF = config["envs"]["tsv2vcf"]           # tsv2vcf conda environment
 BCFTOOLS = config["envs"]["bcftools"]         # BcfTools conda environment
 PANGOLIN = config["envs"]["pangolin"]         # Pangolin conda environment
 NEXTCLADE = config["envs"]["nextclade"]       # Nextclade conda environment
-WORKFLOW = config["envs"]["workflow"]         # Workflow conda environment  
+MULTIQC = config["envs"]["multiqc"]           # Multi-QC conda environment
+WORKFLOW = config["envs"]["workflow"]         # Workflow conda environment
 
 ###############################################################################
 ### PARAMETERS ###
@@ -196,6 +200,6 @@ include: "rules/workflow_reporting.smk"
 
 rule all:
     input:
-        report = "results/10_Reports/snakemake/workflow-report.html"
+        tarball = "results/Reports_archive.tar.gz"
 
 ###############################################################################

@@ -1,0 +1,378 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "GeVarLi Configuration Schema"
+type: object
+required:
+  - fastq_dir
+  - modules
+  - consensus
+  - gisaid
+  - nextclade
+  - ivar
+  - bamclipper
+  - bwa
+  - bowtie2
+  - minimap2
+  - sickle_trim
+  - cutadapt
+  - multiqc
+  - fastq_screen
+  - rename
+  - resources
+  - envs
+  - report
+properties:
+  fastq_dir:
+    type: string
+
+  modules:
+    type: object
+    required:
+      - qualities
+      - keeptrim
+      - clipping
+      - covstats
+      - consensus
+      - lineages
+      - gisaid
+    properties:
+      qualities:
+        type: boolean
+      keeptrim:
+        type: boolean
+      clipping:
+        type: boolean
+      covstats:
+        type: boolean
+      consensus:
+        type: boolean
+      lineages:
+        type: boolean
+      gisaid:
+        type: boolean
+
+  consensus:
+    type: object
+    required:
+      - reference
+      - min_cov
+      - min_freq
+      - iupac
+      - mapper
+      - caller
+      - assigner
+    properties:
+      reference:
+        type: string
+      min_cov:
+        type: string
+      min_freq:
+        type: string
+      iupac:
+        type: string
+      mapper:
+        type: string
+      caller:
+        type: string
+      assigner:
+        type: string
+
+  gisaid:
+    type: object
+    required:
+      - username
+      - threshold
+      - name
+      - country
+      - identifier
+      - year
+    properties:
+      username:
+        type: string
+      threshold:
+        type: string
+      name:
+        type: string
+      country:
+        type: string
+      identifier:
+        type: string
+      year:
+        type: string
+
+  nextclade:
+    type: object
+    required:
+      - path
+      - dataset
+    properties:
+      path:
+        type: string
+      dataset:
+        type: string
+
+  ivar:
+    type: object
+    required:
+      - max_depth
+      - min_bq
+      - min_qual
+      - map_qual
+    properties:
+      max_depth:
+        type: string
+      min_bq:
+        type: string
+      min_qual:
+        type: string
+      map_qual:
+        type: string
+
+  bamclipper:
+    type: object
+    required:
+      - path
+      - primers
+      - upstream
+      - downstream
+    properties:
+      path:
+        type: string
+      primers:
+        type: string
+      upstream:
+        type: string
+      downstream:
+        type: string
+
+  bwa:
+    type: object
+    required:
+      - algorithm
+    properties:
+      algorithm:
+        type: string
+
+  bowtie2:
+    type: object
+    required:
+      - algorithm
+      - sensitivity
+    properties:
+      algorithm:
+        type: string
+      sensitivity:
+        type: string
+
+  minimap2:
+    type: object
+    required:
+      - preset
+      - algorithm
+    properties:
+      preset:
+        type: string
+      algorithm:
+        type: object
+        required:
+          - "k-mer_size"
+          - minimizer_size
+          - split_size
+          - homopolymer
+        properties:
+          "k-mer_size":
+            type: string
+          minimizer_size:
+            type: string
+          split_size:
+            type: string
+          homopolymer:
+            type: string
+
+  sickle_trim:
+    type: object
+    required:
+      - quality
+      - length
+      - command
+      - encoding
+    properties:
+      quality:
+        type: string
+      length:
+        type: string
+      command:
+        type: string
+      encoding:
+        type: string
+
+  cutadapt:
+    type: object
+    required:
+      - clipping
+      - length
+      - kits
+    properties:
+      clipping:
+        type: string
+      length:
+        type: string
+      kits:
+        type: object
+        required:
+          - truseq
+          - nextera
+          - small
+        properties:
+          truseq:
+            type: string
+          nextera:
+            type: string
+          small:
+            type: string
+
+  multiqc:
+    type: object
+    required:
+      - path
+      - config
+      - tag
+    properties:
+      path:
+        type: string
+      config:
+        type: string
+      tag:
+        type: string
+
+  fastq_screen:
+    type: object
+    required:
+      - config
+      - subset
+      - reference
+    properties:
+      config:
+        type: string
+      subset:
+        type: string
+      reference:
+        type: array
+        items:
+          type: string
+
+  rename:
+    type: object
+    required:
+      - barcode_id
+      - line_id
+      - end_id
+    properties:
+      barcode_id:
+        type: boolean
+      line_id:
+        type: boolean
+      end_id:
+        type: boolean
+
+  resources:
+    type: object
+    required:
+      - cpus
+      - ram
+      - tmp_dir
+    properties:
+      cpus:
+        type: string
+      ram:
+        type: string
+      tmp_dir:
+        type: string
+
+  envs:
+    type: object
+    required:
+      - bamclipper
+      - bcftools
+      - bedtools
+      - bowtie2
+      - bwa
+      - cutadapt
+      - fastq_screen
+      - fastqc
+      - gawk
+      - ivar
+      - minimap2
+      - multiqc
+      - nextclade
+      - pangolin
+      - samtools
+      - sickle_trim
+      - tsv2vcf
+      - workflow
+    properties:
+      bamclipper:
+        type: string
+      bcftools:
+        type: string
+      bedtools:
+        type: string
+      bowtie2:
+        type: string
+      bwa:
+        type: string
+      cutadapt:
+        type: string
+      fastq_screen:
+        type: string
+      fastqc:
+        type: string
+      gawk:
+        type: string
+      ivar:
+        type: string
+      minimap2:
+        type: string
+      multiqc:
+        type: string
+      nextclade:
+        type: string
+      pangolin:
+        type: string
+      samtools:
+        type: string
+      sickle_trim:
+        type: string
+      tsv2vcf:
+        type: string
+      workflow:
+        type: string
+
+  report:
+    type: object
+    required:
+      - stat
+      - graph
+    properties:
+      stat:
+        type: object
+        required:
+          - extention
+        properties:
+          extention:
+            type: array
+            items:
+              type: string
+      graph:
+        type: object
+        required:
+          - type
+          - extention
+        properties:
+          type:
+            type: array
+            items:
+              type: string
+          extention:
+            type: array
+            items:
+              type: string

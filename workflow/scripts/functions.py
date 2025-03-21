@@ -171,7 +171,11 @@ def get_final_outputs():
                                 min_cov = MIN_COV,
                                 caller = CALLER,
                                 assigner = ASSIGNER))
-    # final_outpus
+    # logs
+    final_outputs.append("results/10_Reports/setup.log")
+    final_outputs.append("results/10_Reports/config.log")
+    final_outputs.append("results/10_Reports/envs/")
+    # return final_outpus
     return final_outputs
 
 ###############################################################################

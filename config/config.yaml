@@ -25,13 +25,13 @@
 fastq_dir: 'resources/reads/' # Path to reads fastq.gz files (default: 'resources/reads/') [PATH]
 
 modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
-  qualities: true   # Perform reads quality controls (FastQC, Fastq-Screen)        (default: true)
-  keeptrim: false # Keep trimmed reads files (Cutadapt / Sickle-trim)           (default: false)
-  clipping: false # Perform reads clipping (Bamclipper)                         (default: false)
-  covstats: true  # Perform coverage statistics (Fagstat, Covstats)             (default: true)
-  consensus: true # Perform reads mapping to reference (BWA, Minimap2, Bowtie2) (default: true)
-  lineages: true     # Perform clade and lineage assignations (Nexclade, Pangolin) (default: true)
-  gisaid: false   # Perform gisaid submission template (GisAid : TODO)          (default: false)
+  qualities: true   # Perform reads quality controls (FastQC, Fastq-Screen)       (default: true)
+  keeptrim: false   # Keep trimmed reads files (Cutadapt / Sickle-trim)           (default: false)
+  clipping: false   # Perform reads clipping (Bamclipper)                         (default: false)
+  covstats: true    # Perform coverage statistics (Fagstat, Covstats)             (default: true)
+  consensus: true   # Perform reads mapping to reference (BWA, Minimap2, Bowtie2) (default: true)
+  lineages: true    # Perform clade and lineage assignations (Nexclade, Pangolin) (default: true)
+  gisaid: false     # Perform gisaid submission template (GisAid : TODO)          (default: false)
 
 consensus:
   reference: 'SARS-CoV-2_Wuhan_MN908947.3' # Your reference, in fasta format (default: 'SARS-CoV-2_Wuhan_MN-908947-3') [STR]
@@ -336,6 +336,7 @@ envs: # Conda environement yaml files:
   sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
   tsv2vcf:       '../envs/tsv2vcf_v.2025.01.yaml'       # tsv2vcf       ver. 2025.01 (biopython=1.85 numpy=2.2.2 scipy=1.15.1)
   workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.01 (snakemake=8.27.1 graphviz=12.0.0)
+  yq:            '../envs/yq_v.3.4.3.yaml'              # yq            ver. 3.4.3
 
 report: # Snakemake reports formats
   stat:
