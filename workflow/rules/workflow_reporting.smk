@@ -8,39 +8,14 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ workflow_reporting.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Generate workflow reports
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
-
-
-
-###############################################################################
-
-###############################################################################
-rule tar_reports:
-    # Aim: compresses reports into a tarball
-    # Use: tar -zcf 10_Reports_archive.tar.gz 10_Reports/
-    message:
-        """
-        ~ Archive ∞ Compress reports ~
-        """
-    input:
-        html_report = "results/10_Reports/workflow-report.html"
-    output:
-        tarball = "results/Reports_archive.tar.gz"
-    shell:
-        "tar "                     # Tar command
-        "-z "                       # Gzip compression
-        "-c "                       # Create a new archive
-        "-f "                       # Use archive file or device ARCHIVE
-        "{output.tarball} "         # Output archive
-        "-C results/ "              # Change to directory 'results/'
-        "10_Reports/"               # Input directory to compress
 
 ###############################################################################
 rule snakemake_report:
@@ -50,13 +25,12 @@ rule snakemake_report:
         """
         ~ Report ∞ Generate a workflow report in HTML format ~
         """
-    #conda:
-    #    WORKFLOW
+    conda:
+        WORKFLOW
     params:
         #style_sheet = STYLE_SHEET
     input:
         multiqc = "results/10_Reports/multiqc/",
-        time = "results/10_Reports/time.log",
         summary = "results/10_Reports/files-summary.tsv",
         graph = expand("results/10_Reports/graphs/{graph_type}.{ext}",
             graph_type = GRAPH_TYPE,
@@ -71,28 +45,6 @@ rule snakemake_report:
         #"--report-stylesheet {params.style_sheet} " # Custom stylesheet to use for report
         " {output.html_report} " # Output report
         "2> {log}"               # Log redirection
-
-###############################################################################
-rule snakemake_summary:
-    # Aim: generates a workflow summary in txt format
-    # Use: snakemake --summary
-    message:
-        """
-        ~ Summary ∞ Generate a files summary in txt format ~
-        """
-    conda:
-        WORKFLOW
-    input:
-        final_outputs = get_final_outputs()
-    output:
-        summary = "results/10_Reports/files-summary.tsv"
-    log:
-        "results/10_Reports/tools-log/files-summary.log"
-    shell:
-        "snakemake "          # Snakemake
-        "--summary "           # Print a summary of all files created by the workflow
-        "1> {output.summary} " # Output files summary
-        "2> {log}"             # Log redirection
 
 ###############################################################################
 rule snakemake_graph:
@@ -117,6 +69,28 @@ rule snakemake_graph:
         "| dot -T{wildcards.ext} "  # Formats: 'png', 'svg', 'pdf'
         "1> {output.graph} "        # Output graph
         "2> {log}"                  # Log redirection
+
+###############################################################################
+rule snakemake_summary:
+    # Aim: generates a workflow summary in txt format
+    # Use: snakemake --summary
+    message:
+        """
+        ~ Summary ∞ Generate a files summary in txt format ~
+        """
+    conda:
+        WORKFLOW
+    input:
+        final_outputs = get_final_outputs()
+    output:
+        summary = "results/10_Reports/files-summary.tsv"
+    log:
+        "results/10_Reports/tools-log/files-summary.log"
+    shell:
+        "snakemake "          # Snakemake
+        "--summary "           # Print a summary of all files created by the workflow
+        "1> {output.summary} " # Output files summary
+        "2> {log}"             # Log redirection
 
 ###############################################################################
 rule multiqc_aggregation:
@@ -154,70 +128,4 @@ rule multiqc_aggregation:
         "2> /dev/null"               # Suppress error messages
 
 ###############################################################################
-rule log_time:
-    # Aim: log workflow start and end time
-    # Use: date +"%Y-%m-%d %H:%M"
-    message:
-        """
-        ~ Log ∞ Workflow time ~
-        """
-    input:
-        final_outputs = get_final_outputs()
-    output:
-        time_log = "results/10_Reports/time.log"
-    run:
-        time_stamp_start = time.strftime("%Y-%m-%d %H:%M", time.localtime(START_TIME))
-        time_stamp_end = time.strftime("%Y-%m-%d %H:%M", time.localtime())
-        elapsed_time = int(time.time() - START_TIME)
-        hours = elapsed_time // 3600
-        minutes = (elapsed_time % 3600) // 60
-        seconds = elapsed_time % 60
-        formatted_time = f"{hours:02d}:{minutes:02d}:{seconds:02d}"
-        green = "\033[32m"
-        ylo = "\033[33m"
-        nc = "\033[0m"
-        message_time = f"""
-{green}Start time{nc} _____________ {time_stamp_start}
-{green}End time{nc} _______________ {time_stamp_end}
-{green}Processing time{nc} ________ {ylo}{formatted_time}{nc}
-"""
-        print(message_time)
-        ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-        message_clean = ansi_escape.sub('', message_time)
-        with open(output.time_log, "w") as f:
-            f.write(message_clean)
-
-###############################################################################
-rule log_environments:
-    # Aim: copy conda environments files to results
-    # Use: cp workflow/envs/*.yaml results/10_Reports/envs/
-    message:
-        """
-        ~ Log ∞ Workflow environments ~
-        """
-    input:
-        envs = "workflow/envs"
-    output:
-        envs_log = directory("results/10_Reports/envs/")
-    shell:
-        "mkdir -p {output.envs_log} && "            # Create directory
-        "cp {input.envs}/*.yaml {output.envs_log} " # Copy envs files
-        "2> /dev/null"                              # Suppress error messages
-
-###############################################################################
-rule log_config:
-    # Aim: copy settings file to results
-    # Use: cp config/config.yaml results/10_Reports/config.log
-    message:
-        """
-        ~ Log ∞ Workflow configuration ~
-        """
-    input:
-        config = "config/config.yaml"
-    output:
-        config_log = "results/10_Reports/config.log"
-    shell:
-        "cp {input.config} {output.config_log} " # Copy config file
-        "2> /dev/null"                           # Suppress error messages
-
 ###############################################################################

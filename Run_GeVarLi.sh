@@ -10,12 +10,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Run_GeVarLi.sh
-# Version ________________ v.2025.03
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Bash script running GeVarLi snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
+# Latest modifications ___ 2025.04.04
 # Use ____________________ '. Run_GeVarLi.sh'
 ###############################################################################
 
@@ -106,28 +106,28 @@ then # If 'exist'
     ENV_YAML="${workdir}/workflow/envs/workflow-core.yaml"
     CURRENT_ENV=$(conda env export --no-builds --name workflow-core | grep -v '^prefix:')
     EXPECTED_ENV=$(grep -v '^prefix:' "$ENV_YAML")
-    if false #diff <(echo "$CURRENT_ENV") <(echo "$EXPECTED_ENV") > /dev/null
-    then # If 'up-to-date'
-        echo -e "\n ${ylo}Workflow-Core${nc} environment is already up-to-date."
-    else # If 'not' up-to-date
-        if [[ $network == "Offline" ]]
-        then # If 'offline'
-            echo -e "\n Cannot update ${ylo}Workflow-Core${nc} environment.
-                     ${green}Network${nc}: ${red}${network}${nc}."
-        else # If 'online'
-            echo -e "\n Updating ${ylo}Workflow-Core${nc} environment. \n"
-            run_with_spinner \
-                conda env update \
-                    --prune \
-                    --name workflow-core \
-                    --file $ENV_YAML
-        fi
-    fi
+    #if false #diff <(echo "$CURRENT_ENV") <(echo "$EXPECTED_ENV") > /dev/null
+    #hen # If 'up-to-date'
+    #    echo -e "\n ${ylo}Workflow-Core${nc} environment is already up-to-date."
+    #else # If 'not' up-to-date
+    #    if [[ $network == "Offline" ]]
+    #    then # If 'offline'
+    #        echo -e "\n Cannot update ${ylo}Workflow-Core${nc} environment.
+    #                 ${green}Network${nc}: ${red}${network}${nc}."
+    #    else # If 'online'
+    #        echo -e "\n Updating ${ylo}Workflow-Core${nc} environment. \n"
+    #        run_with_spinner \
+    #            conda env update \
+    #                --prune \
+    #                --name workflow-core \
+    #                --file $ENV_YAML
+    #    fi
+    #fi
 else # If 'not' exist
     echo -e "\n ${ylo}Workflow-Core${nc} conda environment not found."
     if [[ $network == "Online" ]]
     then # If 'online'
-        echo -e "\n ${ylo}Workflow-Core${nc} conda environment will be create, with:
+        echo -e "\n ${ylo}Workflow-Core${nc} conda environment will be created, with:
     > ${red}Snakemake${nc}
     > ${red}Snakedeploy${nc}   
     > ${red}Snakemake Slurm plugin${nc} \n"
@@ -176,12 +176,14 @@ echo -e "\n ${green} > Snakemake: list conda environments${nc} \n"
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/Snakefile \
+    --rerun-incomplete \
     --list-conda-envs
 
 echo -e "\n ${green} > Snakemake: create conda environments${nc} \n"
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/Snakefile \
+    --rerun-incomplete \
     --conda-create-envs-only \
     --use-conda
 
@@ -189,6 +191,7 @@ echo -e "\n ${green} > Snakemake: dry run${nc} \n"
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/Snakefile \
+    --rerun-incomplete \
     --use-conda \
     --dry-run \
     --quiet host rules
@@ -197,8 +200,6 @@ echo -e "\n ${green} > Snakemake: run${nc} \n"
 snakemake \
     --directory ${workdir}/ \
     --snakefile ${workdir}/workflow/Snakefile \
-    --cores ${max_threads} \
-    --resources mem_gb=${max_memory} \
     --rerun-incomplete \
     --keep-going \
     --use-conda \
@@ -212,4 +213,5 @@ snakemake \
 echo -e "\n Deactivate ${ylo}Workflow-Core${nc} conda environment."
 conda deactivate
 
+###############################################################################
 ###############################################################################

@@ -1,39 +1,11 @@
 $schema: "http://json-schema.org/draft-07/schema#"
-title: "GeVarLi Configuration Schema"
+title: "GeVarLi Config Schema"
 type: object
-required:
-  - fastq_dir
-  - modules
-  - consensus
-  - gisaid
-  - nextclade
-  - ivar
-  - bamclipper
-  - bwa
-  - bowtie2
-  - minimap2
-  - sickle_trim
-  - cutadapt
-  - multiqc
-  - fastq_screen
-  - rename
-  - resources
-  - envs
-  - report
 properties:
   fastq_dir:
     type: string
-
   modules:
     type: object
-    required:
-      - qualities
-      - keeptrim
-      - clipping
-      - covstats
-      - consensus
-      - lineages
-      - gisaid
     properties:
       qualities:
         type: boolean
@@ -49,42 +21,36 @@ properties:
         type: boolean
       gisaid:
         type: boolean
-
-  consensus:
-    type: object
     required:
-      - reference
-      - min_cov
-      - min_freq
-      - iupac
-      - mapper
-      - caller
-      - assigner
+      - qualities
+      - keeptrim
+      - clipping
+      - covstats
+      - consensus
+      - lineages
+      - gisaid
+  tools:
+    type: object
     properties:
-      reference:
-        type: string
-      min_cov:
-        type: string
-      min_freq:
-        type: string
-      iupac:
-        type: string
       mapper:
         type: string
       caller:
         type: string
       assigner:
         type: string
-
+    required:
+      - mapper
+      - caller
+      - assigner
+  consensus:
+    type: object
+    properties:
+      reference:
+        type: string
+    required:
+      - reference
   gisaid:
     type: object
-    required:
-      - username
-      - threshold
-      - name
-      - country
-      - identifier
-      - year
     properties:
       username:
         type: string
@@ -98,42 +64,78 @@ properties:
         type: string
       year:
         type: string
-
+    required:
+      - username
+      - threshold
+      - name
+      - country
+      - identifier
+      - year
   nextclade:
     type: object
-    required:
-      - path
-      - dataset
     properties:
       path:
         type: string
       dataset:
         type: string
-
-  ivar:
-    type: object
-    required:
-      - max_depth
-      - min_bq
-      - min_qual
-      - map_qual
-    properties:
-      max_depth:
-        type: string
-      min_bq:
-        type: string
-      min_qual:
-        type: string
-      map_qual:
-        type: string
-
-  bamclipper:
-    type: object
     required:
       - path
-      - primers
-      - upstream
-      - downstream
+      - dataset
+  ivar:
+    type: object
+    properties:
+      consensus:
+        type: object
+        properties:
+          min_depth:
+            type: string
+          max_depth:
+            type: string
+          min_freq:
+            type: string
+          map_qual:
+            type: string
+          min_bq:
+            type: string
+          min_qual:
+            type: string
+        required:
+          - min_depth
+          - max_depth
+          - min_freq
+          - map_qual
+          - min_bq
+          - min_qual
+      variant:
+        type: object
+        properties:
+          min_depth:
+            type: string
+          max_depth:
+            type: string
+          min_freq:
+            type: string
+          map_qual:
+            type: string
+          min_bq:
+            type: string
+          min_qual:
+            type: string
+        required:
+          - min_depth
+          - max_depth
+          - min_freq
+          - map_qual
+          - min_bq
+          - min_qual
+      primerclipping:
+        type: [ "object", "null" ]
+    required:
+      - consensus
+      - variant
+      - primerclipping
+  bamclipper:
+    type: object
     properties:
       path:
         type: string
@@ -143,43 +145,35 @@ properties:
         type: string
       downstream:
         type: string
-
+    required:
+      - path
+      - primers
+      - upstream
+      - downstream
   bwa:
     type: object
-    required:
-      - algorithm
     properties:
       algorithm:
         type: string
-
-  bowtie2:
-    type: object
     required:
       - algorithm
-      - sensitivity
+  bowtie2:
+    type: object
     properties:
       algorithm:
         type: string
       sensitivity:
         type: string
-
+    required:
+      - algorithm
+      - sensitivity
   minimap2:
     type: object
-    required:
-      - preset
-      - algorithm
     properties:
-      preset:
-        type: string
       algorithm:
         type: object
-        required:
-          - "k-mer_size"
-          - minimizer_size
-          - split_size
-          - homopolymer
         properties:
-          "k-mer_size":
+          k-mer_size:
             type: string
           minimizer_size:
             type: string
@@ -187,14 +181,18 @@ properties:
             type: string
           homopolymer:
             type: string
-
+        required:
+          - k-mer_size
+          - minimizer_size
+          - split_size
+          - homopolymer
+      preset:
+        type: string
+    required:
+      - algorithm
+      - preset
   sickle_trim:
     type: object
-    required:
-      - quality
-      - length
-      - command
-      - encoding
     properties:
       quality:
         type: string
@@ -204,13 +202,13 @@ properties:
         type: string
       encoding:
         type: string
-
+    required:
+      - quality
+      - length
+      - command
+      - encoding
   cutadapt:
     type: object
-    required:
-      - clipping
-      - length
-      - kits
     properties:
       clipping:
         type: string
@@ -218,10 +216,6 @@ properties:
         type: string
       kits:
         type: object
-        required:
-          - truseq
-          - nextera
-          - small
         properties:
           truseq:
             type: string
@@ -229,13 +223,16 @@ properties:
             type: string
           small:
             type: string
-
+        required:
+          - truseq
+          - nextera
+          - small
+    required:
+      - clipping
+      - length
+      - kits
   multiqc:
     type: object
-    required:
-      - path
-      - config
-      - tag
     properties:
       path:
         type: string
@@ -243,13 +240,12 @@ properties:
         type: string
       tag:
         type: string
-
+    required:
+      - path
+      - config
+      - tag
   fastq_screen:
     type: object
-    required:
-      - config
-      - subset
-      - reference
     properties:
       config:
         type: string
@@ -259,13 +255,12 @@ properties:
         type: array
         items:
           type: string
-
+    required:
+      - config
+      - subset
+      - reference
   rename:
     type: object
-    required:
-      - barcode_id
-      - line_id
-      - end_id
     properties:
       barcode_id:
         type: boolean
@@ -273,13 +268,12 @@ properties:
         type: boolean
       end_id:
         type: boolean
-
+    required:
+      - barcode_id
+      - line_id
+      - end_id
   resources:
     type: object
-    required:
-      - cpus
-      - ram
-      - tmp_dir
     properties:
       cpus:
         type: string
@@ -287,28 +281,12 @@ properties:
         type: string
       tmp_dir:
         type: string
-
+    required:
+      - cpus
+      - ram
+      - tmp_dir
   envs:
     type: object
-    required:
-      - bamclipper
-      - bcftools
-      - bedtools
-      - bowtie2
-      - bwa
-      - cutadapt
-      - fastq_screen
-      - fastqc
-      - gawk
-      - ivar
-      - minimap2
-      - multiqc
-      - nextclade
-      - pangolin
-      - samtools
-      - sickle_trim
-      - tsv2vcf
-      - workflow
     properties:
       bamclipper:
         type: string
@@ -346,27 +324,39 @@ properties:
         type: string
       workflow:
         type: string
-
+    required:
+      - bamclipper
+      - bcftools
+      - bedtools
+      - bowtie2
+      - bwa
+      - cutadapt
+      - fastq_screen
+      - fastqc
+      - gawk
+      - ivar
+      - minimap2
+      - multiqc
+      - nextclade
+      - pangolin
+      - samtools
+      - sickle_trim
+      - tsv2vcf
+      - workflow
   report:
     type: object
-    required:
-      - stat
-      - graph
     properties:
       stat:
         type: object
-        required:
-          - extention
         properties:
           extention:
             type: array
             items:
               type: string
+        required:
+          - extention
       graph:
         type: object
-        required:
-          - type
-          - extention
         properties:
           type:
             type: array
@@ -376,3 +366,29 @@ properties:
             type: array
             items:
               type: string
+        required:
+          - type
+          - extention
+    required:
+      - stat
+      - graph
+required:
+  - fastq_dir
+  - modules
+  - tools
+  - consensus
+  - gisaid
+  - nextclade
+  - ivar
+  - bamclipper
+  - bwa
+  - bowtie2
+  - minimap2
+  - sickle_trim
+  - cutadapt
+  - multiqc
+  - fastq_screen
+  - rename
+  - resources
+  - envs
+  - report

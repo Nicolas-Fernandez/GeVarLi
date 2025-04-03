@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ lineages_calling.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Assign lineage to consensus (Nextclade or Pangolin)
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
 
 ###############################################################################
@@ -91,4 +91,5 @@ rule pangolin_lineage:
         "1> {output.lineage_tsv} ; "     # Output lineage report in tsv format
         "2> /dev/null"                   # Errors redirection
 
+###############################################################################
 ###############################################################################

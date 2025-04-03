@@ -33,7 +33,7 @@ rule fastqscreen_contamination_check:
         cpus = CPUS
     params:
         config = FQC_CONFIG,
-        subset = SUBSET
+        subset = FQC_SUBSET
     input:
         fastq = "results/symlinks/{sample}_R{mate}.fastq.gz"
     output:

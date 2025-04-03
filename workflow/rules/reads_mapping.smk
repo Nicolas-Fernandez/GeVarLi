@@ -37,8 +37,8 @@ rule minimap2_mapping:
         #length = LENGTH
     input:
         mm2_indexes = "resources/indexes/minimap2/{reference}.mmi",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
         mapped = temp("results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam")
     log:
@@ -78,8 +78,8 @@ rule bwa_mapping:
         cpus = CPUS
     input:
         bwa_indexes = "resources/indexes/bwa/{reference}",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
         mapped = temp("results/02_Mapping/{reference}/{sample}_bwa-mapped.sam")
     log:
@@ -113,8 +113,8 @@ rule bowtie2_mapping:
         sensitivity = BT2_SENSITIVITY
     input:
         bt2_indexes = "resources/indexes/bowtie2/{reference}",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
         mapped = temp("results/02_Mapping/{reference}/{sample}_bowtie2-mapped.sam")
     log:

@@ -8,42 +8,14 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ consensus_calling.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Call a consensus genome
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
-
-###############################################################################
-rule sed_rename_headers:
-    # Aim: rename all fasta header with sample name
-    # Use: sed 's/[OLD]/[NEW]/' [IN] > [OUT]
-    message:
-        """
-        ~ Sed ∞ Rename Fasta Header ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
-        Caller: __________ {wildcards.caller}
-        """
-    conda:
-        GAWK
-    input:
-        cons_tmp = "results/05_Consensus/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_consensus.fasta.tmp"
-    output:
-        consensus = "results/05_Consensus/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_consensus.fasta"
-    log:
-        "results/10_Reports/tools-log/sed/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_fasta-header.log"
-    shell:
-        "sed " # Sed, a Stream EDitor used to perform basic text transformations on an input stream
-        "'s/^>.*$/>{wildcards.sample}_{wildcards.mapper}_{wildcards.min_cov}X_{wildcards.caller}/' "
-        "{input.cons_tmp} "      # Input file
-        "1> {output.consensus} " # Output file
-        "2> {log}"               # Log redirection
 
 ###############################################################################
 rule ivar_consensus:
@@ -52,16 +24,16 @@ rule ivar_consensus:
     message:
         """
         ~ iVar ∞ Call Consensus ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
-        Caller: __ iVar
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
+        Caller: _______ iVar
         """
     conda:
         IVAR
     params:
-        min_depth = IVAR_MIN_DEPTH,
+        min_depth = MIN_DEPTH,
         min_freq = IVAR_MIN_FREQ,
         min_insert = IVAR_MIN_INSERT,
         max_depth = IVAR_MAX_DEPTH,
@@ -70,13 +42,14 @@ rule ivar_consensus:
         baq = IVAR_MAP_QUAL
     input:
         mark_dup = get_bam_input,
-        variant_call = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_ivar_variant-call.tsv"
+        variant_call = "results/04_Variants/{reference}/{sample}_{mapper}_{min_depth}X_ivar_variant-call.tsv"
     output:
-        prefix = temp("results/05_Consensus/{reference}/{sample}_{mapper}_{min_cov}X_ivar_consensus"),
-        cons_tmp = temp("results/05_Consensus/{reference}/{sample}_{mapper}_{min_cov}X_ivar_consensus.fasta.tmp"),
-        qual_txt = "results/05_Consensus/{reference}/ivar_consensus-quality/{sample}_{mapper}_{min_cov}X_ivar_consensus.qual.txt",
+        prefix = temp("results/05_Consensus/{reference}/{sample}_{mapper}_{min_depth}X_ivar_consensus"),
+        header = temp("{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus"),
+        consensus = "results/05_Consensus/{reference}/{sample}_{mapper}_{min_depth}X_ivar_consensus.fasta",
+        qual_txt = "results/05_Consensus/ivar_consensus-quality/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus.qual.txt"
     log:
-        "results/10_Reports/tools-log/ivar/{reference}/{sample}_{mapper}_{min_cov}X_ivar_consensus.log"
+        "results/10_Reports/tools-log/ivar/{reference}/{sample}_{mapper}_{min_depth}x_ivar_consensus.log"
     shell:
         "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
         "--verbosity 0 "                  # Set level of verbosity [INT]
@@ -92,15 +65,17 @@ rule ivar_consensus:
         "| "                               ### PIPE to iVar
         "ivar consensus "                # iVar, with command 'consensus': Call consensus from aligned BAM file
         "-p {output.prefix} "             # -p: prefix
+        "-i {output.header} "             # -i: Name of fasta header (default: Consensus_<prefix>_threshold_<min_freq>_quality_<min_qual>_<min_insert>)
         "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base [INT] (Default: 20)
-        "-t {params.min_freq} "           # -t: Minimum frequency threshold to call variants [FLOAT] (Default: 0.03)
-        "-c {params.min_insert} "         # -c: Minimum insertion frequency threshold to call consensus [FLOAT] (Default: 0.8)    
-        "-m {params.min_depth} "          # -m: Minimum read depth to call variants [INT] (Default: 0)
+        "-t {params.min_freq} "           # -t: Minimum frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0)
+        "-c {params.min_insert} "         # -c: Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)    
+        "-m {params.min_depth} "          # -m: Minimum depth to call consensus [INT] (Default: 10)
         "-n N "                           # -n: Character to print in regions with less than minimum coverage (Default: N)
-        #"-i {wildcards.sample} "          # -i: Name of fasta header (default: Consensus_<prefix>_threshold_<min_freq>_quality_<min_qual>_<min_insert>
         "&> {log} "                       # Log redirection
-        "&& mv {output.prefix}.fa {output.cons_tmp} "       # copy consensus.fa (temp) to consensus.fasta.tmp (tmp)
-        "&& mv {output.prefix}.qual.txt {output.qual_txt} " # cppty consensus.qual.txt (tmp) to ivar_consensus-quality/ directory
-        "&& touch {output.prefix}"                          # Touch done
+        "&& mv {output.prefix}.fa {output.consensus} "      # move consensus.fa (temp) to consensus.fasta
+        "&& mv {output.prefix}.qual.txt {output.qual_txt} " # move consensus.qual.txt (tmp) to ivar_consensus-quality/ directory
+        "&& touch {output.prefix} "                         # Touch prefix (temp)
+        "&& touch {output.header} "                         # Touch header (temp)
 
+###############################################################################
 ###############################################################################
