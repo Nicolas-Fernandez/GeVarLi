@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ reads_cleanning.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Perform Illumina reads quality trimming
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
 
 ###############################################################################
@@ -34,12 +34,12 @@ rule sickle_trim_quality:
         quality = SIC_QUALITY,
         length = SIC_LENGTH
     input:
-        fwd_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz"
+        fwd_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/cutadapt/{sample}_cutadapt_R2.fastq.gz"
     output:
-        fwd_reads = temp("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R1.fastq.gz"),
-        rev_reads = temp("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_R2.fastq.gz"),
-        single = temp("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trimmed_SE.fastq.gz")
+        fwd_reads = temp("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz"),
+        rev_reads = temp("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"),
+        single = temp("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_SE.fastq.gz")
     log:
         "results/10_Reports/tools-log/sickle-trim/{sample}.log"
     shell:
@@ -54,7 +54,7 @@ rule sickle_trim_quality:
         "-o {output.fwd_reads} " # --output-pe1: Output trimmed forward fastq file
         "-p {output.rev_reads} " # --output-pe2: Output trimmed reverse fastq file (must use -s option)
         "-s {output.single} "    # --output-single: Output trimmed singles fastq file
-        "&> {log} "              # Log redirection
+        "&> {log}"               # Log redirection
 
 ###############################################################################
 rule cutadapt_adapters_removing:
@@ -71,17 +71,15 @@ rule cutadapt_adapters_removing:
     resources:
         cpus = CPUS
     params:
+        cut = CUT_CLIPPING,
         length = CUT_LENGTH,
-        truseq = CUT_TRUSEQ,
-        nextera = CUT_NEXTERA,
-        small = CUT_SMALL,
-        cut = CUT_CLIPPING
+        adapter_opts = lambda wildcards: " ".join(f"--adapter {a} -A {a}" for a in CUT_ADAPTERS)
     input:
         fwd_reads = "results/symlinks/{sample}_R1.fastq.gz",
         rev_reads = "results/symlinks/{sample}_R2.fastq.gz"
     output:
-        fwd_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R1.fastq.gz"),
-        rev_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt-removed_R2.fastq.gz")
+        fwd_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt_R1.fastq.gz"),
+        rev_reads = temp("results/01_Trimming/cutadapt/{sample}_cutadapt_R2.fastq.gz")
     log:
         "results/10_Reports/tools-log/cutadapt/{sample}.log"
     shell:
@@ -91,16 +89,12 @@ rule cutadapt_adapters_removing:
         "-U {params.cut} "                    # -U: Remove 'n' first bases (5') from reverse R2 (hard-clipping, default: 0)
         "--trim-n "                           # --trim-n: Trim N's on ends (3') of reads
         "--minimum-length {params.length} "   # -m: Discard reads shorter than length
-        "--adapter {params.truseq} "          # -a: Sequence of an adapter ligated to the 3' end of the first read
-        "-A {params.truseq} "                 # -A: 3' adapter to be removed from second read in a pair
-        "--adapter {params.nextera} "         # -a: Sequence of an adapter ligated to the 3' end of the first read
-        "-A {params.nextera} "                # -A: 3' adapter to be removed from second read in a pair
-        "--adapter {params.small} "           # -a: Sequence of an adapter ligated to the 3' end of the first read
-        "-A {params.small} "                  # -A: 3' adapter to be removed from second read in a pair
+        "{params.adapter_opts} "              # -a/-A: Adapters sequences ligated to the 3' end of the first or second read in a pair
         "--output {output.fwd_reads} "        # -o: Write trimmed reads to FILE
         "--paired-output {output.rev_reads} " # -p: Write second read in a pair to FILE
         "{input.fwd_reads} "                  # Input forward reads R1.fastq
         "{input.rev_reads} "                  # Input reverse reads R2.fastq
-        "&> {log} "                           # Log redirection
+        "&> {log}"                            # Log redirection
 
+###############################################################################
 ###############################################################################

@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ variants_calling.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ SNVs and Indels calling
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
 
 ###############################################################################
@@ -32,6 +32,8 @@ rule convert_tsv2vcf:
         """
     conda:
         TSV2VCF
+    params:
+        tsv2vcf = "workflow/scripts/ivar_variants_to_vcf.py" # Script (from viralrecon)
     input:
         tsv = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_ivar_variant-call.tsv"
     output:
@@ -39,11 +41,11 @@ rule convert_tsv2vcf:
     log:
         "results/10_Reports/tools-log/tsv2vcf/{reference}/{sample}_{mapper}_{min_cov}X_ivar_tsv2vcf.log"
     shell:
-        "python3 "                                  # Python 3
-        "workflow/scripts/ivar_variants_to_vcf.py "  # Script (from viralrecon)
-        "{input.tsv} "                               # TSV input
-        "{output.vcf} "                              # VCF output
-        "&> {log}"                                   # Log redirection
+        "python3 "         # Python 3
+        "{params.tsv2vcf} " # Script (from viralrecon)
+        "{input.tsv} "      # TSV input
+        "{output.vcf} "     # VCF output
+        "&> {log}"          # Log redirection
 
 ###############################################################################
 rule ivar_variant_calling:
@@ -62,7 +64,7 @@ rule ivar_variant_calling:
     conda:
         IVAR
     params:
-        min_depth = IVAR_MIN_DEPTH,
+        min_depth = MIN_DEPTH,
         min_freq = IVAR_MIN_FREQ,
         min_insert = IVAR_MIN_INSERT,
         max_depth = IVAR_MAX_DEPTH,
@@ -90,12 +92,13 @@ rule ivar_variant_calling:
         "2>&1 | grep -v '[mpileup] 1 samples in 1 input files' " # Remove this stdout
         "| "                               ### pipe to iVar
         "ivar variants "                 # iVar, with command 'variants': Call variants from aligned BAM file
-        "-p {output.variant_call} "       # -p: prefix
+        "-p {output.variant_call} "       # -p: Prefix for the output tsv variant file
         "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base (Default: 20) [INT]
-        "-t {params.min_freq} "           # -t: Minimum frequency threshold to call variants (Default: 0.03) [FLOAT]
+        "-t {params.min_freq} "           # -t: Minimum frequency threshold (0 to 1) to call variants (Default: 0.03) [FLOAT]
         "-m {params.min_depth} "          # -m: Minimum read depth to call variants (Default: 0) [INT]
         "-r {input.masked_ref} "          # -r: Reference file used for alignment (translate the nuc. sequences and identify intra host single nuc. variants) 
         #"-g "                            # -g: A GFF file in the GFF3 format can be supplied to specify coordinates of open reading frames (ORFs)
         "&> {log}"                        # Log redirection 
 
+###############################################################################
 ###############################################################################

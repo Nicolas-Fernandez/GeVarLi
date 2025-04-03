@@ -87,10 +87,10 @@ rule minimap2_genome_indexing:
     conda:
         MINIMAP2
     params:
-        kmer_size = KMER_SIZE,
-        minimizer_size = MINIMIZER_SIZE,
-        split_size = SPLIT_SIZE
-        #homopolymer = HOMOPOLYMER
+        kmer_size = MM2_KMER_SIZE,
+        minimizer_size = MM2_MINIMIZER_SIZE,
+        split_size = MM2_SPLIT_SIZE
+        #homopolymer = MM2_HOMOPOLYMER
     input:
         fasta = "resources/genomes/{reference}.fasta"
     output:

@@ -8,53 +8,62 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ primers_clipping.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Soft clip amplicons primers
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
 
 ###############################################################################
-rule bamclipper_amplicon_primers:
+rule ivar_trim:
     # Aim: soft-clip amplicon PCR primers from BAM alignments
-    # Use: bamclipper.sh -n [THREADS] -b [MARKDUP.bam] -p [PRIMER.bed] -u [UPSTREAM] -d [DOWNSTREAM]
+    # Use: ivar trim -i [INPUT.bam] -b [PRIMER.bed] -p [PREFIX] -e -m 20 -q 20
     message:
         """
-        ~ BAMClipper ∞ soft-clipping amplicon PCR primers from BAM alignments ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
+        ~ iVar ∞ soft-clipping amplicon PCR primers from BAM alignments ~
+        Sample _________ {wildcards.sample}
+        Reference ______ {wildcards.reference}
+        Mapper _________ {wildcards.mapper}
         """
     conda:
-        BAMCLIPPER
-    resources:
-       cpus = CPUS
+        IVAR
     params:
-        path = CLIPPATH,
-        primers = PRIMERS,
-        upstream = UPSTREAM,
-        downstream = DOWNSTREAM
+        path = PRIMER_BED_PATH,
+        bed = PRIMER_BED_SCHEME,
+        #path = PRIMER_BEDPE_PATH,
+        #bedpe = PRIMER_BEDPE_SCHEME,
+        offset = IVAR_OFFSET,
+        min_len = IVAR_MIN_LENGTH,
+        min_qual = IVAR_MIN_QUAL,
+        slide = IVAR_SLIDE
     input:
-        markdup = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.bam",
-        index = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.bam.bai"
+        bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam",
+        bai = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam.bai"
     output:
-        bamclip = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.primerclipped.bam",
-        baiclip = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.primerclipped.bam.bai"
+        prefix = temp("results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed"),
+        trimmed_bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam",
+        trimmed_bai = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam.bai"
     log:
-        "results/10_Reports/tools-log/bamclipper/{reference}/{sample}_{mapper}_primers-clip.log"
+        "results/10_Reports/tools-log/ivar_trim/{reference}/{sample}_{mapper}.log"
     shell:
-        "bamclipper.sh "                         # BAMClipper, remove primer sequences from BAM alignments of PCR amplicons by soft-clipping
-        "-b {input.markdup} "                     # Indexed BAM alignment file
-        "-p {params.path}{params.primers}.bedpe " # BEDPE of primer pair locations
-        "-n {resources.cpus} "                    # Number of threads (default: 1)
-        "-u {params.upstream} "                   # Number of nuc. upstream for assigning alignments to primers (default: 5)
-        "-d {params.downstream} "                 # Number of nuc. downstream for assigning alignments to primers (default: 5)
-        #"-o results/02_Mapping/ "                 # Path to write output (if BamClipper v.1.1.2) (todo)
-        "&> {log} "                               # Log redirection
-        "&& mv {wildcards.sample}_{wildcards.mapper}_mark-dup.primerclipped.bam {output.bamclip} "    # because BamClipper v.1 default output system...
-        "&& mv {wildcards.sample}_{wildcards.mapper}_mark-dup.primerclipped.bam.bai {output.baiclip}" # because BamClipper v.1 default output system...
+        "ivar trim "                   # iVar, with command 'trim': soft-clip amplicon PCR primers from BAM alignments
+        "-i {input.bam} "               # Input BAM file, with aligned reads, to trim primers and quality
+        "-p {output.prefix} "           # Prefix for the output BAM file
+        "-b {params.path}{params.bed} " # BED file with primer sequences and positions
+                                        # If no BED file is specified, only quality trimming will be done.
+        #"-f {params.path}{params.bedpe} " # Primer pair information file containing left and right primer names for the same amplicon separated by a tab
+                                        # If provided, reads that do not fall within atleat one amplicon will be ignored prior to primer trimming.
+        "-x {params.offset} "           # primer position offset (Default: 0)
+        "-m {params.min_len} "          # Minimum length of read to retain after trimming (Default: 50% average length of the first 1000 reads)
+        "-q {params.min_qual} "         # Minimum quality threshold for sliding window to pass (Default: 20)
+        "-s {params.slide} "            # Width of sliding window (Default: 4)
+        "-e "                           # Include reads with no primers. By default, reads with no primers are excluded
+        "-k "                           # Keep reads to allow for reanalysis
+                                         # Keep reads which would be dropped by alignment length filter or primer requirements, but mark them QCFAIL
+        "&> {log}"                      # Log redirection
 
+###############################################################################
 ###############################################################################

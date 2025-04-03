@@ -10,13 +10,14 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
+# Latest modifications ___ 2025.04.04
 # Use ____________________ Edit default settings
+###############################################################################
 
 ###############################################################################
 ################################## GENERAL ####################################
@@ -27,84 +28,76 @@ fastq_dir: 'resources/reads/' # Path to reads fastq.gz files (default: 'resource
 modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
   qualities: true   # Perform reads quality controls (FastQC, Fastq-Screen)       (default: true)
   keeptrim: false   # Keep trimmed reads files (Cutadapt / Sickle-trim)           (default: false)
-  clipping: false   # Perform reads clipping (Bamclipper)                         (default: false)
+  clipping: true   # Perform reads clipping (iVar)                               (default: false)
   covstats: true    # Perform coverage statistics (Fagstat, Covstats)             (default: true)
   consensus: true   # Perform reads mapping to reference (BWA, Minimap2, Bowtie2) (default: true)
   lineages: true    # Perform clade and lineage assignations (Nexclade, Pangolin) (default: true)
   gisaid: false     # Perform gisaid submission template (GisAid : TODO)          (default: false)
 
-consensus:
-  reference: 'SARS-CoV-2_Wuhan_MN908947.3' # Your reference, in fasta format (default: 'SARS-CoV-2_Wuhan_MN-908947-3') [STR]
-  # Available options (not exhaustive):
-    ##- 'SARS-CoV-2_Wuhan_MN908947.3'                      # SARS-CoV-2  (with Nextclade and Pangolin)(default)
-    ### 
-    ##- 'Monkeypox-virus_Zaire_AF380138.1'                 # Monkeypox [MPXV] (with Nextclade and Pangolin)
-    ##- 'Monkeypox-virus_UK_MT903345.1'                    # Monkeypox [MPXV] (with Nextclade and Pangolin)
-    ##- 'Swinepox-virus_India_MW036632.1'                  # Swinepox  [SPXV] (with Nextclade)
-    ### 
-    ##- 'Ebola-virus_Zaire_AF272001.1'                     # Ebola   [EBOV]
-    ##- 'Ebola-virus_Sudan_MH121162.1'                     # Ebola   [EBOV]
-    ##- 'Marburg-virus_NC001608.3'                         # Marburg [MarV]
-    ### 
-    ##- 'Measles-virus_Ichinose-B95a_NC001498.1'           # Measles [MeV]
-    ##- 'Measles-virus_B3_Khartoum-Sudan_MG912590.1'       # Measles [MeV]
-    ##- 'Measles-virus_B3_Kole-Uganda_ON642796.1'          # Measles [MeV]
-    ##- 'Measles-virus_B3_Bura-Kenya_MZ615446.1_partial'   # Measles [MeV]
-    ##- 'Measles-virus_C2_Netherland-Bilthoven_MG912589.1' # Measles [MeV]
-    ##- 'Measles-virus_H1_Netherland-Amsterdam_MG912594.1' # Measles [MeV]
-    ### 
-    ##- 'Lassa-virus_NC004297.1_Seg-L'                     # Lassa Josiah L
-    ##- 'Lassa-virus_NC004297.1_Seg-S'                     # Lassa Josiah S
-    ##- 'Lassa-virus_Guinea_Faranah_MG812684.1_Seg-L'      # Lassa Guinea L
-    ##- 'Lassa-virus_Guinea_Faranah_MG812685.1_Seg-S'      # Lassa Guinea S
-    ##- 'Lassa-virus_Benin_Ben-16131_MT193231.1_Seg-L'     # Lassa Benin L
-    ##- 'Lassa-virus_Benin_Ben-16131_MT193282.1_Seg-S'     # Lassa Benin S
-    ### 
-    ##- 'Chikungunya-virus_HM045817.1'                     # Chikungunya [CHIKV]
-    ##- 'Dengue-virus-1_NC001477.1'                        # Dengue 1
-    ##- 'Dengue-virus-2_NC001474.2'                        # Dengue 2
-    ##- 'Dengue-virus-3_NC001475.2'                        # Dengue 3
-    ##- 'Dengue-virus-4_NC002640.1'                        # Dengue 4
-    ##- 'West-Nile-virus_M12294.2'                         # West Nile [WNV]
-    ##- 'Zika-virus_French-Polynesia_KX369547.1'           # Zika [ZV]
-    ### 
-    ##- 'Nipah-virus_Malaysia_AJ564622.1'                  # Nipah
-    ### 
-    ##- 'Human-herpesvirus-5_NC006273.2'                   # Herpes    [HCMV]
-    ##- 'Human-herpesvirus-3_NC001348.1'                   # Varicella [VZV]
-    ##- 'Human-adenovirus-A_NC001460.1'                    # Adeno
-    ##- 'Human-enterovirus-68_AY426531.1'                  # Entero
-    ### 
-    ##- 'HIV-1_HXB2_K03455.1'                              # HIV-1 [HIV]
-
-  min_cov: '30' # Minimum coverage, mask lower regions with "N" (default: '30') [INT]
-  # Available options (not exhaustive):
-    ##- '100' # 100 x : for greater coverage
-    ##- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (default)
-    ##- '10'  #  10 X : for some applications...
-    ##- '3'   #   3 X : only for exploration!
-    ##- '1'   #   1 X : not recommanded
-  min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT] *** LoFreq ***
-  iupac: '--iupac-code' # Output variants in the form of IUPAC ambiguity codes (default: "activate")
-  # Available options, set only one:
-    ##- '--iupac-code' # Activate (default)
-    ##- ''             # Deactivate
+tools:
   mapper: 'bwa' # Select your favorite mapper (default: 'bwa')
   # Available options:
     ##- 'bwa'      # Better, faster (default)
     ##- 'bowtie2'  # Slower, "sensitivity" requiried (see below "Bowtie2" options)
     ##- 'minimap2' # Versatile
-  caller: 'ivar'
+  caller: 'ivar' # Select your favorite variant caller (default: 'ivar')
+  # Available options:
+    ##- 'ivar' # iVar: a toolkit for analysis of viral NGS data (default)
   assigner: 'nextclade' # Select your favorite clades / lineages assigner (default: 'nextclade')
   # Available options:
     ##- 'nextclade' # Clade assignment, mutation calling, phylogenetic placement and quality checks (default)
     ##- 'pangolin'  # PANGO: Phylogenetic Assignment of Named Global Outbreak Lineages
 
+reference: 'SARS-CoV-2_Wuhan_MN908947.3' # Your reference, in fasta format (default: 'SARS-CoV-2_Wuhan_MN-908947-3') [STR]
+# Available options (not exhaustive):
+  ##- 'SARS-CoV-2_Wuhan_MN908947.3'                      # SARS-CoV-2  (with Nextclade and Pangolin)(default)
+  ### 
+  ##- 'Monkeypox-virus_Zaire_AF380138.1'                 # Monkeypox [MPXV] (with Nextclade and Pangolin)
+  ##- 'Monkeypox-virus_UK_MT903345.1'                    # Monkeypox [MPXV] (with Nextclade and Pangolin)
+  ##- 'Swinepox-virus_India_MW036632.1'                  # Swinepox  [SPXV] (with Nextclade)
+  ### 
+  ##- 'Ebola-virus_Zaire_AF272001.1'                     # Ebola   [EBOV]
+  ##- 'Ebola-virus_Sudan_MH121162.1'                     # Ebola   [EBOV]
+  ##- 'Marburg-virus_NC001608.3'                         # Marburg [MarV]
+  ### 
+  ##- 'Measles-virus_Ichinose-B95a_NC001498.1'           # Measles [MeV]
+  ##- 'Measles-virus_B3_Khartoum-Sudan_MG912590.1'       # Measles [MeV]
+  ##- 'Measles-virus_B3_Kole-Uganda_ON642796.1'          # Measles [MeV]
+  ##- 'Measles-virus_B3_Bura-Kenya_MZ615446.1_partial'   # Measles [MeV]
+  ##- 'Measles-virus_C2_Netherland-Bilthoven_MG912589.1' # Measles [MeV]
+  ##- 'Measles-virus_H1_Netherland-Amsterdam_MG912594.1' # Measles [MeV]
+  ### 
+  ##- 'Lassa-virus_NC004297.1_Seg-L'                     # Lassa Josiah L
+  ##- 'Lassa-virus_NC004297.1_Seg-S'                     # Lassa Josiah S
+  ##- 'Lassa-virus_Guinea_Faranah_MG812684.1_Seg-L'      # Lassa Guinea L
+  ##- 'Lassa-virus_Guinea_Faranah_MG812685.1_Seg-S'      # Lassa Guinea S
+  ##- 'Lassa-virus_Benin_Ben-16131_MT193231.1_Seg-L'     # Lassa Benin L
+  ##- 'Lassa-virus_Benin_Ben-16131_MT193282.1_Seg-S'     # Lassa Benin S
+  ### 
+  ##- 'Chikungunya-virus_HM045817.1'                     # Chikungunya [CHIKV]
+  ##- 'Dengue-virus-1_NC001477.1'                        # Dengue 1
+  ##- 'Dengue-virus-2_NC001474.2'                        # Dengue 2
+  ##- 'Dengue-virus-3_NC001475.2'                        # Dengue 3
+  ##- 'Dengue-virus-4_NC002640.1'                        # Dengue 4
+  ##- 'West-Nile-virus_M12294.2'                         # West Nile [WNV]
+  ##- 'Zika-virus_French-Polynesia_KX369547.1'           # Zika [ZV]
+  ### 
+  ##- 'Nipah-virus_Malaysia_AJ564622.1'                  # Nipah
+  ### 
+  ##- 'Human-herpesvirus-5_NC006273.2'                   # Herpes    [HCMV]
+  ##- 'Human-herpesvirus-3_NC001348.1'                   # Varicella [VZV]
+  ##- 'Human-adenovirus-A_NC001460.1'                    # Adeno
+  ##- 'Human-enterovirus-68_AY426531.1'                  # Entero
+  ### 
+  ##- 'HIV-1_HXB2_K03455.1'                              # HIV-1 [HIV]
+  ###
+  ##- 'your_custom_reference'                            # Add your custom reference
+
 ###############################################################################
-################################### GISAID ####################################
+################################ SUBMISSIONS ##################################
 ###############################################################################
 
-gisaid: ## TODO ##
+gisaid: ##TODO##
   username: 'username'
   threshold: '30'
   name: 'hCoV-19'
@@ -119,52 +112,110 @@ gisaid: ## TODO ##
 nextclade:
   path: 'resources/nextclade/' # Path to nextclade datasets (default: "resources/nextclade/")
   dataset: 'sars-cov-2' # Nextclade dataset
-  # Available options (not exhaustive):
-    #- 'sars-cov-2' # SARS-CoV-2 (default)
-    #- 'MPXV'       # MPox - all clades 
-    #- 'hMPXV'      # human MPox
-    #- 'hMPXV_B1'   # human MPox - only lineage B1*
+  # Available options (not exhaustive), set only one:
+    ##- 'sars-cov-2' # SARS-CoV-2 (default)
+    ##- 'MPXV'       # MPox - all clades 
+    ##- 'hMPXV'      # human MPox
+    ##- 'hMPXV_B1'   # human MPox - only lineage B1*
 
+###############################################################################
+################################# CONSENSUS ###################################
+###############################################################################
+
+consensus:
+  min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
+  # Available options (not exhaustive):
+    ##- '100' # 100 X : for greater coverage
+    ##- '60'  #  30 X : for better coverage
+    ##- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
+    ##- '10'  #  10 X : for some applications (default)
+    ##- '3'   #   3 X : only for exploration...
+    ##- '1'   #   1 X : not recommanded!
+
+  max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
+  # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
+
+  min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT]
+  min_insert: '0' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
+
+  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
+  # Available options, set only one:
+    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default, recommanded with Samtools)
+    ##- ''         # yes, merge mapping quality: enable (not recommanded with Samtools)
+
+  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
+  min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
 
 ###############################################################################
 ################################## VARIANTS ###################################
 ###############################################################################
 
-ivar:
-  #min_depth: '0'    # Minimum read depth to call variants (Default: '0') [INT] *** iVar ***
-  #min_freq: '0.03'  # Minimum frequency threshold to call variants (Default: '0.03') [FLOAT] *** iVar ***
-  #min_insert: '0.8' # Minimum insertion frequency threshold to call variants (Default: '0.8') [FLOAT] *** iVar ***
-  max_depth: '1000000' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "1000000") [INT]
-  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
-  min_qual: '0'        # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
-  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ' (disable))
-    # Available options:
-    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default)
+variant:
+  min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
+  # Available options (not exhaustive):
+    ##- '100' # 100x : for greater coverage
+    ##- '60'  #  30x : for better coverage
+    ##- '30'  #  30x : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
+    ##- '10'  #  10x : for some applications (default)
+    ##- '3'   #   3x : only for exploration...
+    ##- '1'   #   1x : not recommanded!
+
+  max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
+  # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
+
+  min_freq: '0.2' # Minimum allele frequency allowed (default: "0.2") [FLOAT]
+  min_insert: '0' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
+
+  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
+  # Available options, set only one:
+    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default, recommanded with Samtools)
     ##- ''         # yes, merge mapping quality: enable (not recommanded with Samtools)
 
+  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
+  min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
 
 ###############################################################################
-############################## PRIMER CLEAPING  ###############################
+############################# PRIMERS CLEAPING  ###############################
 ###############################################################################
 
-bamclipper:
-  path: 'resources/primers/bedpe/' # Path to primers bedpe files (default 'resources/primer/bedpe') [PATH]
-  primers: '' # Your primer set, in BEDPE format (no default: you need to know which kit / ref you used)
-  # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences
-  # Available options (not exhaustive), set only one:
-    ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1'         # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
-    ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4'           # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
-    ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3'           # SARS-CoV-2 Artic V3
-    ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2'           # SARS-CoV-2 Artic V2
-    ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1'           # SARS-CoV-2 Artic V1
-    ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V3'          # EBOV Artic V3
-    ##- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2'          # EBOV Artic V2 (based on AF272001.1)    
-    ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V1'          # EBOV Artic V1
-    ##- 'Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1'       # NIV Artic V1
-    ##- 'Monkeypox-virus_UK_MT-903345-1_custom-VGCARE-primers-V1' # MPXV VGCARE V1
-    ##- 'Add_your_favorite_amplicon_kit'                          # Custom
-  upstream: '5'   # (default: '5') [INT]
-  downstream: '5' # (default: '5') [INT]
+primers:
+  offset: '0'      # Offset for primer trimming (default: '0') [INT]
+  min_length: '35' # Minimum length of read to retain after trimming (Default: 50% average length of the first 1000 reads) [INT]
+  min_qual: '20' # Minimum quality threshold for sliding window to pass (Default: '20') [INT]
+  slide: '4'     # Width of sliding window (Default: '4') [INT]
+  bed:
+    path: 'resources/primers_schemes/bed/' # Path to primers bed files (default 'resources/primer/bed') [PATH]
+    scheme: 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # Your primer set, in BED format (no default: you need to know which kit and reference you used!)
+    # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
+    # Available options (not exhaustive), set only one:
+      ##- 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V5.3.2 (latest)
+      ##- 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+      ##- 'nCoV-2019/V4/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
+      ##- 'nCoV-2019/V3/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V3
+      ##- 'nCoV-2019/V2/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V2
+      ##- 'nCoV-2019/V1/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V1
+      ##- 'ZaireEbola/V3/ZaireEbola.primer.bed' # EBOV Artic V3
+      ##- 'ZaireEbola/V2/ZaireEbola.primer.bed' # EBOV Artic V2 (based on AF272001.1)    
+      ##- 'ZaireEbola/V1/ZaireEbola.primer.bed' # EBOV Artic V1
+      ##- 'Nipah/V1/NiV_6_Malaysia.primer.bed'  # NIV Artic V1
+      ##- 'MPXV/V1/MPXV.primer.bed'             # MPXV  V1 (dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v4)
+      ##- 'your_custom_amplicon_kit.bed'        # Add your custom amplicon kit
+  bedpe:
+    path: 'resources/primers_schemes/bedpe/' # Path to primers bedpe files (default 'resources/primer/bedpe') [PATH]
+    scheme: #'insert_here' # Your primer set, in BEDPE format (no default: you need to know which kit and reference you used!)
+    # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
+    # Available options (not exhaustive), set only one:
+      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1.bedpe'   # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4.bedpe'     # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
+      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3.bedpe'     # SARS-CoV-2 Artic V3
+      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2.bedpe'     # SARS-CoV-2 Artic V2
+      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1.bedpe'     # SARS-CoV-2 Artic V1
+      ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V3.bedpe'    # EBOV Artic V3
+      ##- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2.bedpe'    # EBOV Artic V2 (based on AF272001.1)    
+      ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V1.bedpe'    # EBOV Artic V1
+      ##- 'Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1.bedpe' # NIV Artic V1
+      ##- 'Monkeypox-virus_UK_MT-903345-1_VGCARE-primers-V1.bedpe'  # MPXV VGCARE V1 (based on MT903345.1)
+      ##- 'your_custom_amplicon_kit.bedpe'                          # Add your custom amplicon kit
 
 ###############################################################################
 ################################### MAPPING ###################################
@@ -172,14 +223,14 @@ bamclipper:
 
 bwa:
   algorithm: '' # Algorithm for constructing BWA index (default: auto --> '')
-  # Available options:
+  # Available options, set only one:
     ##- ''         # Auto-select (default)
     ##- '-a is'    # Moderately fast, but does not work with database larger than 2GB
     ##- '-a bwtsw' # This method works with the whole human genome
 
 bowtie2:
   algorithm: '' # Algorithm for constructing BT2 index (default: '' (small))
-  # Available options:
+  # Available options, set only one:
     ##- ''              # (default)
     ##- '--large-index' # Force generated index to be "large"
                         # even if reference has fewer than 4 billion nucleotides
@@ -196,11 +247,12 @@ minimap2:
     minimizer_size: '11' # -w: minimizer window size (default: "11") [INT]
     split_size: '8G'     # -I: split index for every {NUM} input bases (default: "8G") [INT]
     homopolymer: ''      # -H: use homopolymer-compressed k-mer  (default: '' (no))
-    # Available options: 
+    # Available options, set only one: 
       ##- ''   # no (default)
       ##- '-H' # yes (preferrable for PacBio)
+
   preset: 'sr' # -x: Minimap2 presets, always applied before other options (default: 'sr')
-  # Available preset options: 
+  # Available preset options, set only one: 
     ##- 'sr'        # genomic short-read mapping, like Illumina (default)
     ##- 'map-ont'   # Nanopore vs reference mapping
     ##- 'ava-ont'   # Nanopore read overlap
@@ -230,19 +282,21 @@ sickle_trim:
 cutadapt:
   clipping: '0' # Cut 'n' first nucleotides of each reads (default: 0)
   length: '50' # Discard reads shorter than 'length' after trim (default: "50")
-  kits: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina)
-    truseq:  'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits
-    nextera: 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits
-    small:   'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits
+  adapters: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina kits)
+  # Available options (not exhaustive):
+    - 'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits (default)
+    - 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits (default)
+    - 'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits (default)
+    #- 'your_custom_adapter'   # Add your custom adapter
 
 ###############################################################################
 ############################### QUALITY CONTROL ###############################
 ###############################################################################
 
-multiqc: ## TODO ##
+multiqc: ##TODO##
   path: 'config/multiqc/' # Path to the multiqc configuration file
   config: 'default.yaml' # Multiqc configuration file (default: default.yaml)
-  # Available options (not exhaustive):
+  # Available options (not exhaustive), set only one:
     ##- 'default.yaml' # default
     ##- ''             #
   tag: '' # Use only modules which tagged with this keyword
@@ -250,11 +304,15 @@ multiqc: ## TODO ##
 fastq_screen:
   config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
   subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+
   reference: # FastqScreen config file genomes to index [LIST]
+    # Available options (not exhaustive):
+  
     ### MOLECULAR BIOLOGY SEQUENCES
     - 'QC_Phi-X174_Coliphage_NC001422.1'
     - 'QC_Kanamycin-Resistance-Gene'
     - 'QC_UniVec_wo_phiX-kanamycin-NGSseq'
+  
     ### MAIN TRANSVIHMI VIRUSES (small genomes, provided)
     - 'SARS-CoV-2_Wuhan_MN908947.3' # without poly-A tail
     - 'Monkeypox-virus_Zaire_AF380138.1'
@@ -276,12 +334,14 @@ fastq_screen:
     - 'Lassa-virus_Josiah_NC004297.1_Seg-L'
     - 'Lassa-virus_Josiah_NC004296.1_Seg-S'
     - 'HIV-1_HXB2_K03455.1'
+  
     ### MAIN TRANSVIHMI PUTATIVE HOSTS (large genomes, not provided)
     #- 'HOST_Gorilla-gorilla_g4'
     #- 'HOST_Pan-troglodytes_t3'
     #- 'HOST_Pteropus-vampyrus_v1'
     #- 'HOST_Mus-musculus_m39'
     #- 'HOST_Homo-sapiens_h38_NC000001.11'
+  
     ### GENERIC LAB MODEL ORGANISMS (putative contaminations)
     - 'QC_Echerichia-coli_CP060121.1'
     #- 'QC_Saccharomyces-cerevisiae'
@@ -293,12 +353,11 @@ fastq_screen:
     #- 'QC_Xenopus-laevis'
     #- 'QC_Gallus-gallus'
 
-
 ###############################################################################
 ############################### RENAME SAMPLES ################################
 ###############################################################################
 
-rename:
+rename: ##TODO##
   barcode_id: true
   line_id: true
   end_id: true
@@ -311,7 +370,7 @@ resources:
   cpus: '8' # Set maximum cpus usage (for multithreading, default: "8") [INT]
   ram: '16' # Set maximum memory usage (in Gb, default: "16") [INT]
   tmp_dir: '$TMPDIR' # Temporary directory.
-  # Available options (not exhaustive):
+  # Available options (not exhaustive), set only one:
     ## -'$TMPDIR'  # System variable $TMPDIR (default)
     ## -'.'        # Local (i.e. GeVarLi directory)
     ## -'/scratch' # HPC (set it to match your HPC usage)
@@ -336,20 +395,21 @@ envs: # Conda environement yaml files:
   sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
   tsv2vcf:       '../envs/tsv2vcf_v.2025.01.yaml'       # tsv2vcf       ver. 2025.01 (biopython=1.85 numpy=2.2.2 scipy=1.15.1)
   workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.01 (snakemake=8.27.1 graphviz=12.0.0)
-  yq:            '../envs/yq_v.3.4.3.yaml'              # yq            ver. 3.4.3
 
 report: # Snakemake reports formats
+
   stat:
-    extention: # [LIST]
+    extention:
       - 'txt'
       - 'tsv'
       - 'json'
+  
   graph:
-    type: # [LIST]
+    type:
       - 'dag'
       - 'rulegraph'
       - 'filegraph'
-    extention: # [LIST]
+    extention:
       - 'png'
       - 'svg'
       - 'pdf'

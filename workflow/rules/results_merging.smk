@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ results_merging.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Merge results
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
 
 ###############################################################################
@@ -24,7 +24,7 @@ rule merge_consensus:
         ~ Merge ∞ Concatenating all samples consensus sequences ~
         Reference: _______ {wildcards.reference}
         Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
+        Min. cov.: _______ {wildcards.min_cov}x
         Caller: __________ {wildcards.caller}                                                                                            
         """
     input:
@@ -39,10 +39,10 @@ rule merge_consensus:
     log:
         "results/10_Reports/tools-log/merge_consensus/{reference}/{mapper}_{min_cov}X_{caller}_consensus.log"
     shell:
-        "cat "                     # Concatenate all consensus sequences
-        "{input.consensus} "        # Input files
-        "> {output.all_consensus} " # Output file
-        "2> {log}"                  # Log redirection
+        "cat "                      # Concatenate all consensus sequences
+        "{input.consensus} "         # Input files
+        "1> {output.all_consensus} " # Output file
+        "2> {log}"                   # Log redirection
 
 ###############################################################################
 rule merge_coverage:
@@ -51,7 +51,7 @@ rule merge_coverage:
         ~ Merge ∞ Concatenating genome coverage statistics ~
         Reference: _______ {wildcards.reference}
         Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
+        Min. cov.: _______ {wildcards.min_cov}x
         """
     input:
         covstats = lambda wildcards: expand("results/03_Coverage/{reference}/{sample}_{mapper}_{min_cov}X_coverage-stats.tsv",
@@ -60,23 +60,23 @@ rule merge_coverage:
                                             mapper = wildcards.mapper,
                                             min_cov = wildcards.min_cov)
     output:
-        all_covstats = "results/All_{reference}_{mapper}_{min_cov}X_genome_coverages.tsv",
-        temp_covstats = temp("results/All_{reference}_{mapper}_{min_cov}X_genome_coverages.temp")
-    log:
+        all_covstats = "results/All_{reference}_{mapper}_{min_cov}X_genome_coverages.tsv"
+     log:
         "results/10_Reports/tools-log/merge_coverage/{reference}/{mapper}_{min_cov}X_covstats.log"
     shell:
-        "cat {input.covstats} > {output.temp_covstats} && "                      # Concatenate all coverage statistics          
-        "awk 'NR==1 || NR%2==0' {output.temp_covstats} 1> {output.all_covstats} " # Keep only even lines
-        "2> {log}"                                                                # Log redirection                  
+        "cat {input.covstats} | "  # Concatenate all coverage statistics          
+        "awk 'NR==1 || NR%2==0' "   # Keep only even lines
+        "1> {output.all_covstats} " # Output file
+        "2> {log}"                  # Log redirection                  
 
 ###############################################################################
 rule merge_clade:
     message:
         """                                                                                                                                       
-        ~ Merge ∞ Concatenating Pangolin lineage assignments ~
+        ~ Merge ∞ Concatenating lineage assignments ~
         Reference: _______ {wildcards.reference}
         Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
+        Min. cov.: _______ {wildcards.min_cov}x
         Variant caller: __ {wildcards.caller}
         Assigner: ________ {wildcards.assigner}                                                                               
         """
@@ -89,13 +89,14 @@ rule merge_clade:
                                         caller = wildcards.caller,
                                         assigner = wildcards.assigner)
     output:
-        all_lineages = "results/All_{reference}_{mapper}_{min_cov}X_{caller}_{assigner}-lineages.tsv",
-        temp_lineages = temp("results/All_{reference}_{mapper}_{min_cov}X_{caller}_{assigner}-lineages.temp")
+        all_lineages = "results/All_{reference}_{mapper}_{min_cov}X_{caller}_{assigner}-lineages.tsv"
     log:
         "results/10_Reports/tools-log/merge_clade/{reference}/{mapper}_{min_cov}X_{caller}_{assigner}-lineages.log"
     shell:
-        "cat {input.lineages} > {output.temp_lineages} && "                      # Concatenate all clade assignments
-        "awk 'NR==1 || NR%2==0' {output.temp_lineages} 1> {output.all_lineages} " # Keep only even lines
-        "2> {log}"                                                                # Log redirection
+        "cat {input.lineages} | "                       # Concatenate all lineage assignments
+        "awk 'NR==1 || NR%2==0' {output.temp_lineages} " # Keep only even lines
+        "1> {output.all_lineages} "                      # Output file
+        "2> {log}"                                       # Log redirection
 
+###############################################################################
 ###############################################################################

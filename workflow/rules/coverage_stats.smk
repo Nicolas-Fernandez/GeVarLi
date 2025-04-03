@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ coverage_stats.smk
-# Version ________________ v.2025.01
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Compute Genome Coverage Statistics from BED file
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
 
 ###############################################################################
@@ -33,7 +33,7 @@ rule awk_coverage_statistics:
     input:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
-        samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_mark-dup.log",
+        samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_markdup.log",
         flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{mapper}_flagstat.json",
         histogram = "results/03_Coverage/{reference}/histogram/{sample}_{mapper}_coverage-histogram.txt",
         genome_cov = "results/02_Mapping/{reference}/{sample}_{mapper}_genome-cov.bed"
@@ -233,4 +233,5 @@ rule samtools_flagstat_ext:
         "1> {output.flagstat} "         # Mark_dup index output
         "2> {log}"                      # Log redirection
 
+###############################################################################
 ###############################################################################

@@ -7,30 +7,15 @@
 ###    \/                                                            \/     ###
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ symlinks_renamming.smk
-# Version ________________ v.2025.01
+# Name ___________________ sample_prep.smk
+# Version ________________ v.2025.04
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Create fastq symlinks
+# Aim ____________________ Prepare samples
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.03.12
-# Use ____________________ snakemake -s Snakefile --use-conda -j
+# Latest modifications ___ 2025.04.04
+# Use ____________________ snakemake -s Snakefile --use-conda
 ###############################################################################
-
-###############################################################################
-rule config:
-    # Aim: Load configuration file
-    # Use: 
-    message:
-        """
-        ~ Configuration ∞ Show analyses settings ~
-        """
-    input:
-        config_file = "config/config.yaml"
-    output:
-        setting_log = "results/10_Reports/settings.log"
-    script:
-        "workflow/scripts/settings.py "
 
 ###############################################################################
 rule symlinks:
@@ -43,18 +28,18 @@ rule symlinks:
         Reads: ___________ R{wildcards.mate}
         """
     input:
-        setting_log = "results/10_Reports/settings.log",
         valid_fastq = lambda wildcards: os.path.abspath(VALID_FASTQ[wildcards.sample][wildcards.mate])
     output:
         symlink = temp("results/symlinks/{sample}_R{mate}.fastq.gz")
     log:
         "results/10_Reports/tools-log/symlinks/{sample}_R{mate}.log"
     shell:
-        "mkdir -p $(dirname {output.symlink}) "
-        "&& "
-        "ln -sf "
-        "{input.valid_fastq} "
-        "{output.symlink} "
-        "&> {log}"
+        "mkdir -p $(dirname {output.symlink}) " # Create output directory
+        "&& "                                   # Create symlink directory
+        "ln -sf "                               # Create symbolic link
+        "{input.valid_fastq} "                  # Source file
+        "{output.symlink} "                     # Link
+        "&> {log}"                              # Log redirection
 
+###############################################################################
 ###############################################################################

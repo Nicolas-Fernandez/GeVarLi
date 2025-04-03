@@ -33,11 +33,11 @@ rule samtools_index_markdup:
     resources:
        cpus = 6
     input:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.bam"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
     output:
-        index = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.bam.bai"
+        index = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_mark-dup-index.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_markdup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
@@ -64,9 +64,9 @@ rule samtools_markdup:
     input:
         sorted = "results/02_Mapping/{reference}/{sample}_{mapper}_sorted.bam"
     output:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{mapper}_mark-dup.bam"
+        mark_dup = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_mark-dup.log"
+        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_markdup.log"
     shell:
         "samtools markdup "          # Samtools markdup, tools for alignments in the SAM format with command mark duplicates
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
