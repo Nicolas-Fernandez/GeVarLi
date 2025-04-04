@@ -97,7 +97,7 @@ reference: 'SARS-CoV-2_Wuhan_MN908947.3' # Your reference, in fasta format (defa
 ################################ SUBMISSIONS ##################################
 ###############################################################################
 
-gisaid: ##TODO##
+gisaid: # TODO
   username: 'username'
   threshold: '30'
   name: 'hCoV-19'
@@ -135,8 +135,8 @@ consensus:
   max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
   # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
 
-  min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  min_insert: '0' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
+  min_freq: '0.2'   # Minimum allele frequency allowed (default: "0.2") [FLOAT]
+  min_insert: '0.8' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
 
   map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
   # Available options, set only one:
@@ -163,8 +163,8 @@ variant:
   max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
   # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
 
-  min_freq: '0.2' # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  min_insert: '0' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
+  min_freq: '0.2'   # Minimum allele frequency allowed (default: "0.2") [FLOAT]
+  min_insert: '0.8' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
 
   map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
   # Available options, set only one:
@@ -175,37 +175,37 @@ variant:
   min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
 
 ###############################################################################
-############################# PRIMERS CLEAPING  ###############################
+############################# PRIMERS CLEAPING ################################
 ###############################################################################
 
 primers:
   offset: '0'      # Offset for primer trimming (default: '0') [INT]
   min_length: '35' # Minimum length of read to retain after trimming (Default: 50% average length of the first 1000 reads) [INT]
-  min_qual: '20' # Minimum quality threshold for sliding window to pass (Default: '20') [INT]
-  slide: '4'     # Width of sliding window (Default: '4') [INT]
+  min_qual: '20'   # Minimum quality threshold for sliding window to pass (Default: '20') [INT]
+  slide: '4'       # Width of sliding window (Default: '4') [INT]
   bed:
     path: 'resources/primers_schemes/bed/' # Path to primers bed files (default 'resources/primer/bed') [PATH]
-    scheme: 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # Your primer set, in BED format (no default: you need to know which kit and reference you used!)
+    scheme: # Your primer set, in BED format (you need to know which kit and reference you used!)
     # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
     # Available options (not exhaustive), set only one:
       ##- 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V5.3.2 (latest)
-      ##- 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+      - 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
       ##- 'nCoV-2019/V4/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
       ##- 'nCoV-2019/V3/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V3
       ##- 'nCoV-2019/V2/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V2
       ##- 'nCoV-2019/V1/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V1
       ##- 'ZaireEbola/V3/ZaireEbola.primer.bed' # EBOV Artic V3
-      ##- 'ZaireEbola/V2/ZaireEbola.primer.bed' # EBOV Artic V2 (based on AF272001.1)    
+      ##- 'ZaireEbola/V2/ZaireEbola.primer.bed' # EBOV Artic V2 (based on AF272001.1)
       ##- 'ZaireEbola/V1/ZaireEbola.primer.bed' # EBOV Artic V1
       ##- 'Nipah/V1/NiV_6_Malaysia.primer.bed'  # NIV Artic V1
       ##- 'MPXV/V1/MPXV.primer.bed'             # MPXV  V1 (dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v4)
       ##- 'your_custom_amplicon_kit.bed'        # Add your custom amplicon kit
   bedpe:
     path: 'resources/primers_schemes/bedpe/' # Path to primers bedpe files (default 'resources/primer/bedpe') [PATH]
-    scheme: #'insert_here' # Your primer set, in BEDPE format (no default: you need to know which kit and reference you used!)
+    scheme: # Your primer set, in BEDPE format (you need to know which kit and reference you used!)
     # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
     # Available options (not exhaustive), set only one:
-      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1.bedpe'   # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+      - 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1.bedpe'   # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
       ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4.bedpe'     # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
       ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3.bedpe'     # SARS-CoV-2 Artic V3
       ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2.bedpe'     # SARS-CoV-2 Artic V2
@@ -293,7 +293,7 @@ cutadapt:
 ############################### QUALITY CONTROL ###############################
 ###############################################################################
 
-multiqc: ##TODO##
+multiqc: # TODO
   path: 'config/multiqc/' # Path to the multiqc configuration file
   config: 'default.yaml' # Multiqc configuration file (default: default.yaml)
   # Available options (not exhaustive), set only one:
@@ -357,7 +357,7 @@ fastq_screen:
 ############################### RENAME SAMPLES ################################
 ###############################################################################
 
-rename: ##TODO##
+rename: # TODO
   barcode_id: true
   line_id: true
   end_id: true
