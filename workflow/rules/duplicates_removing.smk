@@ -19,21 +19,21 @@
 
 ###############################################################################
 rule samtools_index_markdup:
-    # Aim: indexing marked as duplicate BAM file
+    # Aim: index BAM file
     # Use: samtools index -@ [THREADS] -b [MARK-DUP.bam] [INDEX.bai]
     message:
         """
         ~ SamTools ∞ Index 'Marked as Duplicate' BAM file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
+        Sample: ______ {wildcards.sample}
+        Reference: ___ {wildcards.reference}
+        Mapper: ______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
     resources:
-       cpus = 6
+       cpus = 4
     input:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
+        bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
     output:
         index = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam.bai"
     log:
@@ -42,25 +42,25 @@ rule samtools_index_markdup:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
         "-b "                  # -b: Generate BAI-format index for BAM files (default)
-        "{input.mark_dup} "    # Mark_dup bam input
+        "{input.bam} "         # Mark_dup bam input
         "{output.index} "      # Mark_dup index output
         "&> {log}"             # Log redirection
 
 ###############################################################################
 rule samtools_markdup:
-    # Aim: marking duplicate alignments
+    # Aim: mark duplicate alignments
     # Use: samtools markdup -@ [THREADS] -r -s -O BAM [SORTED.bam] [MARK-DUP.bam] 
     message:
         """
         ~ SamTools ∞ Mark Duplicate Alignments ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: ______ {wildcards.sample}
+        Reference: ___ {wildcards.reference}
+        Mapper: ______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
     resources:
-       cpus = 6
+       cpus = 4
     input:
         sorted = "results/02_Mapping/{reference}/{sample}_{mapper}_sorted.bam"
     output:
@@ -78,20 +78,20 @@ rule samtools_markdup:
         "&> {log}"                    # Log redirection 
 
 ###############################################################################
-rule samtools_sorting:
-    # Aim: sorting
+rule samtools_sort_fixmate:
+    # Aim: sort BAM file
     # Use: samtools sort -@ [THREADS] -m [MEM_GB] -T [TMP_DIR] -O BAM -o [SORTED.bam] [FIX-MATE.bam] 
     message:
         """
         ~ SamTools ∞ Sort BAM file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: ______ {wildcards.sample}
+        Reference: ___ {wildcards.reference}
+        Mapper: ______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
     resources:
-       cpus = 6,
+       cpus = 4,
        mem_gb = 1,
        tmp_dir = TMP_DIR
     input:
@@ -117,9 +117,9 @@ rule samtools_fixmate:
     message:
         """
         ~ SamTools ∞ Fil Mate Coordinates ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: ______ {wildcards.sample}
+        Reference: ___ {wildcards.reference}
+        Mapper: ______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -147,9 +147,9 @@ rule samtools_sortbynames:
     message:
         """
         ~ SamTools ∞ Sort by Names BAM file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: ______ {wildcards.sample}
+        Reference: ___ {wildcards.reference}
+        Mapper: ______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
