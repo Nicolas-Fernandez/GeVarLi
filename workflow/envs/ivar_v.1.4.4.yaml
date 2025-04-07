@@ -1,7 +1,8 @@
-name: bwa_v.0.7.18
+name: ivar_v.1.4.4
 channels:
   - conda-forge
   - bioconda
   - nodefaults
 dependencies:
-  - bwa=0.7.18
+  - ivar=1.4.4
+  - samtools=1.21 # samtools 

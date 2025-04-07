@@ -16,7 +16,7 @@
 # Latest modifications ___ 2025.04.04
 # Use ____________________ import scripts.functions as functions
 ###############################################################################
-
+ 
 ###############################################################################
 ### IMPORTS ###
 ###############
@@ -298,7 +298,6 @@ def get_settings(config, start_time):
     gisaid = modules.get("gisaid", "N/A")
 
     # Get tools
-
     tools = config.get("tools", {})
     mapper = tools.get("mapper", "N/A")
     caller = tools.get("caller", "N/A")

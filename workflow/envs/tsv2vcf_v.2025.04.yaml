@@ -1,0 +1,9 @@
+name: tsv2vcf_v.2025.04
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - biopython=1.85 # from Bio import SeqIO
+  - numpy=2.2.4    # numpy.array
+  - scipy=1.15.2   # from scipy.stats import fisher_exact

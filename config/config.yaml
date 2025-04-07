@@ -211,7 +211,7 @@ primers:
       ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2.bedpe'     # SARS-CoV-2 Artic V2
       ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1.bedpe'     # SARS-CoV-2 Artic V1
       ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V3.bedpe'    # EBOV Artic V3
-      ##- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2.bedpe'    # EBOV Artic V2 (based on AF272001.1)    
+      ##- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2.bedpe'    # EBOV Artic V2 (based on AF272001.1)
       ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V1.bedpe'    # EBOV Artic V1
       ##- 'Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1.bedpe' # NIV Artic V1
       ##- 'Monkeypox-virus_UK_MT-903345-1_VGCARE-primers-V1.bedpe'  # MPXV VGCARE V1 (based on MT903345.1)
@@ -238,7 +238,7 @@ bowtie2:
   # Available preset options, set only one:
     ##- '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
     ##- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
-    ##- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"    
+    ##- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"
     ##- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
 
 minimap2:
@@ -307,12 +307,12 @@ fastq_screen:
 
   reference: # FastqScreen config file genomes to index [LIST]
     # Available options (not exhaustive):
-  
+
     ### MOLECULAR BIOLOGY SEQUENCES
     - 'QC_Phi-X174_Coliphage_NC001422.1'
     - 'QC_Kanamycin-Resistance-Gene'
     - 'QC_UniVec_wo_phiX-kanamycin-NGSseq'
-  
+
     ### MAIN TRANSVIHMI VIRUSES (small genomes, provided)
     - 'SARS-CoV-2_Wuhan_MN908947.3' # without poly-A tail
     - 'Monkeypox-virus_Zaire_AF380138.1'
@@ -334,14 +334,14 @@ fastq_screen:
     - 'Lassa-virus_Josiah_NC004297.1_Seg-L'
     - 'Lassa-virus_Josiah_NC004296.1_Seg-S'
     - 'HIV-1_HXB2_K03455.1'
-  
+
     ### MAIN TRANSVIHMI PUTATIVE HOSTS (large genomes, not provided)
     #- 'HOST_Gorilla-gorilla_g4'
     #- 'HOST_Pan-troglodytes_t3'
     #- 'HOST_Pteropus-vampyrus_v1'
     #- 'HOST_Mus-musculus_m39'
     #- 'HOST_Homo-sapiens_h38_NC000001.11'
-  
+
     ### GENERIC LAB MODEL ORGANISMS (putative contaminations)
     - 'QC_Echerichia-coli_CP060121.1'
     #- 'QC_Saccharomyces-cerevisiae'
@@ -377,24 +377,23 @@ resources:
     ## -''         # Custom (set your own)
 
 envs: # Conda environement yaml files:
-  bamclipper:    '../envs/bamclipper_v.1.0.0.yaml'      # Bamclipper    ver. 1.0.0
   bcftools:      '../envs/bcftools_v.1.21.yaml'         # Bcftools      ver. 1.21
   bedtools:      '../envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
   bowtie2:       '../envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
-  bwa:           '../envs/bwa_v.0.7.18.yaml'            # BWA           ver. 0.7.18
+  bwa:           '../envs/bwa_v.0.7.19.yaml'            # BWA           ver. 0.7.19
   cutadapt:      '../envs/cutadapt_v.5.0.yaml'          # Cutadapt      ver. 5.0
   fastq_screen:  '../envs/fastq-screen_v.0.16.yaml'     # Fastq-Screen  ver. 0.16 (bwa=0.7.18 gdgraph=1.54)
   fastqc:        '../envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
   gawk:          '../envs/gawk_v.5.3.1.yaml'            # Awk (GNU)     ver. 5.3.1
-  ivar:          '../envs/ivar_v.1.4.3.yaml'            # iVar          ver. 1.4.3  (samtools=1.21)
+  ivar:          '../envs/ivar_v.1.4.4.yaml'            # iVar          ver. 1.4.4  (samtools=1.21)
   minimap2:      '../envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
-  multiqc:       '../envs/multiqc_v.1.27.1.yaml'        # MultiQC       ver. 1.27.1 (pandoc=3.6.3)
-  nextclade:     '../envs/nextclade_v.3.9.1.yaml'       # Nextclade     ver. 3.9.1
+  multiqc:       '../envs/multiqc_v.1.28.yaml'          # MultiQC       ver. 1.28 (pandoc=3.6.3)
+  nextclade:     '../envs/nextclade_v.3.12.0.yaml'      # Nextclade     ver. 3.12.0
   pangolin:      '../envs/pangolin_v.4.3.1.yaml'        # Pangolin      ver. 4.3.1
   samtools:      '../envs/samtools_v.1.21.yaml'         # Samtools      ver. 1.21
   sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-  tsv2vcf:       '../envs/tsv2vcf_v.2025.01.yaml'       # tsv2vcf       ver. 2025.01 (biopython=1.85 numpy=2.2.2 scipy=1.15.1)
-  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.01 (snakemake=8.27.1 graphviz=12.0.0)
+  tsv2vcf:       '../envs/tsv2vcf_v.2025.04.yaml'       # tsv2vcf       ver. 2025.04 (biopython=1.85 numpy=2.2.4 scipy=1.15.2)
+  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.04 (snakemake=9.1.7 snakedeploy=0.11.0 graphviz=12.2.1)
 
 report: # Snakemake reports formats
 
@@ -403,7 +402,7 @@ report: # Snakemake reports formats
       - 'txt'
       - 'tsv'
       - 'json'
-  
+
   graph:
     type:
       - 'dag'

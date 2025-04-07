@@ -20,12 +20,12 @@
 ###############################################################################
 rule merge_consensus:
     message:
-        """                                                                                                                                       
+        """
         ~ Merge ∞ Concatenating all samples consensus sequences ~
         Reference: _______ {wildcards.reference}
         Mapper: __________ {wildcards.mapper}
         Min. cov.: _______ {wildcards.min_cov}x
-        Caller: __________ {wildcards.caller}                                                                                            
+        Caller: __________ {wildcards.caller}
         """
     input:
         consensus = lambda wildcards: expand("results/05_Consensus/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_consensus.fasta",
@@ -47,7 +47,7 @@ rule merge_consensus:
 ###############################################################################
 rule merge_coverage:
     message:
-        """                                                                                                                                       
+        """
         ~ Merge ∞ Concatenating genome coverage statistics ~
         Reference: _______ {wildcards.reference}
         Mapper: __________ {wildcards.mapper}
@@ -61,24 +61,24 @@ rule merge_coverage:
                                             min_cov = wildcards.min_cov)
     output:
         all_covstats = "results/All_{reference}_{mapper}_{min_cov}X_genome_coverages.tsv"
-     log:
+    log:
         "results/10_Reports/tools-log/merge_coverage/{reference}/{mapper}_{min_cov}X_covstats.log"
     shell:
-        "cat {input.covstats} | "  # Concatenate all coverage statistics          
+        "cat {input.covstats} | "  # Concatenate all coverage statistics
         "awk 'NR==1 || NR%2==0' "   # Keep only even lines
         "1> {output.all_covstats} " # Output file
-        "2> {log}"                  # Log redirection                  
+        "2> {log}"                  # Log redirection
 
 ###############################################################################
 rule merge_clade:
     message:
-        """                                                                                                                                       
+        """
         ~ Merge ∞ Concatenating lineage assignments ~
         Reference: _______ {wildcards.reference}
         Mapper: __________ {wildcards.mapper}
         Min. cov.: _______ {wildcards.min_cov}x
         Variant caller: __ {wildcards.caller}
-        Assigner: ________ {wildcards.assigner}                                                                               
+        Assigner: ________ {wildcards.assigner}
         """
     input:
         lineages = lambda wildcards: expand("results/06_Lineages/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_{assigner}-report.tsv",
@@ -93,10 +93,10 @@ rule merge_clade:
     log:
         "results/10_Reports/tools-log/merge_clade/{reference}/{mapper}_{min_cov}X_{caller}_{assigner}-lineages.log"
     shell:
-        "cat {input.lineages} | "                       # Concatenate all lineage assignments
-        "awk 'NR==1 || NR%2==0' {output.temp_lineages} " # Keep only even lines
-        "1> {output.all_lineages} "                      # Output file
-        "2> {log}"                                       # Log redirection
+        "cat {input.lineages} | "  # Concatenate all lineage assignments
+        "awk 'NR==1 || NR%2==0' "   # Keep only even lines
+        "1> {output.all_lineages} " # Output file
+        "2> {log}"                  # Log redirection
 
 ###############################################################################
 ###############################################################################

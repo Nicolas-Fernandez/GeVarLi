@@ -1,7 +1,7 @@
-name: bamclipper_v.1.0.0
+name: bwa_v.0.7.19
 channels:
   - conda-forge
   - bioconda
   - nodefaults
 dependencies:
-  - bamclipper=1.0.0
+  - bwa=0.7.19
