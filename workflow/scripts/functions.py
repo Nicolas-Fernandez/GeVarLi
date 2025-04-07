@@ -313,6 +313,7 @@ def get_settings(config, start_time):
     # Get other parameters
     nextclade_dataset = config.get("nextclade", {}).get("dataset", "N/A")
     fastqscreen_subset = config.get("fastq_screen", {}).get("subset", "N/A")
+    ivar_clipping = config.get("primers", {}).get("bed", {}).get("scheme", "N/A")
     cutadapt_clipping = config.get("cutadapt", {}).get("clipping", "N/A")
 
     # Get time stamp
@@ -328,22 +329,22 @@ def get_settings(config, start_time):
     {blue}#####{nc} {red}About{nc} {blue}#####{nc}
     {blue}-----------------{nc}
 
-    {green}Name{nc} _________________________ GeVarLi
-    {green}Version{nc} ______________________ {ylo}{version}{nc}
-    {green}Author{nc} _______________________ Nicolas Fernandez
-    {green}Affiliation{nc} __________________ IRD_U233_TransVIHMI
-    {green}Aim{nc} __________________________ {red}Ge{nc}nome assembling, {red}Var{nc}iant calling and {red}Li{nc}neage assignation
-    {green}Date{nc} _________________________ 2021.10.12
-    {green}Latest modifications{nc} _________ 2025.03.26
-    {green}Use{nc} __________________________ '{ylo}snakemake --use-conda{nc}'
+    {green}Name{nc} __________________________ GeVarLi
+    {green}Version{nc} _______________________ {ylo}{version}{nc}
+    {green}Author{nc} ________________________ Nicolas Fernandez
+    {green}Affiliation{nc} ___________________ IRD_U233_TransVIHMI
+    {green}Aim{nc} ___________________________ {red}Ge{nc}nome assembling, {red}Var{nc}iant calling and {red}Li{nc}neage assignation
+    {green}Date{nc} __________________________ 2021.10.12
+    {green}Latest modifications{nc} __________ 2025.04.04
+    {green}Use{nc} ___________________________ '{ylo}snakemake --use-conda{nc}'
 
 
     {blue}------------------------------------------------------------------------{nc}
     {blue}#####{nc} {red}Operating System{nc} {blue}#####{nc}
     {blue}----------------------------{nc}
 
-    {green}Operating system{nc} _____________ {red}{os_type}{nc}
-    {green}Shell{nc} ________________________ '{ylo}{shell}{nc}'
+    {green}Operating system{nc} ______________ {red}{os_type}{nc}
+    {green}Shell{nc} _________________________ '{ylo}{shell}{nc}'
 
 
     {blue}------------------------------------------------------------------------{nc}
@@ -351,30 +352,30 @@ def get_settings(config, start_time):
     {blue}--------------------{nc}
 
                                         {ylo}Brand(R){nc} | {ylo}Type(R){nc} | {ylo}Model{nc} | {ylo}@ Speed GHz{nc}
-    {green}Chip Model Name{nc} ______________ {model_name}
-    {green}Physical CPUs{nc} ________________ {red}{physical_cpu}{nc}
-    {green}Logical CPUs{nc} _________________ {red}{logical_cpu}{nc} threads
-    {green}System Memory{nc} ________________ {red}{ram_gb}{nc} Gb of RAM
+    {green}Chip Model Name{nc} _______________ {model_name}
+    {green}Physical CPUs{nc} _________________ {red}{physical_cpu}{nc}
+    {green}Logical CPUs{nc} __________________ {red}{logical_cpu}{nc} threads
+    {green}System Memory{nc} _________________ {red}{ram_gb}{nc} Gb of RAM
 
 
     {blue}------------------------------------------------------------------------{nc}
     {blue}#####{nc} {red}Configuration{nc} {blue}#####{nc}
     {blue}-------------------------{nc}
 
-    {green}Starting time{nc} ________________ {time_stamp_start}
+    {green}Starting time{nc} _________________ {time_stamp_start}
 
-    {green}Conda version{nc} ________________ {ylo}{conda_version}{nc}
-    {green}Mamba version{nc} ________________ {ylo}{mamba_version}{nc}
-    {green}Snakemake version{nc} ____________ {ylo}{snakemake_version}{nc}
+    {green}Conda version{nc} _________________ {ylo}{conda_version}{nc}
+    {green}Mamba version{nc} _________________ {ylo}{mamba_version}{nc}
+    {green}Snakemake version{nc} _____________ {ylo}{snakemake_version}{nc}
 
-    {green}Max threads{nc} __________________ {red}{max_threads}{nc} of {ylo}{logical_cpu}{nc} threads available
-    {green}Max memory{nc} ___________________ {red}{max_memory}{nc} Gb of {ylo}{ram_gb}{nc} Gb available
-    {green}Temp directory{nc} _______________ '{ylo}{tmp_dir}{nc}'
+    {green}Max threads{nc} ___________________ {red}{max_threads}{nc} of {ylo}{logical_cpu}{nc} threads available
+    {green}Max memory{nc} ____________________ {red}{max_memory}{nc} Gb of {ylo}{ram_gb}{nc} Gb available
+    {green}Temp directory{nc} ________________ '{ylo}{tmp_dir}{nc}'
 
-    {green}Network{nc} ______________________ {red}{network}{nc}
+    {green}Network{nc} _______________________ {red}{network}{nc}
 
-    {green}Working directory{nc} ____________ '{ylo}{workdir}{nc}'
-    {green}Fastq directory{nc} ______________ '{ylo}{FASTQ_DIR}{nc}'
+    {green}Working directory{nc} _____________ '{ylo}{workdir}{nc}'
+    {green}Fastq directory{nc} _______________ '{ylo}{FASTQ_DIR}{nc}'
 
     {green}  > Warnings:{nc}
 
@@ -385,29 +386,30 @@ def get_settings(config, start_time):
 {samples_list}
 
     {blue}Modules:{nc}
-    {green}  > Quality Control{nc} ___________ {ylo}{qualities}{nc}
-    {green}  > Keep Trim{nc} _________________ {ylo}{keeptrim}{nc}
-    {green}  > Soft Clipping{nc} _____________ {ylo}{clipping}{nc}
-    {green}  > Cov Stats{nc} _________________ {ylo}{covstats}{nc}
-    {green}  > Consensus{nc} _________________ {ylo}{consensus}{nc}
-    {green}  > Lineages{nc} __________________ {ylo}{lineages}{nc}
-    {green}  > Gisaid{nc} ____________________ {ylo}{gisaid}{nc}
+    {green}  > Quality Control{nc} ____________ {ylo}{qualities}{nc}
+    {green}  > Keep Trim{nc} __________________ {ylo}{keeptrim}{nc}
+    {green}  > Soft Clipping{nc} ______________ {ylo}{clipping}{nc}
+    {green}  > Cov Stats{nc} __________________ {ylo}{covstats}{nc}
+    {green}  > Consensus{nc} __________________ {ylo}{consensus}{nc}
+    {green}  > Lineages{nc} ___________________ {ylo}{lineages}{nc}
+    {green}  > Gisaid{nc} _____________________ {ylo}{gisaid}{nc}
 
     {blue}Tools:{nc}
-    {green}  > Mapper{nc} ____________________ {ylo}{mapper}{nc}
-    {green}  > Caller{nc} ____________________ {ylo}{caller}{nc}
-    {green}  > Assigner{nc} __________________ {ylo}{assigner}{nc}
+    {green}  > Mapper{nc} _____________________ {ylo}{mapper}{nc}
+    {green}  > Caller{nc} _____________________ {ylo}{caller}{nc}
+    {green}  > Assigner{nc} ___________________ {ylo}{assigner}{nc}
 
     {blue}Params:{nc}
-    {green}  > Reference genome{nc} __________ {ylo}{reference}{nc}
-    {green}  > Min depth{nc} _________________ {red}{min_depth}{nc}x
-    {green}  > Max depth{nc} _________________ {red}{max_depth}{nc}x
-    {green}  > Min allele frequency{nc} ______ {red}{min_freq}{nc}
-    {green}  > Min insertion frequency{nc} ___ {red}{min_insert}{nc}
+    {green}  > Reference genome{nc} ___________ {ylo}{reference}{nc}
+    {green}  > Min depth{nc} __________________ {red}{min_depth}{nc}x
+    {green}  > Max depth{nc} __________________ {red}{max_depth}{nc}x
+    {green}  > Min allele frequency{nc} _______ {red}{min_freq}{nc}
+    {green}  > Min insertion frequency{nc} ____ {red}{min_insert}{nc}
 
     {green}  > Nextclade dataset{nc} _________ {ylo}{nextclade_dataset}{nc}
-    {green}  > Fastq-Screen subset{nc} _______ {red}{fastqscreen_subset}{nc} reads/sample
-    {green}  > Hard clipping{nc} _____________ {red}{cutadapt_clipping}{nc}nt (with cutadapt)
+    {green}  > Fastq-Screen subset{nc} ________ {red}{fastqscreen_subset}{nc} reads/sample
+    {green}  > Soft clipping (ivar){nc} _______ '{ylo}{ivar_clipping}{nc}' scheme
+    {green}  > Hard clipping (cutadapt){nc} ___ {red}{cutadapt_clipping}{nc} nt
     """
 
     # Clean message

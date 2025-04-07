@@ -143,19 +143,7 @@ properties:
           path:
             type: string
           scheme:
-            type: array
-            items:
-              type: string
-        required:
-          - path
-          - scheme
-      bedpe:
-        type: object
-        properties:
-          path:
             type: string
-          scheme:
-            type: array
             items:
               type: string
         required:
@@ -167,7 +155,6 @@ properties:
       - min_qual
       - slide
       - bed
-      - bedpe
   bwa:
     type: object
     properties:
