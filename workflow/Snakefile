@@ -150,8 +150,6 @@ IVAR_SLIDE = config["primers"]["slide"]           # iVar slide windows
 
 PRIMER_BED_PATH = config["primers"]["bed"]["path"]     # primer kit bed path
 PRIMER_BED_SCHEME = config["primers"]["bed"]["scheme"] # primer kit bed scheme
-PRIMER_BEDPE_PATH = config["primers"]["bedpe"]["path"]     # primer kit bedpe path
-PRIMER_BEDPE_SCHEME = config["primers"]["bedpe"]["scheme"] # primer kit bedpe scheme
 
 MIN_DEPTH = config["consensus"]["min_depth"]        # iVar minimum depth
 IVAR_MIN_FREQ = config["consensus"]["min_freq"]     # iVar minimum allele frequency

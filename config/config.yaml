@@ -185,37 +185,21 @@ primers:
   slide: '4'       # Width of sliding window (Default: '4') [INT]
   bed:
     path: 'resources/primers_schemes/bed/' # Path to primers bed files (default 'resources/primer/bed') [PATH]
-    scheme: # Your primer set, in BED format (you need to know which kit and reference you used!)
+    scheme: 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # Your primer set, in BED format (you need to know which kit and reference you used!)
     # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
     # Available options (not exhaustive), set only one:
       ##- 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V5.3.2 (latest)
-      - 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
-      ##- 'nCoV-2019/V4/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
-      ##- 'nCoV-2019/V3/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V3
-      ##- 'nCoV-2019/V2/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V2
-      ##- 'nCoV-2019/V1/SARS-CoV-2.primer.bed'  # SARS-CoV-2 Artic V1
-      ##- 'ZaireEbola/V3/ZaireEbola.primer.bed' # EBOV Artic V3
-      ##- 'ZaireEbola/V2/ZaireEbola.primer.bed' # EBOV Artic V2 (based on AF272001.1)
-      ##- 'ZaireEbola/V1/ZaireEbola.primer.bed' # EBOV Artic V1
-      ##- 'Nipah/V1/NiV_6_Malaysia.primer.bed'  # NIV Artic V1
-      ##- 'MPXV/V1/MPXV.primer.bed'             # MPXV  V1 (dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v4)
-      ##- 'your_custom_amplicon_kit.bed'        # Add your custom amplicon kit
-  bedpe:
-    path: 'resources/primers_schemes/bedpe/' # Path to primers bedpe files (default 'resources/primer/bedpe') [PATH]
-    scheme: # Your primer set, in BEDPE format (you need to know which kit and reference you used!)
-    # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
-    # Available options (not exhaustive), set only one:
-      - 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4-1.bedpe'   # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
-      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V4.bedpe'     # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
-      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V3.bedpe'     # SARS-CoV-2 Artic V3
-      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V2.bedpe'     # SARS-CoV-2 Artic V2
-      ##- 'SARS-CoV-2_Wuhan_MN-908947-3_artic-primers-V1.bedpe'     # SARS-CoV-2 Artic V1
-      ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V3.bedpe'    # EBOV Artic V3
-      ##- 'Ebola-virus_Zaire_AF-272001-1_artic-primers-V2.bedpe'    # EBOV Artic V2 (based on AF272001.1)
-      ##- 'Ebola-virus_Zaire_KR-063671-1_artic-primers-V1.bedpe'    # EBOV Artic V1
-      ##- 'Nipah-virus_Malaysia_AJ-564622-1_artic-primers-V1.bedpe' # NIV Artic V1
-      ##- 'Monkeypox-virus_UK_MT-903345-1_VGCARE-primers-V1.bedpe'  # MPXV VGCARE V1 (based on MT903345.1)
-      ##- 'your_custom_amplicon_kit.bedpe'                          # Add your custom amplicon kit
+      ##- 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed'   # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
+      ##- 'nCoV-2019/V4/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
+      ##- 'nCoV-2019/V3/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V3
+      ##- 'nCoV-2019/V2/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V2
+      ##- 'nCoV-2019/V1/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V1
+      ##- 'ZaireEbola/V3/ZaireEbola.primer.bed'    # EBOV Artic V3
+      ##- 'ZaireEbola/V2/ZaireEbola.primer.bed'    # EBOV Artic V2 (based on AF272001.1)
+      ##- 'ZaireEbola/V1/ZaireEbola.primer.bed'    # EBOV Artic V1
+      ##- 'Nipah/V1/NiV_6_Malaysia.primer.bed'     # NIV Artic V1
+      ##- 'MPXV/V1/MPXV.primer.bed'                # MPXV  V1 (dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v4)
+      ##- 'your_custom_amplicon_kit.bed'           # Add your custom amplicon kit
 
 ###############################################################################
 ################################### MAPPING ###################################

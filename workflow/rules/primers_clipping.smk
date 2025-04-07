@@ -95,8 +95,6 @@ rule ivar_trim:
     params:
         path = PRIMER_BED_PATH,
         bed = PRIMER_BED_SCHEME,
-        #path = PRIMER_BEDPE_PATH,
-        #bedpe = PRIMER_BEDPE_SCHEME,
         offset = IVAR_OFFSET,
         min_len = IVAR_MIN_LENGTH,
         min_qual = IVAR_MIN_QUAL,
@@ -115,8 +113,6 @@ rule ivar_trim:
         "-p {output.prefix} "           # Prefix for the output BAM file
         "-b {params.path}{params.bed} " # BED file with primer sequences and positions
                                         # If no BED file is specified, only quality trimming will be done.
-        #"-f {params.path}{params.bedpe} " # Primer pair information file containing left and right primer names for the same amplicon separated by a tab
-                                        # If provided, reads that do not fall within atleat one amplicon will be ignored prior to primer trimming.
         "-x {params.offset} "           # primer position offset (Default: 0)
         "-m {params.min_len} "          # Minimum length of read to retain after trimming (Default: 50% average length of the first 1000 reads)
         "-q {params.min_qual} "         # Minimum quality threshold for sliding window to pass (Default: 20)
