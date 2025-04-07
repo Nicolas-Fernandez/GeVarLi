@@ -45,7 +45,7 @@ rule ivar_trim:
     output:
         prefix = temp("results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed"),
         trimmed_bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam",
-        trimmed_bai = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam.bai"
+        #trimmed_bai = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam.bai"
     log:
         "results/10_Reports/tools-log/ivar_trim/{reference}/{sample}_{mapper}.log"
     shell:
