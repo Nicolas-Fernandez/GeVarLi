@@ -68,7 +68,7 @@ functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extent
 min_version("9.1.7")
 
 # Schemas
-#validate(config, schema="schemas/config.schema.yaml")
+validate(config, schema="schemas/config.schema.yaml")
 
 ###############################################################################
 ### WILDCARDS ###
@@ -98,7 +98,6 @@ BWA = config["envs"]["bwa"]                   # BWA conda environment
 BOWTIE2 = config["envs"]["bowtie2"]           # Bowtie2 conda environment
 SAMTOOLS = config["envs"]["samtools"]         # SamTools conda environment
 BEDTOOLS = config["envs"]["bedtools"]         # BedTools conda environment
-BAMCLIPPER = config["envs"]["bamclipper"]     # BAMClipper onda environment
 GAWK = config["envs"]["gawk"]                 # Awk (GNU) conda environment
 IVAR = config["envs"]["ivar"]                 # iVar conda environment
 TSV2VCF = config["envs"]["tsv2vcf"]           # tsv2vcf conda environment
@@ -201,24 +200,24 @@ rule all:
 #############
 
 onstart:
-    print("onstart")
+    print("\n \033[94m ===> GeVarLi Workflow : Start! <=== \033[0m \n\n")
     get_settings(config, START_TIME)
 
 onsuccess:
-    print("onsuccess")
+    print("\n \033[92m ===> GeVarLi Workflow : Success! <=== \033[0m \n\n")
     get_time(START_TIME)
     shell("mkdir -p results/10_Reports/envs/ 2> /dev/null")
     shell("cp workflow/envs/*.yaml results/10_Reports/envs/ 2> /dev/null")
     shell("cp config/config.yaml results/10_Reports/config.log 2> /dev/null")
-    shell("tar -zfc results/Reports_archive.tar.gz -C results/ 10_Reports/")
+    shell("tar -czf results/Reports_archive.tar.gz -C results/ 10_Reports/")
 
 onerror:
-    print("onerror")
+    print("\n \033[91m ===> GeVarLi Workflow : Error... <=== \033[0m \n\n")
     get_time(START_TIME)
     shell("mkdir -p results/10_Reports/envs/ 2> /dev/null")
     shell("cp workflow/envs/*.yaml results/10_Reports/envs/ 2> /dev/null")
     shell("cp config/config.yaml results/10_Reports/config.log 2> /dev/null")
-    shell("tar -zfc results/Reports_archive.tar.gz -C results/ 10_Reports/")
+    shell("tar -czf results/Reports_archive.tar.gz -C results/ 10_Reports/")
 
 ###############################################################################
 ###############################################################################

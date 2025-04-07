@@ -111,11 +111,11 @@ def get_final_outputs():
     # reads_mapping
     # primers_clipping
     if MODULES["clipping"]:
-        final_outputs.append(expand("results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam",
+        final_outputs.append(expand("results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam",
                                     reference = REFERENCE,
                                     sample = SAMPLE,
                                     mapper = MAPPER))
-        final_outputs.append(expand("results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam.bai",
+        final_outputs.append(expand("results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam.bai",
                                     reference = REFERENCE,
                                     sample = SAMPLE,
                                     mapper = MAPPER))
@@ -304,13 +304,11 @@ def get_settings(config, start_time):
     assigner = tools.get("assigner", "N/A")
 
     # Get consensus parameters
-    reference = config.get("consensus", {}).get("reference", "N/A")
-
-    ivar_consensus = config.get("ivar", {}).get("consensus", {})
-    min_depth = ivar_consensus.get("min_depth", "N/A")
-    max_depth = ivar_consensus.get("max_depth", "N/A")
-    min_freq = ivar_consensus.get("min_freq", "N/A")
-    min_insert = ivar_consensus.get("min_insert", "N/A")
+    reference = config.get("reference", "N/A")
+    min_depth = config.get("consensus", {}).get("min_depth", "N/A")
+    max_depth = config.get("consensus", {}).get("max_depth", "N/A")
+    min_freq = config.get("consensus", {}).get("min_freq", "N/A")
+    min_insert = config.get("consensus", {}).get("min_insert", "N/A")
   
     # Get other parameters
     nextclade_dataset = config.get("nextclade", {}).get("dataset", "N/A")
@@ -442,10 +440,9 @@ def get_time(start_time):
         ylo = "\033[33m"
         nc = "\033[0m"
         message_time = f"""
-{green}Start time{nc} _____________ {time_stamp_start}
-{green}End time{nc} _______________ {time_stamp_end}
+    {green}Start time{nc} _____________ {time_stamp_start}
+    {green}End time{nc} _______________ {time_stamp_end}
     {green}Processing time{nc} ________ {ylo}{formatted_time}{nc}
-    {green}  > Hard clipping{nc} _____________ {red}{cutadapt_clipping} nt{nc} (with cutadapt)   
 """
         print(message_time)
         ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')

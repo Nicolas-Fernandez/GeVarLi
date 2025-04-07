@@ -28,7 +28,7 @@ fastq_dir: 'resources/reads/' # Path to reads fastq.gz files (default: 'resource
 modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
   qualities: true   # Perform reads quality controls (FastQC, Fastq-Screen)       (default: true)
   keeptrim: false   # Keep trimmed reads files (Cutadapt / Sickle-trim)           (default: false)
-  clipping: true   # Perform reads clipping (iVar)                               (default: false)
+  clipping: false   # Perform reads clipping (iVar)                               (default: false)
   covstats: true    # Perform coverage statistics (Fagstat, Covstats)             (default: true)
   consensus: true   # Perform reads mapping to reference (BWA, Minimap2, Bowtie2) (default: true)
   lineages: true    # Perform clade and lineage assignations (Nexclade, Pangolin) (default: true)

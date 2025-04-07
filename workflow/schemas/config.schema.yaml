@@ -42,13 +42,8 @@ properties:
       - mapper
       - caller
       - assigner
-  consensus:
-    type: object
-    properties:
-      reference:
-        type: string
-    required:
-      - reference
+  reference:
+    type: string
   gisaid:
     type: object
     properties:
@@ -81,75 +76,98 @@ properties:
     required:
       - path
       - dataset
-  ivar:
+  consensus:
     type: object
     properties:
-      consensus:
-        type: object
-        properties:
-          min_depth:
-            type: string
-          max_depth:
-            type: string
-          min_freq:
-            type: string
-          map_qual:
-            type: string
-          min_bq:
-            type: string
-          min_qual:
-            type: string
-        required:
-          - min_depth
-          - max_depth
-          - min_freq
-          - map_qual
-          - min_bq
-          - min_qual
-      variant:
-        type: object
-        properties:
-          min_depth:
-            type: string
-          max_depth:
-            type: string
-          min_freq:
-            type: string
-          map_qual:
-            type: string
-          min_bq:
-            type: string
-          min_qual:
-            type: string
-        required:
-          - min_depth
-          - max_depth
-          - min_freq
-          - map_qual
-          - min_bq
-          - min_qual
-      primerclipping:
-        type: [ "object", "null" ]
+      min_depth:
+        type: string
+      max_depth:
+        type: string
+      min_freq:
+        type: string
+      min_insert:
+        type: string
+      map_qual:
+        type: string
+      min_bq:
+        type: string
+      min_qual:
+        type: string
     required:
-      - consensus
-      - variant
-      - primerclipping
-  bamclipper:
+      - min_depth
+      - max_depth
+      - min_freq
+      - min_insert
+      - map_qual
+      - min_bq
+      - min_qual
+  variant:
     type: object
     properties:
-      path:
+      min_depth:
         type: string
-      primers:
+      max_depth:
         type: string
-      upstream:
+      min_freq:
         type: string
-      downstream:
+      min_insert:
+        type: string
+      map_qual:
+        type: string
+      min_bq:
+        type: string
+      min_qual:
         type: string
     required:
-      - path
-      - primers
-      - upstream
-      - downstream
+      - min_depth
+      - max_depth
+      - min_freq
+      - min_insert
+      - map_qual
+      - min_bq
+      - min_qual
+  primers:
+    type: object
+    properties:
+      offset:
+        type: string
+      min_length:
+        type: string
+      min_qual:
+        type: string
+      slide:
+        type: string
+      bed:
+        type: object
+        properties:
+          path:
+            type: string
+          scheme:
+            type: array
+            items:
+              type: string
+        required:
+          - path
+          - scheme
+      bedpe:
+        type: object
+        properties:
+          path:
+            type: string
+          scheme:
+            type: array
+            items:
+              type: string
+        required:
+          - path
+          - scheme
+    required:
+      - offset
+      - min_length
+      - min_qual
+      - slide
+      - bed
+      - bedpe
   bwa:
     type: object
     properties:
@@ -214,23 +232,14 @@ properties:
         type: string
       length:
         type: string
-      kits:
-        type: object
-        properties:
-          truseq:
-            type: string
-          nextera:
-            type: string
-          small:
-            type: string
-        required:
-          - truseq
-          - nextera
-          - small
+      adapters:
+        type: array
+        items:
+          type: string
     required:
       - clipping
       - length
-      - kits
+      - adapters
   multiqc:
     type: object
     properties:
@@ -287,62 +296,8 @@ properties:
       - tmp_dir
   envs:
     type: object
-    properties:
-      bamclipper:
-        type: string
-      bcftools:
-        type: string
-      bedtools:
-        type: string
-      bowtie2:
-        type: string
-      bwa:
-        type: string
-      cutadapt:
-        type: string
-      fastq_screen:
-        type: string
-      fastqc:
-        type: string
-      gawk:
-        type: string
-      ivar:
-        type: string
-      minimap2:
-        type: string
-      multiqc:
-        type: string
-      nextclade:
-        type: string
-      pangolin:
-        type: string
-      samtools:
-        type: string
-      sickle_trim:
-        type: string
-      tsv2vcf:
-        type: string
-      workflow:
-        type: string
-    required:
-      - bamclipper
-      - bcftools
-      - bedtools
-      - bowtie2
-      - bwa
-      - cutadapt
-      - fastq_screen
-      - fastqc
-      - gawk
-      - ivar
-      - minimap2
-      - multiqc
-      - nextclade
-      - pangolin
-      - samtools
-      - sickle_trim
-      - tsv2vcf
-      - workflow
+    additionalProperties:
+      type: string
   report:
     type: object
     properties:
@@ -376,11 +331,12 @@ required:
   - fastq_dir
   - modules
   - tools
-  - consensus
+  - reference
   - gisaid
   - nextclade
-  - ivar
-  - bamclipper
+  - consensus
+  - variant
+  - primers
   - bwa
   - bowtie2
   - minimap2

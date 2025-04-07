@@ -137,7 +137,7 @@ rule awk_coverage_statistics:
         r""" {input.genome_cov} """                                      # BedGraph coverage input
         r""" 1> {output.cov_stats} """                                   # Mean depth output
         r""" 2> {log}"""                                                 # Log redirection
-        
+
 ###############################################################################
 rule bedtools_genome_coverage:
     # Aim: computing genome coverage sequencing
