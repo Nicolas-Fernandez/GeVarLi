@@ -24,22 +24,22 @@ rule convert_tsv2vcf:
     message:
         """
         ~ iVar ∞ Convert TSV to VCF file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
-        Caller: __________ iVar
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
+        Caller: _______ iVar
         """
     conda:
         TSV2VCF
     params:
         tsv2vcf = "workflow/scripts/ivar_variants_to_vcf.py" # Script (from viralrecon)
     input:
-        tsv = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_ivar_variant-call.tsv"
+        tsv = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_ivar_variant-call.tsv"
     output:
-        vcf = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_ivar_variant-filt.vcf"
+        vcf = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_ivar_variant-filt.vcf"
     log:
-        "results/10_Reports/tools-log/tsv2vcf/{reference}/{sample}_{mapper}_{min_cov}X_ivar_tsv2vcf.log"
+        "results/10_Reports/tools-log/tsv2vcf/{sample}_{reference}_{mapper}_{min_depth}x_ivar_tsv2vcf.log"
     shell:
         "python3 "         # Python 3
         "{params.tsv2vcf} " # Script (from viralrecon)
@@ -55,29 +55,29 @@ rule ivar_variant_calling:
     message:
         """
         ~ iVar ∞ Call Variants ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
-        Caller: __ iVar
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
+        Caller: _______ iVar
         """
     conda:
         IVAR
     params:
         min_depth = MIN_DEPTH,
-        min_freq = IVAR_MIN_FREQ,
-        min_insert = IVAR_MIN_INSERT,
-        max_depth = IVAR_MAX_DEPTH,
-        min_bq = IVAR_MIN_BQ,
-        min_qual = IVAR_MIN_QUAL,
-        baq = IVAR_MAP_QUAL
+        min_freq = MIN_FREQ,
+        #min_indel = MIN_INDEL,
+        max_depth = MAX_DEPTH,
+        min_bq = MIN_BQ,
+        min_qual = MIN_QUAL,
+        baq = MAP_QUAL
     input:
-        masked_ref = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_masked-ref.fasta",
+        masked_ref = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_masked-ref.fasta",
         mark_dup = get_bam_input
     output:
-        variant_call = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_ivar_variant-call.tsv"
+        variant_call = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_ivar_variant-call.tsv"
     log:
-        "results/10_Reports/tools-log/ivar/{reference}/{sample}_{mapper}_{min_cov}X_ivar_variant-call.log"
+        "results/10_Reports/tools-log/ivar/{sample}_{reference}_{mapper}_{min_depth}x_ivar_variant-call.log"
     shell:
         "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
         "--verbosity 0 "                  # Set level of verbosity [INT]

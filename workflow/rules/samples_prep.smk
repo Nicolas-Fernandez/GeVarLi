@@ -24,8 +24,8 @@ rule symlinks:
     message:
         """
         ~ Symlinks ∞ Creating symbolic links ~
-        Sample: __________ {wildcards.sample}
-        Reads: ___________ R{wildcards.mate}
+        Sample: ________ {wildcards.sample}
+        Reads: _________ R{wildcards.mate}
         """
     input:
         valid_fastq = lambda wildcards: os.path.abspath(VALID_FASTQ[wildcards.sample][wildcards.mate])

@@ -20,7 +20,7 @@
 ###############################################################################
 rule samtools_index_trimmed:
     # Aim: index BAM file
-    # Use: samtools index -@ [THREADS] -b [MARK-DUP.bam] [INDEX.bai]
+    # Use: samtools index -@ [THREADS] -b [SORT.bam] [INDEX.bai]
     message:
         """
         ~ SamTools ∞ Index BAM file ~
@@ -33,14 +33,14 @@ rule samtools_index_trimmed:
     resources:
        cpus = 4
     input:
-        bam = "results/02_Mapping/{reference}/{sample}_{mapper}_sorted-trimmed.bam"
+        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam"
     output:
-        index = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam.bai"
+        index = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_index-trimmed.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_trimmed-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
-        "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
+        "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
         "-b "                  # -b: Generate BAI-format index for BAM files (default)
         "{input.bam} "         # Trimmed bam input
         "{output.index} "      # Trimmed index output
@@ -49,13 +49,13 @@ rule samtools_index_trimmed:
 ###############################################################################
 rule samtools_sort_trimmed:
     # Aim: sort BAM file
-    # Use: samtools sort -@ [THREADS] -m [MEM_GB] -T [TMP_DIR] -O BAM -o [SORTED.bam] [FIX-MATE.bam] 
+    # Use: samtools sort -@ [THREADS] -m [MEM_GB] -T [TMP_DIR] -O BAM -o [SORT.bam] [HEAD.bam] 
     message:
         """
         ~ SamTools ∞ Sort BAM file ~
-        Sample: ______ {wildcards.sample}
-        Reference: ___ {wildcards.reference}
-        Mapper: ______ {wildcards.mapper}
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Mapper: ________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -64,11 +64,11 @@ rule samtools_sort_trimmed:
        mem_gb = 1,
        tmp_dir = TMP_DIR
     input:
-        bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam"
+        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-temp.bam"
     output:
-        sorted = temp("results/02_Mapping/{reference}/{sample}_{mapper}_sorted-trimmed.bam")
+        sorted = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_sorted-trimmed.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_trimmed-sorted.log"
     shell:
         "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -76,8 +76,8 @@ rule samtools_sort_trimmed:
         "-T {resources.tmp_dir} "     # -T: Write temporary files to PREFIX.nnnn.bam
         "--output-fmt BAM "           # -O: Specify output format: SAM, BAM, CRAM (here, BAM format)
         "-o {output.sorted} "         # Sorted bam output
-        "{input.bam} "                # Fixmate bam input
-        "&> {log}"                    # Log redirection 
+        "{input.bam} "                # Samtools bam input
+        "&> {log}"                    # Log redirection
 
 ################################################################################
 rule ivar_trim:
@@ -86,27 +86,27 @@ rule ivar_trim:
     message:
         """
         ~ iVar ∞ soft-clipping amplicon PCR primers from BAM alignments ~
-        Sample ______ {wildcards.sample}
-        Reference ___ {wildcards.reference}
-        Mapper ______ {wildcards.mapper}
+        Sample ________ {wildcards.sample}
+        Reference _____ {wildcards.reference}
+        Mapper ________ {wildcards.mapper}
         """
     conda:
         IVAR
     params:
         path = PRIMER_BED_PATH,
         bed = PRIMER_BED_SCHEME,
-        offset = IVAR_OFFSET,
-        min_len = IVAR_MIN_LENGTH,
-        min_qual = IVAR_MIN_QUAL,
-        slide = IVAR_SLIDE
+        offset = PRIMER_OFFSET,
+        min_len = PRIMER_MIN_LENGTH,
+        min_qual = PRIMER_MIN_QUAL,
+        slide = PRIMER_SLIDE
     input:
-        bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam",
-        bai = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam.bai"
+        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam",
+        bai = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam.bai"
     output:
-        prefix = temp("results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed"),
-        trimmed_bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam"
+        prefix = temp("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-temp"),
+        trimmed_bam = temp("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-temp.bam")
     log:
-        "results/10_Reports/tools-log/ivar_trim/{reference}/{sample}_{mapper}_trimmed.log"
+        "results/10_Reports/tools-log/ivar_trim/{sample}_{reference}_{mapper}_trimmed.log"
     shell:
         "ivar trim "                   # iVar, with command 'trim': soft-clip amplicon PCR primers from BAM alignments
         "-i {input.bam} "               # Input BAM file, with aligned reads, to trim primers and quality

@@ -24,8 +24,8 @@ rule fastqscreen_contamination_check:
     message:
         """
         ~ Fasts-Screen ∞ Screen Contamination ~
-        Sample: __________ {wildcards.sample}
-        Reads: ___________ R{wildcards.mate} 
+        Sample: ________ {wildcards.sample}
+        Reads: _________ R{wildcards.mate} 
         """
     conda:
         FASTQ_SCREEN
@@ -58,8 +58,8 @@ rule fastqc_quality_control:
     message:
         """
         ~ FastQC ∞ Quality Control ~
-        Sample: __________ {wildcards.sample}
-        Reads: ___________ R{wildcards.mate}
+        Sample: ________ {wildcards.sample}
+        Reads: _________ R{wildcards.mate}
         """
     conda:
         FASTQC

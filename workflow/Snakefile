@@ -59,7 +59,7 @@ functions.MODULES = config["modules"] # Modules
 functions.MAPPER = config["tools"]["mapper"]     # Reads mapper ('bwa', 'minimap2' or 'bowtie2')
 functions.CALLER = config["tools"]["caller"]     # Variants caller ('ivar' or 'ivar')
 functions.ASSIGNER = config["tools"]["assigner"] # Lineages assigner ('nextclade' or 'pangolin')
-functions.REFERENCE = config["reference"]        # Genome reference sequence, in fasta format
+functions.REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
 functions.MIN_DEPTH = config["consensus"]["min_depth"] # Minimum depth to call consensus, mark lower regions with 'N'
 functions.QC_REF = config["fastq_screen"]["reference"] # FastqScreen config file genomes to index
 functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extentions ('txt' 'tsv' 'json')
@@ -74,8 +74,6 @@ validate(config, schema="schemas/config.schema.yaml")
 ### WILDCARDS ###
 #################
 
-#FASTQ, = glob_wildcards("resources/symlinks/{fastq}.fastq.gz")
-#SAMPLE, = glob_wildcards("resources/symlinks/{sample}_R1.fastq.gz")
 
 ###############################################################################
 ### RESOURCES ###
@@ -114,7 +112,15 @@ WORKFLOW = config["envs"]["workflow"]         # Workflow conda environment
 MAPPER = config["tools"]["mapper"]       # Mapper ('bwa', 'minimap2' or 'bowtie2')
 CALLER = config["tools"]["caller"]       # Variant Caller ('ivar' or 'ivar')
 ASSIGNER = config["tools"]["assigner"]   # Lineage assigner ('nextclade' or 'pangolin')
-REFERENCE = config["reference"] # Genome reference sequence, in fasta format
+
+REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
+MIN_DEPTH = config["consensus"]["min_depth"] # minimum depth
+MAX_DEPTH = config["consensus"]["max_depth"] # maximum depth
+MIN_FREQ = config["consensus"]["min_freq"]   # minimum allele frequency
+MIN_INDEL = config["consensus"]["min_indel"] # minimum indel frequency
+MIN_BQ = config["consensus"]["min_bq"]       # minimum base quality
+MIN_QUAL = config["consensus"]["min_qual"]   # minimum mapping quality
+MAP_QUAL = config["consensus"]["map_qual"]   # minimum mapping quality
 
 FQC_SUBSET = config["fastq_screen"]["subset"] # Fastq-Screen --subset
 FQC_CONFIG = config["fastq_screen"]["config"] # Fastq-Screen --conf
@@ -143,27 +149,18 @@ MM2_PRESET = config["minimap2"]["preset"] # Minimap2 presetv           # MM2 pre
 BT2_ALGO = config["bowtie2"]["algorithm"]          # Bowtie2 indexing algorithm
 BT2_SENSITIVITY = config["bowtie2"]["sensitivity"] # Bowtie2 sensitivity preset
 
-IVAR_OFFSET = config["primers"]["offset"]         # iVar offset
-IVAR_MIN_LENGTH = config["primers"]["min_length"] # iVar minimum length
-IVAR_MIN_QUAL = config["primers"]["min_qual"]     # iVar minimum quality
-IVAR_SLIDE = config["primers"]["slide"]           # iVar slide windows
-
 PRIMER_BED_PATH = config["primers"]["bed"]["path"]     # primer kit bed path
 PRIMER_BED_SCHEME = config["primers"]["bed"]["scheme"] # primer kit bed scheme
-
-MIN_DEPTH = config["consensus"]["min_depth"]        # iVar minimum depth
-IVAR_MIN_FREQ = config["consensus"]["min_freq"]     # iVar minimum allele frequency
-IVAR_MIN_INSERT = config["consensus"]["min_insert"] # iVar minimum insert frequency
-IVAR_MAX_DEPTH = config["consensus"]["max_depth"]   # iVar maximum depth
-IVAR_MIN_BQ = config["consensus"]["min_bq"]         # iVar minimum base quality
-IVAR_MIN_QUAL = config["consensus"]["min_qual"]     # iVar minimum mapping quality
-IVAR_MAP_QUAL = config["consensus"]["map_qual"]     # iVar minimum mapping quality
+PRIMER_OFFSET = config["primers"]["offset"]            # offset
+PRIMER_MIN_LENGTH = config["primers"]["min_length"]    # minimum length
+PRIMER_MIN_QUAL = config["primers"]["min_qual"]        # minimum quality
+PRIMER_SLIDE = config["primers"]["slide"]              # slide windows
 
 NEXT_PATH = config["nextclade"]["path"]       # Path to nextclade dataset
 NEXT_DATASET = config["nextclade"]["dataset"] # Nextclade dataset
 
-GRAPH_TYPE = config["report"]["graph"]["type"]
-GRAPH_EXT = config["report"]["graph"]["extention"]
+GRAPH_TYPE = config["report"]["graph"]["type"]     # Graph type
+GRAPH_EXT = config["report"]["graph"]["extention"] # Graph extention
 
 ###############################################################################
 ### LOAD RULES ###
@@ -198,24 +195,27 @@ rule all:
 #############
 
 onstart:
-    print("\n \033[94m ===> GeVarLi Workflow : Start! <=== \033[0m \n\n")
+    print("\n \033[94m ===> GeVarLi Workflow : Start! <=== \033[0m \n")
     get_settings(config, START_TIME)
+    print("\n")
 
 onsuccess:
-    print("\n \033[92m ===> GeVarLi Workflow : Success! <=== \033[0m \n\n")
+    print("\n \033[92m ===> GeVarLi Workflow : Success! <=== \033[0m \n")
     get_time(START_TIME)
     shell("mkdir -p results/10_Reports/envs/ 2> /dev/null")
     shell("cp workflow/envs/*.yaml results/10_Reports/envs/ 2> /dev/null")
     shell("cp config/config.yaml results/10_Reports/config.log 2> /dev/null")
     shell("tar -czf results/Reports_archive.tar.gz -C results/ 10_Reports/")
+    print("\n")
 
 onerror:
-    print("\n \033[91m ===> GeVarLi Workflow : Error... <=== \033[0m \n\n")
+    print("\n \033[91m ===> GeVarLi Workflow : Error... <=== \033[0m \n")
     get_time(START_TIME)
     shell("mkdir -p results/10_Reports/envs/ 2> /dev/null")
     shell("cp workflow/envs/*.yaml results/10_Reports/envs/ 2> /dev/null")
     shell("cp config/config.yaml results/10_Reports/config.log 2> /dev/null")
     shell("tar -czf results/Reports_archive.tar.gz -C results/ 10_Reports/")
+    print("\n")
 
 ###############################################################################
 ###############################################################################

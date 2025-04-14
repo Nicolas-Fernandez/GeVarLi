@@ -24,7 +24,7 @@ rule sickle_trim_quality:
     message:
         """
         ~ Sickle-trim ∞ Trim Low Quality Sequences ~
-        Sample: __________ {wildcards.sample}
+        Sample: ________ {wildcards.sample}
         """
     conda:
         SICKLE_TRIM
@@ -64,7 +64,7 @@ rule cutadapt_adapters_removing:
     message:
         """
         ~ Cutadapt ∞ Remove Adapters ~
-        Sample: __________ {wildcards.sample}
+        Sample: ________ {wildcards.sample}
         """
     conda:
         CUTADAPT

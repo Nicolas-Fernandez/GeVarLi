@@ -24,7 +24,7 @@ rule bwa_qc_indexing:
     message:
         """
         ~ BWA-SW ∞ Index QC ~
-        Reference: _______ {wildcards.qc_ref}
+        QC_Ref: ________ {wildcards.qc_ref}
         """
     conda:
         BWA
@@ -53,7 +53,7 @@ rule bwa_genome_indexing:
     message:
         """
         ~ BWA-SW ∞ Index Genome ~
-        Reference: _______ {wildcards.reference}
+        Reference: _____ {wildcards.reference}
         """
     conda:
         BWA
@@ -82,7 +82,7 @@ rule minimap2_genome_indexing:
     message:
         """
         ~ Minimap2 ∞ Index Genome ~
-        Reference: _______ {wildcards.reference}
+        Reference: _____ {wildcards.reference}
         """
     conda:
         MINIMAP2
@@ -115,7 +115,7 @@ rule bowtie2_genome_indexing:
     message:
         """
         ~ Bowtie2-build ∞ Index Genome ~
-        Reference: _______ {wildcards.reference}
+        Reference: _____ {wildcards.reference}
         """
     conda:
         BOWTIE2

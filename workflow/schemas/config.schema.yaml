@@ -42,8 +42,34 @@ properties:
       - mapper
       - caller
       - assigner
-  reference:
-    type: string
+  consensus:
+    type: object
+    properties:
+      reference:
+        type: string
+      min_depth:
+        type: string
+      max_depth:
+        type: string
+      min_freq:
+        type: string
+      min_indel:
+        type: string
+      map_qual:
+        type: string
+      min_bq:
+        type: string
+      min_qual:
+        type: string
+    required:
+      - reference
+      - min_depth
+      - max_depth
+      - min_freq
+      - min_indel
+      - map_qual
+      - min_bq
+      - min_qual
   gisaid:
     type: object
     properties:
@@ -76,56 +102,6 @@ properties:
     required:
       - path
       - dataset
-  consensus:
-    type: object
-    properties:
-      min_depth:
-        type: string
-      max_depth:
-        type: string
-      min_freq:
-        type: string
-      min_insert:
-        type: string
-      map_qual:
-        type: string
-      min_bq:
-        type: string
-      min_qual:
-        type: string
-    required:
-      - min_depth
-      - max_depth
-      - min_freq
-      - min_insert
-      - map_qual
-      - min_bq
-      - min_qual
-  variant:
-    type: object
-    properties:
-      min_depth:
-        type: string
-      max_depth:
-        type: string
-      min_freq:
-        type: string
-      min_insert:
-        type: string
-      map_qual:
-        type: string
-      min_bq:
-        type: string
-      min_qual:
-        type: string
-    required:
-      - min_depth
-      - max_depth
-      - min_freq
-      - min_insert
-      - map_qual
-      - min_bq
-      - min_qual
   primers:
     type: object
     properties:
@@ -144,8 +120,6 @@ properties:
             type: string
           scheme:
             type: string
-            items:
-              type: string
         required:
           - path
           - scheme
@@ -318,11 +292,9 @@ required:
   - fastq_dir
   - modules
   - tools
-  - reference
+  - consensus
   - gisaid
   - nextclade
-  - consensus
-  - variant
   - primers
   - bwa
   - bowtie2

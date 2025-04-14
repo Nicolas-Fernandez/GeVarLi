@@ -22,22 +22,22 @@ rule merge_consensus:
     message:
         """
         ~ Merge ∞ Concatenating all samples consensus sequences ~
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}x
-        Caller: __________ {wildcards.caller}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
+        Caller: _______ {wildcards.caller}
         """
     input:
-        consensus = lambda wildcards: expand("results/05_Consensus/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_consensus.fasta",
-                                            reference = wildcards.reference,
+        consensus = lambda wildcards: expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta",
                                             sample = SAMPLE,
+                                            reference = wildcards.reference,
                                             mapper = wildcards.mapper,
                                             min_cov = wildcards.min_cov,
                                             caller = wildcards.caller)
     output:
-        all_consensus = "results/All_{reference}_{mapper}_{min_cov}X_{caller}_consensus_sequences.fasta"
+        all_consensus = "results/All_{reference}_{mapper}_{min_depth}x_{caller}_consensus_sequences.fasta"
     log:
-        "results/10_Reports/tools-log/merge_consensus/{reference}/{mapper}_{min_cov}X_{caller}_consensus.log"
+        "results/10_Reports/tools-log/merge_consensus/{reference}_{mapper}_{min_depth}x_{caller}_consensus.log"
     shell:
         "cat "                      # Concatenate all consensus sequences
         "{input.consensus} "         # Input files
@@ -49,20 +49,20 @@ rule merge_coverage:
     message:
         """
         ~ Merge ∞ Concatenating genome coverage statistics ~
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}x
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
         """
     input:
-        covstats = lambda wildcards: expand("results/03_Coverage/{reference}/{sample}_{mapper}_{min_cov}X_coverage-stats.tsv",
-                                            reference = wildcards.reference,
+        covstats = lambda wildcards: expand("results/03_Coverage/{sample}_{reference}_{mapper}_{min_depth}x_coverage-stats.tsv",
                                             sample = SAMPLE,
+                                            reference = wildcards.reference,
                                             mapper = wildcards.mapper,
                                             min_cov = wildcards.min_cov)
     output:
-        all_covstats = "results/All_{reference}_{mapper}_{min_cov}X_genome_coverages.tsv"
+        all_covstats = "results/All_{reference}_{mapper}_{min_depth}x_genome_coverages.tsv"
     log:
-        "results/10_Reports/tools-log/merge_coverage/{reference}/{mapper}_{min_cov}X_covstats.log"
+        "results/10_Reports/tools-log/merge_coverage/{reference}_{mapper}_{min_depth}x_covstats.log"
     shell:
         "cat {input.covstats} | "  # Concatenate all coverage statistics
         "awk 'NR==1 || NR%2==0' "   # Keep only even lines
@@ -74,24 +74,24 @@ rule merge_clade:
     message:
         """
         ~ Merge ∞ Concatenating lineage assignments ~
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}x
-        Variant caller: __ {wildcards.caller}
-        Assigner: ________ {wildcards.assigner}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
+        Caller: _______ {wildcards.caller}
+        Assigner: _____ {wildcards.assigner}
         """
     input:
-        lineages = lambda wildcards: expand("results/06_Lineages/{reference}/{sample}_{mapper}_{min_cov}X_{caller}_{assigner}-report.tsv",
-                                        reference = wildcards.reference,
+        lineages = lambda wildcards: expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-report.tsv",
                                         sample = SAMPLE,
+                                        reference = wildcards.reference,
                                         mapper = wildcards.mapper,
                                         min_cov = wildcards.min_cov,
                                         caller = wildcards.caller,
                                         assigner = wildcards.assigner)
     output:
-        all_lineages = "results/All_{reference}_{mapper}_{min_cov}X_{caller}_{assigner}-lineages.tsv"
+        all_lineages = "results/All_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-lineages.tsv"
     log:
-        "results/10_Reports/tools-log/merge_clade/{reference}/{mapper}_{min_cov}X_{caller}_{assigner}-lineages.log"
+        "results/10_Reports/tools-log/merge_clade/{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-lineages.log"
     shell:
         "cat {input.lineages} | "  # Concatenate all lineage assignments
         "awk 'NR==1 || NR%2==0' "   # Keep only even lines
