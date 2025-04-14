@@ -72,17 +72,17 @@ def get_valid_fastq(fastq_dir):
 ###############################################################################
 ## GET_BAM_INPUT
 def get_bam_input(wildcards):
-    markdup = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
-    if "cleapping" in MODULES:
-        markdup = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam"
+    markdup = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam"
+    if MODULES["clipping"]:
+        markdup = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam"
     return markdup
 
 ###############################################################################
 ## GET_BAI_INPUT
 def get_bai_input(wildcards):
-    index = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam.bai"
-    if "cleapping" in MODULES:
-        index = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup_trimmed.bam.bai"
+    index = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam.bai"
+    if MODULES["clipping"]:
+        index = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai"
     return index
 
 ###############################################################################
@@ -111,52 +111,52 @@ def get_final_outputs():
     # reads_mapping
     # primers_clipping
     if MODULES["clipping"]:
-        final_outputs.append(expand("results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam",
-                                    reference = REFERENCE,
+        final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam",
                                     sample = SAMPLE,
+                                    reference = REFERENCE,
                                     mapper = MAPPER))
-        final_outputs.append(expand("results/02_Mapping/{reference}/{sample}_{mapper}_markdup-trimmed.bam.bai",
-                                    reference = REFERENCE,
+        final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai",
                                     sample = SAMPLE,
+                                    reference = REFERENCE,
                                     mapper = MAPPER))
     # duplicates_removing
     # coverage_stats
     if MODULES["covstats"]:
-        final_outputs.append(expand("results/03_Coverage/{reference}/{sample}_{mapper}_{min_depth}X_coverage-stats.tsv",
-                                    reference = REFERENCE,
+        final_outputs.append(expand("results/03_Coverage/{sample}_{reference}_{mapper}_{min_depth}X_coverage-stats.tsv",
                                     sample = SAMPLE,
+                                    reference = REFERENCE,
                                     min_depth=MIN_DEPTH,
                                     mapper = MAPPER))
-        final_outputs.append(expand("results/03_Coverage/{reference}/histogram/{sample}_{mapper}_coverage-histogram.txt",
-                                    reference = REFERENCE,
+        final_outputs.append(expand("results/03_Coverage/histogram/{sample}_{reference}_{mapper}_coverage-histogram.txt",
                                     sample = SAMPLE,
+                                    reference = REFERENCE,
                                     mapper = MAPPER))
-        final_outputs.append(expand("results/03_Coverage/{reference}/flagstat/{sample}_{mapper}_flagstat.{ext}",
-                                    reference = REFERENCE,
+        final_outputs.append(expand("results/03_Coverage/flagstat/{sample}_{reference}_{mapper}_flagstat.{ext}",
                                     sample = SAMPLE,
+                                    reference = REFERENCE,
                                     mapper = MAPPER,
                                     ext = STAT_EXT))
     # lowcov_masking
     # variants_calling
     # consensus_calling
     if MODULES["consensus"]:
-        final_outputs.append(expand("results/05_Consensus/{reference}/{sample}_{mapper}_{min_depth}X_{caller}_consensus.fasta",
-                                    reference = REFERENCE,
-                                    sample = SAMPLE,
+        final_outputs.append(expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_consensus.fasta",
+                                    sample=SAMPLE,
+                                    reference=REFERENCE,
                                     mapper = MAPPER,
                                     min_depth=MIN_DEPTH,
                                     caller=CALLER))
-        final_outputs.append(expand("results/04_Variants/{reference}/{sample}_{mapper}_{min_depth}X_{caller}_variant-filt.vcf",
-                                    reference = REFERENCE,
-                                    sample = SAMPLE,
+        final_outputs.append(expand("results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_variant-filt.vcf",
+                                    sample=SAMPLE,
+                                    reference=REFERENCE,
                                     mapper = MAPPER,
                                     min_depth = MIN_DEPTH,
                                     caller = CALLER))
     # lineages_calling
     if MODULES["lineages"]:
-        final_outputs.append(expand("results/06_Lineages/{reference}/{sample}_{mapper}_{min_depth}X_{caller}_{assigner}-report.tsv",
-                                    reference = REFERENCE,
-                                    sample = SAMPLE,
+        final_outputs.append(expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_{assigner}-report.tsv",
+                                    sample=SAMPLE,
+                                    reference=REFERENCE,
                                     mapper = MAPPER,
                                     min_depth = MIN_DEPTH,
                                     caller = CALLER,
@@ -304,11 +304,12 @@ def get_settings(config, start_time):
     assigner = tools.get("assigner", "N/A")
 
     # Get consensus parameters
-    reference = config.get("reference", "N/A")
-    min_depth = config.get("consensus", {}).get("min_depth", "N/A")
-    max_depth = config.get("consensus", {}).get("max_depth", "N/A")
-    min_freq = config.get("consensus", {}).get("min_freq", "N/A")
-    min_insert = config.get("consensus", {}).get("min_insert", "N/A")
+    consensus = config.get("consensus", {})
+    reference = consensus.get("reference", "N/A")
+    min_depth = consensus.get("min_depth", "N/A")
+    max_depth = consensus.get("max_depth", "N/A")
+    min_freq = consensus.get("min_freq", "N/A")
+    min_indel = consensus.get("min_indel", "N/A")
   
     # Get other parameters
     nextclade_dataset = config.get("nextclade", {}).get("dataset", "N/A")
@@ -400,13 +401,13 @@ def get_settings(config, start_time):
     {green}  > Assigner{nc} ___________________ {ylo}{assigner}{nc}
 
     {blue}Params:{nc}
-    {green}  > Reference genome{nc} ___________ {ylo}{reference}{nc}
+    {green}  > Reference genome{nc} ___________ '{ylo}{reference}{nc}'
     {green}  > Min depth{nc} __________________ {red}{min_depth}{nc}x
-    {green}  > Max depth{nc} __________________ {red}{max_depth}{nc}x
+    {green}  > Max depth{nc} __________________ {red}{max_depth}{nc}x (0 = no limit)
     {green}  > Min allele frequency{nc} _______ {red}{min_freq}{nc}
-    {green}  > Min insertion frequency{nc} ____ {red}{min_insert}{nc}
+    {green}  > Min indel frequency{nc} ________ {red}{min_indel}{nc}
 
-    {green}  > Nextclade dataset{nc} _________ {ylo}{nextclade_dataset}{nc}
+    {green}  > Nextclade dataset{nc} __________ '{ylo}{nextclade_dataset}{nc}'
     {green}  > Fastq-Screen subset{nc} ________ {red}{fastqscreen_subset}{nc} reads/sample
     {green}  > Soft clipping (ivar){nc} _______ '{ylo}{ivar_clipping}{nc}' scheme
     {green}  > Hard clipping (cutadapt){nc} ___ {red}{cutadapt_clipping}{nc} nt

@@ -24,9 +24,9 @@ rule minimap2_mapping:
     message:
         """
         ~ Minimap2 ∞ Map Reads ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ MiniMap2
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Mapper: ________ MiniMap2
         """
     conda:
         MINIMAP2
@@ -40,7 +40,7 @@ rule minimap2_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{reference}/{sample}_minimap2-mapped.sam")
+        mapped = temp("results/02_Mapping/{sample}_{reference}_minimap2-mapped.sam")
     log:
         "results/10_Reports/tools-log/minimap2/{sample}_{reference}.log"
     shell:
@@ -68,9 +68,9 @@ rule bwa_mapping:
     message:
         """
         ~ BWA-MEM ∞ Map Reads ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Aligner: _________ BWA
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Aligner: _______ BWA
         """
     conda:
         BWA
@@ -81,7 +81,7 @@ rule bwa_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{reference}/{sample}_bwa-mapped.sam")
+        mapped = temp("results/02_Mapping/{sample}_{reference}_bwa-mapped.sam")
     log:
         "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
     shell:
@@ -101,9 +101,9 @@ rule bowtie2_mapping:
     message:
         """
         ~ Bowtie2 ∞ Map Reads ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Aligner: _________ Bowtie2
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Aligner: _______ Bowtie2
         """
     conda:
         BOWTIE2
@@ -116,7 +116,7 @@ rule bowtie2_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{reference}/{sample}_bowtie2-mapped.sam")
+        mapped = temp("results/02_Mapping/{sample}_{reference}_bowtie2-mapped.sam")
     log:
         "results/10_Reports/tools-log/bowtie2/{sample}_{reference}.log"
     shell:

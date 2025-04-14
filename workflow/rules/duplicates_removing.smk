@@ -24,20 +24,20 @@ rule samtools_index_markdup:
     message:
         """
         ~ SamTools ∞ Index 'Marked as Duplicate' BAM file ~
-        Sample: ______ {wildcards.sample}
-        Reference: ___ {wildcards.reference}
-        Mapper: ______ {wildcards.mapper}
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
     resources:
        cpus = 4
     input:
-        bam = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
+        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam"
     output:
-        index = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam.bai"
+        index = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_markdup-index.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_markdup-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "-@ {resources.cpus} " # --threads: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
@@ -53,20 +53,20 @@ rule samtools_markdup:
     message:
         """
         ~ SamTools ∞ Mark Duplicate Alignments ~
-        Sample: ______ {wildcards.sample}
-        Reference: ___ {wildcards.reference}
-        Mapper: ______ {wildcards.mapper}
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
     resources:
        cpus = 4
     input:
-        sorted = "results/02_Mapping/{reference}/{sample}_{mapper}_sorted.bam"
+        sorted = "results/02_Mapping/{sample}_{reference}_{mapper}_sorted.bam"
     output:
-        mark_dup = "results/02_Mapping/{reference}/{sample}_{mapper}_markdup.bam"
+        mark_dup = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_markdup.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_markdup.log"
     shell:
         "samtools markdup "          # Samtools markdup, tools for alignments in the SAM format with command mark duplicates
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -84,9 +84,9 @@ rule samtools_sort_fixmate:
     message:
         """
         ~ SamTools ∞ Sort BAM file ~
-        Sample: ______ {wildcards.sample}
-        Reference: ___ {wildcards.reference}
-        Mapper: ______ {wildcards.mapper}
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -95,11 +95,11 @@ rule samtools_sort_fixmate:
        mem_gb = 1,
        tmp_dir = TMP_DIR
     input:
-        fix_mate = "results/02_Mapping/{reference}/{sample}_{mapper}_fix-mate.bam"
+        fix_mate = "results/02_Mapping/{sample}_{reference}_{mapper}_fix-mate.bam"
     output:
-        sorted = temp("results/02_Mapping/{reference}/{sample}_{mapper}_sorted.bam")
+        sorted = temp("results/02_Mapping/{sample}_{reference}_{mapper}_sorted.bam")
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_sorted.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_sorted.log"
     shell:
         "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -117,20 +117,20 @@ rule samtools_fixmate:
     message:
         """
         ~ SamTools ∞ Fil Mate Coordinates ~
-        Sample: ______ {wildcards.sample}
-        Reference: ___ {wildcards.reference}
-        Mapper: ______ {wildcards.mapper}
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Mapper: ________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
     resources:
        cpus = 6
     input:
-        sort_by_names = "results/02_Mapping/{reference}/{sample}_{mapper}_sort-by-names.bam"
+        sort_by_names = "results/02_Mapping/{sample}_{reference}_{mapper}_sort-by-names.bam"
     output:
-        fix_mate = temp("results/02_Mapping/{reference}/{sample}_{mapper}_fix-mate.bam")
+        fix_mate = temp("results/02_Mapping/{sample}_{reference}_{mapper}_fix-mate.bam")
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_fix-mate.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_fix-mate.log"
     shell:
         "samtools fixmate "          # Samtools fixmate, tools for alignments in the SAM format with command to fix mate information
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -147,9 +147,9 @@ rule samtools_sortbynames:
     message:
         """
         ~ SamTools ∞ Sort by Names BAM file ~
-        Sample: ______ {wildcards.sample}
-        Reference: ___ {wildcards.reference}
-        Mapper: ______ {wildcards.mapper}
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Mapper: ________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -157,11 +157,11 @@ rule samtools_sortbynames:
        cpus = 6,
        mem_gb = 1
     input:
-        mapped = "results/02_Mapping/{reference}/{sample}_{mapper}-mapped.sam"
+        mapped = "results/02_Mapping/{sample}_{reference}_{mapper}-mapped.sam"
     output:
-        sort_by_names = temp("results/02_Mapping/{reference}/{sample}_{mapper}_sort-by-names.bam")
+        sort_by_names = temp("results/02_Mapping/{sample}_{reference}_{mapper}_sort-by-names.bam")
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_sort-by-names.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_sort-by-names.log"
     shell:
         "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)

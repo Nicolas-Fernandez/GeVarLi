@@ -79,7 +79,7 @@ run_with_spinner() {
     local i=0
     while kill -0 $pid 2>/dev/null; do
         # Clear the line
-        printf "\r\033[K%s Please wait" "${spinner[$i]}"
+        printf "\r\033[K %s Please wait    " "${spinner[$i]}"
         i=$(( (i+1) % ${#spinner[@]} ))
         sleep 0.1
     done
@@ -88,9 +88,9 @@ run_with_spinner() {
     # Clear the spinner line
     printf "\r\033[K"
     if [ $exit_code -eq 0 ]; then
-        echo "✔ Job done!"
+        echo "${green}✔${red} Job done!"
     else
-        echo "✖ Job failed with exit code $exit_code."
+        echo "${red}✖${nc} Job failed with exit code $exit_code."
     fi
 }
 

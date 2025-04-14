@@ -34,22 +34,22 @@ rule ivar_consensus:
         IVAR
     params:
         min_depth = MIN_DEPTH,
-        min_freq = IVAR_MIN_FREQ,
-        min_insert = IVAR_MIN_INSERT,
-        max_depth = IVAR_MAX_DEPTH,
-        min_bq = IVAR_MIN_BQ,
-        min_qual = IVAR_MIN_QUAL,
-        baq = IVAR_MAP_QUAL
+        min_freq = MIN_FREQ,
+        min_insert = MIN_INSERT,
+        max_depth = MAX_DEPTH,
+        min_bq = MIN_BQ,
+        min_qual = MIN_QUAL,
+        baq = MAP_QUAL
     input:
         mark_dup = get_bam_input,
-        variant_call = "results/04_Variants/{reference}/{sample}_{mapper}_{min_depth}X_ivar_variant-call.tsv"
+        variant_call = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}X_ivar_variant-call.tsv"
     output:
-        prefix = temp("results/05_Consensus/{reference}/{sample}_{mapper}_{min_depth}X_ivar_consensus"),
+        prefix = temp("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus"),
         header = temp("{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus"),
-        consensus = "results/05_Consensus/{reference}/{sample}_{mapper}_{min_depth}X_ivar_consensus.fasta",
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus.fasta",
         qual_txt = "results/05_Consensus/ivar_consensus-quality/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus.qual.txt"
     log:
-        "results/10_Reports/tools-log/ivar/{reference}/{sample}_{mapper}_{min_depth}x_ivar_consensus.log"
+        "results/10_Reports/tools-log/ivar/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.log"
     shell:
         "samtools mpileup "              # Samtools mpileup, tools for alignments in the SAM format with command multi-way pileup
         "--verbosity 0 "                  # Set level of verbosity [INT]

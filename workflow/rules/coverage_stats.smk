@@ -24,23 +24,23 @@ rule awk_coverage_statistics:
     message:
         """
         ~ Awk ∞ Compute Genome Coverage Statistics from BED file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
         """
     conda:
         GAWK
     input:
         cutadapt = "results/10_Reports/tools-log/cutadapt/{sample}.log",
         sickle = "results/10_Reports/tools-log/sickle-trim/{sample}.log",
-        samtools = "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_markdup.log",
-        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{mapper}_flagstat.json",
-        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{mapper}_coverage-histogram.txt",
-        genome_cov = "results/02_Mapping/{reference}/{sample}_{mapper}_genome-cov.bed"
+        samtools = "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_markdup.log",
+        flagstat = "results/03_Coverage/flagstat/{sample}_{reference}_{mapper}_flagstat.json",
+        histogram = "results/03_Coverage/histogram/{sample}_{reference}_{mapper}_coverage-histogram.txt",
+        genome_cov = "results/02_Mapping/{sample}_{reference}_{mapper}_genome-cov.bed"
     output:
-        cov_stats = "results/03_Coverage/{reference}/{sample}_{mapper}_{min_cov}X_coverage-stats.tsv"
+        cov_stats = "results/03_Coverage/{sample}_{reference}_{mapper}_{min_cov}X_coverage-stats.tsv"
     log:
-        "results/10_Reports/tools-log/awk/{reference}/{sample}_{mapper}_{min_cov}X_coverage-stats.log"
+        "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_cov}X_coverage-stats.log"
     shell:
         r""" rawReads=$(grep -o -E  """                                  # Get raw reads 
         r""" 'Total read pairs processed:.+' {input.cutadapt}  """       #
@@ -145,9 +145,9 @@ rule bedtools_genome_coverage:
     message:
         """
         ~ BedTools ∞ Compute Genome Coverage ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
         """
     conda:
         BEDTOOLS
@@ -155,9 +155,9 @@ rule bedtools_genome_coverage:
         mark_dup = get_bam_input,
         index = get_bai_input
     output:
-        genome_cov = "results/02_Mapping/{reference}/{sample}_{mapper}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{sample}_{reference}_{mapper}_genome-cov.bed"
     log:
-        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{mapper}_genome-cov.log"
+        "results/10_Reports/tools-log/bedtools/{sample}_{reference}_{mapper}_genome-cov.log"
     shell:
         "bedtools genomecov "    # Bedtools genomecov, compute the coverage of a feature file among a genome
         "-bga "                   # Report depth in BedGraph format, regions with zero coverage are also reported
@@ -172,9 +172,9 @@ rule samtools_coverage_histogram:
     message:
         """
         ~ SamTools ∞ Calcul Depth and Coverage from BAM file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Mapper: ________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -185,9 +185,9 @@ rule samtools_coverage_histogram:
     input:
         mark_dup = get_bam_input
     output:
-        histogram = "results/03_Coverage/{reference}/histogram/{sample}_{mapper}_coverage-histogram.txt"
+        histogram = "results/03_Coverage/histogram/{sample}_{reference}_{mapper}_coverage-histogram.txt"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_coverage-histogram.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_coverage-histogram.log"
     shell:
         "samtools coverage "          # Samtools coverage, tools for alignments in the SAM format with command to alignment depth and percent coverage
         "--histogram "                 # -m: show histogram instead of tabular output
@@ -210,9 +210,9 @@ rule samtools_flagstat_ext:
     message:
         """
         ~ SamTools ∞ Calcul simple Stats from BAM file ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Mapper: ________ {wildcards.mapper}
         """
     conda:
         SAMTOOLS
@@ -221,9 +221,9 @@ rule samtools_flagstat_ext:
     input:
         mark_dup = get_bam_input
     output:
-        flagstat = "results/03_Coverage/{reference}/flagstat/{sample}_{mapper}_flagstat.{ext}"
+        flagstat = "results/03_Coverage/flagstat/{sample}_{reference}_{mapper}_flagstat.{ext}"
     log:
-        "results/10_Reports/tools-log/samtools/{reference}/{sample}_{mapper}_flagstat-{ext}.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_flagstat-{ext}.log"
     shell:
         "samtools flagstat "           # Samtools flagstat, tools for alignments in the SAM format with command to simple stat
         "--threads {resources.cpus} "   # -@: Number of additional threads to use (default: 1)

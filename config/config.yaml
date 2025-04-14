@@ -48,50 +48,78 @@ tools:
     ##- 'nextclade' # Clade assignment, mutation calling, phylogenetic placement and quality checks (default)
     ##- 'pangolin'  # PANGO: Phylogenetic Assignment of Named Global Outbreak Lineages
 
-reference: 'SARS-CoV-2_Wuhan_MN908947.3' # Your reference, in fasta format (default: 'SARS-CoV-2_Wuhan_MN-908947-3') [STR]
-# Available options (not exhaustive):
-  ##- 'SARS-CoV-2_Wuhan_MN908947.3'                      # SARS-CoV-2  (with Nextclade and Pangolin)(default)
-  ### 
-  ##- 'Monkeypox-virus_Zaire_AF380138.1'                 # Monkeypox [MPXV] (with Nextclade and Pangolin)
-  ##- 'Monkeypox-virus_UK_MT903345.1'                    # Monkeypox [MPXV] (with Nextclade and Pangolin)
-  ##- 'Swinepox-virus_India_MW036632.1'                  # Swinepox  [SPXV] (with Nextclade)
-  ### 
-  ##- 'Ebola-virus_Zaire_AF272001.1'                     # Ebola   [EBOV]
-  ##- 'Ebola-virus_Sudan_MH121162.1'                     # Ebola   [EBOV]
-  ##- 'Marburg-virus_NC001608.3'                         # Marburg [MarV]
-  ### 
-  ##- 'Measles-virus_Ichinose-B95a_NC001498.1'           # Measles [MeV]
-  ##- 'Measles-virus_B3_Khartoum-Sudan_MG912590.1'       # Measles [MeV]
-  ##- 'Measles-virus_B3_Kole-Uganda_ON642796.1'          # Measles [MeV]
-  ##- 'Measles-virus_B3_Bura-Kenya_MZ615446.1_partial'   # Measles [MeV]
-  ##- 'Measles-virus_C2_Netherland-Bilthoven_MG912589.1' # Measles [MeV]
-  ##- 'Measles-virus_H1_Netherland-Amsterdam_MG912594.1' # Measles [MeV]
-  ### 
-  ##- 'Lassa-virus_NC004297.1_Seg-L'                     # Lassa Josiah L
-  ##- 'Lassa-virus_NC004297.1_Seg-S'                     # Lassa Josiah S
-  ##- 'Lassa-virus_Guinea_Faranah_MG812684.1_Seg-L'      # Lassa Guinea L
-  ##- 'Lassa-virus_Guinea_Faranah_MG812685.1_Seg-S'      # Lassa Guinea S
-  ##- 'Lassa-virus_Benin_Ben-16131_MT193231.1_Seg-L'     # Lassa Benin L
-  ##- 'Lassa-virus_Benin_Ben-16131_MT193282.1_Seg-S'     # Lassa Benin S
-  ### 
-  ##- 'Chikungunya-virus_HM045817.1'                     # Chikungunya [CHIKV]
-  ##- 'Dengue-virus-1_NC001477.1'                        # Dengue 1
-  ##- 'Dengue-virus-2_NC001474.2'                        # Dengue 2
-  ##- 'Dengue-virus-3_NC001475.2'                        # Dengue 3
-  ##- 'Dengue-virus-4_NC002640.1'                        # Dengue 4
-  ##- 'West-Nile-virus_M12294.2'                         # West Nile [WNV]
-  ##- 'Zika-virus_French-Polynesia_KX369547.1'           # Zika [ZV]
-  ### 
-  ##- 'Nipah-virus_Malaysia_AJ564622.1'                  # Nipah
-  ### 
-  ##- 'Human-herpesvirus-5_NC006273.2'                   # Herpes    [HCMV]
-  ##- 'Human-herpesvirus-3_NC001348.1'                   # Varicella [VZV]
-  ##- 'Human-adenovirus-A_NC001460.1'                    # Adeno
-  ##- 'Human-enterovirus-68_AY426531.1'                  # Entero
-  ### 
-  ##- 'HIV-1_HXB2_K03455.1'                              # HIV-1 [HIV]
-  ###
-  ##- 'your_custom_reference'                            # Add your custom reference
+###############################################################################
+################################# CONSENSUS ###################################
+###############################################################################
+
+consensus:
+  reference: 'SARS-CoV-2_Wuhan_MN908947.3' # Your reference, in fasta format (default: 'SARS-CoV-2_Wuhan_MN-908947-3') [STR]
+  # Available options (not exhaustive):
+    ##- 'SARS-CoV-2_Wuhan_MN908947.3'                      # SARS-CoV-2  (with Nextclade and Pangolin)(default)
+    ### 
+    ##- 'Monkeypox-virus_Zaire_AF380138.1'                 # Monkeypox [MPXV] (with Nextclade and Pangolin)
+    ##- 'Monkeypox-virus_UK_MT903345.1'                    # Monkeypox [MPXV] (with Nextclade and Pangolin)
+    ##- 'Swinepox-virus_India_MW036632.1'                  # Swinepox  [SPXV] (with Nextclade)
+    ### 
+    ##- 'Ebola-virus_Zaire_AF272001.1'                     # Ebola   [EBOV]
+    ##- 'Ebola-virus_Sudan_MH121162.1'                     # Ebola   [EBOV]
+    ##- 'Marburg-virus_NC001608.3'                         # Marburg [MarV]
+    ### 
+    ##- 'Measles-virus_Ichinose-B95a_NC001498.1'           # Measles [MeV]
+    ##- 'Measles-virus_B3_Khartoum-Sudan_MG912590.1'       # Measles [MeV]
+    ##- 'Measles-virus_B3_Kole-Uganda_ON642796.1'          # Measles [MeV]
+    ##- 'Measles-virus_B3_Bura-Kenya_MZ615446.1_partial'   # Measles [MeV]
+    ##- 'Measles-virus_C2_Netherland-Bilthoven_MG912589.1' # Measles [MeV]
+    ##- 'Measles-virus_H1_Netherland-Amsterdam_MG912594.1' # Measles [MeV]
+    ### 
+    ##- 'Lassa-virus_NC004297.1_Seg-L'                     # Lassa Josiah L
+    ##- 'Lassa-virus_NC004297.1_Seg-S'                     # Lassa Josiah S
+    ##- 'Lassa-virus_Guinea_Faranah_MG812684.1_Seg-L'      # Lassa Guinea L
+    ##- 'Lassa-virus_Guinea_Faranah_MG812685.1_Seg-S'      # Lassa Guinea S
+    ##- 'Lassa-virus_Benin_Ben-16131_MT193231.1_Seg-L'     # Lassa Benin L
+    ##- 'Lassa-virus_Benin_Ben-16131_MT193282.1_Seg-S'     # Lassa Benin S
+    ### 
+    ##- 'Chikungunya-virus_HM045817.1'                     # Chikungunya [CHIKV]
+    ##- 'Dengue-virus-1_NC001477.1'                        # Dengue 1
+    ##- 'Dengue-virus-2_NC001474.2'                        # Dengue 2
+    ##- 'Dengue-virus-3_NC001475.2'                        # Dengue 3
+    ##- 'Dengue-virus-4_NC002640.1'                        # Dengue 4
+    ##- 'West-Nile-virus_M12294.2'                         # West Nile [WNV]
+    ##- 'Zika-virus_French-Polynesia_KX369547.1'           # Zika [ZV]
+    ### 
+    ##- 'Nipah-virus_Malaysia_AJ564622.1'                  # Nipah
+    ### 
+    ##- 'Human-herpesvirus-5_NC006273.2'                   # Herpes    [HCMV]
+    ##- 'Human-herpesvirus-3_NC001348.1'                   # Varicella [VZV]
+    ##- 'Human-adenovirus-A_NC001460.1'                    # Adeno
+    ##- 'Human-enterovirus-68_AY426531.1'                  # Entero
+    ### 
+    ##- 'HIV-1_HXB2_K03455.1'                              # HIV-1 [HIV]
+    ###
+    ##- 'your_custom_reference'                            # Add your custom reference
+
+  min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
+  # Available options (not exhaustive):
+    ##- '100' # 100 X : for greater coverage
+    ##- '60'  #  30 X : for better coverage
+    ##- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
+    ##- '10'  #  10 X : for some applications (default)
+    ##- '3'   #   3 X : only for exploration...
+    ##- '1'   #   1 X : not recommanded!
+
+  max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
+  # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
+
+  min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT]
+  min_indel: '0.8' # Minimum indel frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
+
+  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
+  # Available options, set only one:
+    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default, recommanded with Samtools)
+    ##- ''         # yes, merge mapping quality: enable (not recommanded with Samtools)
+
+  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
+  min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
 
 ###############################################################################
 ################################ SUBMISSIONS ##################################
@@ -117,62 +145,6 @@ nextclade:
     ##- 'MPXV'       # MPox - all clades 
     ##- 'hMPXV'      # human MPox
     ##- 'hMPXV_B1'   # human MPox - only lineage B1*
-
-###############################################################################
-################################# CONSENSUS ###################################
-###############################################################################
-
-consensus:
-  min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
-  # Available options (not exhaustive):
-    ##- '100' # 100 X : for greater coverage
-    ##- '60'  #  30 X : for better coverage
-    ##- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
-    ##- '10'  #  10 X : for some applications (default)
-    ##- '3'   #   3 X : only for exploration...
-    ##- '1'   #   1 X : not recommanded!
-
-  max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
-  # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
-
-  min_freq: '0.2'   # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  min_insert: '0.8' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
-
-  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
-  # Available options, set only one:
-    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default, recommanded with Samtools)
-    ##- ''         # yes, merge mapping quality: enable (not recommanded with Samtools)
-
-  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
-  min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
-
-###############################################################################
-################################## VARIANTS ###################################
-###############################################################################
-
-variant:
-  min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
-  # Available options (not exhaustive):
-    ##- '100' # 100x : for greater coverage
-    ##- '60'  #  30x : for better coverage
-    ##- '30'  #  30x : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
-    ##- '10'  #  10x : for some applications (default)
-    ##- '3'   #   3x : only for exploration...
-    ##- '1'   #   1x : not recommanded!
-
-  max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
-  # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
-
-  min_freq: '0.2'   # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  min_insert: '0.8' # Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
-
-  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
-  # Available options, set only one:
-    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default, recommanded with Samtools)
-    ##- ''         # yes, merge mapping quality: enable (not recommanded with Samtools)
-
-  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
-  min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
 
 ###############################################################################
 ############################# PRIMERS CLEAPING ################################

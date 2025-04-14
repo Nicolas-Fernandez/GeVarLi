@@ -24,20 +24,20 @@ rule bedtools_masking:
     message:
         """
         ~ BedTools ∞ Mask Low Coverage Regions ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: __________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
         """
     conda:
         BEDTOOLS
     input:
         reference = "resources/genomes/{reference}.fasta",
-        low_cov_mask = "results/03_Coverage/{reference}/bed/{sample}_{mapper}_{min_cov}X_low-cov-mask.bed"
+        low_cov_mask = "results/03_Coverage/bed/{sample}_{reference}_{mapper}_{min_depth}x_low-cov-mask.bed"
     output:
-        masked_ref = "results/04_Variants/{reference}/{sample}_{mapper}_{min_cov}X_masked-ref.fasta"
+        masked_ref = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_masked-ref.fasta"
     log:
-        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{mapper}_{min_cov}X_masking.log"
+        "results/10_Reports/tools-log/bedtools/{sample}_{reference}_{mapper}_{min_depth}x_masking.log"
     shell:
         "bedtools maskfasta "       # Bedtools maskfasta, mask a fasta file based on feature coordinates
         "-fi {input.reference} "     # Input FASTA file 
@@ -52,19 +52,19 @@ rule bedtools_merged_mask:
     message:
         """
         ~ BedTools ∞ Merge Overlaps ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
         """
     conda:
         BEDTOOLS
     input:
-        min_cov_filt = "results/03_Coverage/{reference}/bed/{sample}_{mapper}_{min_cov}X_min-cov-filt.bed"
+        min_cov_filt = "results/03_Coverage/bed/{sample}_{reference}_{mapper}_{min_depth}x_min-cov-filt.bed"
     output:
-        low_cov_mask = temp("results/03_Coverage/{reference}/bed/{sample}_{mapper}_{min_cov}X_low-cov-mask.bed")
+        low_cov_mask = temp("results/03_Coverage/bed/{sample}_{reference}_{mapper}_{min_depth}x_low-cov-mask.bed")
     log:
-        "results/10_Reports/tools-log/bedtools/{reference}/{sample}_{mapper}_{min_cov}X_merging.log"
+        "results/10_Reports/tools-log/bedtools//{sample}_{reference}_{mapper}_{min_depth}x_merging.log"
     shell:
         "bedtools merge "          # Bedtools merge, merges overlapping BED/GFF/VCF entries into a single interval
         "-i {input.min_cov_filt} "  # -i: BED/GFF/VCF input to merge 
@@ -78,22 +78,22 @@ rule awk_min_covfilt:
     message:
         """
         ~ Awk ∞ Minimum Coverage Filtration ~
-        Sample: __________ {wildcards.sample}
-        Reference: _______ {wildcards.reference}
-        Mapper: _________ {wildcards.mapper}
-        Min. cov.: _______ {wildcards.min_cov}X
+        Sample: _______ {wildcards.sample}
+        Reference: ____ {wildcards.reference}
+        Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
         """
     conda:
         GAWK
     input:
-        genome_cov = "results/02_Mapping/{reference}/{sample}_{mapper}_genome-cov.bed"
+        genome_cov = "results/02_Mapping/{sample}_{reference}_{mapper}_genome-cov.bed"
     output:
-        min_cov_filt = temp("results/03_Coverage/{reference}/bed/{sample}_{mapper}_{min_cov}X_min-cov-filt.bed")
+        min_cov_filt = temp("results/03_Coverage/bed/{sample}{reference}_{mapper}_{min_depth}x_min-cov-filt.bed")
     log:
-        "results/10_Reports/tools-log/awk/{reference}/{sample}_{mapper}_{min_cov}X_min-cov-filt.log"
+        "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_depth}x_min-cov-filt.log"
     shell:
         "awk "                      # Awk, a program that you can use to select particular records in a file and perform operations upon them
-        "'$4 < {wildcards.min_cov}' " # Minimum coverage for masking regions in consensus sequence
+        "'$4 < {wildcards.min_depth}' " # Minimum coverage for masking regions in consensus sequence
         "{input.genome_cov} "         # BedGraph coverage input
         "1> {output.min_cov_filt} "   # Minimum coverage filtered bed output
         "2> {log} "                   # Log redirection
