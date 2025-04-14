@@ -66,7 +66,6 @@ rule ivar_variant_calling:
     params:
         min_depth = MIN_DEPTH,
         min_freq = MIN_FREQ,
-        #min_indel = MIN_INDEL,
         max_depth = MAX_DEPTH,
         min_bq = MIN_BQ,
         min_qual = MIN_QUAL,
