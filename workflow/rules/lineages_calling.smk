@@ -27,7 +27,7 @@ rule nextclade_lineage:
         Sample: ________ {wildcards.sample}
         Reference: _____ {wildcards.reference}
         Mapper: ________ {wildcards.mapper}
-        Min. depth.: ___ {wildcards.min_depth}X
+        Min. depth.: ___ {wildcards.min_depth}x
         Caller: ________ {wildcards.caller}
         """
     conda:
@@ -38,12 +38,12 @@ rule nextclade_lineage:
         path = NEXT_PATH,
         dataset = NEXT_DATASET
     input:
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_nextclade-report.tsv",
-        alignment = directory("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_nextclade-all/")
+        lineage = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade-report.tsv",
+        alignment = directory("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade-all/")
     log:
-        "results/10_Reports/tools-log/nextclade/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_lineage.log"
+        "results/10_Reports/tools-log/nextclade/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_lineage.log"
     shell:
         "nextclade "                                    # Nextclade, assign queries sequences to clades and reports potential quality issues
         "run "                                           # Run analyzis
@@ -73,12 +73,12 @@ rule pangolin_lineage:
         cpus = CPUS,
         tmp_dir = TMP_DIR
     input:
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta"
     output:
-        lineage_csv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_pangolin-report.csv",
-        lineage_tsv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_pangolin-report.tsv"
+        lineage_csv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin-report.csv",
+        lineage_tsv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin-report.tsv"
     log:
-        "results/10_Reports/tools-log/pangolin/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_lineage.log"
+        "results/10_Reports/tools-log/pangolin/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_lineage.log"
     shell:
         "pangolin "                     # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
         "{input.consensus} "             # Query fasta file of sequences to analyse

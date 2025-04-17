@@ -64,7 +64,7 @@ rule bedtools_merged_mask:
     output:
         low_cov_mask = temp("results/03_Coverage/bed/{sample}_{reference}_{mapper}_{min_depth}x_low-cov-mask.bed")
     log:
-        "results/10_Reports/tools-log/bedtools//{sample}_{reference}_{mapper}_{min_depth}x_merging.log"
+        "results/10_Reports/tools-log/bedtools/{sample}_{reference}_{mapper}_{min_depth}x_merge-overlaps.log"
     shell:
         "bedtools merge "          # Bedtools merge, merges overlapping BED/GFF/VCF entries into a single interval
         "-i {input.min_cov_filt} "  # -i: BED/GFF/VCF input to merge 
