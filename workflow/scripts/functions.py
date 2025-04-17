@@ -89,6 +89,7 @@ def get_bai_input(wildcards):
 ## GET_FINAL_OUTPUTS
 def get_final_outputs():
     final_outputs = []
+    # symlinks
     # quality_controls
     if MODULES["qualities"]:
         final_outputs.append(expand("results/00_Quality_Control/fastqc/{sample}_R{mate}/",

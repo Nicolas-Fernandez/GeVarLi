@@ -34,12 +34,10 @@ rule symlinks:
     log:
         "results/10_Reports/tools-log/symlinks/{sample}_R{mate}.log"
     shell:
-        "mkdir -p $(dirname {output.symlink}) " # Create output directory
-        "&& "                                   # Create symlink directory
-        "ln -sf "                               # Create symbolic link
-        "{input.valid_fastq} "                  # Source file
-        "{output.symlink} "                     # Link
-        "&> {log}"                              # Log redirection
+        "ln -sf "             # Create symbolic link
+        "{input.valid_fastq} " # Source file
+        "{output.symlink} "    # Link
+        "&> {log}"             # Log redirection
 
 ###############################################################################
 ###############################################################################
