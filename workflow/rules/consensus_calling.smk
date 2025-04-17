@@ -42,12 +42,12 @@ rule ivar_consensus:
         baq = MAP_QUAL
     input:
         mark_dup = get_bam_input,
-        variant_call = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}X_ivar_variant-call.tsv"
+        variant_call = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_ivar_variant-call.tsv"
     output:
-        prefix = temp("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus"),
+        prefix = temp("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus"),
         header = temp("{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus"),
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus.fasta",
-        qual_txt = "results/05_Consensus/ivar_consensus-quality/{sample}_{reference}_{mapper}_{min_depth}X_ivar_consensus.qual.txt"
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.fasta",
+        qual_txt = "results/05_Consensus/ivar_consensus-quality/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.qual.txt"
     log:
         "results/10_Reports/tools-log/ivar/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.log"
     shell:

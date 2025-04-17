@@ -123,7 +123,7 @@ def get_final_outputs():
     # duplicates_removing
     # coverage_stats
     if MODULES["covstats"]:
-        final_outputs.append(expand("results/03_Coverage/{sample}_{reference}_{mapper}_{min_depth}X_coverage-stats.tsv",
+        final_outputs.append(expand("results/03_Coverage/{sample}_{reference}_{mapper}_{min_depth}x_coverage-stats.tsv",
                                     sample = SAMPLE,
                                     reference = REFERENCE,
                                     min_depth=MIN_DEPTH,
@@ -141,13 +141,13 @@ def get_final_outputs():
     # variants_calling
     # consensus_calling
     if MODULES["consensus"]:
-        final_outputs.append(expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_consensus.fasta",
+        final_outputs.append(expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta",
                                     sample=SAMPLE,
                                     reference=REFERENCE,
                                     mapper = MAPPER,
                                     min_depth=MIN_DEPTH,
                                     caller=CALLER))
-        final_outputs.append(expand("results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_variant-filt.vcf",
+        final_outputs.append(expand("results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_variant-filt.vcf",
                                     sample=SAMPLE,
                                     reference=REFERENCE,
                                     mapper = MAPPER,
@@ -155,7 +155,7 @@ def get_final_outputs():
                                     caller = CALLER))
     # lineages_calling
     if MODULES["lineages"]:
-        final_outputs.append(expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}X_{caller}_{assigner}-report.tsv",
+        final_outputs.append(expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-report.tsv",
                                     sample=SAMPLE,
                                     reference=REFERENCE,
                                     mapper = MAPPER,
@@ -163,16 +163,16 @@ def get_final_outputs():
                                     caller = CALLER,
                                     assigner = ASSIGNER))
     # results_merging
-    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}X_{caller}_consensus_sequences.fasta",
+    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}x_{caller}_consensus_sequences.fasta",
                                 reference = REFERENCE,
                                 mapper = MAPPER,
                                 min_depth = MIN_DEPTH,
                                 caller = CALLER))
-    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}X_genome_coverages.tsv",
+    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}x_genome_coverages.tsv",
                                 reference = REFERENCE,
                                 mapper = MAPPER,
                                 min_depth = MIN_DEPTH))
-    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}X_{caller}_{assigner}-lineages.tsv",
+    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-lineages.tsv",
                                 reference = REFERENCE,
                                 mapper = MAPPER,
                                 min_depth = MIN_DEPTH,

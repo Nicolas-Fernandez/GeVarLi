@@ -32,7 +32,7 @@ rule merge_consensus:
                                             sample = SAMPLE,
                                             reference = wildcards.reference,
                                             mapper = wildcards.mapper,
-                                            min_cov = wildcards.min_cov,
+                                            min_depth = wildcards.min_depth,
                                             caller = wildcards.caller)
     output:
         all_consensus = "results/All_{reference}_{mapper}_{min_depth}x_{caller}_consensus_sequences.fasta"
@@ -58,7 +58,7 @@ rule merge_coverage:
                                             sample = SAMPLE,
                                             reference = wildcards.reference,
                                             mapper = wildcards.mapper,
-                                            min_cov = wildcards.min_cov)
+                                            min_depth = wildcards.min_depth)
     output:
         all_covstats = "results/All_{reference}_{mapper}_{min_depth}x_genome_coverages.tsv"
     log:
@@ -85,7 +85,7 @@ rule merge_clade:
                                         sample = SAMPLE,
                                         reference = wildcards.reference,
                                         mapper = wildcards.mapper,
-                                        min_cov = wildcards.min_cov,
+                                        min_depth = wildcards.min_depth,
                                         caller = wildcards.caller,
                                         assigner = wildcards.assigner)
     output:
