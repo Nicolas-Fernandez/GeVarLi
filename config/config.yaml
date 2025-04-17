@@ -24,6 +24,9 @@
 ###############################################################################
 
 fastq_dir: 'resources/reads/' # Path to reads fastq.gz files (default: 'resources/reads/') [PATH]
+# Available options (not exhaustive):
+  ##- 'resources/reads/' # Path to reads fastq.gz files (default)
+  ##- '.test/reads/' # Path to reads fastq.gz files (test)
 
 modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
   qualities: true   # Perform reads quality controls (FastQC, Fastq-Screen)       (default: true)
