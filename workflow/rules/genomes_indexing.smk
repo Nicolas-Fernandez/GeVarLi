@@ -24,14 +24,14 @@ rule bwa_qc_indexing:
     message:
         """
         ~ BWA-SW ∞ Index QC ~
-        QC_Ref: ____ {wildcards.qc_ref}
+        Reference: ____ {wildcards.qc_ref}
         """
     conda:
         BWA
     params:
         algorithm = BWA_ALGO
     input:
-        fasta = "resources/genomes/{qc_ref}.fasta"
+        fasta = "resources/genomes/fastq-screen/{qc_ref}.fasta"
     output:
         prefix = "resources/indexes/fastq-screen/{qc_ref}",
         bwa_indexes = multiext("resources/indexes/fastq-screen/{qc_ref}",
@@ -60,7 +60,7 @@ rule bwa_genome_indexing:
     params:
         algorithm = BWA_ALGO
     input:
-        fasta = "resources/genomes/{reference}.fasta"
+        fasta = "resources/genomes/viruses/{reference}.fasta"
     output:
         prefix = "resources/indexes/bwa/{reference}",
         bwa_indexes = multiext("resources/indexes/bwa/{reference}",
@@ -92,7 +92,7 @@ rule minimap2_genome_indexing:
         split_size = MM2_SPLIT_SIZE
         #homopolymer = MM2_HOMOPOLYMER
     input:
-        fasta = "resources/genomes/{reference}.fasta"
+        fasta = "resources/genomes/viruses/{reference}.fasta"
     output:
         mm2_indexes = multiext("resources/indexes/minimap2/{reference}",
                                ".mmi")
@@ -124,7 +124,7 @@ rule bowtie2_genome_indexing:
     params:
         algorithm = BT2_ALGO
     input:
-        fasta = "resources/genomes/{reference}.fasta"
+        fasta = "resources/genomes/viruses/{reference}.fasta"
     output:
         prefix = "resources/indexes/bowtie2/{reference}",
         bt2_indexes = multiext("resources/indexes/bowtie2/{reference}",

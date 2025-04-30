@@ -157,7 +157,7 @@ rule samtools_sortbynames:
        cpus = 6,
        mem_gb = 1
     input:
-        mapped = "results/02_Mapping/{sample}_{reference}_{mapper}-mapped.sam"
+        mapped = "results/02_Mapping/{sample}_{reference}_{mapper}_mapped.sam"
     output:
         sort_by_names = temp("results/02_Mapping/{sample}_{reference}_{mapper}_sort-by-names.bam")
     log:

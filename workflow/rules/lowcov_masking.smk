@@ -88,7 +88,7 @@ rule awk_min_covfilt:
     input:
         genome_cov = "results/02_Mapping/{sample}_{reference}_{mapper}_genome-cov.bed"
     output:
-        min_cov_filt = temp("results/03_Coverage/bed/{sample}{reference}_{mapper}_{min_depth}x_min-cov-filt.bed")
+        min_cov_filt = temp("results/03_Coverage/bed/{sample}_{reference}_{mapper}_{min_depth}x_min-cov-filt.bed")
     log:
         "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_depth}x_min-cov-filt.log"
     shell:

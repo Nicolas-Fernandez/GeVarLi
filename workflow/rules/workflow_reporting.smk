@@ -110,7 +110,7 @@ rule multiqc_aggregation:
     output:
         multiqc = directory("results/10_Reports/multiqc/"),
         html_report = "results/10_Reports/multiqc/multiqc_report.html",
-        copy_report = "results/All_QC_reports.html"
+        copy_report = "results/MultiQC_reports.html"
     log:
         "results/10_Reports/tools-log/multiqc.log"
     shell:

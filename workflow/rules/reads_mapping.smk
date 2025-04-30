@@ -18,6 +18,39 @@
 ###############################################################################
 
 ###############################################################################
+rule bwa_mapping:
+    # Aim: reads mapping against reference sequence
+    # Use: bwa mem -t [THREADS] -x [REFERENCE] [FWD_R1.fq] [REV_R2.fq] 1> [MAPPED.sam]
+    message:
+        """
+        ~ BWA-MEM ∞ Map Reads ~
+        Sample: ________ {wildcards.sample}
+        Reference: _____ {wildcards.reference}
+        Aligner: _______ BWA
+        """
+    conda:
+        BWA
+    resources:
+        cpus = CPUS
+    input:
+        bwa_indexes = "resources/indexes/bwa/{reference}",
+        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
+        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
+    output:
+        mapped = temp("results/02_Mapping/{sample}_{reference}_bwa_mapped.sam")
+    log:
+        "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
+    shell:
+        "bwa mem "            # BWA-MEM algorithm, performs local alignment
+        "-t {resources.cpus} " # -t: Number of threads (default: 12)
+        "-v 1 "                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
+        "{input.bwa_indexes} " # Reference index filename prefix
+        "{input.fwd_reads} "   # Forward input reads
+        "{input.rev_reads} "   # Reverse input reads
+        "1> {output.mapped} "  # SAM output
+        "2> {log}"             # Log redirection 
+
+###############################################################################
 rule minimap2_mapping:
     # Aim: reads mapping against reference sequence
     # Use: minimap2
@@ -40,7 +73,7 @@ rule minimap2_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{sample}_{reference}_minimap2-mapped.sam")
+        mapped = temp("results/02_Mapping/{sample}_{reference}_minimap2_mapped.sam")
     log:
         "results/10_Reports/tools-log/minimap2/{sample}_{reference}.log"
     shell:
@@ -56,39 +89,6 @@ rule minimap2_mapping:
         #"-w {params.minimizer_size} " # -w: minimizer window size (default: "11") [INT]
         #"-I {params.split_size} "     # -I: split index for every {NUM} input bases (default: "8G") [INT]
         #"{params.homopolymer} "       # -H: use homopolymer-compressed k-mer (preferrable for PacBio)
-        "{input.fwd_reads} "   # Forward input reads
-        "{input.rev_reads} "   # Reverse input reads
-        "1> {output.mapped} "  # SAM output
-        "2> {log}"             # Log redirection 
-
-###############################################################################
-rule bwa_mapping:
-    # Aim: reads mapping against reference sequence
-    # Use: bwa mem -t [THREADS] -x [REFERENCE] [FWD_R1.fq] [REV_R2.fq] 1> [MAPPED.sam]
-    message:
-        """
-        ~ BWA-MEM ∞ Map Reads ~
-        Sample: ________ {wildcards.sample}
-        Reference: _____ {wildcards.reference}
-        Aligner: _______ BWA
-        """
-    conda:
-        BWA
-    resources:
-        cpus = CPUS
-    input:
-        bwa_indexes = "resources/indexes/bwa/{reference}",
-        fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
-        rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
-    output:
-        mapped = temp("results/02_Mapping/{sample}_{reference}_bwa-mapped.sam")
-    log:
-        "results/10_Reports/tools-log/bwa/{sample}_{reference}.log"
-    shell:
-        "bwa mem "            # BWA-MEM algorithm, performs local alignment
-        "-t {resources.cpus} " # -t: Number of threads (default: 12)
-        "-v 1 "                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
-        "{input.bwa_indexes} " # Reference index filename prefix
         "{input.fwd_reads} "   # Forward input reads
         "{input.rev_reads} "   # Reverse input reads
         "1> {output.mapped} "  # SAM output
@@ -116,7 +116,7 @@ rule bowtie2_mapping:
         fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
-        mapped = temp("results/02_Mapping/{sample}_{reference}_bowtie2-mapped.sam")
+        mapped = temp("results/02_Mapping/{sample}_{reference}_bowtie2_mapped.sam")
     log:
         "results/10_Reports/tools-log/bowtie2/{sample}_{reference}.log"
     shell:
