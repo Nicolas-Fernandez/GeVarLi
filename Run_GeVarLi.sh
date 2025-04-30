@@ -203,6 +203,7 @@ snakemake \
     --rerun-incomplete \
     --keep-going \
     --use-conda \
+    --jobs 0 \
     --quiet host progress
 
 ###############################################################################

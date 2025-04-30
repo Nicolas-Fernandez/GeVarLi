@@ -46,6 +46,7 @@ FASTQ_DIR = config["fastq_dir"]
 VALID_FASTQ, SAMPLE_WARNINGS = get_valid_fastq(FASTQ_DIR)
 SAMPLE = list(VALID_FASTQ.keys())
 MATE = ["1", "2"]
+QC_REF, = glob_wildcards("resources/genomes/fastq-screen/{qc_ref}.fasta")
 START_TIME = time.time()
 
 # Exports
@@ -54,6 +55,7 @@ functions.FASTQ_DIR = FASTQ_DIR
 functions.SAMPLE_WARNINGS = SAMPLE_WARNINGS
 functions.SAMPLE = SAMPLE
 functions.MATE = MATE
+functions.QC_REF = QC_REF
 functions.START_TIME = START_TIME
 functions.MODULES = config["modules"] # Modules
 functions.MAPPER = config["tools"]["mapper"]     # Reads mapper ('bwa', 'minimap2' or 'bowtie2')
@@ -61,7 +63,6 @@ functions.CALLER = config["tools"]["caller"]     # Variants caller ('ivar' or 'i
 functions.ASSIGNER = config["tools"]["assigner"] # Lineages assigner ('nextclade' or 'pangolin')
 functions.REFERENCE = config["consensus"]["reference"] # Genome reference sequence, in fasta format
 functions.MIN_DEPTH = config["consensus"]["min_depth"] # Minimum depth to call consensus, mark lower regions with 'N'
-functions.QC_REF = config["fastq_screen"]["reference"] # FastqScreen config file genomes to index
 functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extentions ('txt' 'tsv' 'json')
 
 # Snakemake version
@@ -74,6 +75,11 @@ validate(config, schema="schemas/config.schema.yaml")
 ### WILDCARDS ###
 #################
 
+wildcard_constraints:
+    reference = "^[A-Z]{1,2}[0-9]{5,7}$",
+    mapper = "^(?:bwa|minimap2|bowtie2)$",
+    caller = "^(?:ivar)$",
+    assigner = "^(?:nextclade|pangolin)$"
 
 ###############################################################################
 ### RESOURCES ###

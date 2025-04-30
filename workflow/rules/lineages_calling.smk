@@ -40,8 +40,8 @@ rule nextclade_lineage:
     input:
         consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta"
     output:
-        lineage = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade-report.tsv",
-        alignment = directory("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade-all/")
+        lineage = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade_report.tsv",
+        alignment = directory("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade_alignments/")
     log:
         "results/10_Reports/tools-log/nextclade/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_lineage.log"
     shell:
@@ -75,8 +75,8 @@ rule pangolin_lineage:
     input:
         consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta"
     output:
-        lineage_csv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin-report.csv",
-        lineage_tsv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin-report.tsv"
+        lineage_csv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin_report.csv",
+        lineage_tsv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin_report.tsv"
     log:
         "results/10_Reports/tools-log/pangolin/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_lineage.log"
     shell:

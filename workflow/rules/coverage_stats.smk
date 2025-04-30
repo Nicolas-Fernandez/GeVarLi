@@ -38,9 +38,9 @@ rule awk_coverage_statistics:
         histogram = "results/03_Coverage/histogram/{sample}_{reference}_{mapper}_coverage-histogram.txt",
         genome_cov = "results/02_Mapping/{sample}_{reference}_{mapper}_genome-cov.bed"
     output:
-        cov_stats = "results/03_Coverage/{sample}_{reference}_{mapper}_{min_cov}X_coverage-stats.tsv"
+        cov_stats = "results/03_Coverage/{sample}_{reference}_{mapper}_{min_cov}x_coverage-stats.tsv"
     log:
-        "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_cov}X_coverage-stats.log"
+        "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_cov}x_coverage-stats.log"
     shell:
         r""" rawReads=$(grep -o -E  """                                  # Get raw reads 
         r""" 'Total read pairs processed:.+' {input.cutadapt}  """       #

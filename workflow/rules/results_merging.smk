@@ -35,7 +35,7 @@ rule merge_consensus:
                                             min_depth = wildcards.min_depth,
                                             caller = wildcards.caller)
     output:
-        all_consensus = "results/All_{reference}_{mapper}_{min_depth}x_{caller}_consensus_sequences.fasta"
+        all_consensus = "results/{reference}_{mapper}_{min_depth}x_{caller}_all-consensus-sequences.fasta"
     log:
         "results/10_Reports/tools-log/merge_consensus/{reference}_{mapper}_{min_depth}x_{caller}_consensus.log"
     shell:
@@ -60,9 +60,9 @@ rule merge_coverage:
                                             mapper = wildcards.mapper,
                                             min_depth = wildcards.min_depth)
     output:
-        all_covstats = "results/All_{reference}_{mapper}_{min_depth}x_genome_coverages.tsv"
+        all_covstats = "results/{reference}_{mapper}_{min_depth}x_all-coverage-stats.tsv"
     log:
-        "results/10_Reports/tools-log/merge_coverage/{reference}_{mapper}_{min_depth}x_covstats.log"
+        "results/10_Reports/tools-log/merge_coverage/{reference}_{mapper}_{min_depth}x_coverage-stats.log"
     shell:
         "cat {input.covstats} | "  # Concatenate all coverage statistics
         "awk 'NR==1 || NR%2==0' "   # Keep only even lines
@@ -81,7 +81,7 @@ rule merge_clade:
         Assigner: _____ {wildcards.assigner}
         """
     input:
-        lineages = lambda wildcards: expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-report.tsv",
+        lineages = lambda wildcards: expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}_report.tsv",
                                         sample = SAMPLE,
                                         reference = wildcards.reference,
                                         mapper = wildcards.mapper,
@@ -89,9 +89,9 @@ rule merge_clade:
                                         caller = wildcards.caller,
                                         assigner = wildcards.assigner)
     output:
-        all_lineages = "results/All_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-lineages.tsv"
+        all_lineages = "results/{reference}_{mapper}_{min_depth}x_{caller}_{assigner}_all-lineages.tsv"
     log:
-        "results/10_Reports/tools-log/merge_clade/{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-lineages.log"
+        "results/10_Reports/tools-log/merge_clade/{reference}_{mapper}_{min_depth}x_{caller}_{assigner}_lineages.log"
     shell:
         "cat {input.lineages} | "  # Concatenate all lineage assignments
         "awk 'NR==1 || NR%2==0' "   # Keep only even lines

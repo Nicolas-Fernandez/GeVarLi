@@ -36,6 +36,7 @@ rule fastqscreen_contamination_check:
         subset = FQC_SUBSET
     input:
         fastq = "results/symlinks/{sample}_R{mate}.fastq.gz"
+        #prefix = "resources/indexes/fastq-screen/{qc_ref}"
     output:
         fastq_screen = directory("results/00_Quality_Control/fastq-screen/{sample}_R{mate}/")
     log:

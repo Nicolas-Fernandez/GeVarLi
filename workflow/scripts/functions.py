@@ -22,7 +22,7 @@
 ###############
 
 import os, re, glob, time, sys, subprocess, platform, yaml
-from snakemake.io import expand
+from snakemake.io import expand # type: ignore
 from collections import defaultdict
 
 ###############################################################################
@@ -92,10 +92,12 @@ def get_final_outputs():
     # symlinks
     # quality_controls
     if MODULES["qualities"]:
-        final_outputs.append(expand("results/00_Quality_Control/fastqc/{sample}_R{mate}/",
+        final_outputs.append(expand("resources/indexes/fastq-screen/{qc_ref}",
+                                qc_ref = QC_REF))
+        final_outputs.append(expand("results/00_Quality_Control/fastq-screen/{sample}_R{mate}/",
                                     sample = SAMPLE,
                                     mate = MATE))
-        final_outputs.append(expand("results/00_Quality_Control/fastq-screen/{sample}_R{mate}/",
+        final_outputs.append(expand("results/00_Quality_Control/fastqc/{sample}_R{mate}/",
                                     sample = SAMPLE,
                                     mate = MATE))
     # reads_trimming
@@ -107,15 +109,13 @@ def get_final_outputs():
         final_outputs.append(expand("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_SE.fastq.gz",
                                     sample = SAMPLE))
     # genomes_indexing
-    final_outputs.append(expand("resources/indexes/fastq-screen/{qc_ref}",
-                                qc_ref = QC_REF))
     # reads_mapping
     # primers_clipping
     if MODULES["clipping"]:
-        final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam",
-                                    sample = SAMPLE,
-                                    reference = REFERENCE,
-                                    mapper = MAPPER))
+        #final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam",
+        #                            sample = SAMPLE,
+        #                            reference = REFERENCE,
+        #                            mapper = MAPPER))
         final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai",
                                     sample = SAMPLE,
                                     reference = REFERENCE,
@@ -137,11 +137,15 @@ def get_final_outputs():
                                     reference = REFERENCE,
                                     mapper = MAPPER,
                                     ext = STAT_EXT))
+        final_outputs.append(expand("results/{reference}_{mapper}_{min_depth}x_all-coverage-stats.tsv",
+                                    reference = REFERENCE,
+                                    mapper = MAPPER,
+                                    min_depth = MIN_DEPTH))
     # lowcov_masking
     # variants_calling
     # consensus_calling
     if MODULES["consensus"]:
-        final_outputs.append(expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta",
+        final_outputs.append(expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus-sequence.fasta",
                                     sample=SAMPLE,
                                     reference=REFERENCE,
                                     mapper = MAPPER,
@@ -153,31 +157,26 @@ def get_final_outputs():
                                     mapper = MAPPER,
                                     min_depth = MIN_DEPTH,
                                     caller = CALLER))
+        final_outputs.append(expand("results/{reference}_{mapper}_{min_depth}x_{caller}_all-consensus-sequences.fasta",
+                                    reference = REFERENCE,
+                                    mapper = MAPPER,
+                                    min_depth = MIN_DEPTH,
+                                    caller = CALLER))
     # lineages_calling
     if MODULES["lineages"]:
-        final_outputs.append(expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-report.tsv",
+        final_outputs.append(expand("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}_report.tsv",
                                     sample=SAMPLE,
                                     reference=REFERENCE,
                                     mapper = MAPPER,
                                     min_depth = MIN_DEPTH,
                                     caller = CALLER,
                                     assigner = ASSIGNER))
-    # results_merging
-    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}x_{caller}_consensus_sequences.fasta",
-                                reference = REFERENCE,
-                                mapper = MAPPER,
-                                min_depth = MIN_DEPTH,
-                                caller = CALLER))
-    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}x_genome_coverages.tsv",
-                                reference = REFERENCE,
-                                mapper = MAPPER,
-                                min_depth = MIN_DEPTH))
-    final_outputs.append(expand("results/All_{reference}_{mapper}_{min_depth}x_{caller}_{assigner}-lineages.tsv",
-                                reference = REFERENCE,
-                                mapper = MAPPER,
-                                min_depth = MIN_DEPTH,
-                                caller = CALLER,
-                                assigner = ASSIGNER))
+        final_outputs.append(expand("results/{reference}_{mapper}_{min_depth}x_{caller}_{assigner}_all-lineages.tsv",
+                                    reference = REFERENCE,
+                                    mapper = MAPPER,
+                                    min_depth = MIN_DEPTH,
+                                    caller = CALLER,
+                                    assigner = ASSIGNER))
     # return final_outpus
     return final_outputs
 
