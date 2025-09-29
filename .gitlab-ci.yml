@@ -21,7 +21,7 @@ before_script:
 test:
   stage: test
   script:
-    - mkdocs build --strict --verbose --site-dir test --config-file .documentations/mkdocs.yaml
+    - mkdocs build --strict --verbose --site-dir test --config-file documentations/mkdocs.yaml
   artifacts:
     paths:
       - test
@@ -31,9 +31,33 @@ test:
 pages:
   stage: deploy
   script:
-    - mkdocs build --verbose --config-file .documentations/mkdocs.yaml
+    - mkdocs build --verbose --config-file documentations/mkdocs.yaml
   artifacts:
     paths:
       - public
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+
+
+
+# This script pushes any change on the main branch to a remote GitLab repository.
+push_to_gitlab:
+  stage: deploy
+  # This job only runs for changes on the 'main' branch.
+  # Change 'main' if your default branch has a different name (e.g., 'master').
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+
+  script:
+    # Added git install just in case
+    - apt-get update && apt-get install -y git
+
+    # Clone the repository from GitForge using a temporary token.
+    - git clone --mirror "https://oauth2:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
+    - cd temp_repo
+
+    # Set the destination URL to your GitLab.com repository, using the secret token.
+    - git remote set-url --push origin "https://oauth2:${GITLAB_PUSH_TOKEN}@gitlab.com/Nicolas-Fernandez/GeVarLi.git"
+
+    # Push all branches and tags.
+    - git push --mirror

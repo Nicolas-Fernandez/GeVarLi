@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ lowcov_masking.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Mask low coverage regions
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -32,7 +32,7 @@ rule bedtools_masking:
     conda:
         BEDTOOLS
     input:
-        reference = "resources/genomes/{reference}.fasta",
+        reference = "resources/genomes/viruses/{reference}.fasta",
         low_cov_mask = "results/03_Coverage/bed/{sample}_{reference}_{mapper}_{min_depth}x_low-cov-mask.bed"
     output:
         masked_ref = "results/04_Variants/{sample}_{reference}_{mapper}_{min_depth}x_masked-ref.fasta"

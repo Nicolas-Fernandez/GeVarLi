@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ reads_mapping.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Map Illumina reads on virus reference genomes
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -33,7 +33,8 @@ rule bwa_mapping:
     resources:
         cpus = CPUS
     input:
-        bwa_indexes = "resources/indexes/bwa/{reference}",
+        bwa_prefix = expand("resources/indexes/bwa/{reference}",
+                            reference = REFERENCE),
         fwd_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
         rev_reads = "results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz"
     output:
@@ -44,7 +45,7 @@ rule bwa_mapping:
         "bwa mem "            # BWA-MEM algorithm, performs local alignment
         "-t {resources.cpus} " # -t: Number of threads (default: 12)
         "-v 1 "                # -v: Verbosity level: 1=error, 2=warning, 3=message, 4+=debugging
-        "{input.bwa_indexes} " # Reference index filename prefix
+        "{input.bwa_prefix} " # Reference index filename prefix
         "{input.fwd_reads} "   # Forward input reads
         "{input.rev_reads} "   # Reverse input reads
         "1> {output.mapped} "  # SAM output

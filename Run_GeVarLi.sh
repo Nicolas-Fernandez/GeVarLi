@@ -10,13 +10,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ Run_GeVarLi.sh
-# Version ________________ v.2025.04
+# Version ________________ v.2025.09
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Bash script running GeVarLi snakefile
+# Aim ____________________ Bash script wrapper running GeVarLi snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ '. Run_GeVarLi.sh'
+# Latest modifications ___ 2025.09.09
+# Use ____________________ './Run_GeVarLi.sh'
 ###############################################################################
 
 ###############################################################################
@@ -24,135 +24,97 @@
 #############
 
 workdir=$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd) # Get working directory
-version=$(<${workdir}/VERSION.txt)                # Get version
-
-blue="\033[1;34m"  # blue
-green="\033[1;32m" # green
-red="\033[1;31m"   # red
-ylo="\033[1;33m"   # yellow
-nc="\033[0m"       # no color
+version=$(<${workdir}/VERSION)                         # Get version
 
 ###############################################################################
-### NETWORK ###
-###############
+### LIBRARIES ###
+#################
 
-# Test if network is online
-if ping -c 1 -W 5 google.com > /dev/null 2>&1 || \
-   ping -c 1 -W 5 cloudflare.com > /dev/null 2>&1
-then
-    network="Online"
-else
-    network="Offline"
-fi
+source "${workdir}/scripts/lib_colors.sh"  # Define color varibales
+source "${workdir}/scripts/lib_spinner.sh" # Run function with a spinner
+source "${workdir}/scripts/lib_network.sh" # Check network statut
+source "${workdir}/scripts/lib_conda.sh"   # Test if a conda distribution already exist
 
 ###############################################################################
-### CONDA ###
-#############
+### INSTALL / UPDATE WORKFLOW-CORE ###
+######################################
 
-# Test if a conda distribution already exist
-if [[ ! $(command -v conda) ]]
-then # If no, invitation message to install it
-    echo -e "
-    ${red}No Conda distribution found.${nc}
-    ${blue}GeVarLi${nc} use the free and open-source package manager ${ylo}Conda${nc}.
-    Read documentation at: ${green}https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/pages/installations/${nc}"
-    return 0
-else # If yes, intern shell source conda
-    echo -e "\n ${green}Conda${nc} distribution found and sourced."
-    source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge3
-    source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
-    source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
-    source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
-fi
+conda_workflow_env="workflow-core"
 
-###############################################################################
-### SPINNER ###
-###############
+ENV_YAML_PATH="workflow/envs/workflow-core.yaml"
+CHECKSUM_DIR=".gevarli_cache"
+CHECKSUM_FILE="${CHECKSUM_DIR}/workflow-core.md5"
 
-# Function to run a command with a spinner
-run_with_spinner() {
-    ("$@" > /dev/null 2>&1) &
-    local pid=$!
-    disown $pid 2>/dev/null
+# Check if the environment already exists and if the YAML file has changed
+echo -e "\n${blue}[INFO]${nc} Check Conda environment: '${ylo}${conda_workflow_env}${nc}'..."
+mkdir -p ${CHECKSUM_DIR}
 
-    local spinner=( "⠋" "⠙" "⠹" "⠸" "⠼" "⠴" "⠦" "⠧" "⠇" "⠏" )
-    local i=0
-    while kill -0 $pid 2>/dev/null; do
-        # Clear the line
-        printf "\r\033[K %s Please wait    " "${spinner[$i]}"
-        i=$(( (i+1) % ${#spinner[@]} ))
-        sleep 0.1
-    done
-    wait $pid
-    local exit_code=$?
-    # Clear the spinner line
-    printf "\r\033[K"
-    if [ $exit_code -eq 0 ]; then
-        echo "${green}✔${red} Job done!"
+if ! conda env list | grep -q "^${conda_workflow_env}\s"; then
+
+  echo -e "\n${ylo}[ACTION]${nc} Environment does not exist. Attempting to create it..."
+  if [[ ${network} == "Online" ]]; then # If network is online
+
+    if run_with_spinner conda env create --file "${ENV_YAML_PATH}"; then
+    # If succes (0)
+    echo -e "\n${green}[SUCCESS]${nc} Environment created. Saving checksum..."
+    if [[ "$(uname)" == "Darwin" ]]; then
+        md5 -q "${ENV_YAML_PATH}" > "${CHECKSUM_FILE}"
     else
-        echo "${red}✖${nc} Job failed with exit code $exit_code."
+        md5sum "${ENV_YAML_PATH}" | awk '{print $1}' > "${CHECKSUM_FILE}"
     fi
-}
-
-###############################################################################
-### WORKFLOW-CORE ###
-#####################
-
-# Test if 'workflow-core' environment exist.
-if conda env list | grep -q "^workflow-core"
-then # If 'exist'
-    echo -e "\n ${ylo}Workflow-Core${nc} conda environment already created."
-    #  Test if 'workflow-core' environment is up-to-date.
-    ENV_YAML="${workdir}/workflow/envs/workflow-core.yaml"
-    CURRENT_ENV=$(conda env export --no-builds --name workflow-core | grep -v '^prefix:')
-    EXPECTED_ENV=$(grep -v '^prefix:' "$ENV_YAML")
-    #if false #diff <(echo "$CURRENT_ENV") <(echo "$EXPECTED_ENV") > /dev/null
-    #hen # If 'up-to-date'
-    #    echo -e "\n ${ylo}Workflow-Core${nc} environment is already up-to-date."
-    #else # If 'not' up-to-date
-    #    if [[ $network == "Offline" ]]
-    #    then # If 'offline'
-    #        echo -e "\n Cannot update ${ylo}Workflow-Core${nc} environment.
-    #                 ${green}Network${nc}: ${red}${network}${nc}."
-    #    else # If 'online'
-    #        echo -e "\n Updating ${ylo}Workflow-Core${nc} environment. \n"
-    #        run_with_spinner \
-    #            conda env update \
-    #                --prune \
-    #                --name workflow-core \
-    #                --file $ENV_YAML
-    #    fi
-    #fi
-else # If 'not' exist
-    echo -e "\n ${ylo}Workflow-Core${nc} conda environment not found."
-    if [[ $network == "Online" ]]
-    then # If 'online'
-        echo -e "\n ${ylo}Workflow-Core${nc} conda environment will be created, with:
-    > ${red}Snakemake${nc}
-    > ${red}Snakedeploy${nc}   
-    > ${red}Snakemake Slurm plugin${nc} \n"
-    run_with_spinner \
-	    conda env create \
-	        --file ${workdir}/workflow/envs/workflow-core.yaml \
-	        --quiet
-        else # If 'offline'
-            echo -e "\n Cannot install ${ylo}Workflow-Core${nc} environment.
-                     ${green}Network${nc}: ${red}${network}${nc}".
+    else
+    # If failure (1)
+    echo -e "\n${red}[ERROR]${nc} Environment creation failed. Please check the logs."
+    exit 1
     fi
+  else # If network is offline
+    echo -e "\n${red}[ERROR]${nc} Cannot install '${ylo}${conda_workflow_env}${nc}' environment."
+    echo -e "${blue}Network status${nc}: ${red}${network}${nc}."
+    exit 1
+  fi
+else
+  if [[ "$(uname)" == "Darwin" ]]; then
+    CURRENT_CHECKSUM=$(md5 -q "${ENV_YAML_PATH}")
+  else
+    CURRENT_CHECKSUM=$(md5sum "${ENV_YAML_PATH}" | awk '{print $1}')
+  fi
+  STORED_CHECKSUM=$(cat "${CHECKSUM_FILE}" 2>/dev/null)
+
+  if [[ "${CURRENT_CHECKSUM}" == "${STORED_CHECKSUM}" ]]; then
+    echo -e "\n${blue}[INFO]${nc} '${ylo}${conda_workflow_env}${nc}' is up to date."
+  else
+    echo -e "\n${ylo}[ACTION]${nc} The YAML file has changed. Attempting to update the environment..."
+
+    if [[ ${network} == "Online" ]]; then # If network is online
+
+    if run_with_spinner conda env update --name "${conda_workflow_env}" --file "${ENV_YAML_PATH}" --prune; then
+        echo -e "\n${green}[SUCCESS]${nc} Environment updated. Saving new checksum..."
+        echo "${CURRENT_CHECKSUM}" > "${CHECKSUM_FILE}"
+    else
+        echo -e "\n${red}[ERROR]${nc} Environment update failed. Please check the logs."
+        exit 1
+    fi
+
+    else # If network is offline
+    echo -e "\n${red}[ERROR]${nc} Cannot update '${ylo}${conda_workflow_env}${nc}' environment."
+    echo -e "${blue}Network status${nc}: ${red}${network}${nc}."
+     exit 1
+    fi
+  fi
 fi
 
-###############################################################################
-### ACTIVATE WORKFLOW-CORE ###
-###############################
 
-# Active workflow-core conda environment.
-if conda env list | grep -q "^workflow-core"
-then
-    echo -e "\n Activate ${ylo}Workflow-Core${nc} conda environment."
-    conda activate workflow-core
+###############################################################################
+### ACTIVATE CONDA WORKFLOW ENVIRONMENT ###
+###########################################
+
+
+if conda env list | grep -q "^${conda_workflow_env}\s"; then
+  echo -e "\n ${green}[SUCCESS]${nc} Activate ${ylo}${conda_workflow_env}${nc} conda environment."
+  conda activate ${conda_workflow_env}
 else
-    echo -e "\n Cannot activate ${ylo}Workflow-Core${nc} conda environment."
-    return 0
+  echo -e "\n ${red}[ERROR]${nc} Cannot activate ${ylo}${conda_workflow_env}${nc} conda environment."
+  return 0
 fi
 
 ###############################################################################
@@ -167,51 +129,50 @@ ${blue}-------------------------${nc}
 
 echo -e "\n ${green} > Snakemake: unlock working directory${nc} \n"
 snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/Snakefile \
-    --rerun-incomplete \
-    --unlock
+  --directory ${workdir}/ \
+  --snakefile ${workdir}/workflow/Snakefile \
+  --rerun-incomplete \
+  --unlock
 
 echo -e "\n ${green} > Snakemake: list conda environments${nc} \n"
 snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/Snakefile \
-    --rerun-incomplete \
-    --list-conda-envs
+  --directory ${workdir}/ \
+  --snakefile ${workdir}/workflow/Snakefile \
+  --rerun-incomplete \
+  --list-conda-envs
 
 echo -e "\n ${green} > Snakemake: create conda environments${nc} \n"
 snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/Snakefile \
-    --rerun-incomplete \
-    --conda-create-envs-only \
-    --use-conda
+  --directory ${workdir}/ \
+  --snakefile ${workdir}/workflow/Snakefile \
+  --rerun-incomplete \
+  --conda-create-envs-only \
+  --use-conda
 
 echo -e "\n ${green} > Snakemake: dry run${nc} \n"
 snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/Snakefile \
-    --rerun-incomplete \
-    --use-conda \
-    --dry-run \
-    --quiet host rules
+  --directory ${workdir}/ \
+  --snakefile ${workdir}/workflow/Snakefile \
+  --rerun-incomplete \
+  --use-conda \
+  --dry-run \
+  --quiet host rules
 
 echo -e "\n ${green} > Snakemake: run${nc} \n"
 snakemake \
-    --directory ${workdir}/ \
-    --snakefile ${workdir}/workflow/Snakefile \
-    --rerun-incomplete \
-    --keep-going \
-    --use-conda \
-    --jobs 0 \
-    --quiet host progress
+  --directory ${workdir}/ \
+  --snakefile ${workdir}/workflow/Snakefile \
+  --rerun-incomplete \
+  --keep-going \
+  --use-conda \
+  --jobs unlimited \
+  --quiet host progress
 
 ###############################################################################
-### DEACTIVATE WORKFLOW-CORE ###
-#################################
+### DEACTIVATE CONDA WORKFLOW ENVIRONMENT ###
+#############################################
 
-# Deactive workflow-core conda environment.
-echo -e "\n Deactivate ${ylo}Workflow-Core${nc} conda environment."
+echo -e "\n Deactivate ${ylo}${conda_workflow_env}${nc} conda environment. \n"
 conda deactivate
 
 ###############################################################################

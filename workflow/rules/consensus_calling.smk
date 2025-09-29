@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ consensus_calling.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Call a consensus genome
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -46,7 +46,7 @@ rule ivar_consensus:
     output:
         prefix = temp("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus"),
         header = temp("{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus"),
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.fasta",
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus-sequence.fasta",
         qual_txt = "results/05_Consensus/ivar_consensus-quality/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.qual.txt"
     log:
         "results/10_Reports/tools-log/ivar/{sample}_{reference}_{mapper}_{min_depth}x_ivar_consensus.log"
@@ -68,7 +68,7 @@ rule ivar_consensus:
         "-i {output.header} "             # -i: Name of fasta header (default: Consensus_<prefix>_threshold_<min_freq>_quality_<min_qual>_<min_insert>)
         "-q {params.min_qual} "           # -q: Minimum quality score threshold to count base [INT] (Default: 20)
         "-t {params.min_freq} "           # -t: Minimum frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0)
-        "-c {params.min_insert} "         # -c: Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)    
+        "-c {params.min_indel} "          # -c: Minimum insertion frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)    
         "-m {params.min_depth} "          # -m: Minimum depth to call consensus [INT] (Default: 10)
         "-n N "                           # -n: Character to print in regions with less than minimum coverage (Default: N)
         "&> {log} "                       # Log redirection

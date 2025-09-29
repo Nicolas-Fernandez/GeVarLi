@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ lineages_calling.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Assign lineage to consensus (Nextclade or Pangolin)
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -38,7 +38,7 @@ rule nextclade_lineage:
         path = NEXT_PATH,
         dataset = NEXT_DATASET
     input:
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus-sequence.fasta"
     output:
         lineage = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade_report.tsv",
         alignment = directory("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade_alignments/")
@@ -73,7 +73,7 @@ rule pangolin_lineage:
         cpus = CPUS,
         tmp_dir = TMP_DIR
     input:
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta"
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus-sequence.fasta"
     output:
         lineage_csv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin_report.csv",
         lineage_tsv = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_pangolin_report.tsv"

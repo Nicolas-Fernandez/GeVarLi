@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ primers_clipping.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Soft clip amplicons primers
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -33,11 +33,11 @@ rule samtools_index_trimmed:
     resources:
        cpus = 4
     input:
-        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam"
+        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_clipped-sorted.bam"
     output:
-        index = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai"
+        index = "results/02_Mapping/{sample}_{reference}_{mapper}_clipped-sorted.bam.bai"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_trimmed-index.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_clipped-index.log"
     shell:
         "samtools index "     # Samtools index, tools for alignments in the SAM format with command to index alignment
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)(NB, --threads form dose'nt work)
@@ -64,11 +64,11 @@ rule samtools_sort_trimmed:
        mem_gb = 1,
        tmp_dir = TMP_DIR
     input:
-        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-temp.bam"
+        bam = "results/02_Mapping/{sample}_{reference}_{mapper}_clipped-temp.bam"
     output:
-        sorted = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam"
+        sorted = "results/02_Mapping/{sample}_{reference}_{mapper}_clipped-sorted.bam"
     log:
-        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_trimmed-sorted.log"
+        "results/10_Reports/tools-log/samtools/{sample}_{reference}_{mapper}_clipped-sorted.log"
     shell:
         "samtools sort "             # Samtools sort, tools for alignments in the SAM format with command to sort alignment file
         "--threads {resources.cpus} " # -@: Number of additional threads to use (default: 1)
@@ -103,10 +103,10 @@ rule ivar_trim:
         bam = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam",
         bai = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam.bai"
     output:
-        prefix = temp("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-temp"),
-        trimmed_bam = temp("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-temp.bam")
+        prefix = temp("results/02_Mapping/{sample}_{reference}_{mapper}_clipped-temp"),
+        trimmed_bam = temp("results/02_Mapping/{sample}_{reference}_{mapper}_clipped-temp.bam")
     log:
-        "results/10_Reports/tools-log/ivar_trim/{sample}_{reference}_{mapper}_trimmed.log"
+        "results/10_Reports/tools-log/ivar_trim/{sample}_{reference}_{mapper}_clipped.log"
     shell:
         "ivar trim "                   # iVar, with command 'trim': soft-clip amplicon PCR primers from BAM alignments
         "-i {input.bam} "               # Input BAM file, with aligned reads, to trim primers and quality

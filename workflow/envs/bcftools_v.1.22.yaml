@@ -1,7 +1,7 @@
-name: samtools_v.1.21
+name: bcftools_v.1.22
 channels:
   - conda-forge
   - bioconda
   - nodefaults
 dependencies:
-  - samtools=1.21
+  - bcftools=1.22
