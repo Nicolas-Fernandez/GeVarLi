@@ -1,0 +1,8 @@
+name: multiqc_v.1.31
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - multiqc=1.31
+  - pandoc=3.7.0.2 # convert documents between different file formats

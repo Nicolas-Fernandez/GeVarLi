@@ -10,12 +10,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
+# Latest modifications ___ 2025.06.10
 # Use ____________________ Edit default settings
 ###############################################################################
 
@@ -23,33 +23,34 @@
 ################################## GENERAL ####################################
 ###############################################################################
 
-fastq_dir: 'resources/reads/' # Path to reads fastq.gz files (default: 'resources/reads/') [PATH]
+fastq_dir: '.test/reads/' # Path to reads fastq.gz files (default: 'resources/reads/') [PATH]
 # Available options (not exhaustive):
   ##- 'resources/reads/' # Path to reads fastq.gz files (default)
   ##- '.test/reads/' # Path to reads fastq.gz files (test)
 
 modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
-  qualities: false   # Perform reads quality controls (FastQC, Fastq-Screen)       (default: true)
-  keeptrim: false   # Keep trimmed reads files (Cutadapt / Sickle-trim)           (default: false)
-  clipping: false   # Perform reads amplicon primers clipping (iVar)                (default: false)
-  covstats: true    # Perform coverage statistics (Fagstat, Covstats)             (default: true)
-  consensus: false   # Perform reads mapping to reference (BWA, Minimap2, Bowtie2) (default: true)
-  lineages: false    # Perform clade and lineage assignations (Nexclade, Pangolin) (default: true)
-  gisaid: false     # Perform gisaid submission template (GisAid : TODO)          (default: false)
+  qualities: true # Perform reads quality controls (FastQC & Fastq-Screen)                 (default: true)
+  keeptrim: true  # Perform (always) but keep trimmed reads files (Cutadapt & Sickle-trim) (default: false)
+  clipping: true  # Perform reads amplicon primers clipping (iVar)                         (default: false)
+  covstats: true  # Perform coverage statistics (Fagstat & Covstats)                       (default: true)
+  consensus: true # Perform reads mapping to reference (BWA | Minimap2 | Bowtie2)          (default: true)
+  lineages: true  # Perform clade and lineage assignations (Nexclade | Pangolin)           (default: true)
+  gisaid: false    # Perform gisaid submission template (GisAid : TODO)                     (default: false)
+
 
 tools:
   mapper: 'bwa' # Select your favorite mapper (default: 'bwa')
   # Available options:
-    ##- 'bwa'      # Better, faster (default)
-    ##- 'bowtie2'  # Slower, "sensitivity" requiried (see below "Bowtie2" options)
-    ##- 'minimap2' # Versatile
+    #- 'bwa'      # Better, faster (default)
+    #- 'bowtie2'  # Slower, "sensitivity" requiried (see below "Bowtie2" options)
+    #- 'minimap2' # Versatile
   caller: 'ivar' # Select your favorite variant caller (default: 'ivar')
   # Available options:
-    ##- 'ivar' # iVar: a toolkit for analysis of viral NGS data (default)
+    #- 'ivar' # iVar: a toolkit for analysis of viral NGS data (default)
   assigner: 'nextclade' # Select your favorite clades / lineages assigner (default: 'nextclade')
   # Available options:
-    ##- 'nextclade' # Clade assignment, mutation calling, phylogenetic placement and quality checks (default)
-    ##- 'pangolin'  # PANGO: Phylogenetic Assignment of Named Global Outbreak Lineages
+    #- 'nextclade' # Clade assignment, mutation calling, phylogenetic placement and quality checks (default)
+    #- 'pangolin'  # PANGO: Phylogenetic Assignment of Named Global Outbreak Lineages
 
 ###############################################################################
 ################################# CONSENSUS ###################################
@@ -58,56 +59,56 @@ tools:
 consensus:
   reference: 'MN908947' # Your reference, in fasta format (default: [SARS-CoV-2]) [STR]
   # Available options (not exhaustive):
-    ##- 'MN908947' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2 (default)
-    ##- 'NC045512' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2
+    #- 'MN908947' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2 (default)
+    #- 'NC045512' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2
     ## 
-    ##- 'AF380138' # [MPXV] : Monkeypox virus Zaire
-    ##- 'MT903345' # [MPXV] : Monkeypox virus UK
-    ##- 'MW036632' # [SPXV] : Swinepox India
+    #- 'AF380138' # [MPXV] : Monkeypox virus Zaire
+    #- 'MT903345' # [MPXV] : Monkeypox virus UK
+    #- 'MW036632' # [SPXV] : Swinepox India
     ##
-    ##- 'AF272001' # [EBOV] : Ebola virus Zaire
-    ##- 'MH121162' # [EBOV] : Ebola virus Sudan
-    ##- 'NC001608' # [MarV] : Marburg virus
+    #- 'AF272001' # [EBOV] : Ebola virus Zaire
+    #- 'MH121162' # [EBOV] : Ebola virus Sudan
+    #- 'NC001608' # [MarV] : Marburg virus
     ##
-    ##- 'NC001498' # [MeV] : Measles virus Ichinose-B95a
-    ##- 'MG912590' # [MeV] : Measles virus B3 Khartoum Sudan
-    ##- 'ON642796' # [MeV] : Measles virus B3 Kole Uganda
-    ##- 'MZ615446' # [MeV] : Measles virus B3 Bura Kenya (partial)
-    ##- 'MG912589' # [MeV] : Measles virus C2 Netherland Bilthoven
-    ##- 'MG912594' # [MeV] : Measles virus H1 Netherland Amsterdam
+    #- 'NC001498' # [MeV] : Measles virus Ichinose-B95a
+    #- 'MG912590' # [MeV] : Measles virus B3 Khartoum Sudan
+    #- 'ON642796' # [MeV] : Measles virus B3 Kole Uganda
+    #- 'MZ615446' # [MeV] : Measles virus B3 Bura Kenya (partial)
+    #- 'MG912589' # [MeV] : Measles virus C2 Netherland Bilthoven
+    #- 'MG912594' # [MeV] : Measles virus H1 Netherland Amsterdam
     ##
-    ##- 'NC004297' # [LASV] : Lassa virus Josiah Segment L
-    ##- 'NC004296' # [LASV] : Lassa virus Josiah Segment S
-    ##- 'MG812684' # [LASV] : Lassa virus Guinea Faranah Segment L
-    ##- 'MG812685' # [LASV] : Lassa virus Guinea Faranah Segment S
-    ##- 'MT193231' # [LASV] : Lassa virus Benin Ben-16131 Segment L
-    ##- 'MT193282' # [LASV] : Lassa virus Benin Ben-16131 Segment S
+    #- 'NC004297' # [LASV] : Lassa virus Josiah Segment L
+    #- 'NC004296' # [LASV] : Lassa virus Josiah Segment S
+    #- 'MG812684' # [LASV] : Lassa virus Guinea Faranah Segment L
+    #- 'MG812685' # [LASV] : Lassa virus Guinea Faranah Segment S
+    #- 'MT199231' # [LASV] : Lassa virus Benin Ben-16131 Segment L
+    #- 'MT193282' # [LASV] : Lassa virus Benin Ben-16131 Segment S
     ##
-    ##- 'HM045817' # [CHIKV] : Chikungunya virus
-    ##- 'NC001477' # [DENV1] : Dengue virus 1
-    ##- 'NC001474' # [DENV2] : Dengue virus 2
-    ##- 'NC001475' # [DENV3] : Dengue virus 3
-    ##- 'NC002640' # [DENV4] : Dengue virus 4
-    ##- 'M12294'   # [WNV] : West Nile virus
-    ##- 'KX369547' # [ZV] : Zika virus French Polynesia
+    #- 'HM045817' # [CHIKV] : Chikungunya virus
+    #- 'NC001477' # [DENV1] : Dengue virus 1
+    #- 'NC001474' # [DENV2] : Dengue virus 2
+    #- 'NC001475' # [DENV3] : Dengue virus 3
+    #- 'NC002640' # [DENV4] : Dengue virus 4
+    #- 'M12294'   # [WNV] : West Nile virus
+    #- 'KX369547' # [ZV] : Zika virus French Polynesia
     ##
-    ##- 'AJ564622' # [Nipah] : Nipah virus Malaysia
+    #- 'AJ564622' # [Nipah] : Nipah virus Malaysia
     ##
-    ##- 'NC006273' # [HCMV]: Human herpesvirus 5 (CMV)
-    ##- 'NC001348' # [VZV] : Human herpesvirus 3 (Varicella)
-    ##- 'NC001460' # [Adeno] : Human adenovirus A
-    ##- 'AY426531' # [Entero] : Human enterovirus 68
+    #- 'NC006273' # [HCMV]: Human herpesvirus 5 (CMV)
+    #- 'NC001348' # [VZV] : Human herpesvirus 3 (Varicella)
+    #- 'NC001460' # [Adeno] : Human adenovirus A
+    #- 'AY426531' # [Entero] : Human enterovirus 68
     ##
-    ##- 'K03455'   # [HIV] : Human immunodeficiency virus type 1 (HXB2)
+    #- 'K03455'   # [HIV] : Human immunodeficiency virus type 1 (HXB2)
 
   min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
   # Available options (not exhaustive):
-    ##- '100' # 100 X : for greater coverage
-    ##- '60'  #  30 X : for better coverage
-    ##- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
-    ##- '10'  #  10 X : for some applications (default)
-    ##- '3'   #   3 X : only for exploration...
-    ##- '1'   #   1 X : not recommanded!
+    #- '100' # 100 X : for greater coverage
+    #- '60'  #  30 X : for better coverage
+    #- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
+    #- '10'  #  10 X : for some applications (default)
+    #- '3'   #   3 X : only for exploration...
+    #- '1'   #   1 X : not recommanded!
 
   max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
   # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
@@ -122,6 +123,7 @@ consensus:
 
   min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
   min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
+
 
 ###############################################################################
 ################################ SUBMISSIONS ##################################
@@ -159,7 +161,7 @@ primers:
   slide: '4'       # Width of sliding window (Default: '4') [INT]
   bed:
     path: 'resources/primers_schemes/bed/' # Path to primers bed files (default 'resources/primer/bed') [PATH]
-    scheme: 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed' # Your primer set, in BED format (you need to know which kit and reference you used!)
+    scheme: 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # Your primer set, in BED format (you need to know which kit and reference you used!)
     # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
     # Available options (not exhaustive), set only one:
       ##- 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V5.3.2 (latest)
@@ -233,14 +235,14 @@ sickle_trim:
   command: 'pe'      # Reading (default and should be "pe" for paired-end sequences)
   encoding: 'sanger' # Quality encoding (default SHOULD BE "sanger")
   # Only for information:
-    ##- 'sanger'   # for CASAVA >= 1.8 for "recent" Illumina reads (default)
-    ##- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
-    ##- 'solexa'   # for CASAVA < 1.3 for Solexa
+    ###- 'sanger'   # for CASAVA >= 1.8 for "recent" Illumina reads (default)
+    ###- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
+    ###- 'solexa'   # for CASAVA < 1.3 for Solexa
 
 cutadapt:
   clipping: '0' # Cut 'n' first nucleotides of each reads (default: 0)
   length: '50' # Discard reads shorter than 'length' after trim (default: "50")
-  adapters: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina kits)
+  adapters: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina kits) [LIST]
   # Available options (not exhaustive):
     - 'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits (default)
     - 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits (default)
@@ -261,7 +263,7 @@ multiqc: # TODO
 
 fastq_screen:
   config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: '10000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+  subset: '1000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
 
 ###############################################################################
 ############################### RENAME SAMPLES ################################
@@ -287,23 +289,23 @@ resources:
     ## -''         # Custom (set your own)
 
 envs: # Conda environement yaml files:
-  bcftools:      '../envs/bcftools_v.1.21.yaml'         # Bcftools      ver. 1.21
+  bcftools:      '../envs/bcftools_v.1.22.yaml'         # Bcftools      ver. 1.22
   bedtools:      '../envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
   bowtie2:       '../envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
   bwa:           '../envs/bwa_v.0.7.19.yaml'            # BWA           ver. 0.7.19
-  cutadapt:      '../envs/cutadapt_v.5.0.yaml'          # Cutadapt      ver. 5.0
-  fastq_screen:  '../envs/fastq-screen_v.0.16.yaml'     # Fastq-Screen  ver. 0.16 (bwa=0.7.18 gdgraph=1.54)
+  cutadapt:      '../envs/cutadapt_v.5.1.yaml'          # Cutadapt      ver. 5.1
+  fastq_screen:  '../envs/fastq-screen_v.0.16.yaml'     # Fastq-Screen  ver. 0.16 (bwa=0.7.19 gdgraph=1.56)
   fastqc:        '../envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
   gawk:          '../envs/gawk_v.5.3.1.yaml'            # Awk (GNU)     ver. 5.3.1
-  ivar:          '../envs/ivar_v.1.4.4.yaml'            # iVar          ver. 1.4.4  (samtools=1.21)
-  minimap2:      '../envs/minimap2_v.2.28.yaml'         # Minimap2      ver. 2.28
-  multiqc:       '../envs/multiqc_v.1.28.yaml'          # MultiQC       ver. 1.28 (pandoc=3.6.3)
-  nextclade:     '../envs/nextclade_v.3.12.0.yaml'      # Nextclade     ver. 3.12.0
+  ivar:          '../envs/ivar_v.1.4.4.yaml'            # iVar          ver. 1.4.4 (samtools=1.21)
+  minimap2:      '../envs/minimap2_v.2.30.yaml'         # Minimap2      ver. 2.30
+  multiqc:       '../envs/multiqc_v.1.31.yaml'          # MultiQC       ver. 1.31 (pandoc=3.7.0.2)
+  nextclade:     '../envs/nextclade_v.3.15.1.yaml'      # Nextclade     ver. 3.15.1
   pangolin:      '../envs/pangolin_v.4.3.1.yaml'        # Pangolin      ver. 4.3.1
-  samtools:      '../envs/samtools_v.1.21.yaml'         # Samtools      ver. 1.21
+  samtools:      '../envs/samtools_v.1.22.yaml'         # Samtools      ver. 1.22
   sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-  tsv2vcf:       '../envs/tsv2vcf_v.2025.04.yaml'       # tsv2vcf       ver. 2025.04 (biopython=1.85 numpy=2.2.4 scipy=1.15.2)
-  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.04 (snakemake=9.1.7 snakedeploy=0.11.0 graphviz=12.2.1)
+  tsv2vcf:       '../envs/tsv2vcf_v.2025.06.yaml'       # tsv2vcf       ver. 2025.06 (biopython=1.85 numpy=2.3.0 scipy=1.15.2)
+  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.06 (snakemake=9.6.2 psutil=7.0.0 graphviz=13.1.0)
 
 report: # Snakemake reports formats
 

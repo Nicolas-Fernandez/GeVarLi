@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ coverage_stats.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Compute Genome Coverage Statistics from BED file
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -27,6 +27,7 @@ rule awk_coverage_statistics:
         Sample: _______ {wildcards.sample}
         Reference: ____ {wildcards.reference}
         Mapper: _______ {wildcards.mapper}
+        Min. depth: ___ {wildcards.min_depth}x
         """
     conda:
         GAWK
@@ -38,9 +39,9 @@ rule awk_coverage_statistics:
         histogram = "results/03_Coverage/histogram/{sample}_{reference}_{mapper}_coverage-histogram.txt",
         genome_cov = "results/02_Mapping/{sample}_{reference}_{mapper}_genome-cov.bed"
     output:
-        cov_stats = "results/03_Coverage/{sample}_{reference}_{mapper}_{min_cov}x_coverage-stats.tsv"
+        cov_stats = "results/03_Coverage/{sample}_{reference}_{mapper}_{min_depth}x_coverage-stats.tsv"
     log:
-        "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_cov}x_coverage-stats.log"
+        "results/10_Reports/tools-log/awk/{sample}_{reference}_{mapper}_{min_depth}x_coverage-stats.log"
     shell:
         r""" rawReads=$(grep -o -E  """                                  # Get raw reads 
         r""" 'Total read pairs processed:.+' {input.cutadapt}  """       #
@@ -92,7 +93,7 @@ rule awk_coverage_statistics:
         r""" -v mappedReads="${{mappedReads}}" """                       # Define external variable
         r""" -v mappedPercentReads="${{mappedPercentReads}}" """         # Define external variable
         r""" -v covPercentAt1X="${{covPercentAt1X}}" """                 # Define external variable
-        r""" '$4 >= {wildcards.min_cov} {{supMin_Cov+=$3-$2}} ; """      # Genome size (>= min_cov @X)
+        r""" '$4 >= {wildcards.min_depth} {{supMin_Cov+=$3-$2}} ; """      # Genome size (>= min_depth @X)
         r""" {{genomeSize+=$3-$2}} ; """                                 # Genome size (total)
         r""" {{totalBases+=($3-$2)*$4}} ; """                            # Total bases @1X
         r""" {{totalBasesSq+=(($3-$2)*$4)**2}} """                       # Total bases square @1X
@@ -114,7 +115,7 @@ rule awk_coverage_statistics:
         r""" "standard_deviation", "\t", """                             # header: standard deviation
         r""" "cov_percent_%_@1X", "\t", """                              # header: coverage percentage @1X
         r""" "cov_percent_%" "\t", """                                   # header: coverage percentage
-        r""" "@_min_cov" """                                             # header: @_[min_cov]_X
+        r""" "@_min_depth" """                                             # header: @_[min_depth]_X
         r""" ORS """                                                      # \n newline
         r""" "{wildcards.sample}", "\t", """                             # value: Sample ID
         r""" rawReads, "\t", """                                         # value: Raw sequences
@@ -131,8 +132,8 @@ rule awk_coverage_statistics:
         r""" int(totalBases/genomeSize), "\t", """                       # value: mean depth
         r""" int(sqrt((totalBasesSq/genomeSize)-(totalBases/genomeSize)**2)), "\t", """ # Standard deviation value
         r""" covPercentAt1X, "\t", """                                   # value
-        r""" supMin_Cov/genomeSize*100, "%", "\t", """                   # Coverage percent (@ min_cov X) value
-        r""" "@{wildcards.min_cov}X" """                                 # @ min_cov X value
+        r""" supMin_Cov/genomeSize*100, "%", "\t", """                   # Coverage percent (@ min_depth X) value
+        r""" "@{wildcards.min_depth}X" """                                 # @ min_depth X value
         r""" }}' """                                                     # Close print
         r""" {input.genome_cov} """                                      # BedGraph coverage input
         r""" 1> {output.cov_stats} """                                   # Mean depth output

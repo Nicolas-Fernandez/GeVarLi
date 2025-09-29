@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ workflow_reporting.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Generate workflow reports
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -122,9 +122,14 @@ rule multiqc_aggregation:
         #"--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
         "--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
-        "{input.final_outputs} "     # Input final outputs
+        #"{input.final_outputs} "     # Input final outputs
+        #"results/10_Reports/tools-log/ " # Input tools log
+        "./ "                        # Current directory
+        "--ignore-symlinks "         # Ignore symbolic links
         "> {log} 2>&1 "              # Log redirection
-        "&& cp {output.html_report} {output.copy_report} " # Copy report to results directory
+        "&& "                         # AND
+        "cp {output.html_report} "   # Copy report...
+        "{output.copy_report} "      # ...to results directory
         "2> /dev/null"               # Suppress error messages
 
 ###############################################################################

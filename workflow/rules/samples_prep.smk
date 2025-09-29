@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ sample_prep.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Prepare samples
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################

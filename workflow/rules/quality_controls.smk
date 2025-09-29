@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ quality_controls.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Perform Illumina reads quality controls
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -35,8 +35,9 @@ rule fastqscreen_contamination_check:
         config = FQC_CONFIG,
         subset = FQC_SUBSET
     input:
-        fastq = "results/symlinks/{sample}_R{mate}.fastq.gz"
-        #prefix = "resources/indexes/fastq-screen/{qc_ref}"
+        fastq = "results/symlinks/{sample}_R{mate}.fastq.gz",
+        prefix = expand("resources/indexes/fastq-screen/{qc_ref}",
+                        qc_ref = QC_REF)
     output:
         fastq_screen = directory("results/00_Quality_Control/fastq-screen/{sample}_R{mate}/")
     log:

@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ results_merging.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Merge results
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -28,7 +28,7 @@ rule merge_consensus:
         Caller: _______ {wildcards.caller}
         """
     input:
-        consensus = lambda wildcards: expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus.fasta",
+        consensus = lambda wildcards: expand("results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus-sequence.fasta",
                                             sample = SAMPLE,
                                             reference = wildcards.reference,
                                             mapper = wildcards.mapper,

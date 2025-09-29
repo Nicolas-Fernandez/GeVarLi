@@ -4,9 +4,10 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - snakemake=9.1.7
-  - snakedeploy=0.11.0
+  - snakemake-minimal=9.6.2
   - snakemake-executor-plugin-slurm
   - snakemake-interface-report-plugins
   - snakemake-interface-storage-plugins
-  - graphviz=12.2.1
+  - snakedeploy=0.11.0
+  - psutil=7.0.0
+  - graphviz=13.1.0

@@ -15,6 +15,7 @@ Thumbs.db
 
 # Ignore local snakemake (include .snakemake/conda/)
 .snakemake
+.gevarli_cache
 
 # Ignore .pyc
 __pycache__

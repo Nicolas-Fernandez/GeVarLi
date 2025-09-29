@@ -1,6 +1,27 @@
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+###                                                                         ###
+###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
+###    ||  \ \ \ \    / __( ___( \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
+###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
+###    ||  /_/_/_/    \___(____) \(__)(__(_)\_(____(____)   \_\_\_\  ||     ###
+###    \/                                                            \/     ###
+###                                                                         ###
+###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
+# Name ___________________ config.schema.yaml
+# Version ________________ v.2025.06
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ JSON schema for GeVarLi configuration file
+# Date ___________________ 2021.10.12
+# Latest modifications ___ 2025.06.10
+# Use ____________________ validate the configuration file
+###############################################################################
+
+###############################################################################
 $schema: "http://json-schema.org/draft-07/schema#"
 title: "GeVarLi Config Schema"
 type: object
+
 properties:
   fastq_dir:
     type: string
@@ -33,11 +54,29 @@ properties:
     type: object
     properties:
       mapper:
-        type: string
+        oneOf:
+          - type: string
+            enum: ["bwa", "bowtie2", "minimap2"]
+          - type: array
+            items:
+              type: string
+              enum: ["bwa", "bowtie2", "minimap2"]
       caller:
-        type: string
+        oneOf:
+          - type: string
+            enum: ["ivar"]
+          - type: array
+            items:
+              type: string
+              enum: ["ivar"]
       assigner:
-        type: string
+        oneOf:
+          - type: string
+            enum: ["nextclade", "pangolin"]
+          - type: array
+            items:
+              type: string
+              enum: ["nextclade", "pangolin"]
     required:
       - mapper
       - caller
@@ -46,8 +85,13 @@ properties:
     type: object
     properties:
       reference:
-        type: string
-        pattern: "^[A-Z]{2}[0-9]+$"
+        oneOf:
+          - type: string
+            pattern: "^[A-Z]{2}[0-9]+$"
+          - type: array
+            items:
+              type: string
+              pattern: "^[A-Z]{2}[0-9]+$"
       min_depth:
         type: string
       max_depth:

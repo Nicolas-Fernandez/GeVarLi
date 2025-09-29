@@ -8,12 +8,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ functions.py
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile functions
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
+# Latest modifications ___ 2025.06.10
 # Use ____________________ import scripts.functions as functions
 ###############################################################################
  
@@ -22,7 +22,8 @@
 ###############
 
 import os, re, glob, time, sys, subprocess, platform, yaml
-from snakemake.io import expand # type: ignore
+from snakemake.io import expand
+from snakemake.io import temp
 from collections import defaultdict
 
 ###############################################################################
@@ -70,11 +71,19 @@ def get_valid_fastq(fastq_dir):
     return valid_fastq, warnings
 
 ###############################################################################
+## STASH_OR_TRASH
+def stash_or_trash(path):
+    if MODULES["keeptrim"]:
+        return path
+    else:
+        return temp(path)
+
+###############################################################################
 ## GET_BAM_INPUT
 def get_bam_input(wildcards):
     markdup = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam"
     if MODULES["clipping"]:
-        markdup = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam"
+        markdup = "results/02_Mapping/{sample}_{reference}_{mapper}_clipped-sorted.bam"
     return markdup
 
 ###############################################################################
@@ -82,7 +91,7 @@ def get_bam_input(wildcards):
 def get_bai_input(wildcards):
     index = "results/02_Mapping/{sample}_{reference}_{mapper}_markdup.bam.bai"
     if MODULES["clipping"]:
-        index = "results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai"
+        index = "results/02_Mapping/{sample}_{reference}_{mapper}_clipped-sorted.bam.bai"
     return index
 
 ###############################################################################
@@ -92,8 +101,6 @@ def get_final_outputs():
     # symlinks
     # quality_controls
     if MODULES["qualities"]:
-        final_outputs.append(expand("resources/indexes/fastq-screen/{qc_ref}",
-                                qc_ref = QC_REF))
         final_outputs.append(expand("results/00_Quality_Control/fastq-screen/{sample}_R{mate}/",
                                     sample = SAMPLE,
                                     mate = MATE))
@@ -101,22 +108,11 @@ def get_final_outputs():
                                     sample = SAMPLE,
                                     mate = MATE))
     # reads_trimming
-    if MODULES["keeptrim"]:
-        final_outputs.append(expand("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R1.fastq.gz",
-                                    sample = SAMPLE))
-        final_outputs.append(expand("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_R2.fastq.gz",
-                                    sample = SAMPLE))
-        final_outputs.append(expand("results/01_Trimming/sickle/{sample}_cutadapt-sickle-trim_SE.fastq.gz",
-                                    sample = SAMPLE))
     # genomes_indexing
     # reads_mapping
     # primers_clipping
     if MODULES["clipping"]:
-        #final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam",
-        #                            sample = SAMPLE,
-        #                            reference = REFERENCE,
-        #                            mapper = MAPPER))
-        final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_trimmed-sorted.bam.bai",
+        final_outputs.append(expand("results/02_Mapping/{sample}_{reference}_{mapper}_clipped-sorted.bam.bai",
                                     sample = SAMPLE,
                                     reference = REFERENCE,
                                     mapper = MAPPER))
@@ -183,6 +179,7 @@ def get_final_outputs():
 ###############################################################################
 # GET_SETTINGS
 def get_settings(config, start_time):
+
     # Get working directory
     workdir = os.getcwd()
 
@@ -194,10 +191,10 @@ def get_settings(config, start_time):
     except Exception:
         version = "N/A"
 
-    # Get 
+    # Get shell information
     shell = os.environ.get("SHELL", "N/A")
 
-    # Get system information
+    # Get operating system informations
     system_platform = platform.system().lower()
     if "darwin" in system_platform:
         os_type = "osx"
@@ -212,47 +209,55 @@ def get_settings(config, start_time):
     else:
         os_type = "unknown (" + system_platform + ")"
 
-    # Get hardware information
-    if os_type == "osx":
-        try:
-            model_name = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"]).decode().strip()
-            physical_cpu = subprocess.check_output(["sysctl", "-n", "hw.physicalcpu"]).decode().strip()
-            logical_cpu = subprocess.check_output(["sysctl", "-n", "hw.logicalcpu"]).decode().strip()
-            mem_size = subprocess.check_output(["sysctl", "-n", "hw.memsize"]).decode().strip()  # en octets
-            ram_gb = int(mem_size) // (1024 ** 3)
-        except Exception:
-            model_name = physical_cpu = logical_cpu = ram_gb = "N/A"
-    elif os_type in ["linux", "bsd", "solaris"]:
-        try:
-            lscpu_out = subprocess.check_output(["lscpu"]).decode()
-            model_name = ""
-            physical_cpu = ""
-            threads_cpu = ""
-            for line in lscpu_out.splitlines():
-                if "Model name:" in line:
-                    model_name = line.split(":", 1)[1].strip()
-                if line.startswith("CPU(s):"):
-                    physical_cpu = line.split(":", 1)[1].strip()
-                if "Thread(s) per core:" in line:
-                    threads_cpu = line.split(":", 1)[1].strip()
-            if physical_cpu and threads_cpu:
-                logical_cpu = int(physical_cpu) * int(threads_cpu)
-            else:
-                logical_cpu = "N/A"
-        except Exception:
-            model_name = physical_cpu = logical_cpu = "N/A"
-        try:
-            with open("/proc/meminfo", "r") as meminfo:
-                for line in meminfo:
-                    if line.startswith("MemTotal:"):
-                        mem_kb = int(re.findall(r'\d+', line)[0])
-                        ram_gb = mem_kb // (1024 ** 2)
-                        break
-        except Exception:
-            ram_gb = "N/A"
-    else:
-        print(f"\nPlease, use a UNIX-like operating system (linux, osx, WSL).")
-        sys.exit(0)
+    # Get hardware informations
+    try:
+        model_name = platform.processor()
+        physical_cpu = psutil.cpu_count(logical=False)
+        logical_cpu = psutil.cpu_count(logical=True)
+        mem_size = psutil.virtual_memory().total
+        ram_gb = mem_size // (1024 ** 3)
+    except Exception:
+        model_name = physical_cpu = logical_cpu = ram_gb = "N/A"
+#    if os_type == "osx":
+#        try:
+#            model_name = subprocess.check_output(["sysctl", "-n", "machdep.cpu.brand_string"]).decode().strip()
+#            physical_cpu = subprocess.check_output(["sysctl", "-n", "hw.physicalcpu"]).decode().strip()
+#            logical_cpu = subprocess.check_output(["sysctl", "-n", "hw.logicalcpu"]).decode().strip()
+#            mem_size = subprocess.check_output(["sysctl", "-n", "hw.memsize"]).decode().strip()
+#            ram_gb = int(mem_size) // (1024 ** 3)
+#        except Exception:
+#            model_name = physical_cpu = logical_cpu = ram_gb = "N/A"
+#    elif os_type in ["linux", "bsd", "solaris"]:
+#        try:
+#           lscpu_out = subprocess.check_output(["lscpu"]).decode()
+#           model_name = ""
+#           physical_cpu = ""
+#           threads_cpu = ""
+#           for line in lscpu_out.splitlines():
+#               if "Model name:" in line:
+#                   model_name = line.split(":", 1)[1].strip()
+#               if line.startswith("CPU(s):"):
+#                   physical_cpu = line.split(":", 1)[1].strip()
+#               if "Thread(s) per core:" in line:
+#                   threads_cpu = line.split(":", 1)[1].strip()
+#            if physical_cpu and threads_cpu:
+#                logical_cpu = int(physical_cpu) * int(threads_cpu)
+#            else:
+#                logical_cpu = "N/A"
+#        except Exception:
+#            model_name = physical_cpu = logical_cpu = "N/A"
+#        try:
+#            with open("/proc/meminfo", "r") as meminfo:
+#                for line in meminfo:#
+#                    if line.startswith("MemTotal:"):
+#                        mem_kb = int(re.findall(r'\d+', line)[0])
+#                        ram_gb = mem_kb // (1024 ** 2)
+#                        break
+#        except Exception:
+#            ram_gb = "N/A"
+#    else:
+#        print(f"\nPlease, use a UNIX-like operating system (linux, osx, WSL).")
+#        sys.exit(0)
 
     # Get network status
     def is_online():
@@ -270,7 +275,7 @@ def get_settings(config, start_time):
 
     network = "Online" if is_online() else "Offline"
 
-    # Get Conda / Snakemake version
+    # Get Conda / Snakemake versions
     def get_version(cmd, fallback="N/A"):
         try:
             return subprocess.check_output(cmd).decode().strip()
@@ -304,18 +309,23 @@ def get_settings(config, start_time):
     assigner = tools.get("assigner", "N/A")
 
     # Get consensus parameters
-    consensus = config.get("consensus", {})
-    reference = consensus.get("reference", "N/A")
-    min_depth = consensus.get("min_depth", "N/A")
-    max_depth = consensus.get("max_depth", "N/A")
-    min_freq = consensus.get("min_freq", "N/A")
-    min_indel = consensus.get("min_indel", "N/A")
-  
+    params = config.get("consensus", {})
+    reference = params.get("reference", "N/A")
+    min_depth = params.get("min_depth", "N/A")
+    max_depth = params.get("max_depth", "N/A")
+    min_freq = params.get("min_freq", "N/A")
+    min_indel = params.get("min_indel", "N/A")
+
     # Get other parameters
-    nextclade_dataset = config.get("nextclade", {}).get("dataset", "N/A")
-    fastqscreen_subset = config.get("fastq_screen", {}).get("subset", "N/A")
-    ivar_clipping = config.get("primers", {}).get("bed", {}).get("scheme", "N/A")
+
+    fastqscreen_subset = config.get("fastqscreen", {}).get("subset", "N/A")
     cutadapt_clipping = config.get("cutadapt", {}).get("clipping", "N/A")
+    ivar_clipping = config.get("primers", {}).get("bed", {}).get("scheme", "N/A")
+    if not clipping:
+        ivar_clipping = "ivar clipping disabled: no"
+    nextclade_dataset = config.get("nextclade", {}).get("dataset", "N/A")
+    if not lineages:
+        nextclade_dataset = "nextclade dataset disabled: no"
 
     # Get time stamp
     time_stamp_start = time.strftime("%Y-%m-%d %H:%M", time.localtime(start_time))
@@ -377,6 +387,7 @@ def get_settings(config, start_time):
 
     {green}Working directory{nc} _____________ '{ylo}{workdir}{nc}'
     {green}Fastq directory{nc} _______________ '{ylo}{FASTQ_DIR}{nc}'
+    {blue}------------------------------------------------------------------------{nc}
 
     {green}  > Warnings:{nc}
 
@@ -407,10 +418,12 @@ def get_settings(config, start_time):
     {green}  > Min allele frequency{nc} _______ {red}{min_freq}{nc}
     {green}  > Min indel frequency{nc} ________ {red}{min_indel}{nc}
 
-    {green}  > Nextclade dataset{nc} __________ '{ylo}{nextclade_dataset}{nc}'
-    {green}  > Fastq-Screen subset{nc} ________ {red}{fastqscreen_subset}{nc} reads/sample
-    {green}  > Soft clipping (ivar){nc} _______ '{ylo}{ivar_clipping}{nc}' scheme
+
+    {green}  > Fastq-Screen subset{nc} ________ {red}{fastqscreen_subset}{nc} reads/sample (0 = no limit)
     {green}  > Hard clipping (cutadapt){nc} ___ {red}{cutadapt_clipping}{nc} nt
+    {green}  > Soft clipping (ivar){nc} _______ '{ylo}{ivar_clipping}{nc}' scheme
+    {green}  > Nextclade dataset{nc} __________ '{ylo}{nextclade_dataset}{nc}' dataset
+    {blue}------------------------------------------------------------------------{nc}
     """
 
     # Clean message

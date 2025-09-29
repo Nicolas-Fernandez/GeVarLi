@@ -8,29 +8,33 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gisaid_submission.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Create a Gisaid submission template file
 # Date ___________________ 2025.01.31
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
-rule gisaid_submission:
-    # Aim:
-    # Use:
-    message:
-        """
-        """
+#rule gisaid_submission:
+    # Aim: Create a Gisaid submission template file
+    # Use: 
+    #message:
+        #"""
+        #~ GISAID ∞ Create Submission Template ~
+        #"""
     #conda:
-    params:
-    input:
-    output:
-    log:
-    shell:
-        ""
+    #params:
+    #input:
+        #"resources/templates/gisaid_submission_template.txt"
+    #output:
+        #"results/10_Reports/gisaid_submission_template.txt"
+    #log:
+        #"results/10_Reports/gisaid_submission_template.log"
+    #shell:
+        #""
 
 ###############################################################################
 ###############################################################################

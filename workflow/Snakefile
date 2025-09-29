@@ -8,13 +8,13 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
-# Version ________________ v.2025.04
+# Version ________________ v.2025.06
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile running GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.04.04
-# Use ____________________ snakemake -s Snakefile --use-conda
+# Latest modifications ___ 2025.06.10
+# Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
 ###############################################################################
@@ -35,10 +35,11 @@ from snakemake.utils import min_version
 from snakemake.utils import validate
 
 from scripts.functions import get_valid_fastq
-from scripts.functions import get_settings
+from scripts.functions import stash_or_trash
 from scripts.functions import get_bam_input
 from scripts.functions import get_bai_input
 from scripts.functions import get_final_outputs
+from scripts.functions import get_settings
 from scripts.functions import get_time
 
 # Local
@@ -69,17 +70,13 @@ functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extent
 min_version("9.1.7")
 
 # Schemas
-validate(config, schema="schemas/config.schema.yaml")
+#validate(config, schema="schemas/config.schema.yaml")
 
 ###############################################################################
 ### WILDCARDS ###
 #################
 
-wildcard_constraints:
-    reference = "^[A-Z]{1,2}[0-9]{5,7}$",
-    mapper = "^(?:bwa|minimap2|bowtie2)$",
-    caller = "^(?:ivar)$",
-    assigner = "^(?:nextclade|pangolin)$"
+
 
 ###############################################################################
 ### RESOURCES ###
@@ -187,6 +184,7 @@ include: "rules/lineages_calling.smk"
 include: "rules/gisaid_submission.smk"
 include: "rules/results_merging.smk"
 include: "rules/workflow_reporting.smk"
+#include: "rules/gisaid_submission.smk"
 
 ###############################################################################
 ### DEBUG ###
