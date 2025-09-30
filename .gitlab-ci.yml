@@ -48,9 +48,13 @@ push_to_gitlab:
     - apt-get update && apt-get install -y git git-lfs
     - git lfs install --force
 
-    # Clone the source repository as a mirror
+    # Clone the source repository as a mirror to get all refs (branches and tags)
     - git clone --mirror "https://oauth2:${FORGE_IRD_READ_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
     - cd temp_repo
+
+    # Unset the "mirror" config that was automatically set by "clone --mirror".
+    # This stops git from implicitly adding --mirror to our next push commands.
+    - git config --unset remote.origin.mirror
 
     # Fetch all LFS objects from the source repository (GitForge)
     - git lfs fetch origin --all
@@ -61,9 +65,9 @@ push_to_gitlab:
     # Push all LFS objects to the new destination (GitLab.com)
     - git lfs push origin --all
 
-    # Push ONLY the main branch, overwriting the destination to keep it in sync
+    # Now that the implicit --mirror is gone, these specific push commands will work.
+    # 1. Push the local main branch to the remote main branch
     - git push --force origin refs/heads/main:refs/heads/main
 
-    # Also push all tags, overwriting them to keep them in sync
+    # 2. Push all local tags to the remote tags
     - git push --force origin refs/tags/*:refs/tags/*
-   
