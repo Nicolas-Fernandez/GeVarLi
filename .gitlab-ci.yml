@@ -66,8 +66,8 @@ push_to_gitlab:
     - git lfs push origin --all
 
     # Now that the implicit --mirror is gone, these specific push commands will work.
-    # 1. Push the local main branch to the remote main branch
+    # Push the local main branch to the remote main branch
     - git push --force origin refs/heads/main:refs/heads/main
 
-    # 2. Push all local tags to the remote tags
+    # Push all local tags to the remote tags
     - git push --force origin refs/tags/*:refs/tags/*
