@@ -38,5 +38,32 @@ pages:
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
+push_to_gitlab:
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  
+  script:
+    # Install git and git-lfs in the CI environment
+    - apt-get update && apt-get install -y git git-lfs
+    - git lfs install
 
+    # Clone the source repository as a mirror
+    - git clone --mirror "https://oauth2:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
+    - cd temp_repo
 
+    # Fetch all LFS objects from the source repository (GitForge)
+    - git lfs fetch origin --all
+
+    # Change the remote URL to point to the destination (GitLab.com)
+    - git remote set-url --push origin "https://oauth2:${GITLAB_PUSH_TOKEN}@gitlab.com/Nicolas-Fernandez/GeVarLi.git"
+
+    # Push all LFS objects to the new destination (GitLab.com)
+    - git lfs push origin --all
+
+    # Push ONLY the main branch, overwriting the destination to keep it in sync
+    - git push origin main --force
+
+    # Also push all tags, overwriting them to keep them in sync
+    - git push origin --tags --force
+   
