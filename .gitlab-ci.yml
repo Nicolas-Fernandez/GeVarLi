@@ -62,8 +62,8 @@ push_to_gitlab:
     - git lfs push origin --all
 
     # Push ONLY the main branch, overwriting the destination to keep it in sync
-    - git push origin main --force
+    - git push --force origin refs/heads/main:refs/heads/main
 
     # Also push all tags, overwriting them to keep them in sync
-    - git push origin --tags --force
+    - git push --force origin refs/tags/*:refs/tags/*
    
