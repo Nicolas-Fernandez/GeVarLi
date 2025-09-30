@@ -49,7 +49,7 @@ push_to_gitlab:
     - git lfs install --force
 
     # Clone the source repository as a mirror
-    - git clone --mirror "https://oauth2:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
+    - git clone --mirror "https://oauth2:${FORGE_IRD_READ_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
     - cd temp_repo
 
     # Fetch all LFS objects from the source repository (GitForge)
