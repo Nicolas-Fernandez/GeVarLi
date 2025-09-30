@@ -46,7 +46,7 @@ push_to_gitlab:
   script:
     # Install git and git-lfs in the CI environment
     - apt-get update && apt-get install -y git git-lfs
-    - git lfs install
+    - git lfs install --force
 
     # Clone the source repository as a mirror
     - git clone --mirror "https://oauth2:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
