@@ -44,7 +44,7 @@ pages:
 push_to_gitlab:
   stage: deploy
   # This job only runs for changes on the 'main' branch.
-  # Change 'main' if your default branch has a different name (e.g., 'master').
+  # Change 'main' if your default branch has a different name.
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
