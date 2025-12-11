@@ -3,24 +3,44 @@
 ###############################################################################
 ### CONDA ###
 #############
+# Name ___________________ lib_conda.sh
+# Version ________________ v.2025.12
+# Author _________________ Nicolas Fernandez
+# Affiliation ____________ IRD_U233_TransVIHMI
+# Aim ____________________ Setup conda
+# Date ___________________ 2025.09.30
+# Latest modifications ___ 2025.11.13
+# Use ____________________ source lib_conda.sh
+###############################################################################
 
-# Test if a conda distribution already exist
-if [[ ! $(command -v conda) ]]
-then
-    # If no, invitation message to install it
-    echo -e "
-    ${red}No Conda distribution found.${nc}
+setup_conda() {
+    if command -v conda &> /dev/null # Test if a conda distribution exist
+    then # If yes, source it
+        local conda_base=$(conda info --base)
+        if [ -f "${conda_base}/etc/profile.d/conda.sh" ]
+        then
+            source "${conda_base}/etc/profile.d/conda.sh"
+            printf "
+    [${GREEN}SUCCES${NC}]: ${BLUE}Conda${NC} distribution found and sourced.
+            "
+        else
+            printf "
+    [${RED}ERROR${NC}]: Found ${BLUE}Conda${NC}, but could not source the ${YLO}'conda.sh'${NC} script.
 
-    ${blue}GeVarLi${nc} use the free and open-source package manager ${ylo}Conda${nc}.
-    
-    ${blue}Read documentation${nc} at: ${green}https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/pages/installations/${nc}
-    "
+        Looked for it at: ${YLO}'${conda_base}/etc/profile.d/conda.sh'${NC}
+            "
+            return 1
+        fi
+    else # If no, invitation to install it
+        printf "
+    [${RED}ERROR${NC}]: No ${BLUE}Conda${NC} distribution found.
+
+    [${YLO}INFO${NC}]: ${BLUE}GeVarLi${NC} use the free and open-source package manager: ${BLUE}Conda${NC}.
+        Please make sure ${BLUE}conda${NC} is installed and that you have initialized your shell with ${YLO}'conda init'${NC}.
+
+    [${YLO}INFO${NC}]: Read documentation at: ${BLUE}https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/pages/installations/${NC}
+        "
+        return 1
+    fi
     return 0
-else
-    # If yes, intern shell source conda
-    echo -e "\n ${green}Conda${nc} distribution found and sourced."
-    source ~/miniforge3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniforge3
-    source ~/mambaforge/etc/profile.d/conda.sh 2> /dev/null                            # local user with mambaforge ¡ Deprecated !
-    source ~/miniconda3/etc/profile.d/conda.sh 2> /dev/null                            # local user with miniconda3 ¡ Deprecated !
-    source /usr/local/bioinfo/miniconda3-23.10.0-1/etc/profile.d/conda.sh 2> /dev/null # iTROP HPC server (conda 23.11.0)
-fi
+}

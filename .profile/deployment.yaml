@@ -1,0 +1,20 @@
+source-files:
+  # Workflow essential: rules.smk, env.yaml, config files
+  - ../../workflow/
+  - ../../config/
+
+  # Ressources: genomes, primers, ...
+  - ../../resources/
+
+  # Scripts: Run, supports
+  - ../../Run_GeVarLi.sh
+  - ../../scripts/
+
+  # Information files
+  - ../../README.md
+  - ../../CHANGELOG.md
+  - ../../CODE_OF_CONDUCT.md
+  - ../../LICENSE
+  - ../../VERSION
+
+  # Exclude Dev Dir: .test/ et .documentations

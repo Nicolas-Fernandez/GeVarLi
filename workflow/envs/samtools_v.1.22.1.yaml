@@ -1,7 +1,7 @@
-name: cutadapt_v.5.1
+name: samtools_v.1.22.1
 channels:
   - conda-forge
   - bioconda
   - nodefaults
 dependencies:
-  - cutadapt=5.1
+  - samtools=1.22.1

@@ -36,25 +36,25 @@ setup_workflow() {
     if ! conda env list | grep -q "^${conda_workflow_env}\s" # If environment does not exist
     then
         printf "
-        [${YLO}INFO${NC}]: Environment does not exist. Attempting to create it...
+    [${YLO}INFO${NC}]: Environment does not exist. Attempting to create it...
         "
         if check_network_status # If network is online
         then 
             if run_with_spinner conda env create --file "${env_yaml}" # If succes (0)
             then
                 printf "
-                [${GREEN}SUCCES${NC}]: Environment created. Saving checksum...
+    [${GREEN}SUCCES${NC}]: Environment created. Saving checksum...
                 "
                 _get_checksum "${env_yaml}" > "${checksum_file}"
             else # If failure (1)
                 printf "
-                [${RED}ERROR${NC}]: Environment creation failed. Please check the logs.
+    [${RED}ERROR${NC}]: Environment creation failed. Please check the logs.
                 "
                 return 1
             fi
         else # If network is offline
             printf "
-            [${RED}ERROR${NC}]: Cannot create environment '${YLO}${conda_workflow_env}${NC}' while offline.
+    [${RED}ERROR${NC}]: Cannot create environment '${YLO}${conda_workflow_env}${NC}' while offline.
             "
             return 1
         fi
@@ -66,29 +66,29 @@ setup_workflow() {
         if [[ "${current_checksum}" == "${stored_checksum}" ]] # If checksums match
         then
             printf "
-            [${YLO}INFO${NC}]: '${YLO}${conda_workflow_env}${NC}' is up to date.
+    [${YLO}INFO${NC}]: '${YLO}${conda_workflow_env}${NC}' is up to date.
             "
         else # If checksums do not match
             printf "
-            [${YLO}INFO${NC}]: Environment definition has changed. Attempting to update...
+    [${YLO}INFO${NC}]: Environment definition has changed. Attempting to update...
             "
             if check_network_status # If network is online
             then
                 if run_with_spinner conda env update --name "${conda_workflow_env}" --file "${env_yaml}" --prune # If succes (0)
                 then
                     printf "
-                    [${GREEN}SUCCES${NC}]: Environment updated. Saving new checksum...
+    [${GREEN}SUCCES${NC}]: Environment updated. Saving new checksum...
                     "
                     _get_checksum "${env_yaml}" > "${checksum_file}"
                 else # If failure (1)
                     printf "
-                    [${RED}ERROR${NC}]: Environment update failed. Please check the logs.
+    [${RED}ERROR${NC}]: Environment update failed. Please check the logs.
                     "
                     return 1
                 fi
             else # If network is offline
                 printf "
-                [${RED}ERROR${NC}]: Cannot update environment '${YLO}${conda_workflow_env}${NC}' while offline.
+    [${RED}ERROR${NC}]: Cannot update environment '${YLO}${conda_workflow_env}${NC}' while offline.
                 "
                 return 1
             fi

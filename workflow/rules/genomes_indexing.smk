@@ -8,43 +8,14 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ genomes_indexing.smk
-# Version ________________ v.2025.06
+# Version ________________ v.2025.12
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Download (soon) and index virus genomes
+# Aim ____________________ Index virus genomes
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.06.10
+# Latest modifications ___ 2025.12.11
 # Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
-
-###############################################################################
-rule bwa_qc_indexing:
-    # Aim: index sequences in the FASTA format
-    # Use: bwa index -a [ALGO] -p [PREFIX] <genome.fasta>
-    message:
-        """
-        ~ BWA-SW ∞ Index QC ~
-        Reference: ____ {wildcards.qc_ref}
-        """
-    conda:
-        BWA
-    params:
-        algorithm = BWA_ALGO
-    input:
-        fasta = "resources/genomes/fastq-screen/{qc_ref}.fasta"
-    output:
-        prefix = "resources/indexes/fastq-screen/{qc_ref}",
-        bwa_indexes = multiext("resources/indexes/fastq-screen/{qc_ref}",
-                               ".amb", ".ann", ".bwt", ".pac", ".sa")
-    log:
-        "results/10_Reports/tools-log/bwa-indexes/{qc_ref}.log"
-    shell:
-        "bwa index "              # BWA-SW algorithm, index sequences
-        "{params.algorithm} "      # -a: Algorithm for constructing BWT index (default: auto)
-        "-p {output.prefix} "      # -p: Prefix of the output database
-        "{input.fasta} "           # Reference sequences in the FASTA format
-        "&> {log} "                # Log redirection
-        "&& touch {output.prefix}" # Touch done
 
 ###############################################################################
 rule bwa_genome_indexing:

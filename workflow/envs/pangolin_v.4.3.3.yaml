@@ -1,7 +1,7 @@
-name: samtools_v.1.22
+name: pangolin_v.4.3.4
 channels:
   - conda-forge
   - bioconda
   - nodefaults
 dependencies:
-  - samtools=1.22
+  - pangolin=4.3.4

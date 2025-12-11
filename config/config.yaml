@@ -10,7 +10,7 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ config.yaml
-# Version ________________ v.2025.06
+# Version ________________ v.2025.12
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Configuration yaml file for gevarli.smk snakefile
@@ -30,7 +30,7 @@ fastq_dir: '.test/reads/' # Path to reads fastq.gz files (default: 'resources/re
 
 modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
   qualities: true # Perform reads quality controls (FastQC & Fastq-Screen)                 (default: true)
-  keeptrim: true  # Perform (always) but keep trimmed reads files (Cutadapt & Sickle-trim) (default: false)
+  keeptrim: false  # Perform (always) but keep trimmed reads files (Cutadapt & Sickle-trim) (default: false)
   clipping: true  # Perform reads amplicon primers clipping (iVar)                         (default: false)
   covstats: true  # Perform coverage statistics (Fagstat & Covstats)                       (default: true)
   consensus: true # Perform reads mapping to reference (BWA | Minimap2 | Bowtie2)          (default: true)
@@ -57,7 +57,7 @@ tools:
 ###############################################################################
 
 consensus:
-  reference: 'MN908947' # Your reference, in fasta format (default: [SARS-CoV-2]) [STR]
+  reference: 'MN908947' # Your reference, in fasta format (default: 'MN908947' [SARS-CoV-2]) [STR]
   # Available options (not exhaustive):
     #- 'MN908947' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2 (default)
     #- 'NC045512' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2
@@ -212,7 +212,6 @@ minimap2:
       ##- '-H' # yes (preferrable for PacBio)
 
   preset: 'sr' # -x: Minimap2 presets, always applied before other options (default: 'sr')
-  # Available preset options, set only one: 
     ##- 'sr'        # genomic short-read mapping, like Illumina (default)
     ##- 'map-ont'   # Nanopore vs reference mapping
     ##- 'ava-ont'   # Nanopore read overlap
@@ -263,7 +262,7 @@ multiqc: # TODO
 
 fastq_screen:
   config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: '1000' # Don't use whole sequences, but a subset reads (default: "10000") [INT] (0=all)
+  subset: '100000' # Don't use whole sequences, but a subset reads (default: "100000") [INT] (0=all)
 
 ###############################################################################
 ############################### RENAME SAMPLES ################################
@@ -293,19 +292,19 @@ envs: # Conda environement yaml files:
   bedtools:      '../envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
   bowtie2:       '../envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
   bwa:           '../envs/bwa_v.0.7.19.yaml'            # BWA           ver. 0.7.19
-  cutadapt:      '../envs/cutadapt_v.5.1.yaml'          # Cutadapt      ver. 5.1
+  cutadapt:      '../envs/cutadapt_v.5.2.yaml'          # Cutadapt      ver. 5.2
   fastq_screen:  '../envs/fastq-screen_v.0.16.yaml'     # Fastq-Screen  ver. 0.16 (bwa=0.7.19 gdgraph=1.56)
   fastqc:        '../envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
   gawk:          '../envs/gawk_v.5.3.1.yaml'            # Awk (GNU)     ver. 5.3.1
   ivar:          '../envs/ivar_v.1.4.4.yaml'            # iVar          ver. 1.4.4 (samtools=1.21)
   minimap2:      '../envs/minimap2_v.2.30.yaml'         # Minimap2      ver. 2.30
-  multiqc:       '../envs/multiqc_v.1.31.yaml'          # MultiQC       ver. 1.31 (pandoc=3.7.0.2)
-  nextclade:     '../envs/nextclade_v.3.15.1.yaml'      # Nextclade     ver. 3.15.1
-  pangolin:      '../envs/pangolin_v.4.3.1.yaml'        # Pangolin      ver. 4.3.1
-  samtools:      '../envs/samtools_v.1.22.yaml'         # Samtools      ver. 1.22
+  multiqc:       '../envs/multiqc_v.1.32.yaml'          # MultiQC       ver. 1.32 (pandoc=3.7.0.2)
+  nextclade:     '../envs/nextclade_v.3.18.1.yaml'      # Nextclade     ver. 3.18.1
+  pangolin:      '../envs/pangolin_v.4.3.3.yaml'        # Pangolin      ver. 4.3.3
+  samtools:      '../envs/samtools_v.1.22.1.yaml'       # Samtools      ver. 1.22.1
   sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-  tsv2vcf:       '../envs/tsv2vcf_v.2025.06.yaml'       # tsv2vcf       ver. 2025.06 (biopython=1.85 numpy=2.3.0 scipy=1.15.2)
-  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. 2025.06 (snakemake=9.6.2 psutil=7.0.0 graphviz=13.1.0)
+  tsv2vcf:       '../envs/tsv2vcf_v.2025.12.yaml'       # tsv2vcf       ver. : biopython=1.86 numpy=2.3.5 scipy=1.16.3
+  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. : snakemake=9.14.3 psutil=7.1.3 graphviz=13.1.2
 
 report: # Snakemake reports formats
 
