@@ -50,8 +50,7 @@ run_with_spinner() (
     printf "\033[3A"
     while kill -0 $pid 2>/dev/null; do
         printf "
-        \r\033[K Please wait %s " "${spinner[$i]}
-        "
+        \r\033[K Please wait %s " "${spinner[$i]}"
         i=$(( (i+1) % ${#spinner[@]} ))
         sleep 0.1
     done
