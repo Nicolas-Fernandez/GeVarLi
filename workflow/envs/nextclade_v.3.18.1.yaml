@@ -1,6 +1,6 @@
-name: nextclade_v.3.15.1
+name: nextclade_v.3.18.1
 channels:
   - bioconda
   - nodefaults
 dependencies:
-  - nextclade=3.15.1
+  - nextclade=3.18.1

@@ -8,12 +8,12 @@
 ###                                                                         ###
 ###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
 # Name ___________________ gevarli.smk
-# Version ________________ v.2025.06
+# Version ________________ v.2025.12
 # Author _________________ Nicolas Fernandez
 # Affiliation ____________ IRD_U233_TransVIHMI
 # Aim ____________________ Snakefile running GeVarLi rules
 # Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.06.10
+# Latest modifications ___ 2025.09.12
 # Use ____________________ snakemake --use-conda -s <SNAKEFILE>
 ###############################################################################
 
@@ -67,7 +67,7 @@ functions.MIN_DEPTH = config["consensus"]["min_depth"] # Minimum depth to call c
 functions.STAT_EXT = config["report"]["stat"]["extention"] # Stat reports extentions ('txt' 'tsv' 'json')
 
 # Snakemake version
-min_version("9.1.7")
+min_version("9.14.3")
 
 # Schemas
 #validate(config, schema="schemas/config.schema.yaml")

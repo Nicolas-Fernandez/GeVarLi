@@ -1,7 +1,7 @@
-name: pangolin_v.4.3.1
+name: cutadapt_v.5.2
 channels:
   - conda-forge
   - bioconda
   - nodefaults
 dependencies:
-  - pangolin=4.3.1
+  - cutadapt=5.2

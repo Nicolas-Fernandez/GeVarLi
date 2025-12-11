@@ -80,16 +80,16 @@ rule pangolin_lineage:
     log:
         "results/10_Reports/tools-log/pangolin/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_lineage.log"
     shell:
-        "pangolin "                     # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
-        "{input.consensus} "             # Query fasta file of sequences to analyse
-        "--threads {resources.cpus} "    # -t: Number of threads
-        "--tempdir {resources.tmp_dir} " # Specify where you want the temp stuff to go (default: $TMPDIR)
-        "--outfile {output.lineage} "    # Optional output file name (default: lineage_report.csv)
-        "&> {log} "                      # Log redirection
-        "sed 's/,/\t/g' "               # Replace commas by tabs
-        "{output.lineage_csv} "          # Input lineage report in csv format
-        "1> {output.lineage_tsv} ; "     # Output lineage report in tsv format
-        "2> /dev/null"                   # Errors redirection
+        "pangolin "                      # Pangolinn, Phylogenetic Assignment of Named Global Outbreak LINeages
+        "{input.consensus} "              # Query fasta file of sequences to analyse
+        "--threads {resources.cpus} "     # -t: Number of threads
+        "--tempdir {resources.tmp_dir} "  # Specify where you want the temp stuff to go (default: $TMPDIR)
+        "--outfile {output.lineage_csv} " # Optional output file name (default: lineage_report.csv)
+        "&> {log} "                       # Log redirection
+        "sed 's/,/\t/g' "                 # Replace commas by tabs
+        "{output.lineage_csv} "           # Input lineage report in csv format
+        "1> {output.lineage_tsv} ; "      # Output lineage report in tsv format
+        "2> /dev/null"                    # Errors redirection
 
 ###############################################################################
 ###############################################################################

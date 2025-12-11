@@ -133,5 +133,8 @@ rule bowtie2_mapping:
         "1> {output.mapped} "         # -S: File for SAM output (default: stdout) 
         "2> {log}"                    # Log redirection 
 
+rule aligner_mapping:
+    
+
 ###############################################################################
 ###############################################################################
