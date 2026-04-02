@@ -28,7 +28,6 @@
   - Raise issues and report bugs: [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/issues)
   - Contact: [nicolas.fernandez@ird.fr](nicolas.fernandez@ird.fr)
 
-
 ## Citation
 
 **GeVarLi, a FAIR, open-source, scalable, modulable and traceable snakemake pipeline,

@@ -31,43 +31,10 @@ test:
 pages:
   stage: deploy
   script:
-    - mkdocs build --verbose --config-file .documentations/mkdocs.yaml
+    - mkdocs build --verbose --config-file documentations/mkdocs.yaml
   artifacts:
     paths:
       - public
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-
-push_to_gitlab:
-  stage: deploy
-  rules:
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
   
-  script:
-    # Install git and git-lfs in the CI environment
-    - apt-get update && apt-get install -y git git-lfs
-    - git lfs install --force
-
-    # Clone the source repository as a mirror to get all refs (branches and tags)
-    - git clone --mirror "https://oauth2:${FORGE_IRD_READ_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" temp_repo
-    - cd temp_repo
-
-    # Unset the "mirror" config that was automatically set by "clone --mirror".
-    # This stops git from implicitly adding --mirror to our next push commands.
-    - git config --unset remote.origin.mirror
-
-    # Fetch all LFS objects from the source repository (GitForge)
-    - git lfs fetch origin --all
-
-    # Change the remote URL to point to the destination (GitLab.com)
-    - git remote set-url --push origin "https://oauth2:${GITLAB_PUSH_TOKEN}@gitlab.com/Nicolas-Fernandez/GeVarLi.git"
-
-    # Push all LFS objects to the new destination (GitLab.com)
-    - git lfs push origin --all
-
-    # Now that the implicit --mirror is gone, these specific push commands will work.
-    # Push the local main branch to the remote main branch
-    - git push --force origin refs/heads/main:refs/heads/main
-
-    # Push all local tags to the remote tags
-    - git push --force origin refs/tags/*:refs/tags/*
