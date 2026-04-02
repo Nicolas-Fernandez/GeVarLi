@@ -31,7 +31,7 @@ test:
 pages:
   stage: deploy
   script:
-    - mkdocs build --verbose --config-file documentations/mkdocs.yaml
+    - mkdocs build --verbose --config-file docs/mkdocs.yaml
   artifacts:
     paths:
       - public
