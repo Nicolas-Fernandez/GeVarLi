@@ -14,6 +14,7 @@
 ###############################################################################
 
 run_with_spinner() (
+
     # Spinner models:
     #local spinner=( "|" "/" "-" "\\" ) # Simple
     #local spinner=( "←" "↖" "↑" "↗" "→" "↘" "↓" "↙" ) # Arrows
@@ -23,7 +24,7 @@ run_with_spinner() (
     #local spinner=( "●∙∙∙∙∙" "∙●∙∙∙∙" "∙∙●∙∙∙" "∙∙∙●∙∙" "∙∙∙∙●∙" "∙∙∙∙∙●" "∙∙∙∙●∙" "∙∙∙●∙∙" "∙∙●∙∙∙" "∙●∙∙∙∙" ) # Dots
     #local spinner=( "🌍" "🌎" "🌏" ) # Earth
     #local spinner=( "🌑" "🌒" "🌓" "🌔" "🌕" "🌖" "🌗" "🌘" ) # Moon
-    #local spinner=( "🌰" "🌱" "🌿" "☘️" "🍀" "🪴" "🌴" "🍃" "🍂") # Plants
+    local spinner=( "🌰" "🌱" "🌿" "☘️" "🍀" "🪴" "🌴" "🍃" "🍂") # Plants
     #local spinner=( "🕐" "🕑" "🕒" "🕓" "🕔" "🕕" "🕖" "🕗" "🕘" "🕙" "🕚" "🕛" ) # Clock
     #local spinner=( " ☀️ " " 🌤️ " " ⛅ " " ☁️ " " 🌧️ " " 🌨️ " " ⛈️ " " 🌨️ " " 🌧️ " " ☁️ " " ⛅ " " 🌤️ " "🌤️🌈" "🌬️🌤️") # Weather
 
@@ -32,10 +33,10 @@ run_with_spinner() (
     local A="${GREEN}A${NC}" # A: Green
     local G="${YLO}G${NC}"   # G: Yellow
     local C="${BLUE}C${NC}"  # C: Blue
-    local spinner=("-[ ${T}${A}${G}${C}${T}${A}${G}${C}${T}${A}${G}${C} ]-"
-                   "-[ ${A}${G}${C}${T}${A}${G}${C}${T}${A}${G}${C}${T} ]-"
-                   "-[ ${G}${C}${T}${A}${G}${C}${T}${A}${G}${C}${T}${A} ]-"
-                   "-[ ${C}${T}${A}${G}${C}${T}${A}${G}${C}${T}${A}${G} ]-")
+    #local spinner=("-[ ${T}${A}${G}${C}${T}${A}${G}${C}${T}${A}${G}${C} ]-"
+                 #  "-[ ${A}${G}${C}${T}${A}${G}${C}${T}${A}${G}${C}${T} ]-"
+                  # "-[ ${G}${C}${T}${A}${G}${C}${T}${A}${G}${C}${T}${A} ]-"
+                  # "-[ ${C}${T}${A}${G}${C}${T}${A}${G}${C}${T}${A}${G} ]-")
 
     # Silent cmd > stdout and stderr
     set +m # 
@@ -51,7 +52,7 @@ run_with_spinner() (
     while kill -0 $pid 2>/dev/null; do
         printf "\r\033[K Please wait %s " "${spinner[$i]}"
         i=$(( (i+1) % ${#spinner[@]} ))
-        sleep 0.1
+        sleep 0.5
     done
 
     wait $pid
