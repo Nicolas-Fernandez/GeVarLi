@@ -6,6 +6,7 @@
   - Thibaut Armel Chérif Gnimadi - CERFIG / Guinée : Developpeur _([Git](https://github.com/armel001))_
   - Programme Afroscreen : Partie prenante _([Website](https://www.afroscreen.org))_
   - DALL•E mini - OpenAI : Illustrateur _([Git](https://github.com/borisdayma/dalle-mini))_
+  - Louis Gervais - Relecture des dockstring
 
 <div style="text-align: center;">
   <img src="../../../images/GeVarLi_by_DALL-E_icone.png" width="100" height="100">
