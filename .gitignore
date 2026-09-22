@@ -31,6 +31,23 @@ __pycache__
 # Ignore HOST genomes (too larges)
 resources/genomes/HOST_*
 
+# Ignore nextclade datasets (downloaded on demand)
+resources/nextclade/*
+!resources/nextclade/.gitkeep
+
+# Ignore GISAID binary executables
+workflow/scripts/gisaid/linux/covCLI
+workflow/scripts/gisaid/osx/covCLI
+
+# Ignore downloaded virus genomes (fetched on demand from NCBI)
+resources/genomes/viruses/*.fasta
+!resources/genomes/viruses/.gitkeep
+
+# Ignore heavy fastq-screen genomes
+resources/genomes/fastq-screen/Echerichia-coli_*.fasta
+resources/genomes/fastq-screen/Loa-loa_*.fasta
+resources/genomes/fastq-screen/UniVec_*.fasta
+
 # Ignore minimap2 indexes
 *.mmi
 

@@ -18,6 +18,29 @@
 ###############################################################################
 
 ###############################################################################
+rule nextclade_dataset_get:
+    # Aim: download Nextclade dataset if not present
+    # Use: nextclade dataset get --name [DATASET] --output-dir [DIR]
+    message:
+        """
+        ~ Nextclade ∞ Download Dataset ~
+        Dataset: _______ {params.dataset}
+        """
+    conda:
+        NEXTCLADE
+    params:
+        dataset = NEXT_DATASET
+    output:
+        dataset_dir = directory(NEXT_PATH + "{dataset}")
+    log:
+        "results/10_Reports/tools-log/nextclade/dataset_{dataset}.log"
+    shell:
+        "nextclade dataset get "
+        "--name {params.dataset} "
+        "--output-dir {output.dataset_dir} "
+        "&> {log}"
+
+###############################################################################
 rule nextclade_lineage:
     # Aim: nextclade lineage assignation
     # Use: nextclade [QUERY.fasta] -t [THREADS] --outfile [NAME.csv]
@@ -38,7 +61,8 @@ rule nextclade_lineage:
         path = NEXT_PATH,
         dataset = NEXT_DATASET
     input:
-        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus-sequence.fasta"
+        consensus = "results/05_Consensus/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_consensus-sequence.fasta",
+        dataset = NEXT_PATH + NEXT_DATASET
     output:
         lineage = "results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade_report.tsv",
         alignment = directory("results/06_Lineages/{sample}_{reference}_{mapper}_{min_depth}x_{caller}_nextclade_alignments/")

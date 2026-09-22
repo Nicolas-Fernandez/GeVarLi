@@ -18,6 +18,22 @@
 ###############################################################################
 
 ###############################################################################
+rule get_ncbi_reference:
+    # Aim: download reference genome from NCBI Entrez if not present locally
+    # Use: efetch.fcgi?db=nuccore&id=<reference>&rettype=fasta
+    message:
+        """
+        ~ NCBI Entrez ∞ Fetch Genome Reference ~
+        Reference: ____ {wildcards.reference}
+        """
+    output:
+        fasta = "resources/genomes/viruses/{reference}.fasta"
+    log:
+        "results/10_Reports/tools-log/ncbi/{reference}.log"
+    shell:
+        "curl -sL 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id={wildcards.reference}&rettype=fasta&retmode=text' > {output.fasta} 2> {log}"
+
+###############################################################################
 rule bwa_genome_indexing:
     # Aim: index sequences in the FASTA format
     # Use: bwa index -a [ALGO] -p [PREFIX] <genome.fasta>
