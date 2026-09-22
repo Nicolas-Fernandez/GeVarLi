@@ -45,10 +45,14 @@ resources/genomes/HOST_*
 *.bt2
 *.bt2l
 
-# Ignore results/ directory
+# Ignore results/ directories
+/results*/
 /results
-/archives
+/archives/
 *.tar.gz
+
+# Ignore graphviz dot files
+*.dot
 
 # Ignore public/ directory
 /public

@@ -120,7 +120,7 @@ rule multiqc_aggregation:
         #"--config {params.config} "  # Specific config file to load
         #"--tag {params.tag} "        # Use only modules which tagged with this keyword
         #"--pdf "                     # Creates PDF report with 'simple' template (require xelatex)
-        "--export "                  # Export plots as static images in addition to the report
+        #"--export "                  # Export plots as static images in addition to the report
         "--outdir {output.multiqc} " # -o: Create report in the specified output directory
         #"{input.final_outputs} "     # Input final outputs
         #"results/10_Reports/tools-log/ " # Input tools log

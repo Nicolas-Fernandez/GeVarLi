@@ -1,328 +1,113 @@
----
-
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-###                                                                         ###
-###    /\  ______      ___ ____ _  _ __   ____ __   ____     ______  /\     ###
-###    ||  \ \ \ \    / __( ___( \/ )__\ (  _ (  ) (_  _)   / / / /  ||     ###
-###    ||   > > > >  ( (_-.)__) \  /(__)\ )   /)(__ _)(_   < < < <   ||     ###
-###    ||  /_/_/_/    \___(____) \(__)(__(_)\_(____(____)   \_\_\_\  ||     ###
-###    \/                                                            \/     ###
-###                                                                         ###
-###I###R###D######U###2###3###3#######T###R###A###N###S###V###I###H###M###I####
-# Name ___________________ config.yaml
-# Version ________________ v.2025.12
-# Author _________________ Nicolas Fernandez
-# Affiliation ____________ IRD_U233_TransVIHMI
-# Aim ____________________ Configuration yaml file for gevarli.smk snakefile
-# Date ___________________ 2021.10.12
-# Latest modifications ___ 2025.06.10
-# Use ____________________ Edit default settings
-###############################################################################
-
-###############################################################################
-################################## GENERAL ####################################
-###############################################################################
-
-fastq_dir: '.test/reads/' # Path to reads fastq.gz files (default: 'resources/reads/') [PATH]
-# Available options (not exhaustive):
-  ##- 'resources/reads/' # Path to reads fastq.gz files (default)
-  ##- '.test/reads/' # Path to reads fastq.gz files (test)
-
-modules: # GeVarLi analysis modules, set 'true' or 'false' [BOOL]
-  qualities: true # Perform reads quality controls (FastQC & Fastq-Screen)                 (default: true)
-  keeptrim: false  # Perform (always) but keep trimmed reads files (Cutadapt & Sickle-trim) (default: false)
-  clipping: true  # Perform reads amplicon primers clipping (iVar)                         (default: false)
-  covstats: true  # Perform coverage statistics (Fagstat & Covstats)                       (default: true)
-  consensus: true # Perform reads mapping to reference (BWA | Minimap2 | Bowtie2)          (default: true)
-  lineages: true  # Perform clade and lineage assignations (Nexclade | Pangolin)           (default: true)
-  gisaid: false    # Perform gisaid submission template (GisAid : TODO)                     (default: false)
-
-
+fastq_dir: /Users/2021nf001/git/workflow_snakemake/GeVarLi/resources/reads
+modules:
+  qualities: true
+  keeptrim: false
+  clipping: false
+  covstats: true
+  consensus: true
+  lineages: true
+  gisaid: false
 tools:
-  mapper: 'bwa' # Select your favorite mapper (default: 'bwa')
-  # Available options:
-    #- 'bwa'      # Better, faster (default)
-    #- 'bowtie2'  # Slower, "sensitivity" requiried (see below "Bowtie2" options)
-    #- 'minimap2' # Versatile
-  caller: 'ivar' # Select your favorite variant caller (default: 'ivar')
-  # Available options:
-    #- 'ivar' # iVar: a toolkit for analysis of viral NGS data (default)
-  assigner: 'nextclade' # Select your favorite clades / lineages assigner (default: 'nextclade')
-  # Available options:
-    #- 'nextclade' # Clade assignment, mutation calling, phylogenetic placement and quality checks (default)
-    #- 'pangolin'  # PANGO: Phylogenetic Assignment of Named Global Outbreak Lineages
-
-###############################################################################
-################################# CONSENSUS ###################################
-###############################################################################
-
+  mapper: bwa
+  caller: ivar
+  assigner: nextclade
 consensus:
-  reference: 'MN908947' # Your reference, in fasta format (default: 'MN908947' [SARS-CoV-2]) [STR]
-  # Available options (not exhaustive):
-    #- 'MN908947' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2 (default)
-    #- 'NC045512' # [SARS-CoV-2] : Severe acute respiratory syndrome coronavirus 2
-    ## 
-    #- 'AF380138' # [MPXV] : Monkeypox virus Zaire
-    #- 'MT903345' # [MPXV] : Monkeypox virus UK
-    #- 'MW036632' # [SPXV] : Swinepox India
-    ##
-    #- 'AF272001' # [EBOV] : Ebola virus Zaire
-    #- 'MH121162' # [EBOV] : Ebola virus Sudan
-    #- 'NC001608' # [MarV] : Marburg virus
-    ##
-    #- 'NC001498' # [MeV] : Measles virus Ichinose-B95a
-    #- 'MG912590' # [MeV] : Measles virus B3 Khartoum Sudan
-    #- 'ON642796' # [MeV] : Measles virus B3 Kole Uganda
-    #- 'MZ615446' # [MeV] : Measles virus B3 Bura Kenya (partial)
-    #- 'MG912589' # [MeV] : Measles virus C2 Netherland Bilthoven
-    #- 'MG912594' # [MeV] : Measles virus H1 Netherland Amsterdam
-    ##
-    #- 'NC004297' # [LASV] : Lassa virus Josiah Segment L
-    #- 'NC004296' # [LASV] : Lassa virus Josiah Segment S
-    #- 'MG812684' # [LASV] : Lassa virus Guinea Faranah Segment L
-    #- 'MG812685' # [LASV] : Lassa virus Guinea Faranah Segment S
-    #- 'MT199231' # [LASV] : Lassa virus Benin Ben-16131 Segment L
-    #- 'MT193282' # [LASV] : Lassa virus Benin Ben-16131 Segment S
-    ##
-    #- 'HM045817' # [CHIKV] : Chikungunya virus
-    #- 'NC001477' # [DENV1] : Dengue virus 1
-    #- 'NC001474' # [DENV2] : Dengue virus 2
-    #- 'NC001475' # [DENV3] : Dengue virus 3
-    #- 'NC002640' # [DENV4] : Dengue virus 4
-    #- 'M12294'   # [WNV] : West Nile virus
-    #- 'KX369547' # [ZV] : Zika virus French Polynesia
-    ##
-    #- 'AJ564622' # [Nipah] : Nipah virus Malaysia
-    ##
-    #- 'NC006273' # [HCMV]: Human herpesvirus 5 (CMV)
-    #- 'NC001348' # [VZV] : Human herpesvirus 3 (Varicella)
-    #- 'NC001460' # [Adeno] : Human adenovirus A
-    #- 'AY426531' # [Entero] : Human enterovirus 68
-    ##
-    #- 'K03455'   # [HIV] : Human immunodeficiency virus type 1 (HXB2)
-
-  min_depth: '30' # Minimum coverage, mask lower regions with "N" (default: '10', recomanded: '30') [INT]
-  # Available options (not exhaustive):
-    #- '100' # 100 X : for greater coverage
-    #- '60'  #  30 X : for better coverage
-    #- '30'  #  30 X : for AFROSCREEN SARS-CoV-2 consortium, with Illumina amplicons sequencing (recomanded)
-    #- '10'  #  10 X : for some applications (default)
-    #- '3'   #   3 X : only for exploration...
-    #- '1'   #   1 X : not recommanded!
-
-  max_depth: '0' # Max per-file depth; avoids excessive memory usage (default: '8000', recomanded "0") [INT]
-  # Passing zero for this option sets it to the highest possible value, effectively removing the depth limit.
-
-  min_freq: '0.2'  # Minimum allele frequency allowed (default: "0.2") [FLOAT]
-  min_indel: '0.8' # Minimum indel frequency threshold (0 to 1) to call consensus [FLOAT] (Default: 0.8)
-
-  map_qual: '--no-BAQ' # Disable BAQ, per-Base Alignment Quality (default: '--no-BAQ')
-  # Available options, set only one:
-    ##- '--no-BAQ' # no, don't merge mapping quality: disable (default, recommanded with Samtools)
-    ##- ''         # yes, merge mapping quality: enable (not recommanded with Samtools)
-
-  min_bq: '0'          # -Q: Skip bases with baseQ/BAQ smaller than (default: '13', recomanded: '0') [INT]
-  min_qual: '0' # -q: Minimum quality score threshold to count base (Default: '20', recomanded: '0') [INT]
-
-
-###############################################################################
-################################ SUBMISSIONS ##################################
-###############################################################################
-
-gisaid: # TODO
-  username: 'username'
+  reference:
+  - AF272001
+  min_depth: '1'
+  max_depth: '0'
+  min_freq: 0.2
+  min_indel: 0.8
+  map_qual: --no-BAQ
+  min_bq: '0'
+  min_qual: '0'
+gisaid:
+  username: username
   threshold: '30'
-  name: 'hCoV-19'
-  country: 'France'
+  name: hCoV-19
+  country: France
   identifier: ''
   year: '2025'
-
-###############################################################################
-################################## LINEAGES ###################################
-###############################################################################
-
 nextclade:
-  path: 'resources/nextclade/' # Path to nextclade datasets (default: "resources/nextclade/")
-  dataset: 'sars-cov-2' # Nextclade dataset
-  # Available options (not exhaustive), set only one:
-    ##- 'sars-cov-2' # SARS-CoV-2 (default)
-    ##- 'MPXV'       # MPox - all clades 
-    ##- 'hMPXV'      # human MPox
-    ##- 'hMPXV_B1'   # human MPox - only lineage B1*
-
-###############################################################################
-############################# PRIMERS CLEAPING ################################
-###############################################################################
-
+  path: resources/nextclade/
+  dataset: sars-cov-2
 primers:
-  offset: '0'      # Offset for primer trimming (default: '0') [INT]
-  min_length: '35' # Minimum length of read to retain after trimming (Default: 50% average length of the first 1000 reads) [INT]
-  min_qual: '20'   # Minimum quality threshold for sliding window to pass (Default: '20') [INT]
-  slide: '4'       # Width of sliding window (Default: '4') [INT]
+  offset: '0'
+  min_length: '35'
+  min_qual: '20'
+  slide: '4'
   bed:
-    path: 'resources/primers_schemes/bed/' # Path to primers bed files (default 'resources/primer/bed') [PATH]
-    scheme: 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # Your primer set, in BED format (you need to know which kit and reference you used!)
-    # Reference sequence names and coordinates of BAM and BED are assumed to be derived from identical reference sequences.
-    # Available options (not exhaustive), set only one:
-      ##- 'nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed' # SARS-CoV-2 Artic V5.3.2 (latest)
-      ##- 'nCoV-2019/V4.1/SARS-CoV-2.primer.bed'   # SARS-CoV-2 Artic V4.1 (update to the V4, see Artic README)
-      ##- 'nCoV-2019/V4/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V4 (not based on V3, see Artic README)
-      ##- 'nCoV-2019/V3/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V3
-      ##- 'nCoV-2019/V2/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V2
-      ##- 'nCoV-2019/V1/SARS-CoV-2.primer.bed'     # SARS-CoV-2 Artic V1
-      ##- 'ZaireEbola/V3/ZaireEbola.primer.bed'    # EBOV Artic V3
-      ##- 'ZaireEbola/V2/ZaireEbola.primer.bed'    # EBOV Artic V2 (based on AF272001.1)
-      ##- 'ZaireEbola/V1/ZaireEbola.primer.bed'    # EBOV Artic V1
-      ##- 'Nipah/V1/NiV_6_Malaysia.primer.bed'     # NIV Artic V1
-      ##- 'MPXV/V1/MPXV.primer.bed'                # MPXV  V1 (dx.doi.org/10.17504/protocols.io.5qpvob1nbl4o/v4)
-      ##- 'your_custom_amplicon_kit.bed'           # Add your custom amplicon kit
-
-###############################################################################
-################################### MAPPING ###################################
-###############################################################################
-
+    path: resources/primers_schemes/bed/
+    scheme: nCoV-2019/V5.3.2/SARS-CoV-2.primer.bed
 bwa:
-  algorithm: '' # Algorithm for constructing BWA index (default: auto --> '')
-  # Available options, set only one:
-    ##- ''         # Auto-select (default)
-    ##- '-a is'    # Moderately fast, but does not work with database larger than 2GB
-    ##- '-a bwtsw' # This method works with the whole human genome
-
+  algorithm: ''
 bowtie2:
-  algorithm: '' # Algorithm for constructing BT2 index (default: '' (small))
-  # Available options, set only one:
-    ##- ''              # (default)
-    ##- '--large-index' # Force generated index to be "large"
-                        # even if reference has fewer than 4 billion nucleotides
-  sensitivity: '--very-sensitive' # Bowtie2 'sensitivity' preset (default: "--very-sensitive")
-  # Available preset options, set only one:
-    ##- '--very-sensitive' # Same as options: "-D 20 -R 3 -N 0 -L 20 -i S,1,0.50" (default)
-    ##- '--sensitive'      # Same as options: "-D 15 -R 2 -N 0 -L 22 -i S,1,1.15"
-    ##- '--fast'           # Same as options: "-D 10 -R 2 -N 0 -L 22 -i S,0,2.50"
-    ##- '--very-fast'      # Same as options: "-D 5 -R 1 -N 0 -L 22 -i S,0,2.50"
-
+  algorithm: ''
+  sensitivity: --very-sensitive
 minimap2:
   algorithm:
-    k-mer_size: '21'     # -k: k-mer size (default: "21", no larger than "28") [INT]
-    minimizer_size: '11' # -w: minimizer window size (default: "11") [INT]
-    split_size: '8G'     # -I: split index for every {NUM} input bases (default: "8G") [INT]
-    homopolymer: ''      # -H: use homopolymer-compressed k-mer  (default: '' (no))
-    # Available options, set only one: 
-      ##- ''   # no (default)
-      ##- '-H' # yes (preferrable for PacBio)
-
-  preset: 'sr' # -x: Minimap2 presets, always applied before other options (default: 'sr')
-    ##- 'sr'        # genomic short-read mapping, like Illumina (default)
-    ##- 'map-ont'   # Nanopore vs reference mapping
-    ##- 'ava-ont'   # Nanopore read overlap
-    ##- 'splice'    # Long-read spliced alignment
-    ##- 'map-pb'    # PacBio vs reference mapping
-    ##- 'map-hifi'  # PacBio HiFi reads vs reference mapping
-    ##- 'ava-pb'    # PacBio read overlap
-    ##- 'splice:hq' # Pacbio-CCS spliced alignment
-    ##- 'asm5'      # asm-to-ref mapping, for ~0.1% sequence divergence
-    ##- 'asm10'     # asm-to-ref mapping, for ~1.0% sequence divergence
-    ##- 'asm20'     # asm-to-ref mapping, for ~5.0% sequence divergence
-
-###############################################################################
-################################## TRIMMING ###################################
-###############################################################################
-
+    k-mer_size: '21'
+    minimizer_size: '11'
+    split_size: 8G
+    homopolymer: ''
+  preset: sr
 sickle_trim:
-  quality: '30'      # Phred score limit (default: "30")
-  length: '50'       # Read length limit after trim (default: "50")
-  command: 'pe'      # Reading (default and should be "pe" for paired-end sequences)
-  encoding: 'sanger' # Quality encoding (default SHOULD BE "sanger")
-  # Only for information:
-    ###- 'sanger'   # for CASAVA >= 1.8 for "recent" Illumina reads (default)
-    ###- 'illumina' # for CASAVA 1.3 to 1.7 for "old" Illumina reads
-    ###- 'solexa'   # for CASAVA < 1.3 for Solexa
-
+  quality: '30'
+  length: '50'
+  command: pe
+  encoding: sanger
 cutadapt:
-  clipping: '0' # Cut 'n' first nucleotides of each reads (default: 0)
-  length: '50' # Discard reads shorter than 'length' after trim (default: "50")
-  adapters: # Sequence of an adapter ligated to the 3' end of the first read (default: Illumina kits) [LIST]
-  # Available options (not exhaustive):
-    - 'AGATCGGAAGAGC'         # Illumina "TruSeq" or "ScriptSeq" based libraries kits (default)
-    - 'CTGTCTCTTATACACATC'    # Illumina "Nextera" or "TruSight" based libraries kits (default)
-    - 'TGGAATTCTCGGGTGCCAAGG' # Illumina "Small" based libraries kits (default)
-    #- 'your_custom_adapter'   # Add your custom adapter
-
-###############################################################################
-############################### QUALITY CONTROL ###############################
-###############################################################################
-
-multiqc: # TODO
-  path: 'config/multiqc/' # Path to the multiqc configuration file
-  config: 'default.yaml' # Multiqc configuration file (default: default.yaml)
-  # Available options (not exhaustive), set only one:
-    ##- 'default.yaml' # default
-    ##- ''             #
-  tag: '' # Use only modules which tagged with this keyword
-
+  clipping: '0'
+  length: '50'
+  adapters:
+  - AGATCGGAAGAGC
+  - CTGTCTCTTATACACATC
+  - TGGAATTCTCGGGTGCCAAGG
+multiqc:
+  path: config/multiqc/
+  config: default.yaml
+  tag: ''
 fastq_screen:
-  config: 'config/fastq-screen.conf' # Path to the fastq-screen configuration file
-  subset: '100000' # Don't use whole sequences, but a subset reads (default: "100000") [INT] (0=all)
-
-###############################################################################
-############################### RENAME SAMPLES ################################
-###############################################################################
-
-rename: # TODO
+  config: config/fastq-screen.conf
+  subset: '100000'
+rename:
   barcode_id: true
   line_id: true
   end_id: true
-
-###############################################################################
-################################### WORKFLOW ##################################
-###############################################################################
-
 resources:
-  cpus: '8' # Set maximum cpus usage (for multithreading, default: "8") [INT]
-  ram: '16' # Set maximum memory usage (in Gb, default: "16") [INT]
-  tmp_dir: '$TMPDIR' # Temporary directory.
-  # Available options (not exhaustive), set only one:
-    ## -'$TMPDIR'  # System variable $TMPDIR (default)
-    ## -'.'        # Local (i.e. GeVarLi directory)
-    ## -'/scratch' # HPC (set it to match your HPC usage)
-    ## -''         # Custom (set your own)
-
-envs: # Conda environement yaml files:
-  bcftools:      '../envs/bcftools_v.1.22.yaml'         # Bcftools      ver. 1.22
-  bedtools:      '../envs/bedtools_v.2.31.1.yaml'       # Bedtools      ver. 2.31.1
-  bowtie2:       '../envs/bowtie2_v.2.5.4.yaml'         # Bowtie2       ver. 2.5.4
-  bwa:           '../envs/bwa_v.0.7.19.yaml'            # BWA           ver. 0.7.19
-  cutadapt:      '../envs/cutadapt_v.5.2.yaml'          # Cutadapt      ver. 5.2
-  fastq_screen:  '../envs/fastq-screen_v.0.16.yaml'     # Fastq-Screen  ver. 0.16 (bwa=0.7.19 gdgraph=1.56)
-  fastqc:        '../envs/fastqc_v.0.12.1.yaml'         # FastQC        ver. 0.12.1
-  gawk:          '../envs/gawk_v.5.3.1.yaml'            # Awk (GNU)     ver. 5.3.1
-  ivar:          '../envs/ivar_v.1.4.4.yaml'            # iVar          ver. 1.4.4 (samtools=1.21)
-  minimap2:      '../envs/minimap2_v.2.30.yaml'         # Minimap2      ver. 2.30
-  multiqc:       '../envs/multiqc_v.1.32.yaml'          # MultiQC       ver. 1.32 (pandoc=3.7.0.2)
-  nextclade:     '../envs/nextclade_v.3.18.1.yaml'      # Nextclade     ver. 3.18.1
-  pangolin:      '../envs/pangolin_v.4.3.3.yaml'        # Pangolin      ver. 4.3.3
-  samtools:      '../envs/samtools_v.1.22.1.yaml'       # Samtools      ver. 1.22.1
-  sickle_trim:   '../envs/sickle-trim_v.1.33.yaml'      # Sickle-trim   ver. 1.33
-  tsv2vcf:       '../envs/tsv2vcf_v.2025.12.yaml'       # tsv2vcf       ver. : biopython=1.86 numpy=2.3.5 scipy=1.16.3
-  workflow:      '../envs/workflow-core.yaml'           # workflow      ver. : snakemake=9.14.3 psutil=7.1.3 graphviz=13.1.2
-
-report: # Snakemake reports formats
-
+  cpus: '8'
+  ram: '4'
+  tmp_dir: $TMPDIR
+envs:
+  bcftools: ../envs/bcftools_v.1.22.yaml
+  bedtools: ../envs/bedtools_v.2.31.1.yaml
+  bowtie2: ../envs/bowtie2_v.2.5.4.yaml
+  bwa: ../envs/bwa_v.0.7.19.yaml
+  cutadapt: ../envs/cutadapt_v.5.2.yaml
+  fastq_screen: ../envs/fastq-screen_v.0.16.yaml
+  fastqc: ../envs/fastqc_v.0.12.1.yaml
+  gawk: ../envs/gawk_v.5.3.1.yaml
+  ivar: ../envs/ivar_v.1.4.4.yaml
+  minimap2: ../envs/minimap2_v.2.30.yaml
+  multiqc: ../envs/multiqc_v.1.21.yaml
+  nextclade: ../envs/nextclade_v.3.18.1.yaml
+  pangolin: ../envs/pangolin_v.4.3.3.yaml
+  samtools: ../envs/samtools_v.1.22.1.yaml
+  sickle_trim: ../envs/sickle-trim_v.1.33.yaml
+  tsv2vcf: ../envs/tsv2vcf_v.2025.12.yaml
+  workflow: ../envs/workflow-core.yaml
+report:
   stat:
     extention:
-      - 'txt'
-      - 'tsv'
-      - 'json'
-
+    - txt
+    - tsv
+    - json
   graph:
     type:
-      - 'dag'
-      - 'rulegraph'
-      - 'filegraph'
+    - dag
+    - rulegraph
+    - filegraph
     extention:
-      - 'png'
-      - 'svg'
-      - 'pdf'
-
-###############################################################################
-###############################################################################
+    - png
+    - svg
+    - pdf

@@ -1,3 +1,7 @@
+stages:
+  - test
+  - deploy
+
 image: ubuntu:jammy
 
 workflow:
@@ -7,29 +11,49 @@ workflow:
 cache:
   key: $CI_COMMIT_REF_SLUG
 
-before_script:
-  - apt-get update
-  - apt-get upgrade -y
-  - apt-get install -y python3-pip
-  - pip install mkdocs-material
-  - pip install pymdown-extensions
-  - pip install mkdocs-minify-plugin
-  - pip install mkdocs-macros-plugin
-  - pip install mkdocs-embed-external-markdown
-  - pip install mkdocs-include-markdown-plugin
-
-test:
+# -----------------------------------------------------------------------------
+# Pipeline Validation (Snakemake DAG & dry-run validation on test dataset)
+# -----------------------------------------------------------------------------
+test_pipeline:
   stage: test
+  image: ubuntu:jammy
+  before_script:
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip install "pulp<2.8" snakemake pyyaml
   script:
-    - mkdocs build --strict --verbose --site-dir test --config-file documentations/mkdocs.yaml
+    - snakemake --directory . --snakefile workflow/Snakefile --configfile config/config.yaml --dry-run
+  rules:
+    - if: $CI_COMMIT_BRANCH
+
+# -----------------------------------------------------------------------------
+# Documentation Build Validation (Strict mode for branch commits / MRs)
+# -----------------------------------------------------------------------------
+test_docs:
+  stage: test
+  image: ubuntu:jammy
+  before_script:
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip install mkdocs-material pymdown-extensions mkdocs-minify-plugin mkdocs-macros-plugin mkdocs-embed-external-markdown mkdocs-include-markdown-plugin pyyaml
+  script:
+    - mkdocs build --strict --verbose --site-dir ../test --config-file docs/mkdocs.yaml
   artifacts:
     paths:
       - test
   rules:
     - if: $CI_COMMIT_REF_NAME != $CI_DEFAULT_BRANCH
 
+# -----------------------------------------------------------------------------
+# Documentation Deployment to GitLab Pages (on default branch 'main')
+# -----------------------------------------------------------------------------
 pages:
   stage: deploy
+  image: ubuntu:jammy
+  before_script:
+    - apt-get update
+    - apt-get install -y python3-pip
+    - pip install mkdocs-material pymdown-extensions mkdocs-minify-plugin mkdocs-macros-plugin mkdocs-embed-external-markdown mkdocs-include-markdown-plugin pyyaml
   script:
     - mkdocs build --verbose --config-file docs/mkdocs.yaml
   artifacts:
@@ -37,4 +61,3 @@ pages:
       - public
   rules:
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-  

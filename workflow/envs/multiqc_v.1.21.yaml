@@ -1,0 +1,8 @@
+name: multiqc_v.1.21
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+dependencies:
+  - multiqc=1.21 # issue with v.1.32
+

@@ -1,0 +1,133 @@
+executor: slurm
+jobs: 100
+use-conda: true
+rerun-incomplete: true
+keep-going: true
+printshellcmds: true
+latency-wait: 60
+slurm-jobname-prefix: "gevarli"
+
+default-resources:
+  mem_mb: 8000
+  runtime: 120
+  slurm_partition: normal
+  constraint: "infiniband"
+
+set-resources:
+  # Quality control
+  fastqc_quality_control:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 4000
+  fastqscreen_contamination_check:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  bowtie2_qc_indexing:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+
+  # Trimming & Cleaning
+  cutadapt_adapters_removing:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 4000
+  sickle_trim_quality:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 4000
+
+  # Indexing & Mapping
+  bwa_genome_indexing:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  bwa_mapping:
+    slurm_partition: normal
+    runtime: 120
+    mem_mb: 16000
+  minimap2_genome_indexing:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  minimap2_mapping:
+    slurm_partition: normal
+    runtime: 120
+    mem_mb: 16000
+  bowtie2_genome_indexing:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  bowtie2_mapping:
+    slurm_partition: normal
+    runtime: 120
+    mem_mb: 16000
+
+  # Alignment processing
+  samtools_sort_trimmed:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 8000
+  samtools_index_trimmed:
+    slurm_partition: normal
+    runtime: 30
+    mem_mb: 4000
+  samtools_markdup:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  samtools_fixmate:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 8000
+  samtools_sortbynames:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 8000
+
+  # Trimming & Variants
+  ivar_trim:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  ivar_variant_calling:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  convert_tsv2vcf:
+    slurm_partition: normal
+    runtime: 30
+    mem_mb: 2000
+  ivar_consensus:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 4000
+
+  # Lineages
+  nextclade_lineage:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 8000
+  pangolin_lineage:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+
+  # Coverage & Reporting
+  bedtools_genome_coverage:
+    slurm_partition: normal
+    runtime: 60
+    mem_mb: 8000
+  awk_coverage_statistics:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 4000
+  multiqc_aggregation:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 4000
+  snakemake_report:
+    slurm_partition: normal
+    runtime: 45
+    mem_mb: 4000
