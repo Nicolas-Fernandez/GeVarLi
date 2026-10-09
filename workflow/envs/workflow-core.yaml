@@ -4,8 +4,8 @@ channels:
   - bioconda
   - nodefaults
 dependencies:
-  - python>=3.12
-  - snakemake-minimal>=9.14.3
+  - python=3.12
+  - snakemake-minimal=9.27.0
   - snakemake-executor-plugin-slurm
   - snakemake-interface-report-plugins
   - snakemake-interface-storage-plugins
