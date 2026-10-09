@@ -2,7 +2,7 @@ fastq_dir: /Users/2021nf001/git/workflow_snakemake/GeVarLi/resources/reads
 modules:
   qualities: true
   keeptrim: false
-  clipping: false
+  clipping: true
   covstats: true
   consensus: true
   lineages: true
