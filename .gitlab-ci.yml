@@ -22,7 +22,7 @@ test_pipeline:
     - apt-get install -y python3-pip
     - pip install "pulp<2.8" snakemake pyyaml
   script:
-    - snakemake --directory . --snakefile workflow/Snakefile --configfile config/config.yaml --dry-run
+    - snakemake --directory . --snakefile workflow/Snakefile --configfile config/config.yaml --config fastq_dir='.test/reads/' --dry-run
   rules:
     - if: $CI_COMMIT_BRANCH
 
