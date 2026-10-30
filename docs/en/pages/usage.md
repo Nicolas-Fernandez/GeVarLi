@@ -1,182 +1,122 @@
 # **Usage**
 
-## **Quick start**
+## **Quick Start**
 
-To start your first analysis:
+### **Standard Analysis**
 
-1. Copy your **paired-end** reads files, in **.fastq.gz** format, into: **./resources/reads/** directory
+To run your analysis with GeVarLi:
 
-!!! note
-   Without reads, SARS-CoV-2 from ```./resources/test\_data/``` directory will be used
+1. **Place your paired-end FASTQ reads** (in `.fastq.gz` format) into the `resources/reads/` directory:
+   ```shell
+   mkdir -p resources/reads
+   cp /path/to/your/reads/*_R{1,2}*.fastq.gz resources/reads/
+   ```
 
-2. Execute **Run_GeVarLi.sh** bash script to run GeVarLi pipeline:
-    - or with a **Double-click** on it _(if you make .sh files executable files with Terminal.app)_
-	- or with a **Right-click** > **Open with** > **Terminal.app**
-	- or with **CLI** from a terminal:
+2. **Execute GeVarLi**:
+   * **Local workstation**:
+     ```shell
+     bash Run_GeVarLi.sh
+     ```
+   * **HPC cluster with Slurm (e.g. IRD i-Trop)**:
+     ```shell
+     bash run_gevarli_itrop-slurm-hpc.sh
+     ```
 
-!!! shell
-    _Exemple script to rin GeVarLi_
-    ```shell
-    ./Run_GeVarLi.sh
-    ```
+3. **Monitor and retrieve results**:
+   Output files will be generated in `results/`, including consensus sequences, variant calls, coverage metrics, and MultiQC reports.
 
-!!! warning
-   If your reads were generated with an **amplicon protocol**, you will also need to provide the **amplicon primer coordinates** in **BEDPE** format, so the **primers are trimmed appropriately** using **bamclipper**.
+---
 
-!!! tip
-   If you don't know the amplicon primer coordinates or don't have coordinates in **BEDPE** format, you can use **cutadapt** to hard-trim the first N nucleotides of your reads (N = yours amplicon primers length). 
+### **Running Built-in Tests**
 
-3. Yours analyzes will start, with default configuration settings  
+GeVarLi includes a lightweight, pre-configured SARS-CoV-2 test dataset (< 500 KB) in [`.test/reads/`](file:///Users/2021nf001/git/workflow_snakemake/GeVarLi/.test/reads).
 
-!!! note
-   Edit **config.yaml** file in ```./configuration/``` directory.  
-   Edit **fastq-screen.conf** file in```./configuration/``` directory.
+* **Fast dry-run check (DAG resolution)**:
+  ```shell
+  snakemake -n --config fastq_dir='.test/reads/'
+  ```
 
-## **Files tree**
+* **Full test execution with the standard wrapper**:
+  ```shell
+  mkdir -p resources/reads
+  cp .test/reads/* resources/reads/
+  bash Run_GeVarLi.sh
+  ```
+
+---
+
+## **Amplicon Primers Trimming**
+
+If your library was sequenced with an amplicon-based protocol (such as ARTIC), provide primer coordinates in **BEDPE** format in `resources/primers/bedpe/` to ensure primers are clipped with **Bamclipper**.  
+Alternatively, set up hard-clipping using **Cutadapt** in `config/config.yaml`.
+
+---
+
+## **Project Structure**
 
 ```shell
 🧩 GeVarLi/
 │
-├── 🖥️️ Run_GeVarLi.sh
-├── 📜 Snakefile
-├── 📚 README.md
-├── 📚 CODE_OF_CONDUCT.md
-├── 🪪 LICENSE.txt
-├── 🚫 .gitignore
-├── 📂 .git/
-├── 📂 .snakemake/
+├── 🖥️ Run_GeVarLi.sh                   # Standard execution script
+├── 🖥️ run_gevarli_itrop-slurm-hpc.sh   # Slurm HPC launcher (i-Trop)
+├── ⚙️ mkdocs.yaml                      # Documentation configuration
+├── 📜 README.md                        # Project overview and badges
+├── 📜 CONTRIBUTING.md                  # Community contribution guide
+├── 📜 CODE_OF_CONDUCT.md               # Contributor covenant code of conduct
+├── 📜 CITATION.cff                     # Citation metadata
+├── 📜 CHANGELOG.md                     # Version changelog
+├── 🪪 LICENSE                          # GNU AGPLv3 license
+├── 🔢 VERSION                          # Version identifier
+├── 🚫 .gitignore                       # Ignored files (results, reads)
+├── ⚙️ .gitlab-ci.yml                   # CI/CD testing and Pages deployment
 │
-├── 📂 configuration/
-│   │
-│   ├── ⚙️ config.yaml
-│   ├── ⚙️ fastq-screen.conf
-│   └── ⚙️ multiqc.yaml
+├── 📂 .gitlab/                         # Issue and MR templates
+│   └── 📂 issue_templates/
+│       ├── 📄 Bug.md
+│       └── 📄 Feature.md
 │
+├── 📂 .test/                           # Lightweight test datasets (< 500 KB)
+│   └── 📂 reads/
+│       ├── 📦 SARS-CoV-2_Omicron-BA1_..._R1.fastq.gz
+│       └── 📦 SARS-CoV-2_Omicron-BA1_..._R2.fastq.gz
 │
-├── 📂 workflow/
-│   │
-│   ├── 📂 environments/
-│   │   │
-│   │   ├── 🍜 {TOOL}_v.{VERSION}.yaml
-│   │   └── 🍜 workflow-base_v.{VERSION}.yaml
-│   │
-│   └── 📂 snakefiles/
-│       │
-│       ├── 📜 gevarli.smk
-│       └── 📜 indexing_genomes.smk
+├── 📂 config/                          # Workflow configuration
+│   ├── ⚙️ config.yaml                  # Main pipeline parameters
+│   ├── ⚙️ fastq-screen.conf            # Contamination database settings
+│   └── ⚙️ multiqc.yaml                 # MultiQC report template
 │
-├── 📂 resources/
-│   │
-│   ├── 📂 genomes/
-│   │   │
-│   │   ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
-│   │   ├── 🧬 Monkeypox-virus_Zaire_AF-380138-1.fasta
-│   │   ├── 🧬 {REFERENCE}.fasta
-│   │   ├── 🧬 QC_Phi-X174_Coliphage_NC-001422-1.fasta
-│   │   └── 🧬 QC_{REFERENCE}.fasta
-│   │
-│   ├── 📂 indexes/
-│   │   │
-│   │   ├── 📂 minimap2/
-│   │   │   │
-│   │   │   └── 🗂️ {GENOME}.mmi
-│   │   │
-│   │   ├── 📂 bwa/
-│   │   │   │
-│   │   │   ├── 🗂️ {GENOME}.amb
-│   │   │   ├── 🗂️ {GENOME}.ann
-│   │   │   ├── 🗂️ {GENOME}.bwt
-│   │   │   ├── 🗂️ {GENOME}.pac
-│   │   │   └── 🗂️ {GENOME}.sa
-│   │   │
-│   │   └── 📂 bowtie2/
-│   │       │
-│   │       ├── 🗂️ {GENOME}.1.bt2
-│   │       ├── 🗂️ {GENOME}.2.bt2
-│   │       ├── 🗂️ {GENOME}.3.bt2
-│   │       ├── 🗂️ {GENOME}.4.bt2
-│   │       ├── 🗂️ {GENOME}.rev.1.bt2
-│   │       └── 🗂️ {GENOME}.rev.2.bt2
-│   │
-│   ├── 📂 nextclade/
-│   │   │
-│   │   └── 📂 {DATABASE}/
-│   │       │
-│   │       ├── 🌍 genemap.gff
-│   │       ├── 🧪 primers.csv
-│   │       ├── ✅ qc.json
-│   │       ├── 🦠 reference.fasta
-│   │       ├── 🧬 sequences.fasta
-│   │       ├── 🏷️ tag.json
-│   │       └── 🌳 tree.json
-│   │
-│   ├── 📂 reads/
-│   │   │
-│   │   ├── 🛡️ .gitkeep
-│   │   ├── 📦 {SAMPLE}_R1.fastq.gz
-│   │   └── 📦 {SAMPLE}_R2.fastq.gz
-│   │
-│   ├── 📂 primers/
-│   │   │
-│   │   ├── 📂 bedpe/
-│   │   ├── 📂 bed/
-│   │   └── 📂 fasta/
-│   │
-│   ├── 📂 annotations/
-│   │   │
-│   │   ├──  SARS-CoV-2_Wuhan_MN-908947-3.bed
-│   │   └──  SARS-CoV-2_Wuhan_MN-908947-3.gff3
-│   │
-│   └── 📂 data_test/
-│       │
-│       ├── 🛡️ .gitkeep
-│       ├── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
-│       └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
+├── 📂 workflow/                        # Snakemake pipeline core
+│   ├── 📜 Snakefile                    # Master workflow entry point
+│   ├── 📂 envs/                        # Conda software environments
+│   │   ├── 🍜 workflow-core.yaml       # Orchestrator environment
+│   │   └── 🍜 {TOOL}.yaml              # Tool-specific isolated environments
+│   └── 📂 rules/                       # Modular workflow rules
+│       ├── 📜 genomes_indexing.smk     # NCBI Entrez fetching and indexing
+│       ├── 📜 quality_control.smk      # FastQC and Fastq-Screen rules
+│       ├── 📜 reads_trimming.smk       # Cutadapt and Sickle trimming
+│       ├── 📜 reads_mapping.smk        # BWA/Minimap2 mapping & Bamclipper
+│       ├── 📜 variants_calling.smk     # iVar SNV calling and VCF formatting
+│       ├── 📜 consensus_calling.smk    # Masked consensus generation
+│       ├── 📜 lineages_calling.smk     # Nextclade dataset fetch and lineage
+│       └── 📜 multiqc_reporting.smk    # Aggregated HTML reporting
 │
-└── 📂 documentation/
-    │
-    ├── ⚙️ mkdocs.yaml
+├── 📂 resources/                       # Inputs and databases
+│   ├── 📂 reads/                       # Input FASTQ directory (user reads)
+│   ├── 📂 genomes/                     # Reference FASTA genomes
+│   │   ├── 📂 viruses/                 # On-demand NCBI Entrez fetched references
+│   │   └── 📂 fastq-screen/            # QC screening references (PhiX, etc.)
+│   ├── 📂 nextclade/                   # On-demand Nextclade lineage datasets
+│   └── 📂 primers/                     # Amplicon schemes (BEDPE, BED, FASTA)
+│
+├── 📂 results/                         # Generated outputs (gitignored)
+│   ├── 🧬 All_{REF}_consensus_sequences.fasta
+│   ├── 📊 All_{REF}_genome_coverages.tsv
+│   ├── 📊 All_{REF}_nextclade_lineages.tsv
+│   └── 📂 10_Reports/                  # Execution summary and HTML reports
+│
+└── 📂 docs/                            # Bilingual web documentation
     ├── 🌐 extra.css
-    │
     ├── 📂 images/
-    │   │
-    │   ├── 📈 afroscreen.jpeg
-    │   ├── 📈 download_button.png
-    │   ├── 📈 GeVarLi_by_DALL-E_icone.png
-    │   ├── 📈 gevarli_filegraph.png
-    │   └── 📈 gevarli_rulegraph.png
-    │
-    ├── 📂 en/
-    │   │
-    │   ├── 📚 index.md
-    │   │
-    │   └── 📂 pages/
-    │       │
-    │       ├── 📚 acknowledgedments.md
-    │       ├── 📚 afroscreen
-    │       ├── 📚 configurations.md
-    │       ├── 📚 contributions.md
-    │       ├── 📚 features.md
-    │       ├── 📚 glossary.md
-    │       ├── 📚 installations.md
-    │       ├── 📚 references.md
-    │       ├── 📚 results.md
-    │       └── 📚 usage.md
-    │
-    └── 📂 fr/
-        │
-        ├── 📚 index.md
-        │
-        └── 📂 pages/
-            │
-            ├── 📚 acknowledgedments.md
-            ├── 📚 afroscreen
-            ├── 📚 configurations.md
-            ├── 📚 contributions.md
-            ├── 📚 features.md
-            ├── 📚 glossary.md
-            ├── 📚 installations.md
-            ├── 📚 references.md
-            ├── 📚 results.md
-            └── 📚 usage.md
+    ├── 📂 en/                          # English documentation pages
+    └── 📂 fr/                          # French documentation pages
 ```

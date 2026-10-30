@@ -1,22 +1,26 @@
 # **Résultats**
 
-Les résultats sont disponible dans le répertoire **./results/** .
+Les résultats sont disponibles dans le répertoire **./results/**.
 
-Ils sont organisés comme ceci :
+Ils sont organisés comme suit :
 
-- Racine : Les fichiers concaternés pour tout les échantillons, 1 par référence utilisées
+- **Racine (`results/`)** : Fichiers concaténés récapitulatifs pour l'ensemble des échantillons (un par référence utilisée) :
+    * Les séquences consensus (FASTA)
+    * Les statistiques de couverture du génome (TSV)
+    * Les lignées Nextclade et les métriques de qualité (TSV)
+    * Les lignées Pangolin, si appelées (TSV)
+- **00_Quality_Control** : Rapports de contrôle qualité sur les lectures brutes (FastQC, Fastq-Screen, MultiQC)
+- **01_Trimming** : Lectures nettoyées des adaptateurs et filtrées par qualité
+- **02_Mapping** : Fichiers d'alignement des lectures (BAM et index BAI)
+- **03_Coverage** : Statistiques de couverture et fichiers BED de masquage
+- **04_Variants** : Fichiers de variants identifiés et filtrés (VCF)
+- **05_Consensus** : Séquences consensus virales assemblées (FASTA)
+- **06_Lineages** : Rapports d'assignation des lignées et clades (Nextclade / Pangolin)
+- **10_Reports** : Synthèse globale du workflow, environnements Conda, logs d'exécution et graphes (DAG, rulegraph, filegraph)
 
-    * les consensus (FASTA)
-    * les statistiques de couverture (TSV)
-    * les lignées Nextclade et la qualité des consensus (TSV)
-    * les lignées Pangolin, si appelé (TSV)
-
-- 00 - Contrôle Qualité : les fichiers de qualités sur les lectures brutes (FASTQ)
-  * test
-  
 !!! tip
-    Les fichiers étiqueté comme **[TEMP]** sont supprimés par défaut, afin de préserver l'espace disque.  
-	Si vous souhaiter les conserver, veuiller éditer le fichier de **configuration**.
+    Les fichiers étiquetés comme **#[TEMP]** sont automatiquement supprimés par défaut afin de préserver l'espace disque.  
+    Si vous souhaitez les conserver, veuillez modifier le fichier de configuration `config.yaml`.
 
 ## **Arborescence des fichiers**
 ```shell
