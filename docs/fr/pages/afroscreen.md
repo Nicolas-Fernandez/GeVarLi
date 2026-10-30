@@ -23,7 +23,7 @@ Sur le long terme, le programme consolidera des plateformes technologiques en st
 
 ## **Réseau**
 
-Le projet AFROSCREEN structure un [réseau]((https://www.afroscreen.org/en/network)) de 25 laboratoires, centres de référence et partenaires, dans 13 pays d’Afrique.
+Le projet AFROSCREEN structure un [réseau](https://www.afroscreen.org/en/network) de 25 laboratoires, centres de référence et partenaires, dans 13 pays d’Afrique.
 
 ## **Actions**
 

@@ -9,8 +9,8 @@
 ![GNU AGPL v3](<https://badgen.net/badge/Licence/GNU AGPL v3/grey?scale=0.9>)
 ![Gitlab](<https://badgen.net/badge/icon/Gitlab/orange?icon=gitlab&label&scale=0.9>)
 ![Bash](<https://badgen.net/badge/icon/Bash 3.2.57/black?icon=terminal&label&scale=0.9>)
-![Python](<https://badgen.net/badge/icon/Python 3.12.7/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
-![Snakemake](<https://badgen.net/badge/icon/Snakemake 8.25.3/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
+![Python](<https://badgen.net/badge/icon/Python 3.12/black?icon=https://upload.wikimedia.org/wikipedia/commons/0/0a/Python.svg&label&scale=0.9>)
+![Snakemake](<https://badgen.net/badge/icon/Snakemake 9.27.0/black?icon=https://upload.wikimedia.org/wikipedia/commons/d/d3/Python_icon_%28black_and_white%29.svg&label&scale=0.9>)
 ![Conda](<https://badgen.net/badge/icon/Conda 24.11.0/black?icon=codacy&label&scale=0.9>)
 
 # GeVarLi: **GE**nome assembly, **VAR**iant calling and **LI**neage assignation
@@ -24,9 +24,9 @@
 
 ## Support
 
-  - Documentations: [Read The Fabulous Manual](https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/)
+  - Documentation: [English (en)](https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/en/) | [Français (fr)](https://transvihmi.pages.ird.fr/nfernandez/GeVarLi/fr/)
   - Raise issues and report bugs: [https://forge.ird.fr](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/issues)
-  - Contact: [nicolas.fernandez@ird.fr](nicolas.fernandez@ird.fr)
+  - Contact: [nicolas.fernandez@ird.fr](mailto:nicolas.fernandez@ird.fr)
 
 ## Citation
 

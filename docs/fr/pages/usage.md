@@ -2,181 +2,121 @@
 
 ## **Démarrage rapide**
 
-Pour lancer votre première analyse :
+### **Analyse standard**
 
-1. Copiez vos fichiers de lectures paired-end, au format .fastq.gz, dans le répertoire ./resources/reads/.
+Pour lancer vos analyses avec GeVarLi :
 
-!!! note
-   Sans fichiers de lectures, les données de test SARS-CoV-2 du répertoire ```./resources/test_data/``` seront utilisées.
-   
-2. Exécutez le script bash Run_GeVarLi.sh pour lancer le pipeline GeVarLi :
-	- soit avec un double-clic dessus (si vous avez rendu les fichiers .sh exécutables avec Terminal.app),
-	- soit avec un clic droit > Ouvrir avec > Terminal.app,
-	- soit avec l’interface CLI depuis un terminal :
-	
-!!! shell
-    _Exemple de script lançant GeVarLi_
-    ```shell
-    ./Run_GeVarLi.sh
-    ```
+1. **Placez vos lectures FASTQ appariées** (au format `.fastq.gz`) dans le répertoire `resources/reads/` :
+   ```shell
+   mkdir -p resources/reads
+   cp /chemin/vers/vos/lectures/*_R{1,2}*.fastq.gz resources/reads/
+   ```
 
-!!! warning
-   Si vos lectures ont été générées avec un **protocole d’amplification**, vous devrez également fournir les **coordonnées des amorces d’amplification** au format **BEDPE**, afin que les **amorces soient correctement retirées** en utilisant **bamclipper**.
+2. **Exécutez GeVarLi** :
+   * **Sur station de travail locale** :
+     ```shell
+     bash Run_GeVarLi.sh
+     ```
+   * **Sur cluster de calcul HPC avec Slurm (ex : IRD i-Trop)** :
+     ```shell
+     bash run_gevarli_itrop-slurm-hpc.sh
+     ```
 
-!!! tip 
-   Si vous ne connaissez pas les coordonnées des amorces d'amplification ou si vous n'avez pas de coordonnées au format **BEDPE**, vous pouvez utiliser **cutadapt** pour retirer de force les N premiers nucléotides de vos lectures (N = longueur de vos amorces d'amplification).
+3. **Consultez les résultats** :
+   Les fichiers produits sont générés dans `results/`, incluant les séquences consensus, les tableaux de couverture, l'appel de variants et le rapport MultiQC.
 
-3. Vos analyses démarreront avec les paramètres de configuration par défaut.
+---
 
-!!! note
-   - Modifiez le fichier config.yaml dans le répertoire ```./configuration/```.  
-   - Modifiez le fichier fastq-screen.conf dans le répertoire ```./configuration/```.
-   
-## **Arborescence des fichiers**
+### **Exécuter les tests intégrés**
+
+GeVarLi inclut un jeu de données de test officiel et ultra-léger (< 500 Ko) dans [`.test/reads/`](file:///Users/2021nf001/git/workflow_snakemake/GeVarLi/.test/reads).
+
+* **Test rapide à blanc (Dry-run / Résolution du DAG)** :
+  ```shell
+  snakemake -n --config fastq_dir='.test/reads/'
+  ```
+
+* **Exécution complète du test avec le script wrapper** :
+  ```shell
+  mkdir -p resources/reads
+  cp .test/reads/* resources/reads/
+  bash Run_GeVarLi.sh
+  ```
+
+---
+
+## **Rognage des amorces d'amplicons**
+
+Si vos banques ont été produites avec un protocole à base d'amplicons (comme ARTIC), fournissez les coordonnées des amorces au format **BEDPE** dans `resources/primers/bedpe/` pour qu'elles soient retirées via **Bamclipper**.  
+Il est également possible de configurer un rognage direct via **Cutadapt** dans `config/config.yaml`.
+
+---
+
+## **Arborescence du projet**
 
 ```shell
 🧩 GeVarLi/
 │
-├── 🖥️️ Run_GeVarLi.sh
-├── 📜 Snakefile
-├── 📚 README.md
-├── 📚 CODE_OF_CONDUCT.md
-├── 🪪 LICENSE.txt
-├── 🚫 .gitignore
-├── 📂 .git/
-├── 📂 .snakemake/
+├── 🖥️ Run_GeVarLi.sh                   # Script d'exécution standard
+├── 🖥️ run_gevarli_itrop-slurm-hpc.sh   # Lanceur Slurm pour cluster HPC (i-Trop)
+├── ⚙️ mkdocs.yaml                      # Configuration de la documentation
+├── 📜 README.md                        # Présentation générale et badges
+├── 📜 CONTRIBUTING.md                  # Guide de contribution
+├── 📜 CODE_OF_CONDUCT.md               # Charte de bonne conduite
+├── 📜 CITATION.cff                     # Métadonnées de citation
+├── 📜 CHANGELOG.md                     # Historique des versions
+├── 🪪 LICENSE                          # Licence GNU AGPLv3
+├── 🔢 VERSION                          # Numéro de version
+├── 🚫 .gitignore                       # Fichiers exclus du suivi Git
+├── ⚙️ .gitlab-ci.yml                   # Validation CI/CD et déploiement Pages
 │
-├── 📂 configuration/
-│   │
-│   ├── ⚙️ config.yaml
-│   ├── ⚙️ fastq-screen.conf
-│   └── ⚙️ multiqc.yaml
+├── 📂 .gitlab/                         # Modèles de tickets et Merge Requests
+│   └── 📂 issue_templates/
+│       ├── 📄 Bug.md
+│       └── 📄 Feature.md
 │
+├── 📂 .test/                           # Jeux de données tests légers (< 500 Ko)
+│   └── 📂 reads/
+│       ├── 📦 SARS-CoV-2_Omicron-BA1_..._R1.fastq.gz
+│       └── 📦 SARS-CoV-2_Omicron-BA1_..._R2.fastq.gz
 │
-├── 📂 workflow/
-│   │
-│   ├── 📂 environments/
-│   │   │
-│   │   ├── 🍜 {TOOL}_v.{VERSION}.yaml
-│   │   └── 🍜 workflow-base_v.{VERSION}.yaml
-│   │
-│   └── 📂 snakefiles/
-│       │
-│       ├── 📜 gevarli.smk
-│       └── 📜 indexing_genomes.smk
+├── 📂 config/                          # Configuration du workflow
+│   ├── ⚙️ config.yaml                  # Paramètres principaux du pipeline
+│   ├── ⚙️ fastq-screen.conf            # Paramètres de dépistage des contaminations
+│   └── ⚙️ multiqc.yaml                 # Modèle de rapport MultiQC
 │
-├── 📂 resources/
-│   │
-│   ├── 📂 genomes/
-│   │   │
-│   │   ├── 🧬 SARS-CoV-2_Wuhan_MN-908947-3.fasta
-│   │   ├── 🧬 Monkeypox-virus_Zaire_AF-380138-1.fasta
-│   │   ├── 🧬 {REFERENCE}.fasta
-│   │   ├── 🧬 QC_Phi-X174_Coliphage_NC-001422-1.fasta
-│   │   └── 🧬 QC_{REFERENCE}.fasta
-│   │
-│   ├── 📂 indexes/
-│   │   │
-│   │   ├── 📂 minimap2/
-│   │   │   │
-│   │   │   └── 🗂️ {GENOME}.mmi
-│   │   │
-│   │   ├── 📂 bwa/
-│   │   │   │
-│   │   │   ├── 🗂️ {GENOME}.amb
-│   │   │   ├── 🗂️ {GENOME}.ann
-│   │   │   ├── 🗂️ {GENOME}.bwt
-│   │   │   ├── 🗂️ {GENOME}.pac
-│   │   │   └── 🗂️ {GENOME}.sa
-│   │   │
-│   │   └── 📂 bowtie2/
-│   │       │
-│   │       ├── 🗂️ {GENOME}.1.bt2
-│   │       ├── 🗂️ {GENOME}.2.bt2
-│   │       ├── 🗂️ {GENOME}.3.bt2
-│   │       ├── 🗂️ {GENOME}.4.bt2
-│   │       ├── 🗂️ {GENOME}.rev.1.bt2
-│   │       └── 🗂️ {GENOME}.rev.2.bt2
-│   │
-│   ├── 📂 nextclade/
-│   │   │
-│   │   └── 📂 {DATABASE}/
-│   │       │
-│   │       ├── 🌍 genemap.gff
-│   │       ├── 🧪 primers.csv
-│   │       ├── ✅ qc.json
-│   │       ├── 🦠 reference.fasta
-│   │       ├── 🧬 sequences.fasta
-│   │       ├── 🏷️ tag.json
-│   │       └── 🌳 tree.json
-│   │
-│   ├── 📂 reads/
-│   │   │
-│   │   ├── 🛡️ .gitkeep
-│   │   ├── 📦 {SAMPLE}_R1.fastq.gz
-│   │   └── 📦 {SAMPLE}_R2.fastq.gz
-│   │
-│   ├── 📂 primers/
-│   │   │
-│   │   ├── 📂 bedpe/
-│   │   ├── 📂 bed/
-│   │   └── 📂 fasta/
-│   │
-│   ├── 📂 annotations/
-│   │   │
-│   │   ├──  SARS-CoV-2_Wuhan_MN-908947-3.bed
-│   │   └──  SARS-CoV-2_Wuhan_MN-908947-3.gff3
-│   │
-│   └── 📂 data_test/
-│       │
-│       ├── 🛡️ .gitkeep
-│       ├── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R1.fastq.gz
-│       └── 📦 SARS-CoV-2_Omicron-BA1_Covid-Seq-Lib-on-MiSeq_250000-reads_R2.fastq.gz
+├── 📂 workflow/                        # Cœur du pipeline Snakemake
+│   ├── 📜 Snakefile                    # Point d'entrée principal
+│   ├── 📂 envs/                        # Définition des environnements Conda
+│   │   ├── 🍜 workflow-core.yaml       # Environnement de l'orchestrateur
+│   │   └── 🍜 {TOOL}.yaml              # Environnements isolés par outil
+│   └── 📂 rules/                       # Règles Snakemake modulaires
+│       ├── 📜 genomes_indexing.smk     # Téléchargement NCBI et indexation
+│       ├── 📜 quality_control.smk      # Règles FastQC et Fastq-Screen
+│       ├── 📜 reads_trimming.smk       # Rognage Cutadapt et Sickle
+│       ├── 📜 reads_mapping.smk        # Alignement BWA/Minimap2 & Bamclipper
+│       ├── 📜 variants_calling.smk     # Appel de variants iVar et format VCF
+│       ├── 📜 consensus_calling.smk    # Assemblage du consensus masqué
+│       ├── 📜 lineages_calling.smk     # Téléchargement Nextclade et lignées
+│       └── 📜 multiqc_reporting.smk    # Agrégation des rapports MultiQC
 │
-└── 📂 documentation/
-    │
-    ├── ⚙️ mkdocs.yaml
+├── 📂 resources/                       # Données d'entrée et bases de données
+│   ├── 📂 reads/                       # Répertoire des FASTQ utilisateurs
+│   ├── 📂 genomes/                     # Fichiers FASTA de référence
+│   │   ├── 📂 viruses/                 # Références NCBI téléchargées à la demande
+│   │   └── 📂 fastq-screen/            # Références de contrôle qualité (PhiX...)
+│   ├── 📂 nextclade/                   # Datasets Nextclade récupérés à la demande
+│   └── 📂 primers/                     # Schémas d'amorces (BEDPE, BED, FASTA)
+│
+├── 📂 results/                         # Fichiers de résultats (exclus de Git)
+│   ├── 🧬 All_{REF}_consensus_sequences.fasta
+│   ├── 📊 All_{REF}_genome_coverages.tsv
+│   ├── 📊 All_{REF}_nextclade_lineages.tsv
+│   └── 📂 10_Reports/                  # Synthèse d'exécution et rapports HTML
+│
+└── 📂 docs/                            # Documentation web bilingue
     ├── 🌐 extra.css
-    │
     ├── 📂 images/
-    │   │
-    │   ├── 📈 afroscreen.jpeg
-    │   ├── 📈 download_button.png
-    │   ├── 📈 GeVarLi_by_DALL-E_icone.png
-    │   ├── 📈 gevarli_filegraph.png
-    │   └── 📈 gevarli_rulegraph.png
-    │
-    ├── 📂 en/
-    │   │
-    │   ├── 📚 index.md
-    │   │
-    │   └── 📂 pages/
-    │       │
-    │       ├── 📚 acknowledgedments.md
-    │       ├── 📚 afroscreen
-    │       ├── 📚 configurations.md
-    │       ├── 📚 contributions.md
-    │       ├── 📚 features.md
-    │       ├── 📚 glossary.md
-    │       ├── 📚 installations.md
-    │       ├── 📚 references.md
-    │       ├── 📚 results.md
-    │       └── 📚 usage.md
-    │
-    └── 📂 fr/
-        │
-        ├── 📚 index.md
-        │
-        └── 📂 pages/
-            │
-            ├── 📚 acknowledgedments.md
-            ├── 📚 afroscreen
-            ├── 📚 configurations.md
-            ├── 📚 contributions.md
-            ├── 📚 features.md
-            ├── 📚 glossary.md
-            ├── 📚 installations.md
-            ├── 📚 references.md
-            ├── 📚 results.md
-            └── 📚 usage.md
+    ├── 📂 en/                          # Pages de documentation en anglais
+    └── 📂 fr/                          # Pages de documentation en français
 ```

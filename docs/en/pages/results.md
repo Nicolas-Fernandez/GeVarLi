@@ -1,17 +1,26 @@
 # **Results**
 
-Results are available in **./results/** directory.
+Results are available in the **./results/** directory.
 
-They are 
+They are organized as follows:
 
-
-
-
-
+- **Root (`results/`)**: Concatenated summary files for all samples (one per reference used):
+    * Consensus sequences (FASTA)
+    * Genome coverage statistics (TSV)
+    * Nextclade lineages and quality scores (TSV)
+    * Pangolin lineages, if invoked (TSV)
+- **00_Quality_Control**: Quality checks on raw reads (FastQC, Fastq-Screen, MultiQC)
+- **01_Trimming**: Adapter-removed and quality-trimmed reads
+- **02_Mapping**: Read alignment files (BAM and BAI index files)
+- **03_Coverage**: Coverage statistics and masking bed files
+- **04_Variants**: Called and filtered single nucleotide variants (VCF)
+- **05_Consensus**: Assembled viral consensus sequences (FASTA)
+- **06_Lineages**: Clade and lineage assignments (Nextclade / Pangolin)
+- **10_Reports**: Workflow summary, Conda environments, execution logs, and workflow graphs (DAG, rulegraph, filegraph)
 
 !!! tip
-    Files tagged as **[temp]** are removed by default, to save disk usage.  
-	If you want to keep them, please edit the **configuration** file.
+    Files tagged as **#[TEMP]** are automatically removed by default to save disk space.  
+    If you want to keep them, please edit the `config.yaml` configuration file.
 
 ## **Files tree**
 ```shell

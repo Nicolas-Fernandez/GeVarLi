@@ -1,92 +1,81 @@
-# **Installations**
+# **Installation**
 
-## **Conda**
+## **Conda (Prérequis)**
 
 !!! warning
     **Dépendance requise**
 
-GeVarLi utilise le gestionnaire de paquets gratuit et open-source **Conda**.
+GeVarLi s'appuie sur le gestionnaire de paquets open-source **Conda** pour créer et gérer automatiquement des environnements bioinformatiques isolés et reproductibles.
 
-**Si vous n'avez pas Conda**, nous vous recommandons vivement de l'installer avec **Miniforge**.
-
-Vous pouvez **télécharger** et **installer** la dernière version de **Miniforge** spécifique à votre système d'exploitation depuis le dépôt git : [Conda-forge / Miniforge](https://github.com/conda-forge/miniforge).
-
-!!! warning
-    Nous vous recommandons fortement de **redéfinir les canaux par défaut** de votre distribution conda et de la **mettre à jour** régulièrement !  
-    Lire pourquoi: [Éviter les Pièges de la Licence Anaconda : Guide Pratique](https://mivegec.pages.ird.fr/dainat/malbec-fix-conda-licensing-issues/fr/).
+**Si vous n'avez pas Conda installé**, nous vous recommandons vivement de l'installer via **Miniforge** :
+Téléchargez l'installateur adapté à votre système depuis le [dépôt officiel Miniforge](https://github.com/conda-forge/miniforge/releases).
 
 !!! shell
-    _Exemple de script pour les systèmes Linux\_x86\_64 bits ou Sous-système Windows pour Linux (WSL)_
+    _Exemple d'installation pour Linux x86_64 ou Sous-système Windows pour Linux (WSL) :_
     ```shell
-    # Téléchargement
+    # Télécharger l'installateur
     curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
     
-    # Installation
+    # Installer Miniforge
     bash ./Miniforge3-Linux-x86_64.sh -b -p ~/miniforge3/
-    
-    # Nettoyage
     rm -f ./Miniforge3-Linux-x86_64.sh
     
-    # Configuration
+    # Configurer les canaux communautaires stricts
     ~/miniforge3/condabin/conda config --add channels bioconda
-    /miniforge3/condabin/conda config --add channels conda-forge
+    ~/miniforge3/condabin/conda config --add channels conda-forge
     ~/miniforge3/condabin/conda config --set channel_priority strict
     ~/miniforge3/condabin/conda config --set auto_activate_base false
     
-    # Mise à jour
-    ~/miniforge3/condabin/conda update conda --yes
-    
-    # Contrôle l'installation
-    ~/miniforge3/condabin/conda --version
-    ~/miniforge3/condabin/conda config --show channels
-    
-    # Initialisation
+    # Initialiser le shell
     ~/miniforge3/condabin/conda init
     ```
-	
-!!! tip
-    Si vous avez besoin d'aide, vous pouvez utiliser ce script annexe : [Install_Conda-with-Miniforge3.sh](https://forge.ird.fr/transvihmi/nfernandez/install_conda-with-miniforge3)
 
+---
 
 ## **GeVarLi**
 
-!!! warning
-    **Présumant que Conda est installé**
+Grâce à l'optimisation complète du dépôt, GeVarLi est ultra-léger (**~9 Mo**) et **ne nécessite plus Git LFS** !
 
-Vous pouvez **télécharger** GeVarLi en tant que fichier zip depuis le dépôt git : [IRD-Forge / GeVarLi](https://forge.ird.fr/transvihmi/nfernandez/GeVarLi).
+### **Méthode recommandée : Cloner avec Git**
 
-<div style="text-align: center;">
-  <img src="../../../images/download_button.png" width="400" height="800">
-</div>
+Cloner le dépôt Git permet de bénéficier du contrôle de version complet et des mises à jour directes :
 
-!!! shell
-    _Exemple de script pour télécharger GeVarLi dans votre répertoire ```/home/```_
-    ```shell
-    # Téléchargement
-    curl https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz
-    
-    # Untar
-    tar -xzvf ~/GeVarLi-main.tar.gz
-    
-    # Nettoyer l'archive
-    rm -f ~/GeVarLi-main.tar.gz
-    
-    # Renomer le répertoire
-    mv ~/GeVarLi-main/ ~/GeVarLi/
-	
-	# Se déplacer dans le répertoire GeVarLi
-	cd ~/GeVarLi/
-    ```
+```shell
+# Cloner le dépôt
+git clone https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi
 
-!!! tip
-    Sinon, vous pouvez aussi **cloner** et **mettre à jour** à jour GeVarLi.
-    
-	_Exemple de script pour le cloner et le mettre à jour, dans votre répertoire ```/home/```_
-    ```shell
-    # Cloner
-    git clone --depth 1 https://forge.ird.fr/transvihmi/nfernandez/GeVarLi.git ~/GeVarLi/
-    cd ~/GeVarLi/
-    
-    # Mise à jour avec un 'git pull' (présumant que vous êtes dans le répertoire GeVarLi/)
-    git reset --hard HEAD && git pull --depth 1 --verbose
-    ```
+# Accéder au dossier
+cd ~/GeVarLi
+```
+
+Pour mettre à jour une installation existante vers la dernière version :
+```shell
+cd ~/GeVarLi
+git pull
+```
+
+---
+
+### **Méthode alternative : Téléchargement d'archive (Sans Git)**
+
+Si vous préférez télécharger une archive autonome sans utiliser Git :
+
+```shell
+# Télécharger l'archive tarball
+curl -L https://forge.ird.fr/transvihmi/nfernandez/GeVarLi/-/archive/main/GeVarLi-main.tar.gz -o ~/GeVarLi-main.tar.gz
+
+# Extraire et entrer dans le dossier
+tar -xzvf ~/GeVarLi-main.tar.gz
+rm -f ~/GeVarLi-main.tar.gz
+mv ~/GeVarLi-main ~/GeVarLi
+cd ~/GeVarLi
+```
+
+---
+
+## **Clusters de calcul HPC (Slurm)**
+
+Si vous travaillez sur un cluster géré par Slurm (comme le cluster i-Trop de l'IRD), assurez-vous que vos clés SSH sont configurées et lancez l'exécution via notre script dédié :
+```shell
+bash run_gevarli_itrop-slurm-hpc.sh
+```

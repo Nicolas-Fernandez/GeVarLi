@@ -3,19 +3,19 @@ site_name: GeVarLi
 site_author: Nicolas Fernandez et al.
 site_url: https://transvihmi.pages.ird.fr/nfernandez/GeVarLi
 site_description: GeVarLi documentations
-site_dir: ../public # When you build your site, all of the files are written to the directory assigned to the site_dir configuration option (defaults to "site")
-docs_dir: ./
+site_dir: public
+docs_dir: docs
 
 # Repository
 repo_name: GeVarLi
 repo_url: https://forge.ird.fr/transvihmi/nfernandez/GeVarLi
-edit_uri: edit/main/docs/ # Allow to replace edit/master/docs use by default
+edit_uri: edit/main/docs/
 
 # Configuration
 theme:
-  language: en  # default language
+  language: en
   name: material
-  logo: ./images/GeVarLi_by_DALL-E_icone.png # logo top left page
+  logo: images/GeVarLi_by_DALL-E_icone.png
   search_index_only: true
   include_search_page: true
   features:
@@ -24,24 +24,18 @@ theme:
     - content.action.view
     - content.code.annotate
     - content.code.copy
-    #- content.tabs.link
     - content.tooltips
     - header.autohide
-    #- navigation.expand
     - navigation.footer
     - navigation.indexes
-    #- navigation.instant
-    #- navigation.prune
-    #- navigation.sections # collapse subsections
     - navigation.tabs
-    #- navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
     - search.highlight
     - search.share
     - search.suggest
     - toc.follow
-    - toc.integrate # remove table of content on the right side
+    - toc.integrate
   palette:
     - scheme: slate
       primary: indigo
@@ -64,7 +58,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.tabbed
   - pymdownx.snippets:
-      base_path: docs
+      base_path:
+        - docs
   - attr_list
   - tables
   - toc:
@@ -76,23 +71,21 @@ plugins:
       separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - minify:
       minify_html: true
-  - external-markdown # Package mkdocs-embed-external-markdown /!\ has to be set before macros
-  - include-markdown # Package mkdocs-include-markdown-plugin
+  - external-markdown
+  - include-markdown
   - macros
 
 # Customization
 extra:
-  homepage: en/ # Page displayed when clicking the logo
+  homepage: en/
   history_buttons: false
-  # --- set whole scope variables ---
   contact: nicolas.fernandez@ird.fr
   institute: IRD
   unit: TransVIHMI
   repo: https://forge.ird.fr/transvihmi/nfernandez/GeVarLi
   color_table_header: "#21a392"
-  anaconda_channels:  "defaults, main, anaconda, free, r, mro, pro, archive, mro-archive, msys2"
+  anaconda_channels: "defaults, main, anaconda, free, r, mro, pro, archive, mro-archive, msys2"
 
-  # --- set alternative languages ---
   alternate:
     - name: English
       link: en/ 
@@ -101,11 +94,10 @@ extra:
       link: fr/
       lang: fr
 
-# Customization
 extra_css: 
   - extra.css
 
-# page tree
+# Page tree
 nav:
   - Home (en):
       - About: en/index.md
